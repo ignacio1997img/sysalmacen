@@ -1,0 +1,441 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use App\Models\Partida;
+use App\Models\Provider;
+use App\Models\Article;
+use App\Models\Modality;
+use App\Models\Sucursal;
+use App\Models\SolicitudCompra;
+use App\Models\Factura;
+use App\Models\DetalleFactura;
+use App\Models\User;
+use DataTables;
+use DateTime;
+use Doctrine\DBAL\Exception\RetryableException;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+
+
+
+class IncomeController extends Controller
+{
+    public function index()
+    {
+        // return DB::connection('mysqlgobe')->table('unidadadminstrativa')
+        //                 ->select('*')
+        //                 ->get();
+        $user =Auth::user();
+    
+        $activo = DB::table('users as u')
+                ->join('sucursal_users as su', 'su.user_id', 'u.id')
+                ->join('sucursals as s', 's.id', 'su.sucursal_id')
+                ->select('u.id as user', 'u.name', 's.id', 's.nombre')
+                ->where('u.id',$user->id )
+                ->where('su.condicion',1)
+                ->get();
+  
+        $income = DB::table('solicitud_compras as sol')
+                ->join('facturas as f', 'f.solicitudcompra_id', 'sol.id')
+                // ->join('invoice_details as fd', 'fd.invoice_id', 'f.id')
+                ->join('modalities as m', 'm.id', 'sol.modality_id')
+                ->join('providers as pro', 'pro.id', 'f.provider_id')
+                ->select('sol.id', 'm.nombre as modalidad', 'sol.nrosolicitud' , 'pro.razonsocial', 'pro.nit', 'f.nrofactura', 'f.fechafactura', 'f.montofactura', 'sol.created_at', 'sol.condicion')
+                ->where('sol.deleted_at', null)
+                ->where('sol.sucursal_id', $activo[0]->id)
+                ->orderBy('sol.id', 'DESC')
+                ->get();
+                
+
+        return view('income.browse', compact('income'));
+    }
+
+
+    public function create()
+    {
+        $user = Auth::user();
+        $sucursales = Sucursal::join('sucursal_users as u','u.sucursal_id', 'sucursals.id')
+                    ->select('sucursals.id','sucursals.nombre','u.condicion')
+                    ->where('u.condicion',1)
+                    ->where('u.user_id', $user->id)
+                    ->get();
+        // $da = AdministrativeDirection::all();
+        // return $this->getIdDireccionInfo(); 
+
+        $da = $this->getIdDireccionInfo(); 
+
+        $proveedor = Provider::all();
+        // $partida = Partida::where('codigo','like','3%')->get();
+        $partida = Partida::all();
+        $modalidad = Modality::all();
+        // return $partida;
+
+        return view('income.add', compact('sucursales', 'da', 'proveedor', 'partida', 'modalidad'));
+
+    }
+
+    protected function view_ingreso($id)
+    {
+        $sol = SolicitudCompra::find($id);
+ 
+        
+        $factura = Factura::where('solicitudcompra_id', $sol->id)->get();
+
+        $sucursal = Sucursal::find($sol->sucursal_id);
+
+        $modalidad = Modality::find($sol->modality_id);
+
+       
+        $unidad = DB::connection('mysqlgobe')->table('unidadadminstrativa')
+                ->select('Nombre')
+                ->where('ID', $sol->unidadadministrativa)
+                ->get();
+
+        $detalle = DB::table('detalle_facturas as df')
+                    ->join('articles as a', 'a.id', 'df.article_id')
+                    ->join('partidas as p', 'p.id', 'a.partida_id')
+                    ->select('p.codigo as partida', 'a.nombre as articulo','a.presentacion','a.id as codigo', 'df.cantsolicitada as cantidad', 'df.precio as precio')
+                    ->where('df.hist', 0)
+                    ->where('df.deleted_at', null)
+                    // ->where('df.condicion', 1)
+                    ->where('df.factura_id', $factura[0]->id)
+                    ->get();
+        
+        $proveedor = Provider::find($factura[0]->provider_id);
+
+        
+        return view('income.report',compact('sol','factura', 'detalle', 'sucursal', 'modalidad', 'unidad', 'proveedor'));
+        // return view('income.view', compact('sol','factura', 'detalle', 'sucursal', 'modalidad', 'unidad'));
+    }
+    protected function view_ingreso_stock($id)
+    {
+        $sol = SolicitudCompra::find($id);
+ 
+        
+        $factura = Factura::where('solicitudcompra_id', $sol->id)->get();
+
+        $sucursal = Sucursal::find($sol->sucursal_id);
+
+        $modalidad = Modality::find($sol->modality_id);
+
+       
+        $unidad = DB::connection('mysqlgobe')->table('unidadadminstrativa')
+                ->select('Nombre')
+                ->where('ID', $sol->unidadadministrativa)
+                ->get();
+
+        $detalle = DB::table('detalle_facturas as df')
+                    ->join('articles as a', 'a.id', 'df.article_id')
+                    ->join('partidas as p', 'p.id', 'a.partida_id')
+                    ->select('p.codigo as partida', 'a.nombre as articulo','a.presentacion','a.id as codigo', 'df.cantsolicitada as cantidad', 'df.cantrestante')
+                    ->where('df.hist', 0)
+                    ->where('df.deleted_at', null)
+                    // ->where('df.condicion', 1)
+                    ->where('df.factura_id', $factura[0]->id)
+                    ->get();
+        
+        $proveedor = Provider::find($factura[0]->provider_id);
+
+        
+        return view('income.reportstock',compact('sol','factura', 'detalle', 'sucursal', 'modalidad', 'unidad', 'proveedor'));
+        // return view('income.view', compact('sol','factura', 'detalle', 'sucursal', 'modalidad', 'unidad'));
+    }
+
+
+    
+    public function store(Request $request)
+    {
+        $user = Auth::user();
+        DB::beginTransaction();
+        try {
+
+            $unidad = DB::connection('mysqlgobe')->table('unidadadminstrativa')
+                    ->select('sigla')
+                    ->where('ID',$request->unidadadministrativa)
+                    ->get();
+            // return $unidad;
+
+            $aux = SolicitudCompra::where('unidadadministrativa',$request->unidadadministrativa)
+                ->where('deleted_at', null)
+                ->get();
+
+                $length = 4;
+                $char = 0;
+                $type = 'd';
+                $format = "%{$char}{$length}{$type}"; // or "$010d";
+                
+
+
+
+            $request->merge(['nrosolicitud' => strtoupper($unidad[0]->sigla).'-'.sprintf($format, count($aux)+1)]);
+
+            // return $request;
+        
+            $gestion = Carbon::parse($request->fechaingreso)->format('Y');
+  
+        
+
+            $solicitud = SolicitudCompra::create([
+                    'sucursal_id'       => $request->branchoffice_id,
+                    'unidadadministrativa'     => $request->unidadadministrativa,
+                    'modality_id'           => $request->modality_id,
+                    'registeruser_id'       => $user->id,
+                    'nrosolicitud'          => $request->nrosolicitud,
+                    'fechaingreso'          => $request->fechaingreso,
+                    'gestion'               => $gestion
+            ]);
+            
+           
+            $factura = Factura::create([
+                    'solicitudcompra_id'   => $solicitud->id,
+                    'provider_id'           => $request->provider_id,
+                    'registeruser_id'       => $user->id,
+                    'tipofactura'           => $request->tipofactura,
+                    'fechafactura'          => $request->fechafactura,
+                    'montofactura'          => $request->montofactura,
+                    'nrofactura'            => $request->nrofactura,
+                    'nroautorizacion'       => $request->nroautorizacion,
+                    'nrocontrol'            => $request->nrocontrol,
+                    'fechaingreso'          => $request->fechaingreso, 
+                    'gestion'               => $gestion
+            ]);
+            
+            $cont = 0;
+       
+            while($cont < count($request->article_id))
+            {
+                DetalleFactura::create([
+                    'factura_id'            => $factura->id,
+                    'registeruser_id'       => $user->id,
+                    'article_id'            => $request->article_id[$cont],
+                    'cantsolicitada'        => $request->cantidad[$cont],
+                    'precio'                => $request->precio[$cont],
+                    'totalbs'               => $request->totalbs[$cont],
+                    'cantrestante'          => $request->cantidad[$cont],
+                    'fechaingreso'          => $request->fechaingreso,
+                    'gestion'               => $gestion
+                ]);
+                $cont++;
+            }
+
+            DB::commit();
+            return redirect()->route('income.index')->with(['message' => 'Registrado exitosamente.', 'alert-type' => 'success']);
+        } catch (\Throwable $th) {
+            
+            DB::rollback();
+            return redirect()->route('income.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
+            
+        }
+        // return redirect()->route('income.index');
+        return redirect('admin/income');
+    }
+
+ 
+    public function edit($id)
+    {
+
+        $da = $this->getIdDireccionInfo(); 
+
+
+        $user = Auth::user();
+        $sucursales = Sucursal::join('sucursal_users as u','u.sucursal_id', 'sucursals.id')
+                    ->select('sucursals.id','sucursals.nombre','u.condicion')
+                    ->where('u.condicion',1)
+                    ->where('u.user_id', $user->id)
+                    ->get();
+
+
+        $sol = SolicitudCompra::find($id);
+        $facturaux = Factura::where('solicitudcompra_id', $id)->get();
+
+        $factura = Factura::find($facturaux[0]->id);
+
+  
+        
+        $detalle = DB::table('detalle_facturas as df')
+                ->join('articles as a', 'a.id', 'df.article_id')
+                ->join('partidas as p', 'p.id', 'a.partida_id')
+                ->select('df.id as de','a.id as articulo_id', 'a.nombre as articulo', 'a.presentacion', 'p.codigo', 'p.nombre as partida', 'df.cantsolicitada', 'df.precio', 'df.totalbs')
+                ->where('df.factura_id', $factura->id)
+                ->get();
+
+        $proveedorselect = Provider::find($factura->provider_id);
+
+
+
+        $proveedor = Provider::all();
+        $partida = Partida::all();
+
+        $modalidad = Modality::all();
+
+
+
+
+        return view('income.edit', compact('sucursales','da',          'detalle', 'partida', 'proveedor', 'sol', 'factura', 'proveedorselect','modalidad'));
+
+    }
+
+
+
+    public function update(Request $request)
+    {
+        $user = Auth::user();
+        $gestion = Carbon::parse($request->fechaingreso)->format('Y');
+        DB::beginTransaction();
+        try {
+
+            //para agregar un numero de solicitud si en caso se cambia la unidad administrativa
+            $aux = SolicitudCompra::find($request->id);            
+            if($aux->unidadadministrativa != $request->unidadadministrativa)
+            {
+                $unidad = DB::connection('mysqlgobe')->table('unidadadminstrativa')
+                    ->select('sigla')
+                    ->where('ID',$request->unidadadministrativa)
+                    ->get();
+
+                $aux = SolicitudCompra::where('unidadadministrativa',$request->unidadadministrativa)
+                    ->where('deleted_at', null)
+                    ->get();
+
+                $length = 4;
+                $char = 0;
+                $type = 'd';
+                $format = "%{$char}{$length}{$type}"; // or "$010d";
+
+                $request->merge(['nrosolicitud' => strtoupper($unidad[0]->sigla).'-'.sprintf($format, count($aux)+1)]);
+            }
+            else
+            {
+                $request->merge(['nrosolicitud' => $aux->nrosolicitud]);
+            }
+
+            SolicitudCompra::where('id',$request->id)->update([
+                    'sucursal_id'       => $request->branchoffice_id,
+                    'unidadadministrativa'     => $request->unidadadministrativa,
+                    'modality_id'           => $request->modality_id,
+                    'registeruser_id'       => $user->id,
+                    'nrosolicitud'          => $request->nrosolicitud,
+                    'fechaingreso'          => $request->fechaingreso,
+                    'gestion'               => $gestion
+            ]);
+  
+           
+            Factura::where('solicitudcompra_id',$request->id)->update([
+                    'provider_id'           => $request->provider_id,
+                    'registeruser_id'       => $user->id,
+                    'tipofactura'           => $request->tipofactura,
+                    'fechafactura'          => $request->fechafactura,
+                    'montofactura'          => $request->montofactura,
+                    'nrofactura'            => $request->nrofactura,
+                    'nroautorizacion'       => $request->nroautorizacion,
+                    'nrocontrol'            => $request->nrocontrol,
+                    'fechaingreso'          => $request->fechaingreso, 
+                    'gestion'               => $gestion
+            ]);
+
+            $factura = Factura::where('solicitudcompra_id',$request->id)->get();
+            // return $factura;
+            
+            // DetalleFactura::where('factura_id', $factura->id)->update(['deleted_at' => Carbon::now(), 'condicion' => 0]);
+            DetalleFactura::where('factura_id', $factura[0]->id)->delete();
+            $cont = 0;
+
+       
+            while($cont < count($request->article_id))
+            {
+                DetalleFactura::create([
+                    'factura_id'            => $factura[0]->id,
+                    'registeruser_id'       => $user->id,
+                    'article_id'            => $request->article_id[$cont],
+                    'cantsolicitada'        => $request->cantidad[$cont],
+                    'precio'                => $request->precio[$cont],
+                    'totalbs'               => $request->totalbs[$cont],
+                    'cantrestante'          => $request->cantidad[$cont],
+                    'fechaingreso'          => $request->fechaingreso,
+                    'gestion'               => $gestion
+                ]);
+                $cont++;
+            }
+
+            DB::commit();
+            return redirect()->route('income.index')->with(['message' => 'Registrado exitosamente.', 'alert-type' => 'success']);
+        } catch (\Throwable $th) {
+            
+            DB::rollback();
+            return redirect()->route('income.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
+            
+        }
+        // return redirect()->route('income.index');
+        return redirect('admin/income');
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public function destroy(Request $request)
+    {       
+        
+        DB::beginTransaction();
+        try{
+
+            $sol = SolicitudCompra::find($request->id);
+            SolicitudCompra::where('id', $sol->id)->update(['deleted_at' => Carbon::now(), 'condicion' => 0]);
+    
+            $fac = Factura::where('solicitudcompra_id',$sol->id)->get();
+            Factura::where('solicitudcompra_id', $sol->id)->update(['deleted_at' => Carbon::now(), 'condicion' => 0]);
+
+            DetalleFactura::where('factura_id', $fac[0]->id)->update(['deleted_at' => Carbon::now(), 'condicion' => 0]);
+
+            DB::commit();
+            return redirect()->route('income.index')->with(['message' => 'Ingreso Eliminado Exitosamente.', 'alert-type' => 'success']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('income.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
+        }
+            
+
+    }
+
+
+
+
+
+    protected function ajax_unidad_administrativa($id)//para la view de ingreso y egreso
+    {
+        return DB::connection('mysqlgobe')->table('unidadadminstrativa')
+                        ->select('*')
+                        ->get();
+    }
+
+
+
+
+
+
+
+    // protected function ajax_unidad_solicitante($id)//para la view de ingreso y egreso
+    // {
+    //     return RequestingUnit::where('executingunit_id', $id)->get();
+    // }
+    protected function ajax_article($id)
+    {
+        return Article::where('partida_id', $id)->get();
+    }
+    protected function ajax_presentacion($id)
+    {
+        return Article::find($id);
+    }
+}
