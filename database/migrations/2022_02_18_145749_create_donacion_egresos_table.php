@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDonacionIngresosTable extends Migration
+class CreateDonacionEgresosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,17 @@ class CreateDonacionIngresosTable extends Migration
      */
     public function up()
     {
-        Schema::create('donacion_ingresos', function (Blueprint $table) {
+        Schema::create('donacion_egresos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('centro_id')->constrained('centros');
-
-            $table->integer('tipodonante');
-            $table->integer('donante_id');
+            // $table->foreignId('donacioningresodetalle_id')->constrained('donacion_ingreso_detalles');
 
             $table->foreignId('registeruser_id')->constrained('users');
 
             $table->string('nrosolicitud');
-            $table->date('fechadonacion');
-            $table->date('fechaingreso');
+            $table->date('fachaentrega');
+
+            // $table->decimal('cantentregada', 11, 2);
 
             $table->text('observacion')->nullable();
             $table->string('gestion', 10);
@@ -33,7 +32,7 @@ class CreateDonacionIngresosTable extends Migration
 
             $table->foreignId('deleteuser_id')->nullable()->constrained('users');
 
-            $table->softDeletes();  
+            $table->softDeletes(); 
         });
     }
 
@@ -44,6 +43,6 @@ class CreateDonacionIngresosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('donacion_ingresos');
+        Schema::dropIfExists('donacion_egresos');
     }
 }

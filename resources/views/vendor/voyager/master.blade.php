@@ -142,42 +142,67 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
     @endif
 </script>
 @include('voyager::media.manager')
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.min.js"></script>
     <script>
-        const IP_ADDRESS = "{{ env('APP_URL', '127.0.0.1') }}";
-        const SOCKET_PORT = "{{ env('SOCKET_PORT', '3000') }}";
+        
 
         $(function() {
-            // Pedir autorización para mostrar notificaciones
-            Notification.requestPermission();
 
-            let socket = io(IP_ADDRESS + ':' + SOCKET_PORT);
-            socket.on('sendNotificationToClient', (id) => {
-                let user_id = "{{ Auth::user()->id }}";
-                if(user_id == id){
-                    if(Notification.permission=='granted'){
-                        let notificacion = new Notification('Nueva derivación',{
-                            body: 'Tienes un trámite nuevo',
-                            icon: '{{ url("images/iconmensage.png") }}'
-                        });
 
-                        notificacion.onclick = function(event) {
-                            event.preventDefault(); // Previene al buscador de mover el foco a la pestaña del Notification
-                            window.location = "";
+
+
+
+            setInterval(            
+                function () 
+                {                
+                    $.get('{{route('donacion_notificacion')}}', function (data) {
+                        if(data.length > 0)
+                        {
+                            var luz = '<i class="voyager-basket text-danger" style="width: 20px; font-size: 1.5em;"></i>'
+                                luz+= '<span class="badge badge-warning navbar-badge" id="bandeja"></span>'
+                            $('#not').html(luz)
+                            $('#bandeja').text(data.length)
+                            const myTimeout1 = setTimeout(si, 400);
+                            
                         }
-                    }
+                        
 
-                    let cont = $('#badge-notification .badge').text();
-                    if(!cont){
-                        let url = "";
-                        $('#badge-notification').html(`<a href="${url}"> <span class="voyager-bell text-danger" style="font-size: 25px"></span> <span class="badge" style="margin-left: -10px">1</span> </a>`);
-                    }else{
-                        $('#badge-notification .badge').text(parseFloat(cont)+1);
-                    }
-                }
-            });
+                        $('#listadoc').text(data.length + ' ' + 'Ariculo por Caducar, Revise sus ingresos registrado')
+                        var list = '';
+                        var j = '';
+                        list = '<table class="dataTable table-hover">'
+                        list+='<tbody>'
+                        for (var i = 0; i < data.length; ++i) {
+                            list+='<tr>'
+                            list+='<td>'+data[i].id+'</td>'
+                            list+='<td>'+data[i].nrosolicitud+'</td>'
+                            list+='<td>'+data[i].nombre+'</td>'
+                            list+='<td>'+data[i].caducidad+'</td>'
+                            list+='<tr>'                            
+                        }
+                        list+='</tbody>'
+                        list +='</table>'
+                        $('#notificaciones').html(list);
+                        
+
+
+
+                    });
+                }, 800 //en medio minuto se recargará solo la campana de notificación..
+            );
+           
         });
+
+        function si()
+        {
+            var luz = '<i class="voyager-bell text-primary" style="width: 20px; font-size: 1.5em;"></i>'
+                                luz+= '<span class="badge badge-warning navbar-badge" id="bandeja"></span>'
+            $('#not').html(luz)
+        }
+
     </script>
+
+
 @yield('javascript')
 @stack('javascript')
 @if(!empty(config('voyager.additional_js')))<!-- Additional Javascript -->

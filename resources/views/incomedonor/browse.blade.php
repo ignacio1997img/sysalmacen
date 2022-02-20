@@ -2,7 +2,7 @@
 
 @section('page_title', 'Viendo Ingresos Donacion')
 
-@if(auth()->user()->hasPermission('browse_user'))
+@if(auth()->user()->hasPermission('browse_incomedonor'))
     @section('page_header')
         <div class="container-fluid">
             <div class="row">
@@ -10,10 +10,10 @@
                     <h1 class="page-title">
                         <i class="voyager-basket"></i> Ingresos de Donaciones
                     </h1>
-                    
+                    @if(auth()->user()->hasPermission('add_incomedonor'))
                         <a href="{{ route('incomedonor.create') }}" class="btn btn-success btn-add-new">
                             <i class="voyager-plus"></i> <span>Crear</span>
-                        </a>@if(auth()->user()->hasPermission('add_income'))
+                        </a>
                     @endif
                 </div>
                 <div class="col-md-4">
@@ -37,6 +37,7 @@
                                                 <th>Nro&deg;</th>
                                                 <th>Nro&deg; Ingreso</th>
                                                 <th>Nombre</th>
+                                                <th>Observacion</th>
                                                 <th>Fecha Donacion</th>
                                                 <th>Fecha Ingreso</th>
                                                 <th class="text-center">Acciones</th>
@@ -48,28 +49,30 @@
                                                     <td>{{$data->id}}</td>
                                                     <td>{{$data->nrosolicitud}}</td>
                                                     <td style="width: 200pt">{{$data->nombre}}</td>
+                                                    <td style="width: 200pt">{{$data->observacion}}</td>
                                                     <td>{{\Carbon\Carbon::parse($data->fechadonacion)->format('d/m/Y')}}</td>
                                                     <td>{{\Carbon\Carbon::parse($data->fechaingreso)->format('d/m/Y')}}</td>
                                                     <td>
                                                         <div class="no-sort no-click bread-actions text-right">
+                                                            @if(auth()->user()->hasPermission('read_incomedonor'))
+                                                                <a href="{{route('incomedonor_view_stock',$data->id)}}" title="Ver" target="_blank" class="btn btn-sm btn-info view">
+                                                                    <i class="voyager-basket"></i> <span class="hidden-xs hidden-sm">Stock</span>
+                                                                </a>
                                                                 <a href="{{route('incomedonor.show',$data->id)}}" title="Ver" target="_blank" class="btn btn-sm btn-info view">
                                                                     <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
-                                                                </a>
-                                                            @if(auth()->user()->hasPermission('read_income'))
+                                                                </a>                                                            
 
                                                             @endif
                                                             @if($data->condicion == 1)
-                                                                    <a href="{{route('income.edit',$data->id)}}" title="Editar" class="btn btn-sm btn-warning">
+                                                                @if(auth()->user()->hasPermission('edit_incomedonor'))
+                                                                    <a href="{{route('incomedonor.edit',$data->id)}}" title="Editar" class="btn btn-sm btn-warning">
                                                                         <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Editar</span>
-                                                                    </a>
-                                                                @if(auth()->user()->hasPermission('edit_income'))
-
+                                                                    </a>   
                                                                 @endif
+                                                                @if(auth()->user()->hasPermission('delete_incomedonor'))
                                                                     <button title="Anular" class="btn btn-sm btn-danger delete" data-toggle="modal" data-id="{{$data->id}}" data-target="#myModalEliminar">
                                                                         <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Anular</span>
-                                                                    </button>
-                                                                @if(auth()->user()->hasPermission('delete_income'))
-
+                                                                    </button>       
                                                                 @endif
                                                             @endif
                                                         </div>
@@ -122,6 +125,7 @@
 
     @section('javascript')
             <script>
+             
                 $(document).ready(function(){
                     $('.dataTable').DataTable({
                         language: {
@@ -169,8 +173,11 @@
             </script>
     @stop
 
+
 @else
     @section('content')
         <h1>No tienes permiso</h1>
+        <br>
+        <h1>Contactese con el Administrador del sistema</h1>
     @stop
 @endif

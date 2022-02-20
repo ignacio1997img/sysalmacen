@@ -6,9 +6,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.js"></script>
 @extends('voyager::master')
 
-@section('page_title', 'Viendo Ingresos')
-@if(auth()->user()->hasPermission('add_incomedonor'))
-
+@section('page_title', 'Viendo Editar Ingresos')
+@if(auth()->user()->hasPermission('edit_incomedonor'))
 <style>
     input:focus {
   background: rgb(197, 252, 215);
@@ -21,7 +20,7 @@
         <div class="container-fluid">
             <div class="row">
                 <h1 class="page-title">
-                    <i class="voyager-basket"></i> Añadir Ingreso de Donaciones
+                    <i class="voyager-basket"></i> Editar Ingreso de Donaciones
                 </h1>
             </div>
         </div>
@@ -37,7 +36,8 @@
                             <div class="panel-body">                            
                                 <div class="table-responsive">
                                     <main class="main">        
-                                        {!! Form::open(['route' => 'incomedonor.store', 'class' => 'was-validated'])!!}
+                                        {!! Form::open(['route' => 'incomedonor_update', 'class' => 'was-validated'])!!}
+                                        <input type="hidden" name="id" id="id" value="{{$ingreso->id}}">
                                         <div class="card-body">
                                             <h5>Centro de Establecimiento</h5>
                                             <div class="row">
@@ -68,7 +68,7 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="date"  class="form-control" name="fechadonacion" required>
+                                                            <input type="date"  class="form-control" name="fechadonacion" value="{{$ingreso->fechadonacion}}" required>
                                                         </div>
                                                         <small>Fecha de Donación.</small>
                                                     </div>
@@ -76,7 +76,7 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="date"  class="form-control" name="fechaingreso" required>
+                                                            <input type="date"  class="form-control" name="fechaingreso" value="{{$ingreso->fechaingreso}}" required>
                                                         </div>
                                                         <small>Fecha de Ingreso.</small>
                                                     </div>
@@ -87,7 +87,7 @@
                                                     <div class="form-group">
                                                         <div class="form-line">
                                                             <!-- <input type="date"  class="form-control" name="fechaingreso" required> -->
-                                                            <textarea name="observacion" id="observacion" rows="2" class="form-control"></textarea>
+                                                            <textarea name="observacion" id="observacion" rows="2" class="form-control">{{$ingreso->observacion}}</textarea>
                                                         </div>
                                                         <small>Observacion.</small>
                                                     </div>
@@ -109,9 +109,9 @@
                                                         <div class="form-line">
                                                             <select name="tipodonante" id="tipodonante"class="form-control" required>
                                                                 <option value="">Seleccione un tipo..</option>
-                                                                <option value="2">Persona</option>
-                                                                <option value="0">Empresa</option>
-                                                                <option value="1">ONG</option>
+                                                                <option value="2" {{ 2 == $ingreso->tipodonante ? 'selected' : '' }}>Persona</option>
+                                                                <option value="0" {{ 0 == $ingreso->tipodonante ? 'selected' : '' }}>Empresa</option>
+                                                                <option value="1" {{ 1 == $ingreso->tipodonante ? 'selected' : '' }}>ONG</option>
                                                             </select>
                                                         </div>
                                                         <small>Tipos Donadores.</small>
@@ -122,18 +122,18 @@
                                                         <div class="form-line">
                                                             <select id="donante" class="form-control select2" required>
                                                                 
-                                                                
+                                                                <option value="{{$donante->id}}">{{$donante->nombre}}</option>
                                                             </select>
                                                         </div>
                                                         <small>Seleccionar un Donante.</small>
                                                     </div>
                                                 </div>
-                                                <input type="hidden" id="donante_id" name="donante_id">
+                                                <input type="hidden" id="donante_id" name="donante_id" value="{{$donante->id}}">
                                             
                                                 <div class="col-sm-3">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="text" id="nit" class="form-control form-control-sm" placeholder="Seleccione un donante" disabled readonly>
+                                                            <input type="text" id="nit" class="form-control form-control-sm" placeholder="Seleccione un donante" value="{{$donante->ci}}" disabled readonly>
                                                         </div>
                                                         <small>CI./NIT.</small>
                                                     </div>
@@ -218,19 +218,53 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Opciones</th>
+                                                        <th>Codigo</th>
                                                         <th>Categoria</th>
                                                         <th>Articulo</th>
                                                         <th>Presentación</th>
                                                         <th>Cantidad</th>
                                                         <th>Precio Estimado.</th>
                                                         <th>Fecha Caducidad.</th>
-                                                        <th>SubTotal</th>
-                    
+                                                        <th>SubTotal</th>                    
                                                     </tr>
                                                 </thead>
+                                                <tbody>
+                                                    @php
+                                                      
+                                                        $total = 0;
+                                                    @endphp
+                                                    @foreach($detalle as $item)
+                                                        @php
+                                                          
+                                                            $total += $item->precio * $item->cantidad;
+                                                        @endphp
+                                                        <tr class="selected" id="fila{{$item->articulo_id}}">
+                                                            <td>
+                                                            
+                                                                <button 
+                                                                    type="button" 
+                                                                    title="Eliminar articulo"
+                                                                    class="btn btn-danger" 
+                                                                    onclick="eliminar('{{$item->articulo_id}}')";
+                                                                >
+                                                                <i class="voyager-trash"></i>
+                                                                </button>
+                                                                
+                                                            </td>
+                                                            <td>{{ $item->articulo_id}}</td>
+                                                            <td>{{ $item->categoria}}</td>                                                            
+                                                            <td><input type="hidden" class="input_article" name="articulo_id[]"value="{{ $item->articulo_id}}">{{ $item->nombre}}</td>
+                                                            <td>{{ $item->presentacion}}</td>
+                                                            <td><input type="hidden" name="cantidad[]" value="{{ $item->cantidad}}">{{ $item->cantidad }}</td>
+                                                            <td><input type="hidden" name="precio[]" value="{{ $item->precio }}">{{ $item->precio }}</td>
+                                                            <td><input type="hidden" name="caducidad[]" value="{{ $item->caducidad}}">{{ $item->caducidad}}</td>
+                                                            <td><input type="hidden" class="input_subtotal" name="totalbs[]" value="{{ $item->precio * $item->cantidad }}">{{ $item->precio * $item->cantidad }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
                                                 <tfoot>
-                                                    <th colspan="7" style="text-align:right"><h5>TOTAL</h5></th>
-                                                    <th><h4 id="total">Bs. 0.00</h4></th>
+                                                    <th colspan="8" style="text-align:right"><h5>TOTAL</h5></th>
+                                                    <th><h4 id="total">Bs. {{ $total }}</h4></th>
                                                 </tfoot>
                                                 
                                             </table>
@@ -277,13 +311,14 @@
 
             })
 
-            var cont=0;
+            // var cont=0;
             var total=0;
             subtotal=[];
 
             function agregar()
             {
-                
+            
+                // alert(cont)
                 categoria=$("#categoria option:selected").text();
                 nombre_articulo=$("#articulo option:selected").text();
                 articulo_id =$("#articulo").val();
@@ -295,86 +330,116 @@
 
                 var arrayarticle = [];
                 var i=0;
+                var j=0;
                 ok=false;
 
-
                 
+                if (categoria != 'Seleccione una categoria..' && nombre_articulo != 'Seleccione un Articulo..' && cantidad != "" && precio != "")
+                {                    
+                    var fila='<tr class="selected" id="fila'+articulo_id+'">'
+                        fila+='<td><button type="button" class="btn btn-danger" onclick="eliminar('+articulo_id+')";><i class="voyager-trash"></i></button></td>'
+                        fila+='<td>'+articulo_id+'</td>'
+                        fila+='<td>'+categoria+'</td>'
+                        fila+='<td><input type="hidden" class="input_article" name="articulo_id[]"value="'+articulo_id+'">'+nombre_articulo+'</td>' 
+                        fila+='<td>'+presentacion+'</td>' 
+                        fila+='<td><input type="hidden" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td>'                       
+                        fila+='<td><input type="hidden" name="precio[]" value="'+precio+'">'+precio+'</td>'                        
+                        fila+='<td><input type="hidden" name="caducidad[]" value="'+caducidad+'">'+caducidad+'</td>'                        
+                        fila+='<td><input type="hidden" class="input_subtotal" name="totalbs[]" value="'+cantidad * precio+'">'+cantidad * precio+'</td>'
+                    fila+='</tr>';
 
-                if (categoria != 'Seleccione una categoria..' && nombre_articulo != 'Seleccione un Articulo..' && cantidad != "" && precio != "") {
 
-                    
-                        var fila='<tr class="selected" id="fila'+cont+'">'
-                            fila+='<td><button type="button" class="btn btn-danger" onclick="eliminar('+cont+')";><i class="voyager-trash"></i></button></td>'
-                            fila+='<td>'+categoria+'</td>'
-                            fila+='<td><input type="hidden" class="input_article" name="articulo_id[]"value="'+articulo_id+'">'+nombre_articulo+'</td>' 
-                            fila+='<td>'+presentacion+'</td>' 
-                            fila+='<td><input type="hidden" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td>'                       
-                            fila+='<td><input type="hidden" name="precio[]" value="'+precio+'">'+precio+'</td>'                        
-                            fila+='<td><input type="hidden" name="caducidad[]" value="'+caducidad+'">'+caducidad+'</td>'                        
-                            fila+='<td>'+cantidad * precio+'</td>'
-                        fila+='</tr>';
+                        
 
+                        $(".input_article").each(function(){
+                            arrayarticle[i]= parseFloat($(this).val());
+                            i++;
+                        }); 
+                        var ok=true
 
-                            cont++;
-                            
+                        for(j=0;j<arrayarticle.length; j++)
+                        {
+                            alert(arrayarticle[j])
+                            if(arrayarticle[j] == articulo_id)
+                            {
+                                // cont--;
+                                ok = false;
+                                // eliminar(arrayarticle.length-1)
+                                swal({
+                                    title: "Error",
+                                    text: "El Articulo ya Existe en la Lista",
+                                    type: "error",
+                                    showCancelButton: false,
+                                    });
+                                div = document.getElementById('flotante');
+                                div.style.display = '';
+                                return;                                
+                            }
+                        }
+
+                        if(ok==true)
+                        {
+                            // cont++;
+                        
                             limpiar();
                             $('#detalles').append(fila);
                             $("#total").html("Bs. "+calcular_total().toFixed(2));
-                        
-                            $(".input_article").each(function(){
-                                arrayarticle[i]= parseFloat($(this).val());
-                                i++;
-                            }); 
-
-                            for(j=0;j<arrayarticle.length-1; j++)
-                            {
-                                if(arrayarticle[j] == arrayarticle[arrayarticle.length-1])
-                                {
-                                    eliminar(arrayarticle.length-1)
-                                    swal({
-                                        title: "Error",
-                                        text: "El Articulo ya Existe en la Lista",
-                                        type: "error",
-                                        showCancelButton: false,
-                                        });
-                                    div = document.getElementById('flotante');
-                                    div.style.display = '';
-                                    return;
-                                    
-                                }
-                            }
-                }
-                else
-                {
+                        }
+                    }
+                    else
+                    {
                     swal({
-                            title: "Error",
-                            text: "Rellene los Campos de las Seccion de Articulo",
-                            type: "error",
-                            showCancelButton: false,
-                            });
-                        div = document.getElementById('flotante');
-                        div.style.display = '';
-                        return;
-                }
+                        title: "Error",
+                        text: "Rellene los Campos de las Seccion de Articulo",
+                        type: "error",
+                        showCancelButton: false,
+                        });
+                    div = document.getElementById('flotante');
+                    div.style.display = '';
+                    return;
+                    }
 
-            }        
+            }      
+
+
+            function check(e,index) 
+            {   
+                alert(index)
+                    tecla = (document.all) ? e.keyCode : e.which;
+
+                    //Tecla de retroceso para borrar, siempre la permite
+                    if (tecla == 8) {
+                
+                        return true;
+                    }
+
+                    var numero =0;
+                    var letra =0;
+                    // Patron de entrada, en este caso solo acepta numeros y letras
+                    patron = /[0-9]/;
+                    tecla_final = String.fromCharCode(tecla);
+                    alert(tecla_final)
+                                
+                        
+                                    
+            }
+            
             function limpiar()
             {
                 $("#precio").val("");
                 $("#cantidad").val("");
-                $("#caducidad").val("");
-                $("#presentacion").val("");
             }
 
-            //eliminar filas en la tabla
+
             function eliminar(index)
             {
                 // total=total-subtotal[index];
+                // alert(subtotal[index])
                 // $("#total").html("Bs/." + total);
                 $("#fila" + index).remove();
                 $("#total").html("Bs. "+calcular_total().toFixed(2));
                 // evaluar();
-                // $('#btn_guardar').attr('disabled', true);
+                $('#btn_guardar').attr('disabled', true);
             }
 
             //calcular total de factura
@@ -389,9 +454,10 @@
                 
                 return total;
             }
+            function sumfila()
+            {
 
-
-
+            }
 
 
 
@@ -519,9 +585,7 @@
         </script> 
     @stop
 
-
-
-    @else
+@else
     @section('content')
         <h1>No tienes permiso</h1>
     @stop

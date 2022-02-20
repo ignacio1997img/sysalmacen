@@ -292,7 +292,11 @@
                                         <div class="card-footer">
                                             <button id="btn_guardar" disabled type="submit"  class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
                                         </div>   
-                                        {!! Form::close() !!}                     
+                                        {!! Form::close() !!}     
+                                        <button id="btnReproducir">Reproducir sonido</button>
+                                        <button id="btnPausar">Pausar sonido</button>
+                                        <button id="btnReiniciar">Ir a inicio de sonido</button>
+                                        <script src="script.js"></script>                
                                     </main>
                                 </div>
                             </div>
@@ -311,10 +315,29 @@
     @section('javascript')
     
         <script>
-            // $(document).ready(function() {
-            //     // alert(5);
-            // });
-            
+            const cargarSonido = function (fuente) {
+    const sonido = document.createElement("audio");
+    sonido.src = fuente;
+    sonido.setAttribute("preload", "auto");
+    sonido.setAttribute("controls", "none");
+    sonido.style.display = "none"; // <-- oculto
+    document.body.appendChild(sonido);
+    return sonido;
+};
+const $botonReproducir = document.querySelector("#btnReproducir"),
+    $botonPausar = document.querySelector("#btnPausar"),
+    $botonReiniciar = document.querySelector("#btnReiniciar");
+// El sonido que podemos reproducir o pausar
+const sonido = cargarSonido("sonido.flac");
+$botonReproducir.onclick = () => {
+    sonido.play();
+};
+$botonPausar.onclick = () => {
+    sonido.pause();
+};
+$botonReiniciar.onclick = () => {
+    sonido.currentTime = 0;
+};
 
 
             $(function()

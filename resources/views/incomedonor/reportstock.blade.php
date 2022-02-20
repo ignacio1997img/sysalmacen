@@ -77,7 +77,7 @@
                                 <tr>
                                     <td class="text-center" style="width: 40%">
                                         <span style="font-size: 15px;">
-                                            <strong>Acta de Ingreso de Donación <br>{{$do->nrosolicitud}}/{{$do->gestion}}]</strong>
+                                            <strong>Stock Disponible - {{$ingreso->nrosolicitud}} <br></strong>
                                         </span>
                                     </td>
                                 </tr>
@@ -86,42 +86,8 @@
                     </tr>
                 </tbody>
             </table>
-            <br>
-        
-                <table class="text-center" width="100%" style="font-size: 8pt">
-                    <tr>
-                        <th>LUGAR DONACION</th>
-                        <th>FECHA DONACION</th>
-                        <th>FECHA INGRESO</th>
-                    </tr>
-                    <tr>
-                        <td>{{$centro->nombre}}</td>
-                        <td>{{\Carbon\Carbon::parse($do->fechadonacion)->format('d/m/Y')}}</td>
-                        <td>{{\Carbon\Carbon::parse($do->fechaingreso)->format('d/m/Y')}}</td>
-                    </tr>
-                </table>
-                <BR></BR>
-                <table class="text-center" width="100%" style="font-size: 8pt">
-                    <tr>
-                        <th>TIPO</th>
-                        <th>NIT / CI</th>
-                        <th>NOMBRE</th>
-                        <th>TEL</th>
-                    </tr>
-                    <tr>
-                        <td>{{$donante->tipo}}</td>
-                        <td>{{$donante->nit}}</td>
-                        <td>{{$donante->name}}</td>
-                        <td>
-                            @if($donante->tel != null)
-                                {{$donante->tel}}
-                            @else
-                                SN
-                            @endif
-                        </td>
-                    </tr>
-                </table>
-                <br>
+<br>
+<br>
 
            
             <table class="table table-striped table-bordered">
@@ -132,21 +98,18 @@
                         <th>Articulo</th>
                         <th>Presentacion</th>
                         <th>Cantidad</th>
-                        <th>Precio Unit.</th>
                         <th>Fecha Caducidad.</th>
-                        <th>Total Parcial</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php $i=1; $total =0;?>
-                    @foreach($detalle as $data)       
+                    <?php $i=1; ?>
+                    @foreach($detalle as $data)
                     <tr>
                         <td>{{$i}}</td>
                         <td>{{$data->categoria}}</td>
-                        <td>{{$data->nombre}}</td>
+                        <td>{{$data->articulo}}</td>
                         <td>{{$data->presentacion}}</td>
-                        <td>{{$data->cantidad}}</td>
-                        <td>{{$data->precio}}</td>
+                        <td>{{$data->cantrestante}}</td>
                         <td>
                             @if($data->caducidad == null)
                                 SN
@@ -155,37 +118,14 @@
                             @endif
 
                         </td>
-                        <td>{{$data->precio * $data->cantidad}}</td>
-                    </tr>   
-                    <?php $i++; $total+= $data->cantidad * $data->precio;?>
+                    </tr>
+                    <?php $i++; ?>
 
-                    @endforeach
-                </tbody>    
+                    @endforeach              
+                </tbody>
             </table>
-            <div class="row" style="font-size: 9pt">
-                <p style="text-align: right">Total - Detalle de Compra: {{NumerosEnLetras::convertir($total,'Bolivianos',true)}}</p>
-            </div>
 
-            <div class="card-body">
-                <div class="row">
-                    <div class="text-center col-6">
-                        <br>
-                        <br>
-                        <br>
-                        ________________________________________
-                        <br>
-                        <b>Responsable Sedeges</b>
-                    </div>
-                    <div class="text-center col-6">
-                        <br>
-                        <br>
-                        <br>
-                        ________________________________________
-                        <br>
-                        <b>{{$centro->nombre}}</b>
-                    </div>
-                </div>
-            </div> 
+ 
 
 
 

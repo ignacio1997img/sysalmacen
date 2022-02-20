@@ -25,9 +25,30 @@ class IncomeController extends Controller
 {
     public function index()
     {
-        // return DB::connection('mysqlgobe')->table('unidadadminstrativa')
-        //                 ->select('*')
-        //                 ->get();
+        // $datetime1 	= new DateTime('2020-10-13 16:52:52');
+        // $datetime2 	= new DateTime('2020-10-11 16:52:52');
+        // $interval 	= $datetime1->diff($datetime2);
+
+        // return $interval->format('%a days');
+
+
+
+
+        // $ok = DB::table('donacion_ingresos as di')
+        //         ->join('donacion_ingreso_detalles as did', 'did.donacioningreso_id', 'di.id')
+        //         ->join('donacion_articulos as da', 'da.id', 'did.donacionarticulo_id')
+        //         ->select('di.nrosolicitud', 'da.nombre', 'did.caducidad')
+        //         ->where('did.deleted_at', null)
+        //         ->where('did.condicion', 1)
+        //         ->where('did.cantrestante','>', 0)
+        //         ->get();
+
+        
+
+
+
+
+
         $user =Auth::user();
     
         $activo = DB::table('users as u')

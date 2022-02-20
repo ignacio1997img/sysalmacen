@@ -11,7 +11,7 @@ class DonacionIngreso extends Model
 
     protected $fillable = [
     'centro_id', 'tipodonante', 'donante_id', 'registeruser_id', 'nrosolicitud', 'fechadonacion', 'fechaingreso', 'gestion',
-    'condicion', 'deleteuser_id'
+    'condicion', 'deleteuser_id', 'observacion'
     ];
 
 }

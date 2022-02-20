@@ -6,8 +6,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.js"></script>
 @extends('voyager::master')
 
-@section('page_title', 'Viendo Ingresos')
-@if(auth()->user()->hasPermission('add_incomedonor'))
+@section('page_title', 'Viendo Egreso')
 
 <style>
     input:focus {
@@ -15,13 +14,14 @@
 }
 </style>
 
+@if(auth()->user()->hasPermission('add_income'))
 
     @section('page_header')
         
         <div class="container-fluid">
             <div class="row">
                 <h1 class="page-title">
-                    <i class="voyager-basket"></i> Añadir Ingreso de Donaciones
+                    <i class="voyager-basket"></i> Añadir Egreso de Donaciones
                 </h1>
             </div>
         </div>
@@ -37,7 +37,7 @@
                             <div class="panel-body">                            
                                 <div class="table-responsive">
                                     <main class="main">        
-                                        {!! Form::open(['route' => 'incomedonor.store', 'class' => 'was-validated'])!!}
+                                        {!! Form::open(['route' => 'egressdonor.store', 'class' => 'was-validated'])!!}
                                         <div class="card-body">
                                             <h5>Centro de Establecimiento</h5>
                                             <div class="row">
@@ -68,19 +68,11 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="date"  class="form-control" name="fechadonacion" required>
+                                                            <input type="date"  class="form-control" name="fechaentrega" required>
                                                         </div>
                                                         <small>Fecha de Donación.</small>
                                                     </div>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="date"  class="form-control" name="fechaingreso" required>
-                                                        </div>
-                                                        <small>Fecha de Ingreso.</small>
-                                                    </div>
-                                                </div>                                                
+                                                </div>                                              
                                             </div>
                                             <div class="row">
                                                 <div class="col-sm-12">
@@ -94,118 +86,50 @@
                                                 </div>
                                             </div>
                                            
-                                            <hr>
-                                            <h5>Donador:</h5>
-                                                {{-- <div class="form-group">
-                                                    <div class="form-line">
-                                                        <input type="file" name="file" id="archivo" class="form-control form-control-sm" placeholder="Seleccione un Proveedor" accept="application/pdf">
-                                                    </div>
-                                                    <small>Archivos.</small>
-                                                </div> --}}
-    
-                                            <div class="row">
-                                                <div class="col-sm-2">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <select name="tipodonante" id="tipodonante"class="form-control" required>
-                                                                <option value="">Seleccione un tipo..</option>
-                                                                <option value="2">Persona</option>
-                                                                <option value="0">Empresa</option>
-                                                                <option value="1">ONG</option>
-                                                            </select>
-                                                        </div>
-                                                        <small>Tipos Donadores.</small>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <select id="donante" class="form-control select2" required>
-                                                                
-                                                                
-                                                            </select>
-                                                        </div>
-                                                        <small>Seleccionar un Donante.</small>
-                                                    </div>
-                                                </div>
-                                                <input type="hidden" id="donante_id" name="donante_id">
                                             
-                                                <div class="col-sm-3">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="text" id="nit" class="form-control form-control-sm" placeholder="Seleccione un donante" disabled readonly>
-                                                        </div>
-                                                        <small>CI./NIT.</small>
-                                                    </div>
-                                                </div>
-                                                <!-- === -->
-                                                <!-- <div class="col-sm-3">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="text" id="responsable" class="form-control form-control-sm" placeholder="Seleccione un Proveedor" disabled >
-                                                        </div>
-                                                        <small>Responsable.</small>
-                                                    </div>
-                                                </div> -->
-                                            </div>
-                                            
-                                            <hr>
                                             <h5>Categoria / Articulo:</h5>
                                             <div class="row">
-                                                <div class="col-sm-3">
+                                                <div class="col-sm-12">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <select id="categoria"class="form-control select2">
+                                                            <select id="ingreso"class="form-control select2">
                                                                 <option value="">Seleccione una categoria..</option>
-                                                                @foreach($categoria as $data)
-                                                                    <option value="{{$data->id}}">{{$data->nombre}}</option>
+                                                                @foreach($vigente as $data)
+                                                                    <option value="{{$data->id}}">{{$data->nrosolicitud}} - {{$data->nombre}}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
-                                                        <small>Categoria.</small>
+                                                        <small>Ingreso Disponible.</small>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="row">                                               
+                                                
                                                 <div class="col-sm-3">
                                                     <div class="form-group">
-                                                        <select id="articulo" class="form-control select2">
+                                                        <select id="articulos" class="form-control select2">
                                                             
                                                         </select>
                                                         <small>Articulo.</small>
                                                     </div>
                                                 </div>
-                                                
-                                                <!-- === -->
-                                                <div class="col-sm-1">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="text"disabled class="form-control form-control-sm" id="presentacion" autocomplete="off">
-                                                        </div>
-                                                        <small>Presentacion.</small>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-1">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="number" id="cantidad" class="form-control" title="Cantidad">
-                                                        </div>
-                                                        <small>Cantidad Artículo.</small>
-                                                    </div>
-                                                </div>
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number" id="precio" class="form-control" title="Precio Unitario Bs">
+                                                            <input type="number" id="stock" disabled class="form-control" title="Stock">
                                                         </div>
-                                                        <small>Precio Unit. Estimado *(Bs).</small>
+                                                        <small>Cantidad (STOCK).</small>
                                                     </div>
-                                                </div><div class="col-sm-2">
+                                                </div>     
+                                                <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="date" id="caducidad" class="form-control" title="Fecha de caducidad del producto o articulo">
+                                                            <input type="number" id="cantidad"  class="form-control" title="Cantidad">
                                                         </div>
-                                                        <small>Fecha Caducidad *(Opcional).</small>
+                                                        <small>Cantidad Artículo.</small>
                                                     </div>
-                                                </div>
+                                                </div>                                              
+                                                
                                             </div>
 
                                             <div class="form-group">
@@ -218,20 +142,15 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Opciones</th>
-                                                        <th>Categoria</th>
                                                         <th>Articulo</th>
-                                                        <th>Presentación</th>
                                                         <th>Cantidad</th>
-                                                        <th>Precio Estimado.</th>
-                                                        <th>Fecha Caducidad.</th>
-                                                        <th>SubTotal</th>
                     
                                                     </tr>
                                                 </thead>
-                                                <tfoot>
+                                                <!-- <tfoot>
                                                     <th colspan="7" style="text-align:right"><h5>TOTAL</h5></th>
                                                     <th><h4 id="total">Bs. 0.00</h4></th>
-                                                </tfoot>
+                                                </tfoot> -->
                                                 
                                             </table>
                                             
@@ -261,14 +180,15 @@
 
             $(function()
             {    
-                $('#categoria').on('change', onselect_article);
-                $('#articulo').on('change', onselect_presentacion);
+                $('#ingreso').on('change', onselect_article);
+                $('#articulos').on('change', llenar_input);
+                // $('#articulo').on('change', onselect_presentacion);
 
                 $('#centrotipo').on('change', onselect_centros);
                 
-                $('#tipodonante').on('change', onselect_donante);
+                // $('#tipodonante').on('change', onselect_donante);
 
-                $('#donante').on('change', onselect_donante_llenar);
+                // $('#donante').on('change', onselect_donante_llenar);
 
 
                 $('#bt_add').click(function() {
@@ -284,14 +204,15 @@
             function agregar()
             {
                 
-                categoria=$("#categoria option:selected").text();
-                nombre_articulo=$("#articulo option:selected").text();
-                articulo_id =$("#articulo").val();
-                presentacion=$("#presentacion").val();
-                precio=parseFloat($("#precio").val());
+                // categoria=$("#categoria option:selected").text();
+                nombre_articulo=$("#articulos option:selected").text();
+                articulo_id =$("#articulos").val();
+                // presentacion=$("#presentacion").val();
                 cantidad=parseFloat($("#cantidad").val());
-                caducidad=$("#caducidad").val();
+                // cantidad=$("#cantidad").val();
+                stock=$("#stock").val();
 
+                    // alert(cantidad);
 
                 var arrayarticle = [];
                 var i=0;
@@ -300,21 +221,16 @@
 
                 
 
-                if (categoria != 'Seleccione una categoria..' && nombre_articulo != 'Seleccione un Articulo..' && cantidad != "" && precio != "") {
-
+                if (nombre_articulo != 'Seleccione un Articulo..' && cantidad != "") {
+// alert(2)
                     
                         var fila='<tr class="selected" id="fila'+cont+'">'
                             fila+='<td><button type="button" class="btn btn-danger" onclick="eliminar('+cont+')";><i class="voyager-trash"></i></button></td>'
-                            fila+='<td>'+categoria+'</td>'
                             fila+='<td><input type="hidden" class="input_article" name="articulo_id[]"value="'+articulo_id+'">'+nombre_articulo+'</td>' 
-                            fila+='<td>'+presentacion+'</td>' 
                             fila+='<td><input type="hidden" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td>'                       
-                            fila+='<td><input type="hidden" name="precio[]" value="'+precio+'">'+precio+'</td>'                        
-                            fila+='<td><input type="hidden" name="caducidad[]" value="'+caducidad+'">'+caducidad+'</td>'                        
-                            fila+='<td>'+cantidad * precio+'</td>'
                         fila+='</tr>';
 
-
+                        if (cantidad >= 1 &&  cantidad <= stock  ) {
                             cont++;
                             
                             limpiar();
@@ -330,6 +246,7 @@
                             {
                                 if(arrayarticle[j] == arrayarticle[arrayarticle.length-1])
                                 {
+                                    cont--;
                                     eliminar(arrayarticle.length-1)
                                     swal({
                                         title: "Error",
@@ -343,6 +260,20 @@
                                     
                                 }
                             }
+                        }
+                        else
+                        {
+                            // alert(total);
+                            swal({
+                                title: "Error",
+                                text: "La cantidad solicitada supera a la cantidad disponible",
+                                type: "error",
+                                showCancelButton: false,
+                                });
+                            div = document.getElementById('flotante');
+                            div.style.display = '';
+                            return;
+                        }
                 }
                 else
                 {
@@ -407,61 +338,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            
-
-            function onselect_article()
-            {
-                var id =  $(this).val();    
-                if(id >=1)
-                {
-                    $.get('{{route('ajax_article_donor')}}/'+id, function(data){
-                        var html_article=    '<option value="">Seleccione un Articulo..</option>'
-                            for(var i=0; i<data.length; ++i)
-                            html_article += '<option value="'+data[i].id+'">'+data[i].nombre+'</option>'
-
-                        $('#articulo').html(html_article);           
-                    });
-                }
-                else
-                {
-                    var html_article=    ''       
-                    $('#articulo').html(html_article);
-                    // $("#presentacion").val('');
-                }
-            }
-
-            function onselect_presentacion()
-            {
-                var id =  $(this).val();    
-                if(id >=1)
-                {
-
-                    $.get('{{route('ajax_presentacion_donor')}}/'+id, function(data){
-                        $("#presentacion").val(data.presentacion);
-                    });
-                }
-                else
-                {
-                    $("#presentacion").val('');
-                    
-                }
-            }
-
             function onselect_centros()
             {
                 var id =  $(this).val();    
@@ -481,48 +357,51 @@
                     var html_centro=    ''       
                     $('#centro_id').html(html_centro);
                 }
-            }
+            }            
 
-            function onselect_donante()
+            function onselect_article()
             {
                 var id =  $(this).val();    
-                if(id >=0 && id != "")
-                {
-                    
-                    $.get('{{route('ajax_income_donante')}}/'+id, function(data){
-                        var html_donante=    '<option value="">Seleccione un donante..</option>'
+                if(id >=1)
+                {                    
+                    $.get('{{route('ajax_disponible_article_donor')}}/'+id, function(data){
+                        var html_article=    '<option value="">Seleccione un Articulo..</option>'
                             for(var i=0; i<data.length; ++i)
-                            html_donante += '<option value="'+data[i].id+'_'+data[i].ci+'">'+data[i].nombre+'</option>'
+                            html_article += '<option value="'+data[i].id+'">'+data[i].nombre+'</option>'
 
-                        $('#donante').html(html_donante);           
+                        $('#articulos').html(html_article);           
                     });
                 }
                 else
                 {
-                    var html_donante=    ''       
-                    $('#donante').html(html_donante);
-                    $("#donador_id").val("");
-                    $("#nit").val("");
+                    var html_article=    ''       
+                    $('#articulos').html(html_article);
+                    // $("#presentacion").val('');
                 }
             }
 
-            function onselect_donante_llenar()
+            function llenar_input()
             {
-                donador = document.getElementById('donante').value.split('_');
- 
-                $("#donante_id").val(donador[0]);
-                $("#nit").val(donador[1]);
+                var id =  $(this).val();    
+                
+                if(id >=1)
+                {
+                    $.get('{{route('ajax_egressdoner_llenarimput')}}/'+id, function(data){
+                        // $("#presentacion").val(data[0].presentacion);
+                        // $("#precio").val(data[0].precio);
+                        $("#stock").val(data[0].cantrestante);
+                        
+                    });
+                }
+                else
+                {
+                    $("#stock").val('');            
+                }
+                
             }
 
 
 
         </script> 
-    @stop
-
-
-
-    @else
-    @section('content')
-        <h1>No tienes permiso</h1>
     @stop
 @endif

@@ -1,3 +1,8 @@
+<style>
+
+}
+</style>
+
 <nav class="navbar navbar-default navbar-fixed-top navbar-top">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -33,8 +38,23 @@
             @show
         </div>
         <ul class="nav navbar-nav @if (__('voyager::generic.is_rtl') == 'true') navbar-left @else navbar-right @endif">
-            <li id="badge-notification">
-                <a href=""> <span class="voyager-bell text-danger" style="font-size: 25px"></span> <span class="badge" style="margin-left: -10px"></span> </a> 
+            <!-- <li id="badge-notification">
+                <a href=""> <span class="voyager-bell text-danger" style="font-size: 25px"></span><small><b>1</b></small><span class="badge" style="margin-left: -10px"></span> </a> 
+            </li> -->
+            <li class="nav-item dropdown" >
+                <a class="nav-link" data-toggle="dropdown" href="#" id="not" aria-expanded="false">
+                <!-- <span class="voyager-power spinner-grow-sm" id="luz" style="background: #16ff16"></span> -->
+                    <!-- <i class="voyager-bell" style="width: 20px; font-size: 1.5em;"></i> -->
+                    <!-- <span class="badge badge-warning navbar-badge" id="bandeja"></span> -->
+                </a>
+                <div class="dropdown-menu">
+                    <span class="dropdown-item dropdown-header bg-danger text-danger" id="listadoc"></span>
+                    <div id="notificaciones">
+
+                    </div>
+                    <!-- <div class="dropdown-divider"></div> -->
+                    <a href="{{route('incomedonor.index')}}">Ir a Ingresos de Donaciones</a>
+                </div>
             </li>
             <li class="dropdown profile">
                 <a href="#" class="dropdown-toggle text-right" data-toggle="dropdown" role="button"
@@ -79,3 +99,7 @@
         </ul>
     </div>
 </nav>
+
+<script>
+
+</script>

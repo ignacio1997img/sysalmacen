@@ -1,8 +1,8 @@
 @extends('voyager::master')
 
 @section('page_title', 'Viendo Ingresos Donacion')
+@if(auth()->user()->hasPermission('browse_egressdonor'))
 
-@if(auth()->user()->hasPermission('browse_incomedonoir'))
     @section('page_header')
         <div class="container-fluid">
             <div class="row">
@@ -10,10 +10,10 @@
                     <h1 class="page-title">
                         <i class="voyager-basket"></i> Egreso de Donaciones
                     </h1>
-                    
-                        <a href="{{ route('egressdoner.create') }}" class="btn btn-success btn-add-new">
+                    @if(auth()->user()->hasPermission('add_egressdonor'))
+                        <a href="{{ route('egressdonor.create') }}" class="btn btn-success btn-add-new">
                             <i class="voyager-plus"></i> <span>Crear</span>
-                        </a>@if(auth()->user()->hasPermission('add_income'))
+                        </a>
                     @endif
                 </div>
                 <div class="col-md-4">
@@ -36,13 +36,44 @@
                                             <tr>
                                                 <th>Nro&deg;</th>
                                                 <th>Nro&deg; Ingreso</th>
-                                                <th>Nombre</th>
+                                                <th>Centro</th>
+                                                <th>Observacion</th>
                                                 <th>Fecha Donacion</th>
-                                                <th>Fecha Ingreso</th>
                                                 <th class="text-center">Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @foreach ($egreso as $data)
+                                                <tr>
+                                                    <td>{{$data->id}}</td>
+                                                    <td>{{$data->nrosolicitud}}</td>
+                                                    <td style="width: 200pt">{{$data->nombre}}</td>
+                                                    <td style="width: 200pt">{{$data->observacion}}</td>
+                                                    <td>{{\Carbon\Carbon::parse($data->fechaentrega)->format('d/m/Y')}}</td>
+                                                    <td>
+                                                        <div class="no-sort no-click bread-actions text-right">
+                                                            @if(auth()->user()->hasPermission('read_egressdonor'))
+
+                                                                <a href="{{route('egressdonor.show',$data->id)}}" title="Ver" target="_blank" class="btn btn-sm btn-info view">
+                                                                    <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
+                                                                </a>
+                                                            @endif
+                                                            <!-- @if($data->condicion == 1)
+                                                                @if(auth()->user()->hasPermission('edit_egressdonor'))
+                                                                    <a href="{{route('income.edit',$data->id)}}" title="Editar" class="btn btn-sm btn-warning">
+                                                                        <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Editar</span>
+                                                                    </a>     
+                                                                @endif
+                                                                @if(auth()->user()->hasPermission('delete_egressdonor'))
+                                                                    <button title="Anular" class="btn btn-sm btn-danger delete" data-toggle="modal" data-id="{{$data->id}}" data-target="#myModalEliminar">
+                                                                        <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Anular</span>
+                                                                    </button>      
+                                                                @endif
+                                                            @endif -->
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach  
                                                                                                                        
                                         </tbody>
                                     </table>
@@ -137,8 +168,11 @@
             </script>
     @stop
 
-@else
-    @section('content')
+
+    @else
+@section('content')
         <h1>No tienes permiso</h1>
+        <br>
+        <h1>Contactese con el Administrador del sistema</h1>
     @stop
 @endif

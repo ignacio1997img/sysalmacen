@@ -9,6 +9,7 @@ use App\Http\Controllers\BandejaController;
 
 use App\Http\Controllers\IncomeDonorController;
 use App\Http\Controllers\EgressDonorController;
+use App\Http\Controllers\NotificationController;
 
 
 
@@ -95,12 +96,16 @@ Route::group(['prefix' => 'admin'], function () {
 
 //INCOME
     Route::resource('incomedonor', IncomeDonorController::class);
-    Route::delete('incomedonor/delete', [IncomeDonorController::class, 'destroy'])->name('incomedonor_delete');
+    Route::delete('incomedonor/browse/delete', [IncomeDonorController::class, 'destroy'])->name('incomedonor_delete');
+    Route::get('incomedonor/browse/view/stock/{id?}', [IncomeDonorController::class, 'show_stock'])->name('incomedonor_view_stock');
+    Route::post('incomedonor/update', [IncomeDonorController::class, 'update'])->name('incomedonor_update');
+
+
     // Route::get('incomedonor/browse/view/{id?}', [IncomeController::class, 'view_ingreso'])->name('incomedonor_view');
 
 
 //EGRESS
-    Route::resource('egressdoner', EgressDonerController::class);  
+    Route::resource('egressdonor', EgressDonorController::class);  
 
 
 
@@ -152,6 +157,23 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('incomedonor/selectpresentacion/{id?}', [IncomeDonorController::class, 'ajax_presentacion'])->name('ajax_presentacion_donor');
     Route::get('incomedonor/selectcentro/{id?}', [IncomeDonorController::class, 'ajax_centro_acogida'])->name('ajax_centro_acogida');
     Route::get('incomedonor/selectdonante/{id?}', [IncomeDonorController::class, 'ajax_income_donante'])->name('ajax_income_donante');
+
+ //egress
+    Route::get('incomedonor/selectarticle/egress/{id?}', [EgressDonorController::class, 'ajax_article'])->name('ajax_disponible_article_donor');
+    Route::get('incomedonor/llenar_input/egress/{id?}', [EgressDonorController::class, 'ajax_autollenar_articulo'])->name('ajax_egressdoner_llenarimput');
+
+
+
+
+
+
+
+//NOTIFICACION
+    Route::get('notification/donacion/caducidad', [NotificationController::class, 'ajax_notificacion_donacion'])->name('donacion_notificacion');
+
+
+   
+
 
 
 });

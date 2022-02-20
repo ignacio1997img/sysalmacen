@@ -51,9 +51,17 @@ class PermissionsTableSeeder extends Seeder
 
 
         //---------- DONACIONES 
+        Permission::generateFor('centro_categorias');
+        Permission::generateFor('centros');
+
         Permission::generateFor('donacion_categorias');
         Permission::generateFor('donacion_articulos');
-        Permission::generateFor('centro_categorias');
+
+        Permission::generateFor('donador_personas');
+        Permission::generateFor('donador_empresas');
+
+        Permission::generateFor('incomedonor');
+        Permission::generateFor('egressdonor');
 
 
         // Permission::generateFor('solicitud_compras');
