@@ -10,6 +10,9 @@ use App\Http\Controllers\BandejaController;
 use App\Http\Controllers\IncomeDonorController;
 use App\Http\Controllers\EgressDonorController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\DonacionSolicitudController;
+
+
 
 
 
@@ -106,6 +109,10 @@ Route::group(['prefix' => 'admin'], function () {
 
 //EGRESS
     Route::resource('egressdonor', EgressDonorController::class);  
+
+
+// VISTA PARA SOLICITUDES DE LAS DESCONCENTRADA
+    Route::resource('solicituddonor', DonacionSolicitudController::class);   
 
 
 

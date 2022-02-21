@@ -21,7 +21,7 @@ class CreateDonacionEgresosTable extends Migration
             $table->foreignId('registeruser_id')->constrained('users');
 
             $table->string('nrosolicitud');
-            $table->date('fachaentrega');
+            $table->date('fechaentrega');
 
             // $table->decimal('cantentregada', 11, 2);
 

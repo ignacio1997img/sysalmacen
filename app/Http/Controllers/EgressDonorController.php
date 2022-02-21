@@ -29,7 +29,7 @@ class EgressDonorController extends Controller
                 ->where('d.deleted_at', null)
                 ->get();
                 
-// return $egreso;
+return $egreso;
         return view('egressdonor.browse', compact('egreso'));
     }
 

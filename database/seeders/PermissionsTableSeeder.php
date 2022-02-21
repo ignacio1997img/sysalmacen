@@ -62,6 +62,8 @@ class PermissionsTableSeeder extends Seeder
 
         Permission::generateFor('incomedonor');
         Permission::generateFor('egressdonor');
+        
+        Permission::generateFor('solicituddonor');
 
 
         // Permission::generateFor('solicitud_compras');

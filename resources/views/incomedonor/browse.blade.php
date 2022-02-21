@@ -2,7 +2,7 @@
 
 @section('page_title', 'Viendo Ingresos Donacion')
 
-@if(auth()->user()->hasPermission('browse_incomedonor'))
+<!-- @if(auth()->user()->hasPermission('browse_incomedonor')) -->
     @section('page_header')
         <div class="container-fluid">
             <div class="row">
@@ -174,10 +174,10 @@
     @stop
 
 
-@else
+<!-- @else
     @section('content')
         <h1>No tienes permiso</h1>
         <br>
         <h1>Contactese con el Administrador del sistema</h1>
     @stop
-@endif
+@endif -->

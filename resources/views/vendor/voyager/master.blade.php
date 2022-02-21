@@ -165,6 +165,12 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
                             const myTimeout1 = setTimeout(si, 400);
                             
                         }
+                        else
+                        {
+                            var luz = '<i class="voyager-bell text-primary" style="width: 20px; font-size: 1.5em;"></i>'
+                                luz+= '<span class="badge badge-warning navbar-badge" id="bandeja"></span>'
+                            $('#not').html(luz)
+                        }
                         
 
                         $('#listadoc').text(data.length + ' ' + 'Ariculo por Caducar, Revise sus ingresos registrado')

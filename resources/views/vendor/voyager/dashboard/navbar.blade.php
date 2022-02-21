@@ -41,6 +41,8 @@
             <!-- <li id="badge-notification">
                 <a href=""> <span class="voyager-bell text-danger" style="font-size: 25px"></span><small><b>1</b></small><span class="badge" style="margin-left: -10px"></span> </a> 
             </li> -->
+            @if(auth()->user()->hasPermission('browse_solicituddonor') || auth()->user()->hasPermission('browse_incomedonor') || auth()->user()->hasPermission('browse_egressdonor'))
+
             <li class="nav-item dropdown" >
                 <a class="nav-link" data-toggle="dropdown" href="#" id="not" aria-expanded="false">
                 <!-- <span class="voyager-power spinner-grow-sm" id="luz" style="background: #16ff16"></span> -->
@@ -56,6 +58,9 @@
                     <a href="{{route('incomedonor.index')}}">Ir a Ingresos de Donaciones</a>
                 </div>
             </li>
+            @endif
+
+
             <li class="dropdown profile">
                 <a href="#" class="dropdown-toggle text-right" data-toggle="dropdown" role="button"
                    aria-expanded="false"><img src="{{ $user_avatar }}" class="profile-img"> <span

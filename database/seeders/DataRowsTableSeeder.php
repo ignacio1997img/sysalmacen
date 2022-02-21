@@ -1281,7 +1281,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 1,
                 'delete' => 1,
                 'details' => '{}',
-                'order' => 2,
+                'order' => 3,
             ),
             79 => 
             array (
@@ -1297,7 +1297,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 1,
                 'delete' => 1,
                 'details' => '{}',
-                'order' => 3,
+                'order' => 4,
             ),
             80 => 
             array (
@@ -1313,7 +1313,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 1,
                 'delete' => 1,
                 'details' => '{}',
-                'order' => 4,
+                'order' => 5,
             ),
             81 => 
             array (
@@ -1329,7 +1329,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 1,
                 'delete' => 1,
                 'details' => '{"on":"Activo","off":"Inactivo","checked":true}',
-                'order' => 5,
+                'order' => 6,
             ),
             82 => 
             array (
@@ -1345,7 +1345,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 0,
                 'delete' => 0,
                 'details' => '{}',
-                'order' => 6,
+                'order' => 7,
             ),
             83 => 
             array (
@@ -1361,7 +1361,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 0,
                 'delete' => 0,
                 'details' => '{}',
-                'order' => 7,
+                'order' => 8,
             ),
             84 => 
             array (
@@ -1377,7 +1377,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 0,
                 'delete' => 0,
                 'details' => '{}',
-                'order' => 8,
+                'order' => 9,
             ),
             85 => 
             array (
@@ -1393,7 +1393,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 1,
                 'delete' => 1,
                 'details' => '{"model":"App\\\\Models\\\\DonacionCategoria","table":"donacion_categorias","type":"belongsTo","column":"categoria_id","key":"id","label":"nombre","pivot_table":"archivos","pivot":"0","taggable":"0"}',
-                'order' => 10,
+                'order' => 2,
             ),
             86 => 
             array (
@@ -1986,6 +1986,22 @@ class DataRowsTableSeeder extends Seeder
                 'delete' => 0,
                 'details' => '{}',
                 'order' => 12,
+            ),
+            123 => 
+            array (
+                'id' => 211,
+                'data_type_id' => 28,
+                'field' => 'sigla',
+                'type' => 'text',
+                'display_name' => 'Sigla',
+                'required' => 1,
+                'browse' => 1,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => '{}',
+                'order' => 4,
             ),
         ));
         

@@ -329,7 +329,7 @@ class IncomeDonorController extends Controller
 
     protected function ajax_article($id)
     {
-        return DonacionArticulo::where('categoria_id', $id)->get();
+        return DonacionArticulo::where('categoria_id', $id)->where('condicion', 1)->get();
     }
 
     protected function ajax_presentacion($id)
