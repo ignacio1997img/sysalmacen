@@ -13,8 +13,11 @@
                     </h1>
                     @if(auth()->user()->hasPermission('add_solicitud'))
                         @if($cant == 0)
+                            <a href="{{ route('incomesolicitud.create') }}" class="btn btn-success btn-add-new">
+                                <i class="voyager-plus"></i> <span>Ingreso</span>
+                            </a>
                             <a href="{{ route('solicitud.create') }}" class="btn btn-success btn-add-new">
-                                <i class="voyager-plus"></i> <span>Crear</span>
+                                <i class="voyager-plus"></i> <span>Egreso</span>
                             </a>
                         @endif
                     @endif
@@ -34,67 +37,142 @@
                         <div class="panel panel-bordered">
                             <div class="panel-body">
                                 <div class="table-responsive">
-                                    <table id="dataTable" class="dataTable table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Nro&deg;</th>
-                                                <th>Nro Proceso </th>
-                                                <th>Fecha Solicitud</th>
-                                                <th>Estado</th>
-                                                <th class="no-sort no-click bread-actions text-right">Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($solicitud as $data)  
-                                                <tr>
-                                                    <td>{{$data->id}}</td>
-                                                    <td>{{$data->nroproceso}}</td>
-                                                    <td>{{$data->fechasolicitud}}</td>
-                                                    <td>
-        
-                                                        @if ($data->estado == "Creado")
-                                                            <label class="label label-warning">{{$data->estado}}</label>
-                                                        @endif
+                                    <ul class="nav nav-tabs">
+                                        <li class="active"><a data-toggle="tab" href="#home">Ingreso</a></li>
+                                        <li><a data-toggle="tab" href="#egreso">Egreso</a></li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div id="home" class="tab-pane fade in active">
+                                            <div class="table-responsive text-center">
+                                                <table id="dataTable" class="dataTable table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Nrossss&deg;</th>
+                                                            <th>Nro Proceso </th>
+                                                            <th>Fecha Solicitud</th>
+                                                            <th>Estado</th>
+                                                            <th class="no-sort no-click bread-actions text-right">Acciones</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($solicitud as $data)  
+                                                            <tr>
+                                                                <td>{{$data->id}}</td>
+                                                                <td>{{$data->nroproceso}}</td>
+                                                                <td>{{$data->fechasolicitud}}</td>
+                                                                <td>
+                    
+                                                                    @if ($data->estado == "Creado")
+                                                                        <label class="label label-warning">{{$data->estado}}</label>
+                                                                    @endif
 
-                                                        @if ($data->estado == "Derivado")
-                                                            <label class="label label-primary">{{$data->estado}}</label>
-                                                        @endif
-                                                        @if ($data->estado == "Rechazado")
-                                                            <label class="label label-danger">{{$data->estado}}</label>
-                                                        @endif
-                                                        @if ($data->estado == "Aprobado")
-                                                            <label class="label label-info">{{$data->estado}}</label>
-                                                        @endif
-                                                        @if ($data->estado == "Entregado")
-                                                            <label class="label label-success">Solicitud Recibida</label>
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        <div class="no-sort no-click bread-actions text-right">
-                                                            @if(auth()->user()->hasPermission('read_solicitud'))  
-                                                                <a href="{{route('solicitudes_view', $data->id)}}" title="Ver" class="btn btn-sm btn-info view">
-                                                                    <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
-                                                                </a>
-                                                            @endif 
-                                                            @if ($data->estado == "Creado")
-                                                                @if(auth()->user()->hasPermission('add_solicitud'))                                                              
-                                                                    <a type="button" data-toggle="modal" data-target="#derivar_modal" data-id="{{$data->id}}" class="btn-sm btn-success"><i class="voyager-move"></i> <span class="hidden-xs hidden-sm">Derivar</span></a>
-                                                                @endif
-                                                                @if(auth()->user()->hasPermission('edit_solicitud'))                                                                                                                      
-                                                                    <a type="button" data-toggle="modal" data-target="#delete_editar" class="btn-sm btn-success"><i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Editar</span></a>
-                                                                @endif 
-                                                            @endif  
-                                                            @if(auth()->user()->hasPermission('delete_solicitud'))  
-                                                                @if ($data->estado != "Entregado" and $data->estado != "Rechazado")
-                                                                    <a type="button" data-toggle="modal" data-target="#delete_modal" data-id="{{$data->id}}" data-numero="{{$data->nroproceso}}" class="btn-sm btn-danger"><i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Borrar</span></a>
-                                                                @endif 
-                                                            @endif 
-                                                        </div>      
-                                                    </td>
-                                                </tr>                                    
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                                                    @if ($data->estado == "Derivado")
+                                                                        <label class="label label-primary">{{$data->estado}}</label>
+                                                                    @endif
+                                                                    @if ($data->estado == "Rechazado")
+                                                                        <label class="label label-danger">{{$data->estado}}</label>
+                                                                    @endif
+                                                                    @if ($data->estado == "Aprobado")
+                                                                        <label class="label label-info">{{$data->estado}}</label>
+                                                                    @endif
+                                                                    @if ($data->estado == "Entregado")
+                                                                        <label class="label label-success">Solicitud Recibida</label>
+                                                                    @endif
+                                                                </td>
+                                                                <td>
+                                                                    <div class="no-sort no-click bread-actions text-right">
+                                                                        @if(auth()->user()->hasPermission('read_solicitud'))  
+                                                                            <a href="{{route('solicitudes_view', $data->id)}}" title="Ver" class="btn btn-sm btn-info view">
+                                                                                <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
+                                                                            </a>
+                                                                        @endif 
+                                                                        @if ($data->estado == "Creado")
+                                                                            @if(auth()->user()->hasPermission('add_solicitud'))                                                              
+                                                                                <a type="button" data-toggle="modal" data-target="#derivar_modal" data-id="{{$data->id}}" class="btn-sm btn-success"><i class="voyager-move"></i> <span class="hidden-xs hidden-sm">Derivar</span></a>
+                                                                            @endif
+                                                                            @if(auth()->user()->hasPermission('edit_solicitud'))                                                                                                                      
+                                                                                <a type="button" data-toggle="modal" data-target="#delete_editar" class="btn-sm btn-success"><i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Editar</span></a>
+                                                                            @endif 
+                                                                        @endif  
+                                                                        @if(auth()->user()->hasPermission('delete_solicitud'))  
+                                                                            @if ($data->estado != "Entregado" and $data->estado != "Rechazado")
+                                                                                <a type="button" data-toggle="modal" data-target="#delete_modal" data-id="{{$data->id}}" data-numero="{{$data->nroproceso}}" class="btn-sm btn-danger"><i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Borrar</span></a>
+                                                                            @endif 
+                                                                        @endif 
+                                                                    </div>      
+                                                                </td>
+                                                            </tr>                                    
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div id="egreso" class="tab-pane fade">
+                                            <div class="table-responsive text-center">
+                                                <table id="dataTable" class="dataTable table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Nro&deg;</th>
+                                                            <th>Nro Proceso </th>
+                                                            <th>Fecha Solicitud</th>
+                                                            <th>Estado</th>
+                                                            <th class="no-sort no-click bread-actions text-right">Acciones</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($solicitud as $data)  
+                                                            <tr>
+                                                                <td>{{$data->id}}</td>
+                                                                <td>{{$data->nroproceso}}</td>
+                                                                <td>{{$data->fechasolicitud}}</td>
+                                                                <td>
+                    
+                                                                    @if ($data->estado == "Creado")
+                                                                        <label class="label label-warning">{{$data->estado}}</label>
+                                                                    @endif
+
+                                                                    @if ($data->estado == "Derivado")
+                                                                        <label class="label label-primary">{{$data->estado}}</label>
+                                                                    @endif
+                                                                    @if ($data->estado == "Rechazado")
+                                                                        <label class="label label-danger">{{$data->estado}}</label>
+                                                                    @endif
+                                                                    @if ($data->estado == "Aprobado")
+                                                                        <label class="label label-info">{{$data->estado}}</label>
+                                                                    @endif
+                                                                    @if ($data->estado == "Entregado")
+                                                                        <label class="label label-success">Solicitud Recibida</label>
+                                                                    @endif
+                                                                </td>
+                                                                <td>
+                                                                    <div class="no-sort no-click bread-actions text-right">
+                                                                        @if(auth()->user()->hasPermission('read_solicitud'))  
+                                                                            <a href="{{route('solicitudes_view', $data->id)}}" title="Ver" class="btn btn-sm btn-info view">
+                                                                                <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
+                                                                            </a>
+                                                                        @endif 
+                                                                        @if ($data->estado == "Creado")
+                                                                            @if(auth()->user()->hasPermission('add_solicitud'))                                                              
+                                                                                <a type="button" data-toggle="modal" data-target="#derivar_modal" data-id="{{$data->id}}" class="btn-sm btn-success"><i class="voyager-move"></i> <span class="hidden-xs hidden-sm">Derivar</span></a>
+                                                                            @endif
+                                                                            @if(auth()->user()->hasPermission('edit_solicitud'))                                                                                                                      
+                                                                                <a type="button" data-toggle="modal" data-target="#delete_editar" class="btn-sm btn-success"><i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Editar</span></a>
+                                                                            @endif 
+                                                                        @endif  
+                                                                        @if(auth()->user()->hasPermission('delete_solicitud'))  
+                                                                            @if ($data->estado != "Entregado" and $data->estado != "Rechazado")
+                                                                                <a type="button" data-toggle="modal" data-target="#delete_modal" data-id="{{$data->id}}" data-numero="{{$data->nroproceso}}" class="btn-sm btn-danger"><i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Borrar</span></a>
+                                                                            @endif 
+                                                                        @endif 
+                                                                    </div>      
+                                                                </td>
+                                                            </tr>                                    
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

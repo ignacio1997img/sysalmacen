@@ -5,6 +5,7 @@ use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\EgressController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SolicitudController;
+use App\Http\Controllers\IncomeSolicitudController;
 use App\Http\Controllers\BandejaController;
 
 use App\Http\Controllers\IncomeDonorController;
@@ -86,6 +87,9 @@ Route::group(['prefix' => 'admin'], function () {
 
 
   //........................  Solicitud para hacer Egresos a jefe de contratacion
+
+    Route::resource('incomesolicitud', IncomeSolicitudController::class);
+
     Route::resource('solicitud', SolicitudController::class);
     Route::delete('solicitudes/delete', [SolicitudController::class, 'destroy'])->name('solicitudes_delete');
     Route::post('solicitudes/derivarsolicitud', [SolicitudController::class, 'derivar_proceso'])->name('derivar_proceso_solicitud');
