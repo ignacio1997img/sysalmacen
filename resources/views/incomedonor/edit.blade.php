@@ -186,7 +186,7 @@
                                                 <div class="col-sm-1">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number" id="cantidad" class="form-control" title="Cantidad">
+                                                            <input type="number" id="cantidad" min="1" class="form-control" title="Cantidad">
                                                         </div>
                                                         <small>Cantidad Artículo.</small>
                                                     </div>
@@ -194,7 +194,7 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number" id="precio" class="form-control" title="Precio Unitario Bs">
+                                                            <input type="number" id="precio" min="0" class="form-control" title="Precio Unitario Bs">
                                                         </div>
                                                         <small>Precio Unit. Estimado *(Bs).</small>
                                                     </div>
@@ -327,6 +327,9 @@
                 cantidad=parseFloat($("#cantidad").val());
                 caducidad=$("#caducidad").val();
 
+                auxprecio=$("#precio").val();
+                auxcantidad=$("#cantidad").val();
+
 
                 var arrayarticle = [];
                 var i=0;
@@ -334,7 +337,7 @@
                 ok=false;
 
                 
-                if (categoria != 'Seleccione una categoria..' && nombre_articulo != 'Seleccione un Articulo..' && cantidad != "" && precio != "")
+                if (categoria != 'Seleccione una categoria..' && nombre_articulo != 'Seleccione un Articulo..' && auxprecio != '' && auxcantidad != '' && cantidad > 0 && precio >= 0)
                 {                    
                     var fila='<tr class="selected" id="fila'+articulo_id+'">'
                         fila+='<td><button type="button" class="btn btn-danger" onclick="eliminar('+articulo_id+')";><i class="voyager-trash"></i></button></td>'
@@ -359,7 +362,7 @@
 
                         for(j=0;j<arrayarticle.length; j++)
                         {
-                            alert(arrayarticle[j])
+                            // alert(arrayarticle[j])
                             if(arrayarticle[j] == articulo_id)
                             {
                                 // cont--;
@@ -439,7 +442,7 @@
                 $("#fila" + index).remove();
                 $("#total").html("Bs. "+calcular_total().toFixed(2));
                 // evaluar();
-                $('#btn_guardar').attr('disabled', true);
+                // $('#btn_guardar').attr('disabled', true);
             }
 
             //calcular total de factura

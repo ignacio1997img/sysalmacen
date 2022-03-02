@@ -14,4 +14,6 @@ class DonacionIngreso extends Model
     'condicion', 'deleteuser_id', 'observacion'
     ];
 
+
+
 }

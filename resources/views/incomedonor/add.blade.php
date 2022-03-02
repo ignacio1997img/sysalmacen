@@ -186,7 +186,7 @@
                                                 <div class="col-sm-1">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number" id="cantidad" class="form-control" title="Cantidad">
+                                                            <input type="number" id="cantidad" min="1" pattern="^[0-9]+" class="form-control" title="Cantidad">
                                                         </div>
                                                         <small>Cantidad Artículo.</small>
                                                     </div>
@@ -194,7 +194,8 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number" id="precio" class="form-control" title="Precio Unitario Bs">
+                                                            <!-- <input type="number" id="precio" min="0" class="form-control positive" title="Precio Unitario Bs"> -->
+                                                            <input type="number" id="precio" min="0" class="form-control" title="Precio Unitario Bs">
                                                         </div>
                                                         <small>Precio Unit. Estimado *(Bs).</small>
                                                     </div>
@@ -277,7 +278,7 @@
 
             })
 
-            var cont=0;
+            // var cont=0;
             var total=0;
             subtotal=[];
 
@@ -292,57 +293,64 @@
                 cantidad=parseFloat($("#cantidad").val());
                 caducidad=$("#caducidad").val();
 
+                auxprecio=$("#precio").val();
+                auxcantidad=$("#cantidad").val();
+
 
                 var arrayarticle = [];
                 var i=0;
+                var j=0;
                 ok=false;
 
 
                 
 
-                if (categoria != 'Seleccione una categoria..' && nombre_articulo != 'Seleccione un Articulo..' && cantidad != "" && precio != "") {
+                if (categoria != 'Seleccione una categoria..' && nombre_articulo != 'Seleccione un Articulo..' && auxprecio != '' && auxcantidad != '' && cantidad > 0 && precio >= 0) {
 
-                    
-                        var fila='<tr class="selected" id="fila'+cont+'">'
-                            fila+='<td><button type="button" class="btn btn-danger" onclick="eliminar('+cont+')";><i class="voyager-trash"></i></button></td>'
+               
+                        var fila='<tr class="selected" id="fila'+articulo_id+'">'
+                            fila+='<td><button type="button" class="btn btn-danger" onclick="eliminar('+articulo_id+')";><i class="voyager-trash"></i></button></td>'
                             fila+='<td>'+categoria+'</td>'
                             fila+='<td><input type="hidden" class="input_article" name="articulo_id[]"value="'+articulo_id+'">'+nombre_articulo+'</td>' 
                             fila+='<td>'+presentacion+'</td>' 
                             fila+='<td><input type="hidden" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td>'                       
                             fila+='<td><input type="hidden" name="precio[]" value="'+precio+'">'+precio+'</td>'                        
                             fila+='<td><input type="hidden" name="caducidad[]" value="'+caducidad+'">'+caducidad+'</td>'                        
-                            fila+='<td>'+cantidad * precio+'</td>'
+                            fila+='<td><input type="hidden" class="input_subtotal" value="'+cantidad * precio+'">'+cantidad * precio+'</td>'
                         fila+='</tr>';
 
-
-                            cont++;
-                            
+                        $(".input_article").each(function(){
+                            arrayarticle[i]= parseFloat($(this).val());
+                            i++;
+                        }); 
+                        var ok=true;
+                        for(j=0;j<arrayarticle.length; j++)
+                        {
+                            if(arrayarticle[j] == articulo_id)
+                            {
+                                // cont--;
+                                limpiar();
+                                ok = false;
+                                // eliminar(arrayarticle.length-1)
+                                swal({
+                                    title: "Error",
+                                    text: "El Articulo ya Existe en la Lista",
+                                    type: "error",
+                                    showCancelButton: false,
+                                    });
+                                div = document.getElementById('flotante');
+                                div.style.display = '';
+                                return;                                
+                            }
+                        }
+                        if(ok==true)
+                        {
+                            // cont++;
+                        
                             limpiar();
                             $('#detalles').append(fila);
                             $("#total").html("Bs. "+calcular_total().toFixed(2));
-                        
-                            $(".input_article").each(function(){
-                                arrayarticle[i]= parseFloat($(this).val());
-                                i++;
-                            }); 
-
-                            for(j=0;j<arrayarticle.length-1; j++)
-                            {
-                                if(arrayarticle[j] == arrayarticle[arrayarticle.length-1])
-                                {
-                                    eliminar(arrayarticle.length-1)
-                                    swal({
-                                        title: "Error",
-                                        text: "El Articulo ya Existe en la Lista",
-                                        type: "error",
-                                        showCancelButton: false,
-                                        });
-                                    div = document.getElementById('flotante');
-                                    div.style.display = '';
-                                    return;
-                                    
-                                }
-                            }
+                        }
                 }
                 else
                 {
@@ -363,7 +371,7 @@
                 $("#precio").val("");
                 $("#cantidad").val("");
                 $("#caducidad").val("");
-                $("#presentacion").val("");
+                // $("#presentacion").val("");
             }
 
             //eliminar filas en la tabla
@@ -390,7 +398,29 @@
                 return total;
             }
 
+            // $(".positive").keyup(function () {
+               
+            // var valor = $(this).prop("value");
+            // alert(valor)
+            // //evaluamos si es negativo, y ponemos 1 por defecto
+            // if (valor >= 0)
+            //     $(value).val(0);
+            // })
 
+
+
+            // function validarNumero(value) {
+            //     var valor = $(value).val();
+            //     toString($(value).val());
+            //     // alert(isNaN(valor));
+
+            //     if (valor >= 0){
+            //         $(value).val(valor);
+            //     }
+            //     else{
+            //         $(value).val(0);
+            //     }
+            // }
 
 
 

@@ -214,66 +214,122 @@
 
                     // alert(cantidad);
 
+                auxcantidad=$("#cantidad").val();
+
+
                 var arrayarticle = [];
                 var i=0;
+                var j=0;
                 ok=false;
 
 
                 
 
-                if (nombre_articulo != 'Seleccione un Articulo..' && cantidad != "") {
-// alert(2)
-                    
-                        var fila='<tr class="selected" id="fila'+cont+'">'
-                            fila+='<td><button type="button" class="btn btn-danger" onclick="eliminar('+cont+')";><i class="voyager-trash"></i></button></td>'
+                if (nombre_articulo != 'Seleccione un Articulo..' && auxcantidad != '' && cantidad > 0) {
+       
+                        var fila='<tr class="selected" id="fila'+articulo_id+'">'
+                            fila+='<td><button type="button" class="btn btn-danger" onclick="eliminar('+articulo_id+')";><i class="voyager-trash"></i></button></td>'
                             fila+='<td><input type="hidden" class="input_article" name="articulo_id[]"value="'+articulo_id+'">'+nombre_articulo+'</td>' 
                             fila+='<td><input type="hidden" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td>'                       
                         fila+='</tr>';
 
-                        if (cantidad >= 1 &&  cantidad <= stock  ) {
-                            cont++;
-                            
-                            limpiar();
-                            $('#detalles').append(fila);
-                            $("#total").html("Bs. "+calcular_total().toFixed(2));
-                        
-                            $(".input_article").each(function(){
-                                arrayarticle[i]= parseFloat($(this).val());
-                                i++;
-                            }); 
+                        $(".input_article").each(function(){
+                            arrayarticle[i]= parseFloat($(this).val());
+                            i++;
+                        }); 
+                        var ok=true;
 
-                            for(j=0;j<arrayarticle.length-1; j++)
+                        for(j=0;j<arrayarticle.length; j++)
+                        {
+                            // alert(arrayarticle[j])
+                            if(arrayarticle[j] == articulo_id)
                             {
-                                if(arrayarticle[j] == arrayarticle[arrayarticle.length-1])
-                                {
-                                    cont--;
-                                    eliminar(arrayarticle.length-1)
-                                    swal({
-                                        title: "Error",
-                                        text: "El Articulo ya Existe en la Lista",
-                                        type: "error",
-                                        showCancelButton: false,
-                                        });
-                                    div = document.getElementById('flotante');
-                                    div.style.display = '';
-                                    return;
-                                    
-                                }
+                                // cont--;
+                                ok = false;
+                                // eliminar(arrayarticle.length-1)
+                                swal({
+                                    title: "Error",
+                                    text: "El Articulo ya Existe en la Lista",
+                                    type: "error",
+                                    showCancelButton: false,
+                                    });
+                                div = document.getElementById('flotante');
+                                div.style.display = '';
+                                return;                                
                             }
                         }
-                        else
+
+                        if(ok==true)
                         {
-                            // alert(total);
-                            swal({
-                                title: "Error",
-                                text: "La cantidad solicitada supera a la cantidad disponible",
-                                type: "error",
-                                showCancelButton: false,
-                                });
-                            div = document.getElementById('flotante');
-                            div.style.display = '';
-                            return;
+                            if (cantidad >= 1 &&  cantidad <= stock  )
+                            {
+                                limpiar();
+                                $('#detalles').append(fila);
+                                $("#total").html("Bs. "+calcular_total().toFixed(2));
+                            }
+                            else
+                            {
+                                // alert(total);
+                                swal({
+                                    title: "Error",
+                                    text: "La cantidad solicitada supera a la cantidad disponible",
+                                    type: "error",
+                                    showCancelButton: false,
+                                    });
+                                div = document.getElementById('flotante');
+                                div.style.display = '';
+                                return;
+                            }
                         }
+
+
+
+
+
+                        // if (cantidad >= 1 &&  cantidad <= stock  ) {
+                        //     cont++;
+                        //     alert(45)
+                        //     limpiar();
+                        //     $('#detalles').append(fila);
+                        //     $("#total").html("Bs. "+calcular_total().toFixed(2));
+                        
+                        //     $(".input_article").each(function(){
+                        //         arrayarticle[i]= parseFloat($(this).val());
+                        //         i++;
+                        //     }); 
+
+                        //     for(j=0;j<arrayarticle.length-1; j++)
+                        //     {
+                        //         if(arrayarticle[j] == arrayarticle[arrayarticle.length-1])
+                        //         {
+                        //             cont--;
+                        //             eliminar(arrayarticle.length-1)
+                        //             swal({
+                        //                 title: "Error",
+                        //                 text: "El Articulo ya Existe en la Lista",
+                        //                 type: "error",
+                        //                 showCancelButton: false,
+                        //                 });
+                        //             div = document.getElementById('flotante');
+                        //             div.style.display = '';
+                        //             return;
+                                    
+                        //         }
+                        //     }
+                        // }
+                        // else
+                        // {
+                        //     // alert(total);
+                        //     swal({
+                        //         title: "Error",
+                        //         text: "La cantidad solicitada supera a la cantidad disponible",
+                        //         type: "error",
+                        //         showCancelButton: false,
+                        //         });
+                        //     div = document.getElementById('flotante');
+                        //     div.style.display = '';
+                        //     return;
+                        // }
                 }
                 else
                 {
@@ -291,10 +347,10 @@
             }        
             function limpiar()
             {
-                $("#precio").val("");
+                // $("#stock").val("");
                 $("#cantidad").val("");
-                $("#caducidad").val("");
-                $("#presentacion").val("");
+                // $("#caducidad").val("");
+                // $("#presentacion").val("");
             }
 
             //eliminar filas en la tabla
@@ -340,6 +396,9 @@
 
             function onselect_centros()
             {
+                $("#stock").val("");
+                $("#cantidad").val("");
+
                 var id =  $(this).val();    
                 if(id >=1)
                 {
@@ -361,6 +420,9 @@
 
             function onselect_article()
             {
+                $("#stock").val("");
+                $("#cantidad").val("");
+
                 var id =  $(this).val();    
                 if(id >=1)
                 {                    

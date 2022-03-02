@@ -13,7 +13,6 @@ class DonacionArticulo extends Model
         'categoria_id', 'nombre', 'presentacion', 'condicion'
     ];
 
-
     public function DonacionCategoria()
     {
         return $this->belongsTo(DonacionCategoria::class);
