@@ -54,6 +54,9 @@
                                             ->select('c.ID','c.idContribuyente', 'c.nombre AS nombrecontribuyente', 'ca.Descripcion as cargo', 'u.Nombre as unidad', 'c.Estado')
                                             ->where('c.Estado', 1)
                                             ->get();
+                                $usuario = \App\Models\User::find($dataTypeContent->id);
+                                // dd($usuario);
+                                // <input type="hidden" name="user_id" value="{{$dataTypeContent->id}}">
 
                             ?>
 
@@ -62,7 +65,7 @@
                                 <select name="funcionario_id" class="form-control select2">
                                     <option value="" selected>Seleccione</option>
                                     @foreach ($funcionarios as $data)                                    
-                                     <option value="{{$data->ID}}">{{$data->nombrecontribuyente}} - {{$data->cargo}} -{{$data->unidad}}</option>                                 
+                                     <option value="{{$data->ID}}" {{ $data->ID == $usuario->funcionario_id ? 'selected' : '' }}>{{$data->nombrecontribuyente}} - {{$data->cargo}} -{{$data->unidad}}</option>                                 
                                     @endforeach
                                 </select>
                             </div>
