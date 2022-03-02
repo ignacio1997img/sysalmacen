@@ -55,6 +55,13 @@
                                             ->where('c.Estado', 1)
                                             ->get();
                                 $usuario = \App\Models\User::find($dataTypeContent->id);
+                     
+                                // dd($usuario);
+                                // if($usuario == null)
+                                // {
+                                //     $usuario->merge(['funcionario_id' => 0]);
+                                // }
+                            
                                 // dd($usuario);
                                 // <input type="hidden" name="user_id" value="{{$dataTypeContent->id}}">
 
@@ -64,8 +71,12 @@
                                 <label for="default_role">{{ __('Funcionario') }}</label>
                                 <select name="funcionario_id" class="form-control select2">
                                     <option value="" selected>Seleccione</option>
-                                    @foreach ($funcionarios as $data)                                    
-                                     <option value="{{$data->ID}}" {{ $data->ID == $usuario->funcionario_id ? 'selected' : '' }}>{{$data->nombrecontribuyente}} - {{$data->cargo}} -{{$data->unidad}}</option>                                 
+                                    @foreach ($funcionarios as $data)    
+                                        @if($usuario == null)                                
+                                            <option value="{{$data->ID}}" >{{$data->nombrecontribuyente}} - {{$data->cargo}} -{{$data->unidad}}</option>     
+                                        @else
+                                            <option value="{{$data->ID}}" {{$data->ID == $usuario->funcionario_id? 'selected' : '' }}>{{$data->nombrecontribuyente}} - {{$data->cargo}} -{{$data->unidad}}</option>    
+                                        @endif                            
                                     @endforeach
                                 </select>
                             </div>
