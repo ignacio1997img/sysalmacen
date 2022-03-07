@@ -37,7 +37,7 @@
                             <div class="panel-body">                            
                                 <div class="table-responsive">
                                     <main class="main">        
-                                        {!! Form::open(['route' => 'incomedonor.store', 'class' => 'was-validated'])!!}
+                                        {!! Form::open(['route' => 'incomedonor.store', 'class' => 'was-validated', 'enctype' => 'multipart/form-data'])!!}
                                         <div class="card-body">
                                             <h5>Centro de Establecimiento</h5>
                                             <div class="row">
@@ -89,68 +89,60 @@
                                                             <!-- <input type="date"  class="form-control" name="fechaingreso" required> -->
                                                             <textarea name="observacion" id="observacion" rows="2" class="form-control"></textarea>
                                                         </div>
-                                                        <small>Observacion.</small>
+                                                        <small>Observación.</small>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div>
+                                                    <div class="form-group">
+                                                        <input type="file" name="archivos[]"  multiple class="form-control" accept="image/*">
+                                                        <small>Archivos.</small>
+                                                    </div>
+                                            </div>
                                            
                                             <hr>
-                                            <h5>Donador:</h5>
-                                                {{-- <div class="form-group">
-                                                    <div class="form-line">
-                                                        <input type="file" name="file" id="archivo" class="form-control form-control-sm" placeholder="Seleccione un Proveedor" accept="application/pdf">
-                                                    </div>
-                                                    <small>Archivos.</small>
-                                                </div> --}}
+                                            <h5>Donador:</h5>                                               
     
                                             <div class="row">
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <select name="tipodonante" id="tipodonante"class="form-control" required>
+                                                            <select name="tipodonante" id="tipodonante"class="form-control select2" required>
                                                                 <option value="">Seleccione un tipo..</option>
-                                                                <option value="2">Persona</option>
                                                                 <option value="0">Empresa</option>
                                                                 <option value="1">ONG</option>
+                                                                <option value="2">Persona</option>           
+                                                                <option value="3">Anónimo</option>           
                                                             </select>
                                                         </div>
                                                         <small>Tipos Donadores.</small>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <select id="donante" class="form-control select2" required>
-                                                                
-                                                                
-                                                            </select>
+                                                <div id="div_donadores">
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <div class="form-line">
+                                                                <select class="form-control" required>
+                                                                    
+                                                                    
+                                                                </select>
+                                                            </div>
+                                                            <small>Seleccionar un Donante.</small>
                                                         </div>
-                                                        <small>Seleccionar un Donante.</small>
+                                                    </div>                                                
+                                                    <div class="col-sm-3">
+                                                        <div class="form-group">
+                                                            <div class="form-line">
+                                                                <input type="text" class="form-control form-control-sm" placeholder="Seleccione un donante" disabled readonly>
+                                                            </div>
+                                                            <small>CI./NIT.</small>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <input type="hidden" id="donante_id" name="donante_id">
-                                            
-                                                <div class="col-sm-3">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="text" id="nit" class="form-control form-control-sm" placeholder="Seleccione un donante" disabled readonly>
-                                                        </div>
-                                                        <small>CI./NIT.</small>
-                                                    </div>
-                                                </div>
-                                                <!-- === -->
-                                                <!-- <div class="col-sm-3">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="text" id="responsable" class="form-control form-control-sm" placeholder="Seleccione un Proveedor" disabled >
-                                                        </div>
-                                                        <small>Responsable.</small>
-                                                    </div>
-                                                </div> -->
                                             </div>
                                             
                                             <hr>
-                                            <h5>Categoria / Articulo:</h5>
+                                            <h5>Detalle Categoria / Articulo:</h5>
                                             <div class="row">
                                                 <div class="col-sm-3">
                                                     <div class="form-group">
@@ -208,6 +200,30 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="row">
+                                                <div class="col-sm-3">
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <select name="estado" id="estado"class="form-control select2" required>
+                                                                <option value="0">Exelente</option>
+                                                                <option value="1">Buena</option>
+                                                                <option value="2">Regular</option>           
+                                                                <option value="3">Mala</option>           
+                                                            </select>
+                                                        </div>
+                                                        <small>Estado Producto.</small>
+                                                    </div>
+                                                </div>   
+                                                <div class="col-sm-9">
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <!-- <input type="date"  class="form-control" name="fechaingreso" required> -->
+                                                            <textarea name="observacion" id="observacion" rows="2" class="form-control" placeholder="Opcional"></textarea>
+                                                        </div>
+                                                        <small>Observación / Características.</small>
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                             <div class="form-group">
                                                 <div class="form-line">
@@ -235,6 +251,7 @@
                                                 </tfoot>
                                                 
                                             </table>
+                                           
                                             
                                         </div>   
                                         <div class="card-footer">
@@ -254,6 +271,13 @@
 
     @section('css')
     <script src="{{ asset('js/app.js') }}" defer></script>
+        <style>
+  
+            .select2{
+                width: 100% !important;
+            }
+        </style>
+      
     @stop
 
     @section('javascript')
@@ -268,7 +292,7 @@
                 $('#centrotipo').on('change', onselect_centros);
                 
                 $('#tipodonante').on('change', onselect_donante);
-
+                $('#donante').select2();
                 $('#donante').on('change', onselect_donante_llenar);
 
 
@@ -276,6 +300,8 @@
                     agregar();
                 });
 
+
+                // $('#donante').select2();
             })
 
             // var cont=0;
@@ -302,8 +328,7 @@
                 var j=0;
                 ok=false;
 
-
-                
+     
 
                 if (categoria != 'Seleccione una categoria..' && nombre_articulo != 'Seleccione un Articulo..' && auxprecio != '' && auxcantidad != '' && cantidad > 0 && precio >= 0) {
 
@@ -516,16 +541,20 @@
             function onselect_donante()
             {
                 var id =  $(this).val();    
+
                 if(id >=0 && id != "")
                 {
-                    
-                    $.get('{{route('ajax_income_donante')}}/'+id, function(data){
-                        var html_donante=    '<option value="">Seleccione un donante..</option>'
-                            for(var i=0; i<data.length; ++i)
-                            html_donante += '<option value="'+data[i].id+'_'+data[i].ci+'">'+data[i].nombre+'</option>'
+                    div_donacione_show(id);   
+                    if(id!=3)   
+                    {
+                        $.get('{{route('ajax_income_donante')}}/'+id, function(data){
+                            var html_donante=    '<option value="">Seleccione una opción..</option>'
+                                for(var i=0; i<data.length; ++i)
+                                html_donante += '<option value="'+data[i].id+'_'+data[i].ci+'">'+data[i].nombre+'</option>'
 
-                        $('#donante').html(html_donante);           
-                    });
+                            $('#donante').html(html_donante);           
+                        });
+                    }                   
                 }
                 else
                 {
@@ -534,6 +563,57 @@
                     $("#donador_id").val("");
                     $("#nit").val("");
                 }
+            }
+            
+
+            function div_donacione_show(x)
+            {
+                var html_donador = '';
+
+                        html_donador+=      '<div class="col-sm-6">'
+                        html_donador+=          '<div class="form-group">'
+                        html_donador+=              '<div class="form-line">'
+                        html_donador+=                   '<select id="donante" class="form-control select2" required>' 
+                        if(x==3)      
+                        {
+                            html_donador+=                        '<option value="">Anónimo</option>'   
+                        }  
+                        html_donador+=                   '</select>'
+                        html_donador+=              '</div>'
+                        html_donador+=              '<small>Seleccionar un Donante.</small>'
+                        html_donador+=          '</div>'
+                        html_donador+=      '</div>'
+                        if(x==0 && x==1)   
+                        {
+                            html_donador+=      '<input type="hidden" id="donante_id" name="onuempresa_id">'
+                        }
+                        if(x==2) 
+                        {
+                            html_donador+=      '<input type="hidden" id="donante_id" name="persona_id">'
+                        }               
+                                                
+                        html_donador+=      '<div class="col-sm-3">'
+                        html_donador+=           '<div class="form-group">'
+                        html_donador+=                '<div class="form-line">'
+                        if(x==3)
+                        {
+                            html_donador+=                    '<input type="text" id="nit" class="form-control form-control-sm" value="XXXXXXXX" disabled readonly>'
+
+                        }
+                        else
+                        {
+                            html_donador+=                    '<input type="text" id="nit" class="form-control form-control-sm" placeholder="Seleccione un donante" disabled readonly>'
+                        }
+                        html_donador+=                '</div>'
+                        html_donador+=                '<small>CI./NIT.</small>'
+                        html_donador+=           '</div>'
+                        html_donador+=      '</div>'
+                
+                $('#donante').select2();
+
+                $('#div_donadores').html(html_donador);
+                $('#donante').on('change', onselect_donante_llenar);
+
             }
 
             function onselect_donante_llenar()

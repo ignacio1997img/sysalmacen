@@ -15,14 +15,14 @@ class CreateDonacionArchivosTable extends Migration
     {
         Schema::create('donacion_archivos', function (Blueprint $table) {
             $table->id();
-            $table->string('descripcion')->nullable();
+            // $table->string('descripcion')->nullable();
             $table->string('nombre_origen')->nullable();
-            $table->string('extension', 10)->nullable();
+            // $table->string('extension', 10)->nullable();
             $table->string('ruta')->nullable();
 
             $table->foreignId('donacioningreso_id')
                   ->nullable()
-                  ->constrained('donacion_egresos')
+                  ->constrained('donacion_ingresos')
                   ->onDelete('cascade');
 
             $table->foreignId('user_id')->nullable()->constrained('users');

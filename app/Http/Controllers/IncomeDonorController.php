@@ -10,10 +10,16 @@ use App\Models\DonadorEmpresa;
 use App\Models\DonadorPersona;
 use App\Models\DonacionIngreso;
 use App\Models\DonacionIngresoDetalle;
+use App\Models\DonacionArchivo;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use DataTables;
+use Illuminate\Support\Str;
+use file;
+
 
 class IncomeDonorController extends Controller
 {
@@ -48,6 +54,8 @@ class IncomeDonorController extends Controller
 
     public function store(Request $request)
     {
+        return $request;
+        
         DB::beginTransaction();
         try {
 
@@ -108,11 +116,34 @@ class IncomeDonorController extends Controller
                 ]);
                 $cont++;
             }
-
             // return $request;
+            
+            $file = $request->file('archivos');
 
-
-
+            // dd($file);
+            // return $file;
+            $i=0;
+            if ($file) {
+                // dd($file);
+                for ($i=0; $i < count($file); $i++) { 
+                    
+                    $nombre_origen = $file[$i]->getClientOriginalName();
+                    
+                    $newFileName = Str::random(20).time().'.'.$file[$i]->getClientOriginalExtension();
+                    
+                    $dir = "donacion/income/".date('F').date('Y');
+                    
+                    Storage::makeDirectory($dir);
+                    Storage::disk('public')->put($dir.'/'.$newFileName, file_get_contents($file[$i]));
+                    
+                    DonacionArchivo::create([
+                        'nombre_origen' => $nombre_origen,
+                        'donacioningreso_id' => $income->id,
+                        'ruta' => $dir.'/'.$newFileName,
+                        'user_id' => $user->id
+                    ]);
+                }
+            }
 
 
             DB::commit();

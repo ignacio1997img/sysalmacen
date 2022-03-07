@@ -169,6 +169,7 @@ class IncomeController extends Controller
     
     public function store(Request $request)
     {
+        dd($request);
         $user = Auth::user();
         DB::beginTransaction();
         try {

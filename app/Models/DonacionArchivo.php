@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class DonacionArchivo extends Model
 {
     use HasFactory;
+    protected $fillable =['nombre_origen', 'ruta', 'donacioningreso_id', 'user_id'];
 }

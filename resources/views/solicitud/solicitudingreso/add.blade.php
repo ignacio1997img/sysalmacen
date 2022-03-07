@@ -82,19 +82,11 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Opciones</th>
-                                                        <th>Partida</th>
                                                         <th>Articulo</th>
                                                         <th>Presentación</th>
-                                                        <th>Cantidad</th>
-                                                        <th>Precio Art.</th>
-                                                        <th>SubTotal</th>
-                    
+                                                        <th>Cantidad</th>                    
                                                     </tr>
                                                 </thead>
-                                                <tfoot>
-                                                    <th colspan="6" style="text-align:right"><h5>TOTAL</h5></th>
-                                                    <th><h4 id="total">Bs. 0.00</h4></th>
-                                                </tfoot>
                                                 
                                             </table>
                                             
