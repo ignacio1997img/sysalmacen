@@ -49,11 +49,11 @@
         </style>
     </head>
     <body>
-        <div class="noImprimir text-center">
+        <!-- <div class="noImprimir text-center">
             <button onclick="javascript:window.print()" class="btn btn-link">
                 IMPRIMIR
             </button>
-        </div>
+        </div> -->
         <div class="centrar">
             {{-- ENCABEZADO --}}
             <table class="alltables text-center">
@@ -97,6 +97,8 @@
                         <th>Categoria</th>
                         <th>Articulo</th>
                         <th>Presentacion</th>
+                        <th>Estado</th>
+                        <th>Característica</th>
                         <th>Cantidad</th>
                         <th>Fecha Caducidad.</th>
                     </tr>
@@ -109,6 +111,8 @@
                         <td>{{$data->categoria}}</td>
                         <td>{{$data->articulo}}</td>
                         <td>{{$data->presentacion}}</td>
+                        <td>{{$data->estado}}</td>
+                        <td>{{$data->caracteristica}}</td>
                         <td>{{$data->cantrestante}}</td>
                         <td>
                             @if($data->caducidad == null)
@@ -122,6 +126,36 @@
                     <?php $i++; ?>
 
                     @endforeach              
+                </tbody>
+            </table>
+
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Nº</th>
+                        <th>Título</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php $i=1; ?>
+                    @forelse($archivos as $item)
+                    <tr>
+                        <td>{{$i}}</td>
+                        <td>{{$item->nombre_origen}}</td>
+                        <td>
+                            <a href="{{url('storage/'.$item->ruta)}}" title="Ver" target="_blank" class="btn btn-sm btn-success view">
+                            <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
+                                                                </a>
+                        </td>
+                    </tr>
+                    <?php $i++; ?>
+
+                    @empty
+                        <tr>
+                            <td colspan="6"><h5 class="text-center">No hay archivos guardados</h5></td>
+                        </tr>
+                    @endforelse          
                 </tbody>
             </table>
 

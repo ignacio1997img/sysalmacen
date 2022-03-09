@@ -118,27 +118,28 @@
                                                         <small>Tipos Donadores.</small>
                                                     </div>
                                                 </div>
-                                                <div id="div_donadores">
+                                                
                                                     <div class="col-sm-6">
                                                         <div class="form-group">
                                                             <div class="form-line">
-                                                                <select class="form-control" required>
+                                                                <select id="donante" class="form-control select2" required>
                                                                     
                                                                     
                                                                 </select>
                                                             </div>
                                                             <small>Seleccionar un Donante.</small>
                                                         </div>
-                                                    </div>                                                
+                                                    </div>      
+                                                    <input type="hidden" id="donante_id" name="donante_id">                                          
                                                     <div class="col-sm-3">
                                                         <div class="form-group">
                                                             <div class="form-line">
-                                                                <input type="text" class="form-control form-control-sm" placeholder="Seleccione un donante" disabled readonly>
+                                                                <input type="text" id="nit" class="form-control form-control-sm" placeholder="Seleccione un donante" disabled readonly>
                                                             </div>
                                                             <small>CI./NIT.</small>
                                                         </div>
                                                     </div>
-                                                </div>
+                                           
                                             </div>
                                             
                                             <hr>
@@ -204,11 +205,11 @@
                                                 <div class="col-sm-3">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <select name="estado" id="estado"class="form-control select2" required>
-                                                                <option value="0">Exelente</option>
-                                                                <option value="1">Buena</option>
-                                                                <option value="2">Regular</option>           
-                                                                <option value="3">Mala</option>           
+                                                            <select id="estado"class="form-control select2" required>
+                                                                <option value="Exelente">Exelente</option>
+                                                                <option value="Buena">Buena</option>
+                                                                <option value="Regular">Regular</option>           
+                                                                <option value="Mala">Mala</option>           
                                                             </select>
                                                         </div>
                                                         <small>Estado Producto.</small>
@@ -218,7 +219,7 @@
                                                     <div class="form-group">
                                                         <div class="form-line">
                                                             <!-- <input type="date"  class="form-control" name="fechaingreso" required> -->
-                                                            <textarea name="observacion" id="observacion" rows="2" class="form-control" placeholder="Opcional"></textarea>
+                                                            <textarea id="caracteristica" rows="2" class="form-control" placeholder="Opcional"></textarea>
                                                         </div>
                                                         <small>Observación / Características.</small>
                                                     </div>
@@ -236,8 +237,10 @@
                                                     <tr>
                                                         <th>Opciones</th>
                                                         <th>Categoria</th>
-                                                        <th>Articulo</th>
+                                                        <th>Artículo</th>
                                                         <th>Presentación</th>
+                                                        <th>Estado</th>
+                                                        <th>Característica</th>
                                                         <th>Cantidad</th>
                                                         <th>Precio Estimado.</th>
                                                         <th>Fecha Caducidad.</th>
@@ -246,7 +249,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tfoot>
-                                                    <th colspan="7" style="text-align:right"><h5>TOTAL</h5></th>
+                                                    <th colspan="9" style="text-align:right"><h5>TOTAL</h5></th>
                                                     <th><h4 id="total">Bs. 0.00</h4></th>
                                                 </tfoot>
                                                 
@@ -270,14 +273,7 @@
 
 
     @section('css')
-    <script src="{{ asset('js/app.js') }}" defer></script>
-        <style>
-  
-            .select2{
-                width: 100% !important;
-            }
-        </style>
-      
+    <script src="{{ asset('js/app.js') }}" defer></script>      
     @stop
 
     @section('javascript')
@@ -292,7 +288,7 @@
                 $('#centrotipo').on('change', onselect_centros);
                 
                 $('#tipodonante').on('change', onselect_donante);
-                $('#donante').select2();
+
                 $('#donante').on('change', onselect_donante_llenar);
 
 
@@ -313,10 +309,15 @@
                 
                 categoria=$("#categoria option:selected").text();
                 nombre_articulo=$("#articulo option:selected").text();
+
+                estado=$("#estado option:selected").text();
+                caracteristica=$("#caracteristica").val();
+
                 articulo_id =$("#articulo").val();
                 presentacion=$("#presentacion").val();
                 precio=parseFloat($("#precio").val());
                 cantidad=parseFloat($("#cantidad").val());
+                caducidad=$("#caducidad").val();
                 caducidad=$("#caducidad").val();
 
                 auxprecio=$("#precio").val();
@@ -328,6 +329,20 @@
                 var j=0;
                 ok=false;
 
+                if(caracteristica=="")
+                {
+                    caracteristica='S/N'
+                }
+                
+                var auxcaducidad=''
+                if(caducidad=="")
+                {
+                    auxcaducidad='S/N'
+                }
+                else
+                {
+                    auxcaducidad =caducidad;
+                }
      
 
                 if (categoria != 'Seleccione una categoria..' && nombre_articulo != 'Seleccione un Articulo..' && auxprecio != '' && auxcantidad != '' && cantidad > 0 && precio >= 0) {
@@ -338,9 +353,11 @@
                             fila+='<td>'+categoria+'</td>'
                             fila+='<td><input type="hidden" class="input_article" name="articulo_id[]"value="'+articulo_id+'">'+nombre_articulo+'</td>' 
                             fila+='<td>'+presentacion+'</td>' 
+                            fila+='<td><input type="hidden" name="estado[]" value="'+estado+'">'+estado+'</td>' 
+                            fila+='<td><input type="hidden" name="caracteristica[]" value="'+caracteristica+'">'+caracteristica+'</td>' 
                             fila+='<td><input type="hidden" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td>'                       
                             fila+='<td><input type="hidden" name="precio[]" value="'+precio+'">'+precio+'</td>'                        
-                            fila+='<td><input type="hidden" name="caducidad[]" value="'+caducidad+'">'+caducidad+'</td>'                        
+                            fila+='<td><input type="hidden" name="caducidad[]" value="'+caducidad+'">'+auxcaducidad+'</td>'                        
                             fila+='<td><input type="hidden" class="input_subtotal" value="'+cantidad * precio+'">'+cantidad * precio+'</td>'
                         fila+='</tr>';
 
@@ -544,7 +561,7 @@
 
                 if(id >=0 && id != "")
                 {
-                    div_donacione_show(id);   
+                    $("#nit").val(""); 
                     if(id!=3)   
                     {
                         $.get('{{route('ajax_income_donante')}}/'+id, function(data){
@@ -554,7 +571,13 @@
 
                             $('#donante').html(html_donante);           
                         });
-                    }                   
+                    }  
+                    else
+                    {
+                        var html_donante= '<option value="'+0000+'">Anónimo</option>';
+                        $('#donante').html(html_donante); 
+                        $("#nit").val("XXXXXXXXXX");
+                    }                 
                 }
                 else
                 {
@@ -566,55 +589,55 @@
             }
             
 
-            function div_donacione_show(x)
-            {
-                var html_donador = '';
+            // function div_donacione_show(x)
+            // {
+            //     var html_donador = '';
 
-                        html_donador+=      '<div class="col-sm-6">'
-                        html_donador+=          '<div class="form-group">'
-                        html_donador+=              '<div class="form-line">'
-                        html_donador+=                   '<select id="donante" class="form-control select2" required>' 
-                        if(x==3)      
-                        {
-                            html_donador+=                        '<option value="">Anónimo</option>'   
-                        }  
-                        html_donador+=                   '</select>'
-                        html_donador+=              '</div>'
-                        html_donador+=              '<small>Seleccionar un Donante.</small>'
-                        html_donador+=          '</div>'
-                        html_donador+=      '</div>'
-                        if(x==0 && x==1)   
-                        {
-                            html_donador+=      '<input type="hidden" id="donante_id" name="onuempresa_id">'
-                        }
-                        if(x==2) 
-                        {
-                            html_donador+=      '<input type="hidden" id="donante_id" name="persona_id">'
-                        }               
+            //             html_donador+=      '<div class="col-sm-6">'
+            //             html_donador+=          '<div class="form-group">'
+            //             html_donador+=              '<div class="form-line">'
+            //             html_donador+=                   '<select id="donante" class="form-control select2" required>' 
+            //             if(x==3)      
+            //             {
+            //                 html_donador+=                        '<option value="">Anónimo</option>'   
+            //             }  
+            //             html_donador+=                   '</select>'
+            //             html_donador+=              '</div>'
+            //             html_donador+=              '<small>Seleccionar un Donante.</small>'
+            //             html_donador+=          '</div>'
+            //             html_donador+=      '</div>'
+            //             if(x==0 && x==1)   
+            //             {
+            //                 html_donador+=      '<input type="hidden" id="donante_id" name="onuempresa_id">'
+            //             }
+            //             if(x==2) 
+            //             {
+            //                 html_donador+=      '<input type="hidden" id="donante_id" name="persona_id">'
+            //             }               
                                                 
-                        html_donador+=      '<div class="col-sm-3">'
-                        html_donador+=           '<div class="form-group">'
-                        html_donador+=                '<div class="form-line">'
-                        if(x==3)
-                        {
-                            html_donador+=                    '<input type="text" id="nit" class="form-control form-control-sm" value="XXXXXXXX" disabled readonly>'
+            //             html_donador+=      '<div class="col-sm-3">'
+            //             html_donador+=           '<div class="form-group">'
+            //             html_donador+=                '<div class="form-line">'
+            //             if(x==3)
+            //             {
+            //                 html_donador+=                    '<input type="text" id="nit" class="form-control form-control-sm" value="XXXXXXXX" disabled readonly>'
 
-                        }
-                        else
-                        {
-                            html_donador+=                    '<input type="text" id="nit" class="form-control form-control-sm" placeholder="Seleccione un donante" disabled readonly>'
-                        }
-                        html_donador+=                '</div>'
-                        html_donador+=                '<small>CI./NIT.</small>'
-                        html_donador+=           '</div>'
-                        html_donador+=      '</div>'
+            //             }
+            //             else
+            //             {
+            //                 html_donador+=                    '<input type="text" id="nit" class="form-control form-control-sm" placeholder="Seleccione un donante" disabled readonly>'
+            //             }
+            //             html_donador+=                '</div>'
+            //             html_donador+=                '<small>CI./NIT.</small>'
+            //             html_donador+=           '</div>'
+            //             html_donador+=      '</div>'
                 
-                $('#donante').select2();
+            //     $('#donante').select2();
 
-                $('#div_donadores').html(html_donador);
-                $('#donante').on('change', onselect_donante_llenar);
+            //     $('#div_donadores').html(html_donador);
+            //     $('#donante').on('change', onselect_donante_llenar);
 
-            }
+            // }
 
             function onselect_donante_llenar()
             {

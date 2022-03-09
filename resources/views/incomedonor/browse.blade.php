@@ -55,12 +55,15 @@
                                                     <td>
                                                         <div class="no-sort no-click bread-actions text-right">
                                                             @if(auth()->user()->hasPermission('read_incomedonor'))
-                                                                <a href="{{route('incomedonor_view_stock',$data->id)}}" title="Ver" target="_blank" class="btn btn-sm btn-info view">
-                                                                    <i class="voyager-basket"></i> <span class="hidden-xs hidden-sm">Stock</span>
+                                                                <a href="{{route('incomedonor_view_stock',$data->id)}}" title="Ver" target="_blank" class="btn btn-sm btn-success view">
+                                                                    <i class="voyager-basket"></i> <i class="voyager-photos"></i> <span class="hidden-xs hidden-sm">Stock & Detalle</span>
                                                                 </a>
                                                                 <a href="{{route('incomedonor.show',$data->id)}}" title="Ver" target="_blank" class="btn btn-sm btn-info view">
                                                                     <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
-                                                                </a>                                                            
+                                                                </a>    
+                                                                <!-- <a href="{{route('incomedonor.show',$data->id)}}" title="Fotos" target="_blank" class="btn btn-sm btn-info view">
+                                                                    <i class="voyager-photos"></i> <span class="hidden-xs hidden-sm">Fotos</span>
+                                                                </a>                                                             -->
 
                                                             @endif
                                                             @if($data->condicion == 1)

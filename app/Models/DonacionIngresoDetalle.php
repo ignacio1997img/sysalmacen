@@ -9,8 +9,7 @@ class DonacionIngresoDetalle extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'donacioningreso_id', 'donacionarticulo_id', 'registeruser_id', 'cantidad', 'precio', 'cantrestante', 'caducidad','condicion', 'deleteuser_id'      
+        'donacioningreso_id', 'donacionarticulo_id', 'registeruser_id','estado','caracteristica', 'cantidad', 'precio', 'cantrestante', 'caducidad','condicion', 'deleteuser_id'      
     ];
-
 
 }

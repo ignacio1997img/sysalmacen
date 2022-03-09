@@ -19,7 +19,8 @@ class CreateDonacionIngresoDetallesTable extends Migration
             $table->foreignId('donacionarticulo_id')->constrained('donacion_articulos');
             $table->foreignId('registeruser_id')->nullable()->constrained('users');
 
-
+            $table->string('estado');
+            $table->text('caracteristica')->nullable();
             $table->decimal('cantidad', 11, 2);
             $table->decimal('precio', 11, 2)->default(0);
             $table->decimal('cantrestante', 11, 2);

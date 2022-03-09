@@ -15,7 +15,7 @@ class CreateDonacionArchivosTable extends Migration
     {
         Schema::create('donacion_archivos', function (Blueprint $table) {
             $table->id();
-            // $table->string('descripcion')->nullable();
+            $table->smallInteger('entrada');
             $table->string('nombre_origen')->nullable();
             // $table->string('extension', 10)->nullable();
             $table->string('ruta')->nullable();

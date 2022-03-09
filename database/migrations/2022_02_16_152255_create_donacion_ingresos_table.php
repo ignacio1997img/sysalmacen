@@ -18,7 +18,8 @@ class CreateDonacionIngresosTable extends Migration
             $table->foreignId('centro_id')->constrained('centros');
 
             $table->integer('tipodonante');
-            $table->integer('donante_id');
+            $table->integer('onuempresa_id')->nullable();
+            $table->integer('persona_id')->nullable();
 
             $table->foreignId('registeruser_id')->constrained('users');
 

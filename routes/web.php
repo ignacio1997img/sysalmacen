@@ -106,6 +106,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::delete('incomedonor/browse/delete', [IncomeDonorController::class, 'destroy'])->name('incomedonor_delete');
     Route::get('incomedonor/browse/view/stock/{id?}', [IncomeDonorController::class, 'show_stock'])->name('incomedonor_view_stock');
     Route::post('incomedonor/update', [IncomeDonorController::class, 'update'])->name('incomedonor_update');
+    Route::post('incomedonor/delete/archivos', [IncomeDonorController::class, 'destroy_file'])->name('incomedonor_delete_file');
 
 
     // Route::get('incomedonor/browse/view/{id?}', [IncomeController::class, 'view_ingreso'])->name('incomedonor_view');
