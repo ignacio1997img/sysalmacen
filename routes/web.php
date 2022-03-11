@@ -108,6 +108,9 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('incomedonor/update', [IncomeDonorController::class, 'update'])->name('incomedonor_update');
     Route::post('incomedonor/delete/archivos', [IncomeDonorController::class, 'destroy_file'])->name('incomedonor_delete_file');
 
+    Route::get('donacion/browse/view/stock/disponible', [IncomeDonorController::class, 'show_stock_disponible'])->name('incomedonor_view_stock_disponible');
+
+
 
     // Route::get('incomedonor/browse/view/{id?}', [IncomeController::class, 'view_ingreso'])->name('incomedonor_view');
 

@@ -567,7 +567,7 @@ class MenuItemsTableSeeder extends Seeder
             array (
                 'id' => 51,
                 'menu_id' => 1,
-                'title' => 'Stock Vigente',
+                'title' => 'Stock Consulta',
                 'url' => '',
                 'target' => '_self',
                 'icon_class' => 'voyager-basket',
@@ -575,9 +575,9 @@ class MenuItemsTableSeeder extends Seeder
                 'parent_id' => NULL,
                 'order' => 6,
                 'created_at' => '2022-02-21 00:20:06',
-                'updated_at' => '2022-02-21 00:20:21',
+                'updated_at' => '2022-03-09 15:48:07',
                 'route' => 'solicituddonor.index',
-                'parameters' => NULL,
+                'parameters' => 'null',
             ),
         ));
         

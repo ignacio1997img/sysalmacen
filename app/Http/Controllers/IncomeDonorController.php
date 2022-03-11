@@ -250,6 +250,12 @@ class IncomeDonorController extends Controller
 
 
     }
+    
+    public function show_stock_disponible()
+    {
+        return 2;
+        // return view('incomedonor.stock');
+    }
 
 
     public function edit($id)
