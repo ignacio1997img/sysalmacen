@@ -1,6 +1,6 @@
 <html mmoznomarginboxes="" mozdisallowselectionprint="">
     <head>
-        <title>Comprobante Egreso</title>
+        <title>Comprobante Ingresos</title>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('css/print.style.css') }}" media="print">
@@ -70,14 +70,14 @@
                                 <tr>
                                     <td class="text-center" style="width: 40%">
                                         <span style="font-size: 20px;">
-                                            <strong>UNIDAD DE ALMACENES MATERIALES Y SUMINISTROS</strong>
+                                            <strong>UNIDAD DE ALMACENES DE DONACIONES SEDEGES</strong>
                                         </span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="text-center" style="width: 40%">
                                         <span style="font-size: 15px;">
-                                            <strong>Acta de Entrega de Materiales y Suministros <br>Trinidad-{{\Carbon\Carbon::parse($sol->fechaegreso)->format('d/m/Y')}}</strong>
+                                            <strong>Acta de Ingreso de Donación <br>[{{$do->nrosolicitud}}/{{$do->gestion}}]</strong>
                                         </span>
                                     </td>
                                 </tr>
@@ -90,12 +90,44 @@
         
                 <table class="text-center" width="100%" style="font-size: 8pt">
                     <tr>
-                        <th>CUENTA</th>
-                        <th>SOLICITANTE</th>
+                        <th>LUGAR DONACION</th>
+                        <th>FECHA DONACION</th>
+                        <th>FECHA INGRESO</th>
                     </tr>
                     <tr>
-                        <td>MATERIALES Y SUMINISTROS</td>
-                        <td>{{$unidad[0]->Nombre}}</td>                        
+                        <td>{{$centro->nombre}}</td>
+                        <td>{{\Carbon\Carbon::parse($do->fechadonacion)->format('d/m/Y')}}</td>
+                        <td>{{\Carbon\Carbon::parse($do->fechaingreso)->format('d/m/Y')}}</td>
+                    </tr>
+                </table>
+                <BR></BR>
+                <table class="text-center" width="100%" style="font-size: 8pt">
+                    <tr>
+                        <th>TIPO</th>
+                        <th>NIT / CI</th>
+                        <th>NOMBRE</th>
+                        <th>TEL</th>
+                    </tr>
+                    <tr>
+                        <td>{{$donante->tipo}}</td>
+                        <td>{{$donante->nit}}</td>
+                        <td>{{$donante->name}}</td>
+                        <td>
+                            @if($donante->tel != null)
+                                {{$donante->tel}}
+                            @else
+                                SN
+                            @endif
+                        </td>
+                    </tr>
+                </table>
+                <br>
+                <table width="100%" style="font-size: 8pt">
+                    <tr>
+                        <th>OBSERVACION:</th>
+                    </tr>
+                    <tr>
+                        <td>{{$do->observacion}}</td>
                     </tr>
                 </table>
                 <br>
@@ -105,39 +137,47 @@
                 <thead>
                     <tr>
                         <th>Nº</th>
-                        <th>Nro Solicitud</th>
+                        <th>Categoria</th>
                         <th>Artículo</th>
-                        <th>Codigo Articulo</th>
-                        <th>Presentacion</th>
+                        <th>Presentacion</th>                        
+                        <th>Estado</th>
+                        <th>Característica</th>
                         <th>Cantidad</th>
                         <th>Precio Unit.</th>
+                        <th>Fecha Caducidad.</th>
                         <th>Total Parcial</th>
                     </tr>
                 </thead>
                 <tbody>
-                <?php $numeroitems = 1; $suma_Total = 0; $total =0;?>
-                    @foreach($detalle as $data)
-                                                <tr>
-                                                    <td>{{$numeroitems}}</td>
-                                                    <td>{{$data->modalidad}}-{{$data->numero}}</td>
-                                                    <td>{{$data->articulo}}</td>
-                                                    <td>{{$data->codigo}}</td>
-                                                    <td>{{$data->presentacion}}</td>                                                    
-                                                    <td>{{$data->cantidadentregar}}</td>
-                                                    <td>{{$data->precio}}</td>
-                                                    <td>{{$data->cantidadentregar * $data->precio}}</td>
-                                                </tr>
-                                                <?php
-                                                    $total+= $data->cantidadentregar * $data->precio;
-                                                    $numeroitems++;
-                                                ?>
-                    @endforeach  
-                </tbody>
+                    <?php $i=1; $total =0;?>
+                    @foreach($detalle as $data)       
+                    <tr>
+                        <td>{{$i}}</td>
+                        <td>{{$data->categoria}}</td>
+                        <td>{{$data->nombre}}</td>
+                        <td>{{$data->presentacion}}</td>
+                        <td>{{$data->estado}}</td>
+                        <td>{{$data->caracteristica}}</td>
+                        <td>{{$data->cantidad}}</td>
+                        <td>{{$data->precio}}</td>
+                        <td>
+                            @if($data->caducidad == null)
+                                SN
+                            @else
+                            {{\Carbon\Carbon::parse($data->caducidad)->format('d/m/Y')}}
+                            @endif
+
+                        </td>
+                        <td>{{$data->precio * $data->cantidad}}</td>
+                    </tr>   
+                    <?php $i++; $total+= $data->cantidad * $data->precio;?>
+
+                    @endforeach
+                </tbody>    
             </table>
             <div class="row" style="font-size: 9pt">
-                <p style="text-align: right">Total Detalle de Egreso: {{NumerosEnLetras::convertir($total,'Bolivianos',true)}}</p>
+                <p style="text-align: right">Total - Detalle de Compra: {{NumerosEnLetras::convertir($total,'Bolivianos',true)}}</p>
             </div>
-            
 
             <div class="card-body">
                 <div class="row">
@@ -145,17 +185,17 @@
                         <br>
                         <br>
                         <br>
-                        <b>ENTREGUE CONFORME</b>
+                        ________________________________________
                         <br>
-                        {{$sol->atendidopor}}
+                        <b>Responsable Sedeges</b>
                     </div>
                     <div class="text-center col-6">
                         <br>
                         <br>
                         <br>
-                        <b>RECIBI CONFORME</b>
+                        ________________________________________
                         <br>
-                        {{$sol->cargo}}
+                        <b>{{$centro->nombre}}</b>
                     </div>
                 </div>
             </div> 

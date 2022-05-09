@@ -13,13 +13,68 @@
   background: rgb(197, 252, 215);
 }
 </style>
+<style>
+    input:focus{        
+        background: rgb(255, 245, 229);
+        border-color: rgb(255, 161, 10);
+        /* border-radius: 50px; */
+    }
+    input.text, select.text, textarea.text{ 
+        border-radius: 5px 5px 5px 5px;
+        color: #000000;
+        border-color: rgb(63, 63, 63);
+    }
+
+   
+    small{font-size: 32px;
+        color: rgb(12, 12, 12);
+        font-weight: bold;
+    }
+    #subtitle{
+        font-size: 18px;
+        color: rgb(12, 12, 12);
+        font-weight: bold;
+    }
+
+
+    #detalles {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    }
+
+    #detalles td, #detalles th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    }
+
+    #detalles tr:nth-child(even){background-color: #f2f2f2;}
+
+    #detalles tr:hover {background-color: #ddd;}
+
+    #detalles th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #04AA6D;
+        color: white;
+    }
+
+    .form-control .select2{
+        border-radius: 5px 5px 5px 5px;
+        color: #000000;
+        border-color: rgb(63, 63, 63);
+    }
+    
+
+</style>
 
 
     @section('page_header')
         
         <div class="container-fluid">
             <div class="row">
-                <h1 class="page-title">
+                <h1 class="page-title" id="subtitle">
                     <i class="voyager-basket"></i> Editar Ingreso de Donaciones
                 </h1>
             </div>
@@ -39,7 +94,7 @@
                                         {!! Form::open(['route' => 'incomedonor_update', 'class' => 'was-validated', 'enctype' => 'multipart/form-data'])!!}
                                         <input type="hidden" name="id" id="id" value="{{$ingreso->id}}">
                                         <div class="card-body">
-                                            <h5>Centro de Establecimiento</h5>
+                                            <h5 id="subtitle">Centro de Establecimiento</h5>
                                             <div class="row">
                                                 <!-- === -->
                                                 <?php 
@@ -80,7 +135,7 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="date"  class="form-control" name="fechadonacion" value="{{$ingreso->fechadonacion}}" required>
+                                                            <input type="date"  class="form-control text" name="fechadonacion" value="{{$ingreso->fechadonacion}}" required>
                                                         </div>
                                                         <small>Fecha de Donación.</small>
                                                     </div>
@@ -88,7 +143,7 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="date"  class="form-control" name="fechaingreso" value="{{$ingreso->fechaingreso}}" required>
+                                                            <input type="date"  class="form-control text" name="fechaingreso" value="{{$ingreso->fechaingreso}}" required>
                                                         </div>
                                                         <small>Fecha de Ingreso.</small>
                                                     </div>
@@ -99,13 +154,13 @@
                                                     <div class="form-group">
                                                         <div class="form-line">
                                                             <!-- <input type="date"  class="form-control" name="fechaingreso" required> -->
-                                                            <textarea name="observacion" id="observacion" rows="2" class="form-control">{{$ingreso->observacion}}</textarea>
+                                                            <textarea name="observacion" id="observacion" rows="2" class="form-control text">{{$ingreso->observacion}}</textarea>
                                                         </div>
                                                         <small>Observacion.</small>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <table style="width:100%" class="table table-bordered table-striped table-sm">
+                                            <table style="width:100%" id="detalle" class="table table-bordered table-striped table-sm">
                                                 <thead>
                                                     <tr>
                                                         <th style="width:3%">Nro</th>
@@ -148,7 +203,7 @@
                                             </div>
                                            
                                             <hr>
-                                            <h5>Donador:</h5>
+                                            <h5 id="subtitle">Donador:</h5>
                                                 
     
                                             <div class="row">
@@ -207,7 +262,7 @@
                                                 <div class="col-sm-3">
                                                     <div class="form-group">
                                                         <div class="form-line">                                                            
-                                                            <input type="text" id="nit" class="form-control form-control-sm" placeholder="Seleccione un donante" value="{{1 == $anonimo ? 'XXXXXXXX' : $ci}}" disabled readonly>
+                                                            <input type="text" id="nit" class="form-control form-control-sm text" placeholder="Seleccione un donante" value="{{1 == $anonimo ? 'XXXXXXXX' : $ci}}" disabled readonly>
                                                         </div>
                                                         <small>CI./NIT.</small>
                                                     </div>
@@ -224,7 +279,7 @@
                                             </div>
                                             
                                             <hr>
-                                            <h5>Categoria / Articulo:</h5>
+                                            <h5 id="subtitle">Categoria / Articulo:</h5>
                                             <div class="row">
                                                 <div class="col-sm-3">
                                                     <div class="form-group">
@@ -252,7 +307,7 @@
                                                 <div class="col-sm-1">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="text"disabled class="form-control form-control-sm" id="presentacion" autocomplete="off">
+                                                            <input type="text"disabled class="form-control form-control-sm text" id="presentacion" autocomplete="off">
                                                         </div>
                                                         <small>Presentacion.</small>
                                                     </div>
@@ -260,7 +315,7 @@
                                                 <div class="col-sm-1">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number" id="cantidad" min="1" class="form-control" title="Cantidad">
+                                                            <input type="number" id="cantidad" min="1" class="form-control text" title="Cantidad">
                                                         </div>
                                                         <small>Cantidad Artículo.</small>
                                                     </div>
@@ -268,14 +323,14 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number" id="precio" min="0" class="form-control" title="Precio Unitario Bs">
+                                                            <input type="number" id="precio" min="0" class="form-control text" title="Precio Unitario Bs">
                                                         </div>
                                                         <small>Precio Unit. Estimado *(Bs).</small>
                                                     </div>
                                                 </div><div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="date" id="caducidad" class="form-control" title="Fecha de caducidad del producto o articulo">
+                                                            <input type="date" id="caducidad" class="form-control text" title="Fecha de caducidad del producto o articulo">
                                                         </div>
                                                         <small>Fecha Caducidad *(Opcional).</small>
                                                     </div>
@@ -300,7 +355,7 @@
                                                     <div class="form-group">
                                                         <div class="form-line">
                                                             <!-- <input type="date"  class="form-control" name="fechaingreso" required> -->
-                                                            <textarea id="caracteristica" rows="2" class="form-control" placeholder="Opcional"></textarea>
+                                                            <textarea id="caracteristica" rows="2" class="form-control text" placeholder="Opcional"></textarea>
                                                         </div>
                                                         <small>Observación / Características.</small>
                                                     </div>
@@ -431,6 +486,8 @@
 
 
     @section('css')
+
+    
     <script src="{{ asset('js/app.js') }}" defer></script>
     @stop
 
@@ -440,6 +497,8 @@
 
             $(function()
             {    
+                $(".select2").select2({theme: "classic"});
+
                 $('#categoria').on('change', onselect_article);
                 $('#articulo').on('change', onselect_presentacion);
 
@@ -598,6 +657,7 @@
             {
                 $("#precio").val("");
                 $("#cantidad").val("");
+                $("#caracteristica").val("");
             }
 
 

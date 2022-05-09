@@ -18,15 +18,15 @@ class CreateDonacionEgresosTable extends Migration
             $table->foreignId('centro_id')->constrained('centros');
             // $table->foreignId('donacioningresodetalle_id')->constrained('donacion_ingreso_detalles');
 
-            $table->foreignId('registeruser_id')->constrained('users');
+            $table->foreignId('registeruser_id')->nullable()->constrained('users');
 
-            $table->string('nrosolicitud');
-            $table->date('fechaentrega');
+            $table->string('nrosolicitud')->nullable();
+            $table->date('fechaentrega')->nullable();
 
             // $table->decimal('cantentregada', 11, 2);
 
             $table->text('observacion')->nullable();
-            $table->string('gestion', 10);
+            $table->string('gestion', 10)->nullable();
             $table->smallInteger('condicion')->default(1);  
             $table->timestamps();
 

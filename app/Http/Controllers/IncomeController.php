@@ -57,21 +57,21 @@ class IncomeController extends Controller
                 ->select('u.id as user', 'u.name', 's.id', 's.nombre')
                 ->where('u.id',$user->id )
                 ->where('su.condicion',1)
-                ->get();
+                ->first();
   
         $income = DB::table('solicitud_compras as sol')
                 ->join('facturas as f', 'f.solicitudcompra_id', 'sol.id')
                 // ->join('invoice_details as fd', 'fd.invoice_id', 'f.id')
                 ->join('modalities as m', 'm.id', 'sol.modality_id')
                 ->join('providers as pro', 'pro.id', 'f.provider_id')
-                ->select('sol.id', 'm.nombre as modalidad', 'sol.nrosolicitud' , 'pro.razonsocial', 'pro.nit', 'f.nrofactura', 'f.fechafactura', 'f.montofactura', 'sol.created_at', 'sol.condicion')
+                ->select('sol.id', 'sol.stock', 'm.nombre as modalidad', 'sol.nrosolicitud' , 'pro.razonsocial', 'pro.nit', 'f.nrofactura', 'f.fechafactura', 'f.montofactura', 'sol.created_at', 'sol.condicion')
                 ->where('sol.deleted_at', null)
-                ->where('sol.sucursal_id', $activo[0]->id)
+                ->where('sol.sucursal_id', $activo->id)
                 ->orderBy('sol.id', 'DESC')
                 ->get();
                 
 
-        return view('income.browse', compact('income'));
+        return view('almacenes.income.browse', compact('income'));
     }
 
 
@@ -86,7 +86,7 @@ class IncomeController extends Controller
         // $da = AdministrativeDirection::all();
         // return $this->getIdDireccionInfo(); 
 
-        $da = $this->getIdDireccionInfo(); 
+        $da = $this->getDireccion(); 
 
         $proveedor = Provider::all();
         // $partida = Partida::where('codigo','like','3%')->get();
@@ -94,7 +94,7 @@ class IncomeController extends Controller
         $modalidad = Modality::all();
         // return $partida;
 
-        return view('income.add', compact('sucursales', 'da', 'proveedor', 'partida', 'modalidad'));
+        return view('almacenes.income.add', compact('sucursales', 'da', 'proveedor', 'partida', 'modalidad'));
 
     }
 
@@ -128,7 +128,7 @@ class IncomeController extends Controller
         $proveedor = Provider::find($factura[0]->provider_id);
 
         
-        return view('income.report',compact('sol','factura', 'detalle', 'sucursal', 'modalidad', 'unidad', 'proveedor'));
+        return view('almacenes.income.report',compact('sol','factura', 'detalle', 'sucursal', 'modalidad', 'unidad', 'proveedor'));
         // return view('income.view', compact('sol','factura', 'detalle', 'sucursal', 'modalidad', 'unidad'));
     }
     protected function view_ingreso_stock($id)
@@ -161,7 +161,7 @@ class IncomeController extends Controller
         $proveedor = Provider::find($factura[0]->provider_id);
 
         
-        return view('income.reportstock',compact('sol','factura', 'detalle', 'sucursal', 'modalidad', 'unidad', 'proveedor'));
+        return view('almacenes.income.reportstock',compact('sol','factura', 'detalle', 'sucursal', 'modalidad', 'unidad', 'proveedor'));
         // return view('income.view', compact('sol','factura', 'detalle', 'sucursal', 'modalidad', 'unidad'));
     }
 
@@ -169,7 +169,8 @@ class IncomeController extends Controller
     
     public function store(Request $request)
     {
-        dd($request);
+        // dd($request);
+        // return $request;
         $user = Auth::user();
         DB::beginTransaction();
         try {
@@ -235,14 +236,14 @@ class IncomeController extends Controller
                     'article_id'            => $request->article_id[$cont],
                     'cantsolicitada'        => $request->cantidad[$cont],
                     'precio'                => $request->precio[$cont],
-                    'totalbs'               => $request->totalbs[$cont],
+                    'totalbs'               => $request->cantidad[$cont]*$request->precio[$cont],
                     'cantrestante'          => $request->cantidad[$cont],
                     'fechaingreso'          => $request->fechaingreso,
                     'gestion'               => $gestion
                 ]);
                 $cont++;
             }
-
+            // return $request;
             DB::commit();
             return redirect()->route('income.index')->with(['message' => 'Registrado exitosamente.', 'alert-type' => 'success']);
         } catch (\Throwable $th) {
@@ -259,7 +260,9 @@ class IncomeController extends Controller
     public function edit($id)
     {
 
-        $da = $this->getIdDireccionInfo(); 
+        $da = $this->getDireccion();     
+
+        $solicitud = SolicitudCompra::find($id);
 
 
         $user = Auth::user();
@@ -271,10 +274,11 @@ class IncomeController extends Controller
 
 
         $sol = SolicitudCompra::find($id);
-        $facturaux = Factura::where('solicitudcompra_id', $id)->get();
+        // $facturaux = Factura::where('solicitudcompra_id', $id)->first();
 
-        $factura = Factura::find($facturaux[0]->id);
+        // $factura = Factura::find($facturaux->id);
 
+        $factura = Factura::where('solicitudcompra_id', $id)->first();
   
         
         $detalle = DB::table('detalle_facturas as df')
@@ -292,98 +296,104 @@ class IncomeController extends Controller
         $partida = Partida::all();
 
         $modalidad = Modality::all();
+        // return $da;
 
 
 
-
-        return view('income.edit', compact('sucursales','da',          'detalle', 'partida', 'proveedor', 'sol', 'factura', 'proveedorselect','modalidad'));
+        return view('almacenes.income.edit', compact('da', 'solicitud',       'sucursales', 'detalle', 'partida', 'proveedor', 'sol', 'factura', 'proveedorselect','modalidad'));
 
     }
 
 
 
     public function update(Request $request)
-    {
+    {  
         $user = Auth::user();
         $gestion = Carbon::parse($request->fechaingreso)->format('Y');
         DB::beginTransaction();
         try {
-
-            //para agregar un numero de solicitud si en caso se cambia la unidad administrativa
-            $aux = SolicitudCompra::find($request->id);            
-            if($aux->unidadadministrativa != $request->unidadadministrativa)
+            if(floatval($request->total) === floatval($request->montofactura))
             {
-                $unidad = DB::connection('mysqlgobe')->table('unidadadminstrativa')
-                    ->select('sigla')
-                    ->where('ID',$request->unidadadministrativa)
-                    ->get();
+                //para agregar un numero de solicitud si en caso se cambia la unidad administrativa
+                $aux = SolicitudCompra::find($request->id);            
+                if($aux->unidadadministrativa != $request->unidadadministrativa)
+                {
+                    $unidad = DB::connection('mamore')->table('unidades')
+                        ->select('sigla')
+                        ->where('id',$request->unidadadministrativa)
+                        ->first();
 
-                $aux = SolicitudCompra::where('unidadadministrativa',$request->unidadadministrativa)
-                    ->where('deleted_at', null)
-                    ->get();
+                    $aux = SolicitudCompra::where('unidadadministrativa',$request->unidadadministrativa)
+                        ->where('deleted_at', null)
+                        ->get();
 
-                $length = 4;
-                $char = 0;
-                $type = 'd';
-                $format = "%{$char}{$length}{$type}"; // or "$010d";
+                    $length = 4;
+                    $char = 0;
+                    $type = 'd';
+                    $format = "%{$char}{$length}{$type}"; // or "$010d";
 
-                $request->merge(['nrosolicitud' => strtoupper($unidad[0]->sigla).'-'.sprintf($format, count($aux)+1)]);
+                    $request->merge(['nrosolicitud' => strtoupper($unidad->sigla).'-'.sprintf($format, count($aux)+1)]);
+                }
+                else
+                {
+                    $request->merge(['nrosolicitud' => $aux->nrosolicitud]);
+                }
+
+                SolicitudCompra::where('id',$request->id)->update([
+                        'sucursal_id'       => $request->branchoffice_id,
+                        'unidadadministrativa'     => $request->unidadadministrativa,
+                        'modality_id'           => $request->modality_id,
+                        'registeruser_id'       => $user->id,
+                        'nrosolicitud'          => $request->nrosolicitud,
+                        'fechaingreso'          => $request->fechaingreso,
+                        'gestion'               => $gestion
+                ]);
+    
+            
+                Factura::where('solicitudcompra_id',$request->id)->update([
+                        'provider_id'           => $request->provider_id,
+                        'registeruser_id'       => $user->id,
+                        'tipofactura'           => $request->tipofactura,
+                        'fechafactura'          => $request->fechafactura,
+                        'montofactura'          => $request->montofactura,
+                        'nrofactura'            => $request->nrofactura,
+                        'nroautorizacion'       => $request->nroautorizacion,
+                        'nrocontrol'            => $request->nrocontrol,
+                        'fechaingreso'          => $request->fechaingreso, 
+                        'gestion'               => $gestion
+                ]);
+
+                $factura = Factura::where('solicitudcompra_id',$request->id)->first();
+                // return $factura;
+                
+                // DetalleFactura::where('factura_id', $factura->id)->update(['deleted_at' => Carbon::now(), 'condicion' => 0]);
+                DetalleFactura::where('factura_id', $factura->id)->delete();
+                $cont = 0;
+
+        
+                while($cont < count($request->article_id))
+                {
+                    DetalleFactura::create([
+                        'factura_id'            => $factura->id,
+                        'registeruser_id'       => $user->id,
+                        'article_id'            => $request->article_id[$cont],
+                        'cantsolicitada'        => $request->cantidad[$cont],
+                        'precio'                => $request->precio[$cont],
+                        'totalbs'               => $request->totalbs[$cont],
+                        'cantrestante'          => $request->cantidad[$cont],
+                        'fechaingreso'          => $request->fechaingreso,
+                        'gestion'               => $gestion
+                    ]);
+                    $cont++;
+                }
+
+                DB::commit();
+                return redirect()->route('income.index')->with(['message' => 'Actualizado exitosamente.', 'alert-type' => 'success']);
             }
             else
             {
-                $request->merge(['nrosolicitud' => $aux->nrosolicitud]);
+                return redirect()->route('income.edit', $request->id)->with(['message' => 'El monto de la factura no coincide con el total de la solicitud.', 'alert-type' => 'error']);
             }
-
-            SolicitudCompra::where('id',$request->id)->update([
-                    'sucursal_id'       => $request->branchoffice_id,
-                    'unidadadministrativa'     => $request->unidadadministrativa,
-                    'modality_id'           => $request->modality_id,
-                    'registeruser_id'       => $user->id,
-                    'nrosolicitud'          => $request->nrosolicitud,
-                    'fechaingreso'          => $request->fechaingreso,
-                    'gestion'               => $gestion
-            ]);
-  
-           
-            Factura::where('solicitudcompra_id',$request->id)->update([
-                    'provider_id'           => $request->provider_id,
-                    'registeruser_id'       => $user->id,
-                    'tipofactura'           => $request->tipofactura,
-                    'fechafactura'          => $request->fechafactura,
-                    'montofactura'          => $request->montofactura,
-                    'nrofactura'            => $request->nrofactura,
-                    'nroautorizacion'       => $request->nroautorizacion,
-                    'nrocontrol'            => $request->nrocontrol,
-                    'fechaingreso'          => $request->fechaingreso, 
-                    'gestion'               => $gestion
-            ]);
-
-            $factura = Factura::where('solicitudcompra_id',$request->id)->get();
-            // return $factura;
-            
-            // DetalleFactura::where('factura_id', $factura->id)->update(['deleted_at' => Carbon::now(), 'condicion' => 0]);
-            DetalleFactura::where('factura_id', $factura[0]->id)->delete();
-            $cont = 0;
-
-       
-            while($cont < count($request->article_id))
-            {
-                DetalleFactura::create([
-                    'factura_id'            => $factura[0]->id,
-                    'registeruser_id'       => $user->id,
-                    'article_id'            => $request->article_id[$cont],
-                    'cantsolicitada'        => $request->cantidad[$cont],
-                    'precio'                => $request->precio[$cont],
-                    'totalbs'               => $request->totalbs[$cont],
-                    'cantrestante'          => $request->cantidad[$cont],
-                    'fechaingreso'          => $request->fechaingreso,
-                    'gestion'               => $gestion
-                ]);
-                $cont++;
-            }
-
-            DB::commit();
-            return redirect()->route('income.index')->with(['message' => 'Registrado exitosamente.', 'alert-type' => 'success']);
         } catch (\Throwable $th) {
             
             DB::rollback();
@@ -437,8 +447,11 @@ class IncomeController extends Controller
 
     protected function ajax_unidad_administrativa($id)//para la view de ingreso y egreso
     {
-        return DB::connection('mysqlgobe')->table('unidadadminstrativa')
+        return DB::connection('mamore')->table('unidades')
+                        ->where('deleted_at', null)
+                        ->where('direccion_id',$id)
                         ->select('*')
+                        ->orderBy('nombre', 'asc')
                         ->get();
     }
 

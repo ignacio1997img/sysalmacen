@@ -2,7 +2,7 @@
 
 @section('page_title', 'Bandeja de Entradas')
 
-@if(auth()->user()->hasPermission('browse_bandeja'))
+@if(auth()->user()->hasPermission('browse_bandejas'))
 
     @section('content')
         <div class="page-content browse container-fluid">

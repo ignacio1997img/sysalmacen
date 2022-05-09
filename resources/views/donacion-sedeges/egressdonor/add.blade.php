@@ -1,12 +1,6 @@
-{{-- <link href="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/css/alertify.min.css" rel="stylesheet"/>
-<script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/alertify.min.js"></script> --}}
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.css" rel="stylesheet" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.js"></script>
 @extends('voyager::master')
 
-@section('page_title', 'Viendo Egreso')
+@section('page_title', 'Registrar Salida Donacion')
 
 <style>
     input:focus {
@@ -14,13 +8,18 @@
 }
 </style>
 
-@if(auth()->user()->hasPermission('add_income'))
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.css" rel="stylesheet" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.js"></script>
+
+@if(auth()->user()->hasPermission('add_egressdonor'))
 
     @section('page_header')
         
         <div class="container-fluid">
             <div class="row">
-                <h1 class="page-title">
+                <h1 class="page-title" id="subtitle">
                     <i class="voyager-basket"></i> Añadir Egreso de Donaciones
                 </h1>
             </div>
@@ -37,9 +36,9 @@
                             <div class="panel-body">                            
                                 <div class="table-responsive">
                                     <main class="main">        
-                                        {!! Form::open(['route' => 'egressdonor.store', 'class' => 'was-validated'])!!}
+                                        {!! Form::open(['route' => 'egressdonor.store', 'class' => 'was-validated', 'enctype' => 'multipart/form-data'])!!}
                                         <div class="card-body">
-                                            <h5>Centro de Establecimiento</h5>
+                                            <h5 id="subtitle">Centro de Establecimiento</h5>
                                             <div class="row">
                                                 <!-- === -->
                                                 <div class="col-sm-4">
@@ -65,10 +64,10 @@
                                                         <small>Centro.</small>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-2">
+                                                <div class="col-sm-3">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="date"  class="form-control" name="fechaentrega" required>
+                                                            <input type="date"  class="form-control text" name="fechaentrega" required>
                                                         </div>
                                                         <small>Fecha de Donación.</small>
                                                     </div>
@@ -79,15 +78,20 @@
                                                     <div class="form-group">
                                                         <div class="form-line">
                                                             <!-- <input type="date"  class="form-control" name="fechaingreso" required> -->
-                                                            <textarea name="observacion" id="observacion" rows="2" class="form-control"></textarea>
+                                                            <textarea name="observacion" id="observacion" rows="2" class="form-control text"></textarea>
                                                         </div>
                                                         <small>Observacion.</small>
                                                     </div>
                                                 </div>
                                             </div>
-                                           
+                                            <div>
+                                                    <div class="form-group">
+                                                        <input type="file" name="archivos[]"  multiple class="form-control text" accept="image/*">
+                                                        <small>Archivos.</small>
+                                                    </div>
+                                            </div>
                                             
-                                            <h5>Categoria / Articulo:</h5>
+                                            <h5 id="subtitle">Categoria / Articulo:</h5>
                                             <div class="row">
                                                 <div class="col-sm-12">
                                                     <div class="form-group">
@@ -116,7 +120,7 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number" id="stock" disabled class="form-control" title="Stock">
+                                                            <input type="number" id="stock" disabled class="form-control text" title="Stock">
                                                         </div>
                                                         <small>Cantidad (STOCK).</small>
                                                     </div>
@@ -124,12 +128,35 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number" id="cantidad"  class="form-control" title="Cantidad">
+                                                            <input type="number" id="cantidad"  class="form-control text" title="Cantidad">
                                                         </div>
                                                         <small>Cantidad Artículo.</small>
                                                     </div>
-                                                </div>                                              
-                                                
+                                                </div>      
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-3">
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <select id="estado"class="form-control select2" required>
+                                                                <option value="Exelente">Exelente</option>
+                                                                <option value="Buena">Buena</option>
+                                                                <option value="Regular">Regular</option>           
+                                                                <option value="Mala">Mala</option>           
+                                                            </select>
+                                                        </div>
+                                                        <small>Estado Producto.</small>
+                                                    </div>
+                                                </div>   
+                                                <div class="col-sm-9">
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <!-- <input type="date"  class="form-control" name="fechaingreso" required> -->
+                                                            <textarea id="caracteristica" rows="2" class="form-control text" placeholder="Opcional"></textarea>
+                                                        </div>
+                                                        <small>Observación / Características.</small>
+                                                    </div>
+                                                </div>
                                             </div>
 
                                             <div class="form-group">
@@ -143,6 +170,8 @@
                                                     <tr>
                                                         <th>Opciones</th>
                                                         <th>Articulo</th>
+                                                        <th>Estado</th>
+                                                        <th>Característica</th>
                                                         <th>Cantidad</th>
                     
                                                     </tr>
@@ -171,6 +200,53 @@
 
 
     @section('css')
+        <style>
+            input:focus{        
+                background: rgb(255, 245, 229);
+                border-color: rgb(255, 161, 10);
+                /* border-radius: 50px; */
+            }
+            input.text, select.text, textarea.text{ 
+                border-radius: 5px 5px 5px 5px;
+                color: #000000;
+                border-color: rgb(63, 63, 63);
+            }
+
+        
+            small{font-size: 12px;
+                color: rgb(12, 12, 12);
+                font-weight: bold;
+            }
+            #subtitle{
+                font-size: 18px;
+                color: rgb(12, 12, 12);
+                font-weight: bold;
+            }
+
+
+            #detalles {
+                font-family: Arial, Helvetica, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            #detalles td, #detalles th {
+                border: 1px solid #ddd;
+                padding: 8px;
+            }
+
+            #detalles tr:nth-child(even){background-color: #f2f2f2;}
+
+            #detalles tr:hover {background-color: #ddd;}
+
+            #detalles th {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                text-align: left;
+                background-color: #04AA6D;
+                color: white;
+            }
+        </style>
     <script src="{{ asset('js/app.js') }}" defer></script>
     @stop
 
@@ -180,6 +256,7 @@
 
             $(function()
             {    
+                $(".select2").select2({theme: "classic"});
                 $('#ingreso').on('change', onselect_article);
                 $('#articulos').on('change', llenar_input);
                 // $('#articulo').on('change', onselect_presentacion);
@@ -208,6 +285,9 @@
                 nombre_articulo=$("#articulos option:selected").text();
                 articulo_id =$("#articulos").val();
                 // presentacion=$("#presentacion").val();
+                estado=$("#estado option:selected").text();
+                caracteristica=$("#caracteristica").val();
+
                 cantidad=parseFloat($("#cantidad").val());
                 // cantidad=$("#cantidad").val();
                 stock=$("#stock").val();
@@ -223,13 +303,19 @@
                 ok=false;
 
 
-                
+                if(caracteristica=="")
+                {
+                    caracteristica='S/N'
+                }
+            
 
                 if (nombre_articulo != 'Seleccione un Articulo..' && auxcantidad != '' && cantidad > 0) {
        
                         var fila='<tr class="selected" id="fila'+articulo_id+'">'
                             fila+='<td><button type="button" class="btn btn-danger" onclick="eliminar('+articulo_id+')";><i class="voyager-trash"></i></button></td>'
                             fila+='<td><input type="hidden" class="input_article" name="articulo_id[]"value="'+articulo_id+'">'+nombre_articulo+'</td>' 
+                            fila+='<td><input type="hidden" name="estado[]" value="'+estado+'">'+estado+'</td>' 
+                            fila+='<td><input type="hidden" name="caracteristica[]" value="'+caracteristica+'">'+caracteristica+'</td>' 
                             fila+='<td><input type="hidden" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td>'                       
                         fila+='</tr>';
 
@@ -349,8 +435,7 @@
             {
                 // $("#stock").val("");
                 $("#cantidad").val("");
-                // $("#caducidad").val("");
-                // $("#presentacion").val("");
+                $("#caracteristica").val("");
             }
 
             //eliminar filas en la tabla
@@ -465,5 +550,10 @@
 
 
         </script> 
+    @stop
+    @section('content')
+        <h1>No tienes permiso</h1>
+        <br>
+        <h1>Contactese con el Administrador del sistema</h1>
     @stop
 @endif

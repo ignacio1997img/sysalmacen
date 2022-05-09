@@ -47,13 +47,22 @@
                             </div>
                             
                             <?php 
-                                $funcionarios = Illuminate\Support\Facades\DB::connection('mysqlgobe')->table('contribuyente as co')                            
-                                            ->join('contratos as c', 'c.idContribuyente', 'co.N_Carnet')     
-                                            ->join('unidadadminstrativa as u', 'u.ID', 'c.idDependencia') 
-                                            ->join('cargo as ca', 'ca.ID', 'c.idCargo')
-                                            ->select('c.ID','c.idContribuyente', 'c.nombre AS nombrecontribuyente', 'ca.Descripcion as cargo', 'u.Nombre as unidad', 'c.Estado')
-                                            ->where('c.Estado', 1)
+                                // $funcionarios = Illuminate\Support\Facades\DB::connection('mysqlgobe')->table('contribuyente as co')                            
+                                //             ->join('contratos as c', 'c.idContribuyente', 'co.N_Carnet')     
+                                //             ->join('unidadadminstrativa as u', 'u.ID', 'c.idDependencia') 
+                                //             ->join('cargo as ca', 'ca.ID', 'c.idCargo')
+                                //             ->select('c.ID','c.idContribuyente', 'c.nombre AS nombrecontribuyente', 'ca.Descripcion as cargo', 'u.Nombre as unidad', 'c.Estado')
+                                //             ->where('c.Estado', 1)
+                                //             ->get();
+                                            
+                                $funcionarios = Illuminate\Support\Facades\DB::connection('mamore')->table('people as p')
+                                            ->join('contracts as c', 'c.person_id', 'p.id')
+                                            ->select('p.id', 'p.ci', 'p.first_name', 'p.last_name')
+                                            ->where('c.status','firmado')
+                                            ->orderBy('p.last_name', 'asc')
                                             ->get();
+                                
+
                                 $usuario = \App\Models\User::find($dataTypeContent->id);
                      
                                 // dd($usuario);
@@ -66,21 +75,21 @@
                                 // <input type="hidden" name="user_id" value="{{$dataTypeContent->id}}">
 
                             ?>
-
+                            {{-- @if (auth()->user()->isAdmin()) --}}
                             <div class="form-group">
                                 <label for="default_role">{{ __('Funcionario') }}</label>
                                 <select name="funcionario_id" class="form-control select2">
                                     <option value="" selected>Seleccione</option>
                                     @foreach ($funcionarios as $data)    
                                         @if($usuario == null)                                
-                                            <option value="{{$data->ID}}" >{{$data->nombrecontribuyente}} - {{$data->cargo}} -{{$data->unidad}}</option>     
+                                            <option value="{{$data->id}}" >{{$data->last_name}} {{$data->first_name}}</option>     
                                         @else
-                                            <option value="{{$data->ID}}" {{$data->ID == $usuario->funcionario_id? 'selected' : '' }}>{{$data->nombrecontribuyente}} - {{$data->cargo}} -{{$data->unidad}}</option>    
+                                            <option value="{{$data->id}}" {{$data->id == $usuario->funcionario_id? 'selected' : '' }}>{{$data->last_name}} {{$data->first_name}}</option>    
                                         @endif                            
                                     @endforeach
                                 </select>
                             </div>
-
+                            {{-- @endif --}}
                             <div class="form-group">
                                 <label for="email">{{ __('voyager::generic.email') }}</label>
                                 <input type="email" class="form-control" id="email" name="email" placeholder="{{ __('voyager::generic.email') }}"

@@ -16,9 +16,9 @@ class CreateDonacionArticulosTable extends Migration
         Schema::create('donacion_articulos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('categoria_id')->nullable()->constrained('donacion_categorias');
-            $table->string('nombre', 512);
+            $table->string('nombre', 512)->nullable();
 
-            $table->string('presentacion', 512);
+            $table->string('presentacion', 512)->nullable();
             $table->boolean('condicion')->default(1);
             $table->timestamps();
             $table->softDeletes();  

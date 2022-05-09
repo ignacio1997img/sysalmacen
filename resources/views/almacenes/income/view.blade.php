@@ -7,7 +7,7 @@
     <div class="col-md-12" style="padding: 10px;">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="navbar-brand" href="javascript:;">
-                <i class="voyager-credit-cards"></i> Viendo Ingreso
+                <i class="voyager-credit-cards"></i> Viendo Ingresos
             </a>
             <div class="container-fluid">
                 <!-- Collect the nav links, forms, and other content for toggling -->

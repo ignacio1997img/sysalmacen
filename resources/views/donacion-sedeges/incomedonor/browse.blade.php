@@ -1,13 +1,45 @@
 @extends('voyager::master')
+<style>
+    #dataTable {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            }
 
+            #dataTable td, #dataTable th {
+            border: 1px solid #ddd;
+            padding: 8px;
+            }
+
+            #dataTable tr:nth-child(even){background-color: #f2f2f2;}
+
+            #dataTable tr:hover {background-color: #ddd;}
+
+            #dataTable th {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                text-align: left;
+                background-color: #04AA6D;
+                color: white;
+    }
+
+
+
+    #subtitle{
+            font-size: 18px;
+            color: rgb(12, 12, 12);
+            font-weight: bold;
+        }
+</style>
 @section('page_title', 'Viendo Ingresos Donacion')
 
-<!-- @if(auth()->user()->hasPermission('browse_incomedonor')) -->
+
+@if(auth()->user()->hasPermission('browse_incomedonor')) 
     @section('page_header')
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-8">
-                    <h1 class="page-title">
+                    <h1 class="page-title" id="subtitle">
                         <i class="voyager-basket"></i> Ingresos de Donaciones
                     </h1>
                     @if(auth()->user()->hasPermission('add_incomedonor'))
@@ -31,7 +63,7 @@
                         <div class="panel panel-bordered">
                             <div class="panel-body">
                                 <div class="table-responsive">
-                                    <table id="dataTable" class="dataTable table-hover">
+                                    <table id="dataTable" class="dataTab table-hover">
                                         <thead>
                                             <tr>
                                                 <th>Nro&deg;</th>
@@ -40,6 +72,7 @@
                                                 <th>Observacion</th>
                                                 <th>Fecha Donacion</th>
                                                 <th>Fecha Ingreso</th>
+                                                <th>Stock</th>
                                                 <th class="text-center">Acciones</th>
                                             </tr>
                                         </thead>
@@ -52,6 +85,13 @@
                                                     <td style="width: 200pt">{{$data->observacion}}</td>
                                                     <td>{{\Carbon\Carbon::parse($data->fechadonacion)->format('d/m/Y')}}</td>
                                                     <td>{{\Carbon\Carbon::parse($data->fechaingreso)->format('d/m/Y')}}</td>
+                                                    <td>
+                                                        @if ($data->stock == 1)
+                                                            <label class="label label-success">SI</label>
+                                                        @else
+                                                            <label class="label label-danger">NO</label>
+                                                        @endif
+                                                    </td>
                                                     <td>
                                                         <div class="no-sort no-click bread-actions text-right">
                                                             @if(auth()->user()->hasPermission('read_incomedonor'))
@@ -128,9 +168,8 @@
 
     @section('javascript')
             <script>
-             
                 $(document).ready(function(){
-                    $('.dataTable').DataTable({
+                    $('.dataTab').DataTable({
                         language: {
                             // "order": [[ 0, "desc" ]],
                             sProcessing: "Procesando...",

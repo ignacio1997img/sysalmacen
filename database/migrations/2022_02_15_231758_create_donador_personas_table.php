@@ -15,7 +15,7 @@ class CreateDonadorPersonasTable extends Migration
     {
         Schema::create('donador_personas', function (Blueprint $table) {
             $table->id();
-            $table->string('ci');
+            $table->string('ci')->unique();
             $table->string('nombre',500);
             $table->string('tel')->nullable();
             $table->text('direccion')->nullable();

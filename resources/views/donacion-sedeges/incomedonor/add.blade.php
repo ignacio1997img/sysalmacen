@@ -10,9 +10,59 @@
 @if(auth()->user()->hasPermission('add_incomedonor'))
 
 <style>
-    input:focus {
-  background: rgb(197, 252, 215);
-}
+    input:focus{        
+        background: rgb(255, 245, 229);
+        border-color: rgb(255, 161, 10);
+        /* border-radius: 50px; */
+    }
+    input.text, select.text, textarea.text{ 
+        border-radius: 5px 5px 5px 5px;
+        color: #000000;
+        border-color: rgb(63, 63, 63);
+    }
+
+   
+    small{font-size: 32px;
+        color: rgb(12, 12, 12);
+        font-weight: bold;
+    }
+    #subtitle{
+        font-size: 18px;
+        color: rgb(12, 12, 12);
+        font-weight: bold;
+    }
+
+
+    #detalles {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    }
+
+    #detalles td, #detalles th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    }
+
+    #detalles tr:nth-child(even){background-color: #f2f2f2;}
+
+    #detalles tr:hover {background-color: #ddd;}
+
+    #detalles th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #04AA6D;
+        color: white;
+    }
+
+    .form-control .select2{
+        border-radius: 5px 5px 5px 5px;
+        color: #000000;
+        border-color: rgb(63, 63, 63);
+    }
+    
+
 </style>
 
 
@@ -20,14 +70,16 @@
         
         <div class="container-fluid">
             <div class="row">
-                <h1 class="page-title">
+                <h1 class="page-title" id="subtitle">
                     <i class="voyager-basket"></i> Añadir Ingreso de Donaciones
                 </h1>
             </div>
         </div>
     @stop
+    
 
     @section('content')    
+    
         <div id="app">
             <div class="page-content browse container-fluid" >
                 @include('voyager::alerts')
@@ -39,7 +91,7 @@
                                     <main class="main">        
                                         {!! Form::open(['route' => 'incomedonor.store', 'class' => 'was-validated', 'enctype' => 'multipart/form-data'])!!}
                                         <div class="card-body">
-                                            <h5>Centro de Establecimiento</h5>
+                                            <h5 id="subtitle">Centro de Establecimiento</h5>
                                             <div class="row">
                                                 <!-- === -->
                                                 <div class="col-sm-4">
@@ -68,7 +120,7 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="date"  class="form-control" name="fechadonacion" required>
+                                                            <input type="date"  class="form-control text" name="fechadonacion" required>
                                                         </div>
                                                         <small>Fecha de Donación.</small>
                                                     </div>
@@ -76,7 +128,7 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="date"  class="form-control" name="fechaingreso" required>
+                                                            <input type="date" class="form-control text" name="fechaingreso" required>
                                                         </div>
                                                         <small>Fecha de Ingreso.</small>
                                                     </div>
@@ -87,7 +139,7 @@
                                                     <div class="form-group">
                                                         <div class="form-line">
                                                             <!-- <input type="date"  class="form-control" name="fechaingreso" required> -->
-                                                            <textarea name="observacion" id="observacion" rows="2" class="form-control"></textarea>
+                                                            <textarea name="observacion" id="observacion" rows="2" class="form-control text"></textarea>
                                                         </div>
                                                         <small>Observación.</small>
                                                     </div>
@@ -101,7 +153,7 @@
                                             </div>
                                            
                                             <hr>
-                                            <h5>Donador:</h5>                                               
+                                            <h5 id="subtitle">Donador:</h5>                                               
     
                                             <div class="row">
                                                 <div class="col-sm-2">
@@ -134,7 +186,7 @@
                                                     <div class="col-sm-3">
                                                         <div class="form-group">
                                                             <div class="form-line">
-                                                                <input type="text" id="nit" class="form-control form-control-sm" placeholder="Seleccione un donante" disabled readonly>
+                                                                <input type="text" id="nit" class="form-control text form-control-sm" placeholder="Seleccione un donante" disabled readonly>
                                                             </div>
                                                             <small>CI./NIT.</small>
                                                         </div>
@@ -143,7 +195,7 @@
                                             </div>
                                             
                                             <hr>
-                                            <h5>Detalle Categoria / Articulo:</h5>
+                                            <h5 id="subtitle">Detalle Categoria / Articulo:</h5>
                                             <div class="row">
                                                 <div class="col-sm-3">
                                                     <div class="form-group">
@@ -171,7 +223,7 @@
                                                 <div class="col-sm-1">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="text"disabled class="form-control form-control-sm" id="presentacion" autocomplete="off">
+                                                            <input type="text"disabled class="form-control text form-control-sm" id="presentacion" autocomplete="off">
                                                         </div>
                                                         <small>Presentacion.</small>
                                                     </div>
@@ -179,7 +231,7 @@
                                                 <div class="col-sm-1">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number" id="cantidad" min="1" pattern="^[0-9]+" class="form-control" title="Cantidad">
+                                                            <input type="number" id="cantidad" min="1" pattern="^[0-9]+" class="form-control text" title="Cantidad">
                                                         </div>
                                                         <small>Cantidad Artículo.</small>
                                                     </div>
@@ -188,14 +240,14 @@
                                                     <div class="form-group">
                                                         <div class="form-line">
                                                             <!-- <input type="number" id="precio" min="0" class="form-control positive" title="Precio Unitario Bs"> -->
-                                                            <input type="number" id="precio" min="0" class="form-control" title="Precio Unitario Bs">
+                                                            <input type="number" id="precio" min="0" class="form-control text" title="Precio Unitario Bs">
                                                         </div>
                                                         <small>Precio Unit. Estimado *(Bs).</small>
                                                     </div>
                                                 </div><div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="date" id="caducidad" class="form-control" title="Fecha de caducidad del producto o articulo">
+                                                            <input type="date" id="caducidad" class="form-control text" title="Fecha de caducidad del producto o articulo">
                                                         </div>
                                                         <small>Fecha Caducidad *(Opcional).</small>
                                                     </div>
@@ -219,7 +271,7 @@
                                                     <div class="form-group">
                                                         <div class="form-line">
                                                             <!-- <input type="date"  class="form-control" name="fechaingreso" required> -->
-                                                            <textarea id="caracteristica" rows="2" class="form-control" placeholder="Opcional"></textarea>
+                                                            <textarea id="caracteristica" rows="2" class="form-control text" placeholder="Opcional"></textarea>
                                                         </div>
                                                         <small>Observación / Características.</small>
                                                     </div>
@@ -282,6 +334,9 @@
 
             $(function()
             {    
+                
+                $(".select2").select2({theme: "classic"});
+                // $(".select2").select2({theme: "classic"});
                 $('#categoria').on('change', onselect_article);
                 $('#articulo').on('change', onselect_presentacion);
 
@@ -318,7 +373,7 @@
                 precio=parseFloat($("#precio").val());
                 cantidad=parseFloat($("#cantidad").val());
                 caducidad=$("#caducidad").val();
-                caducidad=$("#caducidad").val();
+                // caducidad=$("#caducidad").val();
 
                 auxprecio=$("#precio").val();
                 auxcantidad=$("#cantidad").val();
@@ -413,6 +468,8 @@
                 $("#precio").val("");
                 $("#cantidad").val("");
                 $("#caducidad").val("");
+                $("#caracteristica").val("");
+
                 // $("#presentacion").val("");
             }
 

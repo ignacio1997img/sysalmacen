@@ -18,8 +18,10 @@ class CreateDonacionEgresoDetallesTable extends Migration
             $table->foreignId('donacionegreso_id')->constrained('donacion_egresos');
             $table->foreignId('donacioningresodetalle_id')->constrained('donacion_ingreso_detalles');
 
-            $table->foreignId('registeruser_id')->constrained('users');
+            $table->foreignId('registeruser_id')->nullable()->constrained('users');
 
+            $table->string('estado');
+            $table->text('caracteristica')->nullable();
             $table->decimal('cantentregada', 11, 2);
 
             $table->smallInteger('condicion')->default(1);  

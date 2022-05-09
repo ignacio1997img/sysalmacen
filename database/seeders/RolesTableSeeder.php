@@ -26,26 +26,55 @@ class RolesTableSeeder extends Seeder
             ])->save();
         }
 
-        $role = Role::firstOrNew(['name' => 'Almacen']);
+        //  DONACIONES SEDEGES ROLES
+        $role = Role::firstOrNew(['name' => 'sedeges_donacion_responsable']);
         if (!$role->exists) {
             $role->fill([
-                'display_name' => __('Responsable Almacen'),
+                'display_name' => __('Responsable de Donacion SEDEGES'),
+            ])->save();
+        }
+        $role = Role::firstOrNew(['name' => 'sedeges_donacion_view']);
+        if (!$role->exists) {
+            $role->fill([
+                'display_name' => __('Ver Stock Donacion SEDEGES'),
+            ])->save();
+        }
+        // FIN DONACIONES SEDEGES
+
+        $role = Role::firstOrNew(['name' => 'almacen_responsable']);
+        if (!$role->exists) {
+            $role->fill([
+                'display_name' => __('Responsable de almacen'),
             ])->save();
         }
 
-        $role = Role::firstOrNew(['name' => 'Solicitante']);
-        if (!$role->exists) {
-            $role->fill([
-                'display_name' => __('Unidades Solicitante'),
-            ])->save();
-        }
 
-        $role = Role::firstOrNew(['name' => 'Contrataciones']);
-        if (!$role->exists) {
-            $role->fill([
-                'display_name' => __('Contrataciones'),
-            ])->save();
-        }
+
+
+
+
+
+        
+        // $role = Role::firstOrNew(['name' => 'Almacen']);
+        // if (!$role->exists) {
+        //     $role->fill([
+        //         'display_name' => __('Responsable Almacen'),
+        //     ])->save();
+        // }
+
+        // $role = Role::firstOrNew(['name' => 'Solicitante']);
+        // if (!$role->exists) {
+        //     $role->fill([
+        //         'display_name' => __('Unidades Solicitante'),
+        //     ])->save();
+        // }
+
+        // $role = Role::firstOrNew(['name' => 'Contrataciones']);
+        // if (!$role->exists) {
+        //     $role->fill([
+        //         'display_name' => __('Contrataciones'),
+        //     ])->save();
+        // }
     }
 }
 

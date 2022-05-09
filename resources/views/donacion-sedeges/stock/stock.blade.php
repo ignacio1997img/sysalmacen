@@ -1,20 +1,47 @@
 @extends('voyager::master')
+<style>
+    #dataTable {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            }
 
-@section('page_title', 'Viendo Ingresos')
+            #dataTable td, #dataTable th {
+            border: 1px solid #ddd;
+            padding: 8px;
+            }
 
-@if(auth()->user()->hasPermission('browse_income'))
+            #dataTable tr:nth-child(even){background-color: #f2f2f2;}
+
+            #dataTable tr:hover {background-color: #ddd;}
+
+            #dataTable th {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                text-align: left;
+                background-color: #04AA6D;
+                color: white;
+    }
+
+
+
+    #subtitle{
+            font-size: 18px;
+            color: rgb(12, 12, 12);
+            font-weight: bold;
+        }
+</style>
+@section('page_title', 'Viendo Ingresos Donacion')
+
+
+@if(auth()->user()->hasPermission('browse_incomedonorstockview')) 
     @section('page_header')
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-8">
-                    <h1 class="page-title">
-                        <i class="voyager-basket"></i> Ingresos
+                    <h1 class="page-title" id="subtitle">
+                        <i class="voyager-basket"></i> Donaciones Disponibles
                     </h1>
-                    @if(auth()->user()->hasPermission('add_income'))
-                        <a href="{{ route('income.create') }}" class="btn btn-success btn-add-new">
-                            <i class="voyager-plus"></i> <span>Crear</span>
-                        </a>
-                    @endif
                 </div>
                 <div class="col-md-4">
 
@@ -31,53 +58,38 @@
                         <div class="panel panel-bordered">
                             <div class="panel-body">
                                 <div class="table-responsive">
-                                    <table id="dataTable" class="dataTable table-hover">
+                                    <table id="dataTable" class="dataTab table-hover">
                                         <thead>
                                             <tr>
                                                 <th>Nro&deg;</th>
-                                                <th>Entidad + Nro Compra</th>
-                                                <th>Proveedor</th>
-                                                <th>Número Factura</th>
-                                                <th>Fecha Factura</th>
-                                                <th>Fecha Registro</th>
-                                                <th>Acciones</th>
+                                                <th>Nro&deg; Ingreso</th>
+                                                <th>Nombre</th>
+                                                <th>Observacion</th>
+                                                <th>Fecha Donacion</th>
+                                                <th>Fecha Ingreso</th>
+                                                <th class="text-center">Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($income as $data)
                                                 <tr>
                                                     <td>{{$data->id}}</td>
-                                                    <td>{{$data->modalidad}} - {{$data->nrosolicitud}}</td>
-                                                    <td style="width: 200pt">{{$data->razonsocial}}<br><strong>NIT: {{$data->nit}}</strong></td>
-                                                    <td>{{$data->nrofactura}}</td>
-                                                    <td>{{\Carbon\Carbon::parse($data->fechafactura)->format('d/m/Y')}}<br><strong>Monto: {{$data->montofactura}} Bs.</strong></td>
-                                                    <td>{{date('d/m/Y H:i:s', strtotime($data->created_at))}}<br><small>{{\Carbon\Carbon::parse($data->created_at)->diffForHumans()}}.</small></td>
+                                                    <td>{{$data->nrosolicitud}}</td>
+                                                    <td style="width: 200pt">{{$data->nombre}}</td>
+                                                    <td style="width: 200pt">{{$data->observacion}}</td>
+                                                    <td>{{\Carbon\Carbon::parse($data->fechadonacion)->format('d/m/Y')}}</td>
+                                                    <td>{{\Carbon\Carbon::parse($data->fechaingreso)->format('d/m/Y')}}</td>
                                                     <td>
                                                         <div class="no-sort no-click bread-actions text-right">
-                                                            @if(auth()->user()->hasPermission('read_income'))
-                                                                <a href="{{route('income_view_stock',$data->id)}}" title="Ver" target="_blank" class="btn btn-sm btn-info view">
-                                                                    <i class="voyager-basket"></i> <span class="hidden-xs hidden-sm">Stock</span>
+                                                            @if(auth()->user()->hasPermission('read_incomedonor'))
+                                                                <a href="{{route('incomedonor_view_stock',$data->id)}}" title="Ver" target="_blank" class="btn btn-sm btn-success view">
+                                                                    <i class="voyager-basket"></i> <i class="voyager-photos"></i> <span class="hidden-xs hidden-sm">Stock & Detalle</span>
                                                                 </a>
-                                                                <a href="{{route('income_view',$data->id)}}" title="Ver" target="_blank" class="btn btn-sm btn-info view">
-                                                                    <i class="voyager-file-text"></i> <span class="hidden-xs hidden-sm">Ver</span>
-                                                                </a>                                                                
-                                                            @endif
-                                                            @if($data->condicion == 1)
-                                                                @if(auth()->user()->hasPermission('edit_income'))
-                                                                    <a href="{{route('income.edit',$data->id)}}" title="Editar" class="btn btn-sm btn-warning">
-                                                                        <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Editar</span>
-                                                                    </a>
-                                                                @endif
-                                                                @if(auth()->user()->hasPermission('delete_income'))
-                                                                    <button title="Anular" class="btn btn-sm btn-danger delete" data-toggle="modal" data-id="{{$data->id}}" data-target="#myModalEliminar">
-                                                                        <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Anular</span>
-                                                                    </button>
-                                                                @endif
                                                             @endif
                                                         </div>
                                                     </td>
                                                 </tr>
-                                            @endforeach                                        
+                                            @endforeach                                                                                    
                                         </tbody>
                                     </table>
                                 </div>
@@ -90,7 +102,7 @@
             <div class="modal modal-danger fade" tabindex="-1" id="myModalEliminar" role="dialog">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        {!! Form::open(['route' => 'income_delete', 'method' => 'DELETE']) !!}
+                        {!! Form::open(['route' => 'incomedonor_delete', 'method' => 'DELETE']) !!}
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
                             <h4 class="modal-title"><i class="voyager-trash"></i> Desea eliminar el siguiente ingreso?</h4>
@@ -125,8 +137,9 @@
     @section('javascript')
             <script>
                 $(document).ready(function(){
-                    $('.dataTable').DataTable({
+                    $('.dataTab').DataTable({
                         language: {
+                            // "order": [[ 0, "desc" ]],
                             sProcessing: "Procesando...",
                             sLengthMenu: "Mostrar _MENU_ registros",
                             sZeroRecords: "No se encontraron resultados",
@@ -170,8 +183,11 @@
             </script>
     @stop
 
-@else
+
+<!-- @else
     @section('content')
         <h1>No tienes permiso</h1>
+        <br>
+        <h1>Contactese con el Administrador del sistema</h1>
     @stop
-@endif
+@endif -->

@@ -10,7 +10,7 @@ class SolicitudCompra extends Model
     use HasFactory;
 
     protected $fillable = ['sucursal_id', 'unidadadministrativa', 'modality_id', 'registeruser_id',
-                            'nrosolicitud', 'fechaingreso', 'gestion', 'condicion', 'deleteuser_id'
+                            'nrosolicitud', 'fechaingreso', 'gestion', 'condicion', 'deleteuser_id','stock'
                             ];
                             
 }

@@ -17,19 +17,20 @@ class CreateDonacionIngresosTable extends Migration
             $table->id();
             $table->foreignId('centro_id')->constrained('centros');
 
-            $table->integer('tipodonante');
+            $table->integer('tipodonante')->nullable();
             $table->integer('onuempresa_id')->nullable();
             $table->integer('persona_id')->nullable();
 
-            $table->foreignId('registeruser_id')->constrained('users');
+            $table->foreignId('registeruser_id')->nullable()->constrained('users');
 
-            $table->string('nrosolicitud');
-            $table->date('fechadonacion');
-            $table->date('fechaingreso');
+            $table->string('nrosolicitud')->nullable();
+            $table->date('fechadonacion')->nullable();
+            $table->date('fechaingreso')->nullable();
 
             $table->text('observacion')->nullable();
-            $table->string('gestion', 10);
+            $table->string('gestion', 10)->nullable();
             $table->smallInteger('condicion')->default(1);  
+            $table->smallInteger('stock')->default(1);
             $table->timestamps();
 
             $table->foreignId('deleteuser_id')->nullable()->constrained('users');

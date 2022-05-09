@@ -21,7 +21,7 @@ class DonacionSolicitudController extends Controller
 // return $detalle;
 
 
-        return view('solicituddonor.browse', compact('detalle'));
+        return view('donacion-sedeges.solicituddonor.browse', compact('detalle'));
     }
 
     /**

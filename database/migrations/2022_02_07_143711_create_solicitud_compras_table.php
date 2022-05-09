@@ -15,11 +15,11 @@ class CreateSolicitudComprasTable extends Migration
     {
         Schema::create('solicitud_compras', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sucursal_id')->constrained('sucursals');
+            $table->foreignId('sucursal_id')->nullable()->constrained('sucursals');
             // $table->foreignId('requestingunit_id')->constrained('requesting_units');
             $table->integer('unidadadministrativa');
             $table->foreignId('modality_id')->constrained('modalities');
-            $table->foreignId('registeruser_id')->constrained('users');
+            $table->foreignId('registeruser_id')->nullable()->constrained('users');
 
 
             $table->string('nrosolicitud');
@@ -27,6 +27,8 @@ class CreateSolicitudComprasTable extends Migration
             $table->string('gestion', 10);
             $table->boolean('condicion')->default(1);  // para cuando la solicitud no tiene moviemto de egreso tendra 1
                                                        // y cuando tenga algun egreso sera 0
+            $table->smallInteger('stock')->default(1);
+
             $table->timestamps();
 
 

@@ -12,13 +12,15 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function getIdDireccionInfo() {
+    public function getDireccion() {
         try {
-            return DB::connection('mysqlgobe')->table('direccionadministrativa as d')
+            return DB::connection('mamore')->table('direcciones as d')
+                        ->where('deleted_at', null)
                         ->select('*')
+                        ->orderBy('nombre','asc')
                         ->get();
         } catch (\Throwable $th) {
-            return 111;
+            return 'ERROR';
         }
     }
 }

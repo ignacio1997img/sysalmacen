@@ -21,7 +21,7 @@
         "laraveles/spanish": "^1.5",
         "nesbot/carbon": "^2.56",
         "orangehill/iseed": "^3.0",
-        "owen-it/laravel-auditing": "^12.2",
+        "owen-it/laravel-auditing": "^13.0",
         "predis/predis": "^1.1",
         "tcg/voyager": "^1.4",
         "villca/numeros-en-letras": "^1.2"

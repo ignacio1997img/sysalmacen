@@ -7,7 +7,7 @@
         <div class="container-fluid">
             <div class="row">
                 <!-- <div class="c"> -->
-                    <h1 class="page-title">
+                    <h1 id="subtitle" class="page-title">
                         <i class="voyager-basket"></i> Egresos
                     </h1>
                     <!-- <a href="{{ route('egres.create') }}" class="btn btn-success btn-add-new">   en proceso no habilitar
@@ -81,7 +81,7 @@
 
                                     <div id="pendiente" class="tab-pane fade">
                                         <div class="table-responsive text-center">
-                                            <table class="dataTables table-hover">
+                                            <table id="dataTable" class="dataTables table-hover">
                                                 <thead>
                                                     <tr >
                                                         <th class="text-center">Nro</th>
@@ -165,7 +165,37 @@
 
 
     @section('css')
+    <style>
+        #subtitle{
+            font-size: 18px;
+            color: rgb(12, 12, 12);
+            font-weight: bold;
+        }
+        #dataTable {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        }
 
+        #dataTable td, #dataTable th {
+        border: 1px solid #ddd;
+        padding: 8px;
+        }
+
+        #dataTable tr:nth-child(even){background-color: #f2f2f2;}
+
+        #dataTable tr:hover {background-color: #ddd;}
+
+        #dataTable th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #04AA6D;
+            color: white;
+        }
+        
+
+    </style>
     @stop
 
     @section('javascript')

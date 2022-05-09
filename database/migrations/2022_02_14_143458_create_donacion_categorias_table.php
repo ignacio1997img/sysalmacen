@@ -17,7 +17,7 @@ class CreateDonacionCategoriasTable extends Migration
             $table->id();
 
             $table->string('nombre',500);
-            $table->text('descripcion');
+            $table->text('descripcion')->nullable();
 
             $table->boolean('condicion')->default(1); 
             

@@ -24,15 +24,15 @@ class UsersTableSeeder extends Seeder
                 'id' => 1,
                 'role_id' => 1,
                 'name' => 'Admin',
-                'funcionario_id' => 0,
+                'funcionario_id' => 19448,
                 'email' => 'admin@admin.com',
                 'avatar' => 'users/default.png',
                 'email_verified_at' => NULL,
                 'password' => '$2y$10$piw47ZDCJq3ieZXMVap/2eo1j71yvn4g2LNCxJu7b/7JEgq/8Q4oG',
                 'remember_token' => NULL,
-                'settings' => NULL,
+                'settings' => '{"locale":"es"}',
                 'created_at' => '2021-06-01 21:05:11',
-                'updated_at' => '2021-06-01 21:05:11',
+                'updated_at' => '2022-03-02 16:18:02',
             ),
             1 => 
             array (
@@ -52,7 +52,7 @@ class UsersTableSeeder extends Seeder
             2 => 
             array (
                 'id' => 3,
-                'role_id' => 3,
+                'role_id' => 1,
                 'name' => 'marcelo',
                 'funcionario_id' => 21379,
                 'email' => 'marcelo@gmail.com',
@@ -62,7 +62,7 @@ class UsersTableSeeder extends Seeder
                 'remember_token' => NULL,
                 'settings' => '{"locale":"es"}',
                 'created_at' => '2022-02-13 22:46:29',
-                'updated_at' => '2022-02-14 12:42:49',
+                'updated_at' => '2022-03-02 13:15:54',
             ),
             3 => 
             array (
@@ -81,18 +81,18 @@ class UsersTableSeeder extends Seeder
             ),
             4 => 
             array (
-                'id' => 5,
-                'role_id' => 3,
-                'name' => 'mario',
-                'funcionario_id' => 21067,
-                'email' => 'mario@gmail.com',
+                'id' => 8,
+                'role_id' => 6,
+                'name' => 'Ignacio Molina Guzman',
+                'funcionario_id' => 108,
+                'email' => 'ignacio@gmail.com',
                 'avatar' => 'users/default.png',
                 'email_verified_at' => NULL,
-                'password' => '$2y$10$s.kif0Ebxzdooj0EUqxakuyjBatqsNHKTuRDU9Dz.rGdnsFMduypi',
+                'password' => '$2y$10$RsNE7NWEURPVIUd6s.YoqugnDOAzO2mdmd6TIXaS4icivBxF9nCmG',
                 'remember_token' => NULL,
                 'settings' => '{"locale":"es"}',
-                'created_at' => '2022-02-13 22:49:20',
-                'updated_at' => '2022-02-13 22:49:20',
+                'created_at' => '2022-05-05 09:37:35',
+                'updated_at' => '2022-05-05 09:38:12',
             ),
         ));
         

@@ -2,7 +2,7 @@
 
 @section('page_title', 'Viendo Ingresos Donacion')
 
-@if(auth()->user()->hasPermission('browse_solicituddonor'))
+@if(auth()->user()->hasPermission('browse_view_stock_donacion'))
     @section('page_header')
         <!-- <div class="container-fluid">
             <div class="row">
@@ -29,7 +29,7 @@
                 <div class="row">
                     <div class="col-md-12">                        
                         <div class="panel panel-bordered">
-                        <h2><b>Stock Disponible</b></h2>
+                        <h2 id="subtitle"><b>Stock Disponibles</b></h2>
                             <div class="panel-body">
                                 <div class="table-responsive">
                                     <table id="dataTable" class="dataTable table-hover">
@@ -66,7 +66,37 @@
 
 
     @section('css')
+    <style>
+        #dataTable {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        }
 
+        #dataTable td, #dataTable th {
+        border: 1px solid #ddd;
+        padding: 8px;
+        }
+
+        #dataTable tr:nth-child(even){background-color: #f2f2f2;}
+
+        #dataTable tr:hover {background-color: #ddd;}
+
+        #dataTable th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #04AA6D;
+            color: white;
+        }
+        
+        #subtitle{
+            font-size: 25px;
+            color: rgb(12, 12, 12);
+            font-weight: bold;
+        }
+
+    </style>
     @stop
 
     @section('javascript')

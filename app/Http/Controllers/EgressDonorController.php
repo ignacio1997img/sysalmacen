@@ -9,6 +9,7 @@ use App\Models\DonacionIngreso;
 use App\Models\DonacionIngresoDetalle;
 use App\Models\DonadorEmpresa;
 use App\Models\DonadorPersona;
+use App\Models\DonacionArchivo;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Models\Centro;
@@ -17,12 +18,15 @@ use App\Models\DonacionEgreso;
 use App\Models\DonacionEgresoDetalle;
 use Illuminate\Http\Client\ResponseSequence;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class EgressDonorController extends Controller
 {
    
     public function index()
     {
+        
         $egreso = DB::table('donacion_egresos as d')
                 ->join('centros as c', 'c.id', 'd.centro_id')
                 ->select('d.id', 'd.nrosolicitud', 'd.observacion', 'c.nombre', 'd.fechaentrega', 'd.condicion')
@@ -30,7 +34,7 @@ class EgressDonorController extends Controller
                 ->get();
                 
 // return $egreso;
-        return view('egressdonor.browse', compact('egreso'));
+        return view('donacion-sedeges.egressdonor.browse', compact('egreso'));
     }
 
     public function create()
@@ -57,16 +61,15 @@ class EgressDonorController extends Controller
                 ->groupBy('di.nrosolicitud', 'c.nombre', 'di.id')
                 ->get();
 
-        return view('egressdonor.add', compact('categoria', 'centrotipo','vigente'));        
+        return view('donacion-sedeges.egressdonor.add', compact('categoria', 'centrotipo','vigente'));        
     }
 
 
     public function store(Request $request)
     {
-        // return $request;
         DB::beginTransaction();
         try {
-            
+            // return $request;
             $user = Auth::user();
             $gestion = Carbon::parse($request->fechaingreso)->format('Y');
 
@@ -96,13 +99,16 @@ class EgressDonorController extends Controller
                 ]);
 
             $i=0;
+            // return $request;
             while($i< count($request->articulo_id))
             {
                 DonacionEgresoDetalle::create([
                     'donacionegreso_id'             => $egreso->id,
                     'donacioningresodetalle_id'     => $request->articulo_id[$i], // id del detalle de donacion ingreso detalle
                     'registeruser_id'               => $user->id,
-                    'cantentregada'                 => $request->cantidad[$i]
+                    'cantentregada'                 => $request->cantidad[$i],
+                    'estado'                 => $request->estado[$i],
+                    'caracteristica'                 => $request->caracteristica[$i]
 
                 ]);
 
@@ -114,12 +120,51 @@ class EgressDonorController extends Controller
                     DonacionIngresoDetalle::where('id',$request->articulo_id[$i])->update(['condicion'=>0]);
                 }
 
-                $detalle = DonacionIngresoDetalle::find($request->articulo_id[$i]);
-                DonacionIngreso::where('id',$detalle->donacioningreso_id)->update(['condicion' => 0]);
+                // $detalle = DonacionIngresoDetalle::find($request->articulo_id[$i]);
+                DonacionIngreso::where('id',$d->donacioningreso_id)->update(['condicion' => 0]);//para inabilitar la edicion o modificacion
+
+
+
+                $stock = DonacionIngresoDetalle::where('donacioningreso_id',$d->donacioningreso_id)->where('condicion', 1)
+                ->where('deleted_at', null)->where('cantrestante', '!=', 0)->select('cantrestante')->groupBy('cantrestante')->count();
+                // return $stock;
+                if($stock == 0)
+                {
+                    DonacionIngreso::find($d->donacioningreso_id)->update(['stock' => 0]);
+                }
 
                 $i++;
             }
+
+            // $stock = DonacionIngresoDetalle::where('donacioningreso_id', $request->ingreso_id)->where('condicion', 1)
+            //     ->where('deleted_at', null)->where('cantrestante', '!=', 0)->select('cantrestante')->groupBy('cantrestante')->count();
+            //     return $stock;
             
+            $file = $request->file('archivos');
+
+            $i=0;
+            if ($file) {
+                // dd($file);
+                for ($i=0; $i < count($file); $i++) { 
+                    
+                    $nombre_origen = $file[$i]->getClientOriginalName();
+                    
+                    $newFileName = Str::random(20).time().'.'.$file[$i]->getClientOriginalExtension();
+                    
+                    $dir = "DonacionSedeges/egres/".date('F').date('Y');
+                    
+                    Storage::makeDirectory($dir);
+                    Storage::disk('public')->put($dir.'/'.$newFileName, file_get_contents($file[$i]));
+                    
+                    DonacionArchivo::create([
+                        'entrada'               => 0,
+                        'nombre_origen'         => $nombre_origen,
+                        'donacionegreso_id'     => $egreso->id,
+                        'ruta'                  => $dir.'/'.$newFileName,
+                        'user_id'               => $user->id
+                    ]);
+                }
+            }
 
             DB::commit();
             return redirect()->route('egressdonor.index')->with(['message' => 'Egreso Registrado Exitosamente.', 'alert-type' => 'success']);
@@ -131,9 +176,18 @@ class EgressDonorController extends Controller
         }
     }
 
+
+    //para ver las foto guardadas cuando se hace un egreso
+    public function show_photo($id)
+    {
+        $archivos = DonacionArchivo::where('deleted_at', null)
+                ->where('donacionegreso_id', $id)
+                ->get();
+        return view('donacion-sedeges.egressdonor.viewphoto', compact('archivos'));
+    }
+
     public function show($id)
     {
-        // return $id;
         $egreso = DonacionEgreso::find($id);
         $centro = Centro::find($egreso->centro_id);
         $detalle = DB::table('donacion_egreso_detalles as ded')
@@ -144,9 +198,7 @@ class EgressDonorController extends Controller
                     ->get();
 
 
-        // return $detalle;
-
-        return view('egressdonor.report', compact('egreso', 'centro', 'detalle'));
+        return view('donacion-sedeges.egressdonor.report', compact('egreso', 'centro', 'detalle'));
     }
 
 

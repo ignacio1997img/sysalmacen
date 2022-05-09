@@ -14,8 +14,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DonacionSolicitudController;
 
 
-
-
+use App\Http\Controllers\DonationStockController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,41 +62,51 @@ Route::group(['prefix' => 'admin'], function () {
 
    //........................  EGRES
     Route::resource('egres', EgressController::class);
-    Route::get('egresos/browse/pendiente/view/{id?}', [EgressController::class, 'view_pendiente'])->name('egres_view_pendiente');
-    Route::post('egresos/pendiente/entregar', [EgressController::class, 'store_egreso_pendiente'])->name('egreso_store_egreso_pendiente');
-
-
-    Route::get('egresos/browse/entregado/view/{id?}', [EgressController::class, 'view_egreso'])->name('egreso_view_entregado');// en mantenimiento sin funcionamiento 
-    Route::delete('egres/browse/delete', [EgressController::class, 'destroy'])->name('egres_delete');// en mantenimiento sin funcionamiento 
+    Route::post('egres/update', [EgressController::class, 'update'])->name('egres_update');
+    Route::post('egres/delete', [EgressController::class, 'destroy'])->name('egres_delete');
+    // Route::get('egres/view/{id?}', [EgressController::class, 'view_egreso'])->name('egreso_view_entregado');// en mantenimiento sin funcionamiento 
 
 
 
 
-    //bandeja
-    Route::resource('bandeja', BandejaController::class);
-    Route::get('bandeja/pendiente/view/{id?}', [BandejaController::class, 'view'])->name('bandeja_pendiente_view');
-    Route::get('bandeja/aprobada/view/{id?}', [BandejaController::class, 'view_aprobada'])->name('bandeja_aprobada_view');
-    Route::post('bandeja/pendiente/aprobarsoicitud', [BandejaController::class, 'aprobar'])->name('bandeja_aprobar_solicitud');
-    Route::post('bandeja/pendiente/rechazarsolicitud', [BandejaController::class, 'rechazo'])->name('bandeja_rechazar_solicitud');
-
-    Route::get('bandeja/pendiente/view/editar/{id?}', [BandejaController::class, 'view_editar'])->name('view_editar_aprobar_solicitud');
-    Route::post('bandeja/pendiente/view/editar/aprobar', [BandejaController::class, 'editar_aprobar'])->name('store_editar_aprobar_solicitud');
 
 
 
 
-  //........................  Solicitud para hacer Egresos a jefe de contratacion
+    // Route::get('egresos/browse/pendiente/view/{id?}', [EgressController::class, 'view_pendiente'])->name('egres_view_pendiente');
+    // Route::post('egresos/pendiente/entregar', [EgressController::class, 'store_egreso_pendiente'])->name('egreso_store_egreso_pendiente');
 
-    Route::resource('incomesolicitud', IncomeSolicitudController::class);
 
-    Route::resource('solicitud', SolicitudController::class);
-    Route::delete('solicitudes/delete', [SolicitudController::class, 'destroy'])->name('solicitudes_delete');
-    Route::post('solicitudes/derivarsolicitud', [SolicitudController::class, 'derivar_proceso'])->name('derivar_proceso_solicitud');
-    Route::get('solicitudes/browse/view/{id?}', [SolicitudController::class, 'view'])->name('solicitudes_view');
+    // Route::delete('egres/browse/delete', [EgressController::class, 'destroy'])->name('egres_delete');// en mantenimiento sin funcionamiento 
 
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//     //bandeja
+//     Route::resource('bandeja', BandejaController::class);
+//     Route::get('bandeja/pendiente/view/{id?}', [BandejaController::class, 'view'])->name('bandeja_pendiente_view');
+//     Route::get('bandeja/aprobada/view/{id?}', [BandejaController::class, 'view_aprobada'])->name('bandeja_aprobada_view');
+//     Route::post('bandeja/pendiente/aprobarsoicitud', [BandejaController::class, 'aprobar'])->name('bandeja_aprobar_solicitud');
+//     Route::post('bandeja/pendiente/rechazarsolicitud', [BandejaController::class, 'rechazo'])->name('bandeja_rechazar_solicitud');
+
+//     Route::get('bandeja/pendiente/view/editar/{id?}', [BandejaController::class, 'view_editar'])->name('view_editar_aprobar_solicitud');
+//     Route::post('bandeja/pendiente/view/editar/aprobar', [BandejaController::class, 'editar_aprobar'])->name('store_editar_aprobar_solicitud');
+
+
+
+
+//   //........................  Solicitud para hacer Egresos a jefe de contratacion
+
+//     Route::resource('incomesolicitud', IncomeSolicitudController::class);
+
+//     Route::resource('solicitud', SolicitudController::class);
+//     Route::delete('solicitudes/delete', [SolicitudController::class, 'destroy'])->name('solicitudes_delete');
+//     Route::post('solicitudes/derivarsolicitud', [SolicitudController::class, 'derivar_proceso'])->name('derivar_proceso_solicitud');
+//     Route::get('solicitudes/browse/view/{id?}', [SolicitudController::class, 'view'])->name('solicitudes_view');
+
+
+
+//////////////////////////////////////////////////////////////////// SEDEGES ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //                                                                      DONACION EN LOS ALMACENES
 
@@ -108,19 +117,22 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('incomedonor/update', [IncomeDonorController::class, 'update'])->name('incomedonor_update');
     Route::post('incomedonor/delete/archivos', [IncomeDonorController::class, 'destroy_file'])->name('incomedonor_delete_file');
 
-    Route::get('donacion/browse/view/stock/disponible', [IncomeDonorController::class, 'show_stock_disponible'])->name('incomedonor_view_stock_disponible');
-
+    // Route::get('donacion/browse/view/stock/disponible', [IncomeDonorController::class, 'show_stock_disponible'])->name('incomedonor_view_stock_disponible');
 
 
     // Route::get('incomedonor/browse/view/{id?}', [IncomeController::class, 'view_ingreso'])->name('incomedonor_view');
+//STOCK VIEW PARA VER EL SEDEGES
+    Route::get('incomedonor/stock/view', [DonationStockController::class, 'stock_view'])->name('donation.stock.view');   
 
 
 //EGRESS
     Route::resource('egressdonor', EgressDonorController::class);  
+    Route::get('egressdonor/browse/view/photo/{id?}', [EgressDonorController::class, 'show_photo'])->name('egressdonor_view_photo');
+
 
 
 // VISTA PARA SOLICITUDES DE LAS DESCONCENTRADA
-    Route::resource('solicituddonor', DonacionSolicitudController::class);   
+    Route::resource('view_stock_donacion', DonacionSolicitudController::class);   
 
 
 
@@ -129,6 +141,7 @@ Route::group(['prefix' => 'admin'], function () {
 
 
 
+    
 
 
 

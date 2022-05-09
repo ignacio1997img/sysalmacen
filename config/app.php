@@ -179,6 +179,8 @@ return [
 
         Barryvdh\DomPDF\ServiceProvider::class,
 
+        OwenIt\Auditing\AuditingServiceProvider::class,
+
     ],
 
     /*

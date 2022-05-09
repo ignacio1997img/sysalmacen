@@ -7,7 +7,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-8">
-                    <h1 class="page-title">
+                    <h1 class="page-title" id="subtitle">
                         <i class="voyager-basket"></i> Egreso de Donaciones
                     </h1>
                     @if(auth()->user()->hasPermission('add_egressdonor'))
@@ -53,7 +53,9 @@
                                                     <td>
                                                         <div class="no-sort no-click bread-actions text-right">
                                                             @if(auth()->user()->hasPermission('read_egressdonor'))
-
+                                                                <a href="{{route('egressdonor_view_photo',$data->id)}}" title="Ver" class="btn btn-sm btn-success view">
+                                                                    <i class="voyager-photos"></i> <span class="hidden-xs hidden-sm">Archivos</span>
+                                                                </a>
                                                                 <a href="{{route('egressdonor.show',$data->id)}}" title="Ver" target="_blank" class="btn btn-sm btn-info view">
                                                                     <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
                                                                 </a>
@@ -116,7 +118,37 @@
 
 
     @section('css')
+    <style>
+        #dataTable {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        }
 
+        #dataTable td, #dataTable th {
+        border: 1px solid #ddd;
+        padding: 8px;
+        }
+
+        #dataTable tr:nth-child(even){background-color: #f2f2f2;}
+
+        #dataTable tr:hover {background-color: #ddd;}
+
+        #dataTable th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #04AA6D;
+            color: white;
+        }
+        
+        #subtitle{
+            font-size: 18px;
+            color: rgb(12, 12, 12);
+            font-weight: bold;
+        }
+
+    </style>
     @stop
 
     @section('javascript')

@@ -25,6 +25,11 @@ class CreateDonacionArchivosTable extends Migration
                   ->constrained('donacion_ingresos')
                   ->onDelete('cascade');
 
+            $table->foreignId('donacionegreso_id')
+                  ->nullable()
+                  ->constrained('donacion_egresos')
+                  ->onDelete('cascade');
+
             $table->foreignId('user_id')->nullable()->constrained('users');
             
             $table->timestamps();

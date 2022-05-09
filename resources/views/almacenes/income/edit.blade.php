@@ -10,18 +10,70 @@
 
 <style>
     input:focus {
-  background: rgb(197, 252, 215);
-}
+        background: rgb(197, 252, 215);
+    }
+
+    input:focus{        
+        background: rgb(255, 245, 229);
+        border-color: rgb(255, 161, 10);
+        /* border-radius: 50px; */
+    }
+    input.text, select.text, textarea.text{ 
+        border-radius: 5px 5px 5px 5px;
+        color: #000000;
+        border-color: rgb(63, 63, 63);
+    }
+
+   
+    small{font-size: 32px;
+        color: rgb(12, 12, 12);
+        font-weight: bold;
+    }
+    #subtitle{
+        font-size: 18px;
+        color: rgb(12, 12, 12);
+        font-weight: bold;
+    }
+
+
+    #detalles {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    }
+
+    #detalles td, #detalles th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    }
+
+    #detalles tr:nth-child(even){background-color: #f2f2f2;}
+
+    #detalles tr:hover {background-color: #ddd;}
+
+    #detalles th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #04AA6D;
+        color: white;
+    }
+
+    .form-control .select2{
+        border-radius: 5px 5px 5px 5px;
+        color: #000000;
+        border-color: rgb(63, 63, 63);
+    }
+    
+
 </style>
-
-@if(auth()->user()->hasPermission('add_income'))
-
+@if(auth()->user()->hasPermission('edit_income'))
     @section('page_header')
         
         <div class="container-fluid">
             <div class="row">
-                <h1 class="page-title">
-                    <i class="voyager-basket"></i> Añadir Ingreso
+                <h1 id="subtitle" class="page-title">
+                    <i class="voyager-basket"></i> Editar Ingreso
                 </h1>
             </div>
         </div>
@@ -37,10 +89,23 @@
                             <div class="panel-body">                            
                                 <div class="table-responsive">
                                     <main class="main">        
-                                        {!! Form::open(['route' => 'income.store', 'class' => 'was-validated'])!!}
+                                        {!! Form::open(['route' => 'income_update', 'id'=>'1', 'class' => 'was-validated'])!!}
                                         <div class="card-body">
-                                            <h5>Solicitud de Compras</h5>
+                                            <h5 id="subtitle">Solicitud de Compras</h5>
                                             <div class="row">
+                                                @php
+                                                    $direccion = \DB::connection('mamore')->table('unidades')
+                                                                    ->where('id', $solicitud->unidadadministrativa)
+                                                                    ->select('*')
+                                                                    ->orderBy('nombre','asc')
+                                                                    ->first();
+                                                    $unidades = \DB::connection('mamore')->table('unidades')
+                                                                    ->where('direccion_id', $direccion->direccion_id)
+                                                                    ->select('*')
+                                                                    ->orderBy('nombre','asc')
+                                                                    ->get();
+                                                    // dd($unidades);
+                                                @endphp
                                                 <!-- === -->
                                                 <div class="col-sm-3">
                                                     <div class="form-group">
@@ -48,7 +113,7 @@
                                                             <select name="branchoffice_id" class="form-control select2" required>
                                                                 <option value="">Seleccione una sucursal</option>
                                                                 @foreach ($sucursales as $sucursal)
-                                                                    <option value="{{$sucursal->id}}">{{$sucursal->nombre}}</option>
+                                                                    <option value="{{$sucursal->id}}" {{ $sucursal->id == $solicitud->sucursal_id ? 'selected' : '' }}>{{$sucursal->nombre}}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
@@ -61,7 +126,7 @@
                                                             <select id="das" class="form-control select2" required>
                                                                 <option value="">Seleccione una Direccion Administrativa</option>
                                                                 @foreach ($da as $data)
-                                                                    <option value="{{$data->ID}}">{{$data->NOMBRE}}</option>
+                                                                    <option value="{{$data->id}}" {{$data->id == $direccion->direccion_id? 'selected':''}}>{{$data->nombre}}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
@@ -73,7 +138,9 @@
                                                     <div class="form-group">
                                                         <div class="form-line">
                                                             <select id="unidadEje" name="unidadadministrativa" class="form-control select2" required>
-                                                                
+                                                                @foreach ($unidades as $item)
+                                                                    <option value="{{$item->id}}" {{$item->id == $solicitud->unidadadministrativa? 'selected':''}}>{{$item->nombre}}</option>
+                                                                @endforeach
                                                             </select>
                                                         </div>
                                                         <small>Seleccionar Unidad Administrativa.</small>
@@ -82,12 +149,11 @@
                                                 <div class="col-sm-3">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="date" name="fechaingreso" class="form-control" required>
+                                                            <input type="date" name="fechaingreso" class="form-control text" value="{{$sol->fechaingreso}}" required>
                                                         </div>
                                                         <small>Fecha Ingreso.</small>
                                                     </div>
                                                 </div>
-
                                                 <!-- === -->
                                             </div>
                                             <div class="row">
@@ -97,7 +163,7 @@
                                                             <select name="modality_id" class="form-control select2" required>
                                                                 <option value="">Seleccione una Modalidad de Compra</option>
                                                                 @foreach ($modalidad as $data)
-                                                                    <option value="{{$data->id}}">{{$data->nombre}}</option>
+                                                                    <option value="{{$data->id}}" {{ $data->id == $sol->modality_id ? 'selected' : '' }}>{{$data->nombre}}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
@@ -108,17 +174,17 @@
                                                 <!-- <div class="col-sm-3">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="text" class="form-control form-control-sm" name="nrosolicitud" placeholder="Introducir número de solicitud" autocomplete="off" required>
+                                                            <input type="text" disabled class="form-control form-control-sm" name="nrosolicitud" value="{{$sol->nrosolicitud}}" placeholder="Introducir número de solicitud" autocomplete="off" required>
                                                         </div>
                                                         <small>Número Solicitud.</small>
                                                     </div>
                                                 </div> -->
                                                 <!-- === -->
-                                               
+                                                
                                                 <!-- === -->
                                             </div>
                                             <hr>
-                                            <h5>Proveedor + Detalle de Factura:</h5>
+                                            <h5 id="subtitle">Proveedor + Detalle de Factura:</h5>
                                                 {{-- <div class="form-group">
                                                     <div class="form-line">
                                                         <input type="file" name="file" id="archivo" class="form-control form-control-sm" placeholder="Seleccione un Proveedor" accept="application/pdf">
@@ -130,22 +196,22 @@
                                                 <div class="col-sm-6">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <select id="provider" name="provider_id" class="form-control select2" required>
+                                                            <select id="provider" name="provider_id"  class="form-control select2" required>
                                                                 <option value="">Seleccione un Proveedor</option>
                                                                 @foreach ($proveedor as $data)
-                                                                    <option value="{{$data->id}}_{{$data->nit}}_{{$data->responsable}}">{{$data->razonsocial}}</option>
+                                                                    <option value="{{$data->id}}_{{$data->nit}}_{{$data->responsable}}" {{ $data->id == $factura->provider_id ? 'selected' : '' }}>{{$data->razonsocial}}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
                                                         <small>Seleccionar Proveedor.</small>
                                                     </div>
                                                 </div>
-                                                <input type="hidden" id="provider_id" name="provider_id">
+                                                <input type="hidden" id="provider_id" name="provider_id" value="{{$proveedorselect->id}}">
                                             
                                                 <div class="col-sm-3">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="text" id="nit" class="form-control form-control-sm" placeholder="Seleccione un Proveedor" disabled readonly>
+                                                            <input type="text" id="nit" class="form-control form-control-sm text" placeholder="Seleccione un Proveedor" value="{{$proveedorselect->nit}}" disabled readonly>
                                                         </div>
                                                         <small>NIT.</small>
                                                     </div>
@@ -154,7 +220,7 @@
                                                 <div class="col-sm-3">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="text" id="responsable" class="form-control form-control-sm" placeholder="Seleccione un Proveedor" disabled >
+                                                            <input type="text" id="responsable" class="form-control form-control-sm text" placeholder="Seleccione un Proveedor" value="{{$proveedorselect->responsable}}" disabled >
                                                         </div>
                                                         <small>Responsable.</small>
                                                     </div>
@@ -164,7 +230,7 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <select name="tipofactura" id="tipofactura"class="form-control" required>
+                                                            <select name="tipofactura" id="tipofactura"class="form-control text" required>
                                                                 <option value="Manual">Manual</option>
                                                                 <option value="Electronica">Electronica</option>
                                                             </select>
@@ -175,7 +241,7 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="date" id="fechafactura" name="fechafactura" class="form-control">
+                                                            <input type="date" id="fechafactura" name="fechafactura" value="{{$factura->fechafactura}}" class="form-control text">
                                                         </div>
                                                         <small>Fecha Factura.</small>
                                                     </div>
@@ -185,7 +251,7 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number" step="0.01" class="form-control form-control-sm" id="montofactura" name="montofactura" placeholder="Introducir monto" autocomplete="off" required>
+                                                            <input type="number" step="0.01" class="form-control form-control-sm text" id="montofactura" value="{{$factura->montofactura}}" name="montofactura" placeholder="Introducir monto" autocomplete="off" required>
                                                         </div>
                                                         <small>Monto Factura *(Bs).</small>
                                                     </div>
@@ -193,7 +259,7 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number" id="nrofactura" name="nrofactura" class="form-control" title="Introducir Nro de Factura" required>
+                                                            <input type="number" id="nrofactura" name="nrofactura" class="form-control text" value="{{$factura->nrofactura}}" title="Introducir Nro de Factura" required>
                                                         </div>
                                                         <small>Nro Factura.</small>
                                                     </div>
@@ -201,7 +267,7 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number"  name="nroautorizacion" id="nroautorizacion" class="form-control" title="Introducir Nro Autorizacion de la Factura" required>
+                                                            <input type="number"  name="nroautorizacion" id="nroautorizacion" class="form-control text" value="{{$factura->nroautorizacion}}" title="Introducir Nro Autorizacion de la Factura" required>
                                                         </div>
                                                         <small>Nro Autorizacion Fact.</small>
                                                     </div>
@@ -211,9 +277,9 @@
                                                 </div>
                                             </div>
                                             <hr>
-                                            <h5>Partida + Articulo:</h5>
+                                            <h5 id="subtitle">Partida + Articulo:</h5>
                                             <div class="row">
-                                                <div class="col-sm-4">
+                                            <div class="col-sm-4">
                                                     <div class="form-group">
                                                         <div class="form-line">
                                                             <select id="partida"class="form-control select2">
@@ -239,7 +305,7 @@
                                                 <div class="col-sm-1">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="text"disabled class="form-control form-control-sm" id="presentacion" autocomplete="off">
+                                                            <input type="text"disabled class="form-control form-control-sm text" id="presentacion" autocomplete="off">
                                                         </div>
                                                         <small>Presentacion.</small>
                                                     </div>
@@ -247,7 +313,7 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number" id="cantidad" class="form-control" title="Cantidad">
+                                                            <input type="number" id="cantidad" class="form-control text" title="Cantidad">
                                                         </div>
                                                         <small>Cantidad Artículo.</small>
                                                     </div>
@@ -255,7 +321,7 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number" id="precio" class="form-control" title="Precio Unitario Bs">
+                                                            <input type="number" id="precio" class="form-control text" title="Precio Unitario Bs">
                                                         </div>
                                                         <small>Precio Artículo *(Bs).</small>
                                                     </div>
@@ -281,22 +347,52 @@
                     
                                                     </tr>
                                                 </thead>
+                                                <tbody>
+                                                    @php
+                                                        // $cont = 0;
+                                                        $total = 0;
+                                                    @endphp
+                                                    @foreach($detalle as $item)
+                                                        @php
+                                                            // $cont++;
+                                                            $total += $item->totalbs;
+                                                        @endphp
+                                                        <tr class="selected" id="fila{{$item->articulo_id}}">
+                                                            <td>
+                                                            
+                                                                <button 
+                                                                    type="button" 
+                                                                    title="Eliminar articulo"
+                                                                    class="btn btn-danger" 
+                                                                    onclick="eliminar('{{$item->articulo_id}}')";
+                                                                >
+                                                                <i class="voyager-trash"></i>
+                                                                </button>
+                                                                
+                                                            </td>
+                                                            <td>{{$item->codigo}} - {{$item->partida}}</td>
+                                                            <td><input type="hidden" class="input_article" name="article_id[]" value="{{ $item->articulo_id}}">{{$item->articulo}}</td>
+                                                            <td>{{ $item->presentacion}}</td>
+                                                            <td><input type="hidden" name="precio[]" value="{{ $item->precio }}">{{ $item->cantsolicitada }}</td>
+                                                            <td><input type="hidden" name="cantidad[]" value="{{ $item->cantsolicitada }}">{{ $item->cantsolicitada }}</td>
+                                                            <td><input type="hidden" class="input_subtotal" name="totalbs[]" value="{{ $item->totalbs }}">{{ $item->totalbs }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
                                                 <tfoot>
                                                     <th colspan="6" style="text-align:right"><h5>TOTAL</h5></th>
-                                                    <th><h4 id="total">Bs. 0.00</h4></th>
+                                                    <th><h4  id="total">Bs. {{ $total }}</h4></th>
+                                                    <input type="hidden" step="0.01" name="total" value="{{ $total }}" id="totals">
                                                 </tfoot>
                                                 
                                             </table>
                                             
                                         </div>   
+                                        <input type="hidden" name="id" value="{{$sol->id}}">
                                         <div class="card-footer">
-                                            <button id="btn_guardar" disabled type="submit"  class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
+                                            <button id="btn_guardar" type="submit"  class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
                                         </div>   
-                                        {!! Form::close() !!}     
-                                        <button id="btnReproducir">Reproducir sonido</button>
-                                        <button id="btnPausar">Pausar sonido</button>
-                                        <button id="btnReiniciar">Ir a inicio de sonido</button>
-                                        <script src="script.js"></script>                
+                                        {!! Form::close() !!}                     
                                     </main>
                                 </div>
                             </div>
@@ -313,40 +409,17 @@
     @stop
 
     @section('javascript')
-    
-        <script>
-            const cargarSonido = function (fuente) {
-    const sonido = document.createElement("audio");
-    sonido.src = fuente;
-    sonido.setAttribute("preload", "auto");
-    sonido.setAttribute("controls", "none");
-    sonido.style.display = "none"; // <-- oculto
-    document.body.appendChild(sonido);
-    return sonido;
-};
-const $botonReproducir = document.querySelector("#btnReproducir"),
-    $botonPausar = document.querySelector("#btnPausar"),
-    $botonReiniciar = document.querySelector("#btnReiniciar");
-// El sonido que podemos reproducir o pausar
-const sonido = cargarSonido("sonido.flac");
-$botonReproducir.onclick = () => {
-    sonido.play();
-};
-$botonPausar.onclick = () => {
-    sonido.pause();
-};
-$botonReiniciar.onclick = () => {
-    sonido.currentTime = 0;
-};
+    <script>
+            $(document).ready(function() {
+                $(".select2").select2({theme: "classic"});
 
+                $('.select2bs4').select2({});
 
-            $(function()
-            {    
-                // alert(4);
                 $('#das').on('change', unidad_administrativa);
 
-                $('#provider').on('change', onselect_proveedor_llenar);
 
+
+                $('#provider').on('change', onselect_proveedor_llenar);
                 $('#tipofactura').on('change', onselect_tipo);
 
                 $('#partida').on('change', onselect_article);
@@ -355,14 +428,22 @@ $botonReiniciar.onclick = () => {
                 $('#bt_add').click(function() {
                     agregar();
                 });
+            });
 
-            })
+
+            //variables.
+            var cont=0;
+            total=0;
+            subtotal=[];
+
+
             var cont=0;
             var total=0;
             subtotal=[];
 
             function agregar()
             {
+            
                 partida=$("#partida option:selected").text();
                 montofactura=$("#montofactura").val();
                 article_id=$("#article_id").val();
@@ -371,50 +452,77 @@ $botonReiniciar.onclick = () => {
                 precio=$("#precio").val();
                 nombre_articulo=$("#article_id option:selected").text();
 
-
+                var arrayarticle = [];
+                var i=0;
+                var j=0;
+                ok=false;
                 if (partida != 'Seleccione una Partida..' && nombre_articulo != 'Seleccione un Articulo..' && cantidad != "" && precio != "") {
                     
 
 
-                    var fila='<tr class="selected" id="fila'+cont+'">'
-                            fila+='<td><button type="button" class="btn btn-danger" onclick="eliminar('+cont+')";><i class="voyager-trash"></i></button></td>'
+                    var fila='<tr class="selected" id="fila'+article_id+'">'
+                            fila+='<td><button type="button" class="btn btn-danger" onclick="eliminar('+article_id+')";><i class="voyager-trash"></i></button></td>'
                             fila+='<td>'+partida+'</td>'
-                            fila+='<td><input type="hidden" name="article_id[]"value="'+article_id+'">'+nombre_articulo+'</td>'
+                            fila+='<td><input type="hidden" class="input_article" name="article_id[]"value="'+article_id+'">'+nombre_articulo+'</td>'
                             fila+='<td>'+presentacion+'</td>'
-                            fila+='<td><input type="hidden" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td>'
-                            fila+='<td><input type="hidden" name="precio[]" value="'+precio+'">'+precio+'</td>'
+                            fila+='<td><input type="hidden"  class="form-control" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td>'
+                            fila+='<td><input type="hidden"  class="form-control" name="precio[]" value="'+precio+'">'+precio+'</td>'
                             fila+='<td><input type="hidden" class="input_subtotal" name="totalbs[]" value="'+cantidad * precio+'">'+cantidad * precio+'</td>'
                         fila+='</tr>';
-                    
-                
-                    // let monto_subtotal = parseFloat(calcular_total()+subtotal).toFixed(2);
+                        
 
-                    // variables de detalle de factura y total de factura
                     let detalle_subtotal = parseFloat(calcular_total()+cantidad * precio ).toFixed(2);
-
-                        let monto_factura = parseFloat($('#montofactura').val());
-                    
+                    let monto_factura = parseFloat($('#montofactura').val());
+                        
 
                     if (detalle_subtotal <= monto_factura) {
 
-                        cont++;
-                        limpiar();
-                        $('#detalles').append(fila);
-                        $("#total").html("Bs. "+calcular_total().toFixed(2));
-
-                    
-                        //evaluar();
-                        if (calcular_total().toFixed(2)==monto_factura.toFixed(2)) {
-                            $('#btn_guardar').removeAttr('disabled');
-                        }
-                        else
+                        $(".input_article").each(function(){
+                            arrayarticle[i]= parseFloat($(this).val());
+                            i++;
+                        }); 
+                        var ok=true;
+                        // alert(arrayarticle.length)
+                        for(j=0;j<arrayarticle.length; j++)
                         {
-                            $('#btn_guardar').attr('disabled', true);
+                            
+                            if(arrayarticle[j] == article_id)
+                            {
+                                // cont--;
+                                limpiar();
+                                ok = false;
+                                // eliminar(arrayarticle.length-1)
+                                swal({
+                                    title: "Error",
+                                    text: "El Articulo ya Existe en la Lista",
+                                    type: "error",
+                                    showCancelButton: false,
+                                    });
+                                div = document.getElementById('flotante');
+                                div.style.display = '';
+                                return;                                
+                            }
+                        }
+                        if(ok==true)
+                        {
+                            // cont++;
+                        
+                            limpiar();
+                            $('#detalles').append(fila);
+                            $("#total").html("Bs. "+calcular_total().toFixed(2));
+                            // $("#totals").html(calcular_total().toFixed(2));
+                            $("#totals").val(calcular_total().toFixed(2));
+                            if (calcular_total().toFixed(2)==monto_factura.toFixed(2)) {
+                                $('#btn_guardar').removeAttr('disabled');
+                            }
+                            else
+                            {
+                                $('#btn_guardar').attr('disabled', true);
+                            }
                         }
                     }
                     else
                     {
-                        // alert(total);
                         swal({
                             title: "Error",
                             text: "El monto total supera al monto de la factura",
@@ -439,7 +547,31 @@ $botonReiniciar.onclick = () => {
                         return;
                 }
 
-            }        
+            }      
+
+
+            function check(e,index) 
+            {   
+                alert(index)
+                    tecla = (document.all) ? e.keyCode : e.which;
+
+                    //Tecla de retroceso para borrar, siempre la permite
+                    if (tecla == 8) {
+                
+                        return true;
+                    }
+
+                    var numero =0;
+                    var letra =0;
+                    // Patron de entrada, en este caso solo acepta numeros y letras
+                    patron = /[0-9]/;
+                    tecla_final = String.fromCharCode(tecla);
+                    alert(tecla_final)
+                                
+                        
+                                    
+            }
+            
             function limpiar()
             {
                 $("#precio").val("");
@@ -449,10 +581,12 @@ $botonReiniciar.onclick = () => {
 
             function eliminar(index)
             {
-                total=total-subtotal[index];
-                $("#total").html("Bs/." + total);
+                // total=total-subtotal[index];
+                // alert(subtotal[index])
+                // $("#total").html("Bs/." + total);
                 $("#fila" + index).remove();
                 $("#total").html("Bs. "+calcular_total().toFixed(2));
+                $("#totals").val(calcular_total().toFixed(2));
                 // evaluar();
                 $('#btn_guardar').attr('disabled', true);
             }
@@ -469,9 +603,38 @@ $botonReiniciar.onclick = () => {
                 
                 return total;
             }
+            function sumfila()
+            {
 
+            }
 
-            
+            //funcion que da mensaje de confirmacion al tratar de agrehar artículo.
+            // function confirmarguardado()
+            // {
+            //   	var mensaje = confirm("Esta seguro de guardar este detalle de compra");
+            //     if (mensaje == true) {
+            //     	return true;
+            //     }else {
+            //         return false;
+            //     	}
+            // }
+
+            // //Select filtro + extraccion de datos de articulos y categoria
+            // $("#idarticulo_select2bs4").change(mostrarValoresArticulo);
+            // function mostrarValoresArticulo()
+            // {
+            // 	datoArticulo = document.getElementById('idarticulo_select2bs4').value.split('_');
+            //   	$("#codigoarticulo").val(datoArticulo[0]);
+            //   	$("#presentacion").val(datoArticulo[1]);
+            //   	$("#nombrecategoria").val(datoArticulo[2]);
+            // }
+
+            // //mensaje de espera de enviado de formulario
+            // $('#form').on('submit', function(e) {
+            //     $('.loader').css('display', 'block')
+            //     document.getElementById("btn_guardar").disabled = true;
+            //     //e.preventDefault();
+            // });
             function unidad_administrativa()
             {
                 var id =  $(this).val();    
@@ -491,16 +654,19 @@ $botonReiniciar.onclick = () => {
                     $('#unidadEje').html(html_unidad);
                 }
             }
+
+
+
+
+
+
+
             
-        
-            function onselect_proveedor_llenar()
-            {
-                datoProveedor = document.getElementById('provider').value.split('_');
-                // alert(datoProveedor[2]);
-                $("#provider_id").val(datoProveedor[0]);
-                $("#nit").val(datoProveedor[1]);
-                $("#responsable").val(datoProveedor[2]);
-            }
+
+
+
+
+
 
             function onselect_tipo()
             {
@@ -511,7 +677,7 @@ $botonReiniciar.onclick = () => {
                 {
                     html_factura =  '<div class="form-group">'
                     html_factura+=       '<div class="form-line">'
-                    html_factura+=            '<input type="number" name="nrocontrol" class="form-control" title="Introducir Nro Control Factura">'
+                    html_factura+=            '<input type="number" name="nrocontrol" class="form-control text" title="Introducir Nro Control Factura">'
                     html_factura+=       '</div>'
                     html_factura+=       '<small>Nro Control.</small>'
                     html_factura+=  '</div>'
@@ -522,6 +688,15 @@ $botonReiniciar.onclick = () => {
                     html_factura ='';
                     $('#nrocontrol').html(html_factura);
                 }
+            }
+
+            function onselect_proveedor_llenar()
+            {
+                datoProveedor = document.getElementById('provider').value.split('_');
+                // alert(datoProveedor[2]);
+                $("#provider_id").val(datoProveedor[0]);
+                $("#nit").val(datoProveedor[1]);
+                $("#responsable").val(datoProveedor[2]);
             }
 
             function onselect_article()
@@ -566,6 +741,9 @@ $botonReiniciar.onclick = () => {
                 // $("#responsable").val(datoProveedor[2]);
             }
 
-        </script> 
+        </script>
+    @stop
+    @section('content')
+        <h1>No tienes permiso</h1>
     @stop
 @endif

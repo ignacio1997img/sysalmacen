@@ -19,22 +19,24 @@ use Illuminate\Support\Facades\Storage;
 use DataTables;
 use Illuminate\Support\Str;
 use file;
-
+use PhpParser\Node\Stmt\Return_;
 
 class IncomeDonorController extends Controller
 {
     
     public function index()
     {
+
         $income = DB::table('donacion_ingresos as di')
             ->join('centros as c', 'c.id', 'di.centro_id')
-            ->select('di.id', 'di.nrosolicitud', 'c.nombre','di.observacion', 'di.fechadonacion', 'di.fechaingreso', 'di.condicion')
+            ->select('di.id', 'di.nrosolicitud', 'c.nombre','di.observacion', 'di.fechadonacion', 'di.fechaingreso', 'di.condicion', 'di.stock')
             ->where('di.deleted_at', null)
             // ->where('di.condicion','!=',0)
             ->get();
 
-            // return $income;
-        return view('incomedonor.browse', compact('income'));
+
+
+        return view('donacion-sedeges.incomedonor.browse', compact('income'));
     }
 
     /**
@@ -49,7 +51,7 @@ class IncomeDonorController extends Controller
         $centrotipo = CentroCategoria::where('deleted_at', null)
         ->where('condicion', 1)->get();
 
-        return view('incomedonor.add', compact('categoria', 'centrotipo'));        
+        return view('donacion-sedeges.incomedonor.add', compact('categoria', 'centrotipo'));        
     }
 
     public function store(Request $request)
@@ -60,8 +62,6 @@ class IncomeDonorController extends Controller
 
             $user = Auth::user();
             $gestion = Carbon::parse($request->fechaingreso)->format('Y');
-
-
 
 
             $aux = DonacionIngreso::where('centro_id', $request->centro_id)
@@ -141,7 +141,7 @@ class IncomeDonorController extends Controller
                     
                     $newFileName = Str::random(20).time().'.'.$file[$i]->getClientOriginalExtension();
                     
-                    $dir = "donacion/income/".date('F').date('Y');
+                    $dir = "DonacionSedeges/income/".date('F').date('Y');
                     
                     Storage::makeDirectory($dir);
                     Storage::disk('public')->put($dir.'/'.$newFileName, file_get_contents($file[$i]));
@@ -162,6 +162,7 @@ class IncomeDonorController extends Controller
 
         } catch (\Throwable $th) {
             DB::rollBack();
+
             return redirect()->route('incomedonor.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
 
         }
@@ -224,7 +225,7 @@ class IncomeDonorController extends Controller
         }
         // return $donante->tipo;
         
-        return view('incomedonor.report',compact('detalle', 'do', 'centro', 'donante'));
+        return view('donacion-sedeges.incomedonor.report',compact('detalle', 'do', 'centro', 'donante'));
     }
 
     public function show_stock($id)
@@ -246,7 +247,7 @@ class IncomeDonorController extends Controller
         // return $detalle;
 
         // return $archivos;
-        return view('incomedonor.reportstock', compact('ingreso', 'detalle', 'archivos'));
+        return view('donacion-sedeges.incomedonor.reportstock', compact('ingreso', 'detalle', 'archivos'));
 
 
     }
@@ -318,7 +319,7 @@ class IncomeDonorController extends Controller
                 ->where('donacioningreso_id', $id)
                 ->get();
 
-        return view('incomedonor.edit', compact('categoria', 'centrotipo', 'ingreso', 'donante', 'detalle', 'anonimo','archivos'));
+        return view('donacion-sedeges.incomedonor.edit', compact('categoria', 'centrotipo', 'ingreso', 'donante', 'detalle', 'anonimo','archivos'));
     }
     
 
@@ -418,7 +419,7 @@ class IncomeDonorController extends Controller
                     
                     $newFileName = Str::random(20).time().'.'.$file[$i]->getClientOriginalExtension();
                     
-                    $dir = "donacion/income/".date('F').date('Y');
+                    $dir = "DonacionSedeges/income/".date('F').date('Y');
                     
                     Storage::makeDirectory($dir);
                     Storage::disk('public')->put($dir.'/'.$newFileName, file_get_contents($file[$i]));
@@ -434,7 +435,6 @@ class IncomeDonorController extends Controller
                 }
                
             }
-            
 
             DB::commit();
             return redirect()->route('incomedonor.index')->with(['message' => 'Ingreso Editado Exitosamente.', 'alert-type' => 'success']);
@@ -479,10 +479,10 @@ class IncomeDonorController extends Controller
                 ->update(['deleted_at' => Carbon::now(),'deleteuser_id' => $user->id]);
 
             DB::commit();
-            return redirect()->route('incomedonor.edit', $request->ingreso_id)->with(['message' => 'Archivo Eliminado Exitosamente.', 'alert-type' => 'success']);
+            return redirect()->route('donacion-sedeges.incomedonor.edit', $request->ingreso_id)->with(['message' => 'Archivo Eliminado Exitosamente.', 'alert-type' => 'success']);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->route('incomedonor.edit', $request->ingreso_id)->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
+            return redirect()->route('donacion-sedeges.incomedonor.edit', $request->ingreso_id)->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
         }
     }
 
@@ -529,5 +529,29 @@ class IncomeDonorController extends Controller
             }
         }
         return $donacion;
+    }
+
+
+    public function ajax_search_donante(Request $request)
+    {
+        $donante = DonadorEmpresa::where('deleted_at', null);
+        if($request->tipo == "0")
+        {
+            return $donante->where('tipo', 0)->get();
+            if($request->tipo == "1")
+            {
+                return $donante->where('tipo', 1)->get();
+            }
+            while($request->tipo == "2")
+            {
+                return $donante->where('tipo', 2)->get();
+            }
+
+            if($request->tipo == null)
+            {
+                return $donante->get();
+            }
+
+        }
     }
 }

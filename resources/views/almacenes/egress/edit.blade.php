@@ -5,13 +5,71 @@
 @extends('voyager::master')
 
 @section('page_title', 'añadir Egresos')
+<style>
+    input:focus {
+        background: rgb(197, 252, 215);
+    }
 
+    input:focus{        
+        background: rgb(255, 245, 229);
+        border-color: rgb(255, 161, 10);
+        /* border-radius: 50px; */
+    }
+    input.text, select.text, textarea.text{ 
+        border-radius: 5px 5px 5px 5px;
+        color: #000000;
+        border-color: rgb(63, 63, 63);
+    }
+
+   
+    small{font-size: 32px;
+        color: rgb(12, 12, 12);
+        font-weight: bold;
+    }
+    #subtitle{
+        font-size: 18px;
+        color: rgb(12, 12, 12);
+        font-weight: bold;
+    }
+
+
+    #detalles {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    }
+
+    #detalles td, #detalles th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    }
+
+    #detalles tr:nth-child(even){background-color: #f2f2f2;}
+
+    #detalles tr:hover {background-color: #ddd;}
+
+    #detalles th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #04AA6D;
+        color: white;
+    }
+
+    .form-control .select2{
+        border-radius: 5px 5px 5px 5px;
+        color: #000000;
+        border-color: rgb(63, 63, 63);
+    }
+    
+
+</style>
 @section('page_header')
     
     <div class="container-fluid">
         <div class="row">
-            <h1 class="page-title">
-                <i class="voyager-basket"></i> Añadir Egreso
+            <h1 id="subtitle" class="page-title">
+                <i class="voyager-basket"></i> Editar Egreso
             </h1>
         </div>
     </div>
@@ -27,10 +85,23 @@
                         <div class="panel-body">                            
                             <div class="table-responsive">
                                 <main class="main">      
-                                {!! Form::open(['route' => 'egres.store', 'class' => 'was-validated'])!!}  
+                                {!! Form::open(['route' => 'egres_update', 'class' => 'was-validated'])!!}  
                                     <div class="card-body">
-                                        <h5>Solicitud de Compras</h5>
+                                        <h5 id="subtitle">Solicitud de Compras</h5>
                                         <div class="row">
+                                                @php
+                                                    $direccion = \DB::connection('mamore')->table('unidades')
+                                                                    ->where('id', $solicitud->unidadadministrativa)
+                                                                    ->select('*')
+                                                                    ->orderBy('nombre','asc')
+                                                                    ->first();
+                                                    $unidades = \DB::connection('mamore')->table('unidades')
+                                                                    ->where('direccion_id', $direccion->direccion_id)
+                                                                    ->select('*')
+                                                                    ->orderBy('nombre','asc')
+                                                                    ->get();
+                                                    // dd($unidades);
+                                                @endphp
                                             <!-- === -->
                                             <div class="col-sm-3">
                                                 <div class="form-group">
@@ -38,7 +109,7 @@
                                                         <select name="sucursal_id" class="form-control select2" required>
                                                             <option value="">Seleccione una sucursal</option>
                                                             @foreach ($sucursales as $sucursal)
-                                                                <option value="{{$sucursal->id}}">{{$sucursal->nombre}}</option>
+                                                                <option value="{{$sucursal->id}}" {{$solicitud->sucursal_id? 'selected':''}}>{{$sucursal->nombre}}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -52,7 +123,7 @@
                                                         <select id="das" class="form-control select2" required>
                                                             <option value="">Seleccione una Direccion Administrativa</option>
                                                             @foreach ($da as $data)
-                                                                <option value="{{$data->ID}}">{{$data->NOMBRE}}</option>
+                                                                <option value="{{$data->id}}" {{$data->id == $direccion->direccion_id? 'selected':''}}>{{$data->nombre}}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -64,7 +135,9 @@
                                                 <div class="form-group">
                                                     <div class="form-line">
                                                         <select id="unidadEje" name="unidadadministrativa" class="form-control select2" required>
-                                                            
+                                                            @foreach ($unidades as $item)
+                                                                    <option value="{{$item->id}}" {{$item->id == $solicitud->unidadadministrativa? 'selected':''}}>{{$item->nombre}}</option>
+                                                            @endforeach
                                                         </select>
                                                     </div>
                                                     <small>Seleccionar Unidad Administrativa.</small>
@@ -77,7 +150,10 @@
                                                 <div class="form-group">
                                                     <div class="form-line">
                                                         <select id="modalidad" class="form-control select2" >
-                                                            
+                                                            <option value="">Seleccione una modalidad de compra</option>
+                                                            @foreach ($compra as $item)
+                                                                    <option value="{{$item->id}}">{{$item->nombre}} - {{$item->nrosolicitud}}</option>
+                                                            @endforeach
                                                         </select>
                                                     </div>
                                                     <small>Seleccionar Modalidad de Compra.</small>
@@ -86,7 +162,7 @@
                                             <div class="col-sm-3">
                                                 <div class="form-group">
                                                     <div class="form-line">
-                                                        <input type="number" name="nropedido" class="form-control form-control-sm" placeholder="Numero de Pedido" required>
+                                                        <input type="number" name="nropedido" class="form-control form-control-sm text" placeholder="Numero de Pedido" required>
                                                     </div>
                                                     <small>Numero de Pedido.</small>
                                                 </div>
@@ -94,7 +170,7 @@
                                             <div class="col-sm-3">
                                                 <div class="form-group">
                                                     <div class="form-line">
-                                                        <input type="date" name="fechasolicitud" class="form-control" required>
+                                                        <input type="date" name="fechasolicitud" class="form-control text" required>
                                                     </div>
                                                     <small>Fecha Solicitud.</small>
                                                 </div>
@@ -102,14 +178,14 @@
                                             <div class="col-sm-3">
                                                 <div class="form-group">
                                                     <div class="form-line">
-                                                        <input type="date" name="fechaegreso" class="form-control" required>
+                                                        <input type="date" name="fechaegreso" class="form-control text" required>
                                                     </div>
                                                     <small>Fecha Egreso.</small>
                                                 </div>
                                             </div>
                                         </div>
                                         <hr>
-                                        <h5>Articulo:</h5>
+                                        <h5 id="subtitle">Articulo:</h5>
                                         <div class="row">
                                             <div class="col-sm-4">
                                                 <div class="form-group">
@@ -122,7 +198,7 @@
                                             <div class="col-sm-2">
                                                 <div class="form-group">
                                                     <div class="form-line">
-                                                        <input type="text" id="presentacion" class="form-control form-control-sm" placeholder="Seleccione un Articulo" readonly>
+                                                        <input type="text" id="presentacion" class="form-control form-control-sm text" placeholder="Seleccione un Articulo" readonly>
                                                     </div>
                                                     <small>Presentación.</small>
                                                 </div>
@@ -130,7 +206,7 @@
                                             <div class="col-sm-2">
                                                 <div class="form-group">
                                                     <div class="form-line">
-                                                        <input type="text" id="precio" class="form-control form-control-sm" placeholder="Seleccione un Articulo" readonly>
+                                                        <input type="text" id="precio" class="form-control form-control-sm text" placeholder="Seleccione un Articulo" readonly>
                                                     </div>
                                                     <small>Precio.</small>
                                                 </div>
@@ -138,7 +214,7 @@
                                             <div class="col-sm-2">
                                                 <div class="form-group">
                                                     <div class="form-line">
-                                                        <input type="text" id="stok" class="form-control form-control-sm" placeholder="Seleccione un Articulo" readonly>
+                                                        <input type="text" id="stok" class="form-control form-control-sm text" placeholder="Seleccione un Articulo" readonly>
                                                     </div>
                                                     <small>Stock Artículo.</small>
                                                 </div>
@@ -146,7 +222,7 @@
                                             <div class="col-sm-2">
                                                 <div class="form-group">
                                                     <div class="form-line">
-                                                        <input type="number" id="cantidad" step="0.01" class="form-control form-control-sm" placeholder="Introducir monto" autocomplete="off">
+                                                        <input type="number" id="cantidad" step="0.01" class="form-control form-control-sm text" placeholder="Introducir monto" autocomplete="off">
                                                     </div>
                                                     <small>Cantidad.</small>
                                                 </div>
@@ -181,7 +257,7 @@
                                             
                                         </table>
                                         <div class="card-footer">
-                                            <button id="btn_guardar" type="submit"  class="btn btn-outline-info"><i class="fas fa-save"></i> Guardar</button>
+                                            <button id="btn_guardar" type="submit"  class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
                                         </div>  
                                     </div>
                                     {!! Form::close() !!}      
@@ -210,6 +286,8 @@
 
         $(function()
         {             
+            $(".select2").select2({theme: "classic"});
+
             $('#das').on('change', unidad_administrativa);
 
             $('#unidadEje').on('change', onselect_modalidad_compra);
@@ -258,39 +336,36 @@
                 
                     // alert(2);
                 
-                    var fila='<tr class="selected" id="fila'+cont+'">'
-                        fila+='<td><button type="button" class="btn btn-danger" onclick="eliminar('+cont+')";><i class="voyager-trash"></i></button></td>'
-                        fila+='<td><input type="hidden" class="input_article" name="detallefactura_id[]"value="'+detallefactura_id+'">'+detallefactura_id+'</td>' 
+                    var fila='<tr class="selected" id="fila'+detallefactura_id+'">'
+                        fila+='<td><button type="button" class="btn btn-danger" onclick="eliminar('+detallefactura_id+')";><i class="voyager-trash"></i></button></td>'
+                        fila+='<td><input type="hidden" class="detallefactura_id" name="detallefactura_id[]"value="'+detallefactura_id+'">'+detallefactura_id+'</td>' 
                         fila+='<td>'+modalidad+'</td>'                         
                         fila+='<td>'+nombre_articulo+'</td>'
                         fila+='<td>'+presentacion+'</td>' 
                         fila+='<td><input type="hidden" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td>'                       
                         fila+='<td><input type="hidden" name="precio[]" value="'+precio+'">'+precio+'</td>'                        
-                        fila+='<td><input type="hidden" class="input_subtotal" name="totalbs[]" value="'+cantidad * precio+'">'+cantidad * precio+'</td>'
+                        fila+='<td><input type="hidden" class="input_subtotal" value="'+cantidad * precio+'">'+cantidad * precio+'</td>'
                     fila+='</tr>';
 
 
                     let detalle_subtotal = parseFloat(calcular_total()+cantidad * precio ).toFixed(2);
                     if (cantidad >= 1 &&  cantidad <= stok && stok != 0 ) {
 
-                        cont++;
-                        
-                        limpiar();
-                        $('#detalles').append(fila);
-                        $("#total").html("Bs. "+calcular_total().toFixed(2));
-                     
-                        $(".input_article").each(function(){
+                        $(".detallefactura_id").each(function(){
                             arrayarticle[i]= parseFloat($(this).val());
-                            // alert(arrayarticle[i]);
                             i++;
                         }); 
-
-                        for(j=0;j<arrayarticle.length-1; j++)
+                        var ok=true;
+                        // alert(arrayarticle.length)
+                        for(j=0;j<arrayarticle.length; j++)
                         {
-                            // alert(arrayarticle[j])
-                            if(arrayarticle[j] == arrayarticle[arrayarticle.length-1])
+                            
+                            if(arrayarticle[j] == detallefactura_id)
                             {
-                                eliminar(arrayarticle.length-1)
+                                // cont--;
+                                limpiar();
+                                ok = false;
+                                // eliminar(arrayarticle.length-1)
                                 swal({
                                     title: "Error",
                                     text: "El Articulo ya Existe en la Lista",
@@ -299,8 +374,18 @@
                                     });
                                 div = document.getElementById('flotante');
                                 div.style.display = '';
-                                return;
-                                
+                                return;                                
+                            }
+                        }
+                        if(ok==true)
+                        {
+                            // cont++;
+                        
+                            limpiar();
+                            $('#detalles').append(fila);
+                            $("#total").html("Bs. "+calcular_total().toFixed(2));
+                            if (calcular_total().toFixed(2)==monto_factura.toFixed(2)) {
+                                $('#btn_guardar').removeAttr('disabled');
                             }
                         }
                         
@@ -389,7 +474,7 @@
                 $.get('{{route('ajax_unidad_administrativa')}}/'+id, function(data){
                     var html_unidad=    '<option value="">Seleccione Una Unidad Administrativa..</option>'
                         for(var i=0; i<data.length; ++i)
-                        html_unidad += '<option value="'+data[i].ID+'">'+data[i].Nombre+'</option>'
+                        html_unidad += '<option value="'+data[i].id+'">'+data[i].nombre+'</option>'
 
                     $('#unidadEje').html(html_unidad);;            
                 });
