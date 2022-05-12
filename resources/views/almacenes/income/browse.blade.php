@@ -34,33 +34,39 @@
                                     <table id="dataTable" class="dataTable table-hover">
                                         <thead>
                                             <tr>
-                                                <th>Nro&deg;</th>
-                                                <th>Entidad + Nro Compra</th>
-                                                <th>Proveedor</th>
-                                                <th>Número Factura</th>
-                                                <th>Fecha Factura</th>
-                                                <th>Fecha Registro</th>
-                                                <th>Stock</th>
-                                                <th>Acciones</th>
+                                                <th style="text-align: center">Nro&deg;</th>
+                                                <th style="text-align: center">Entidad + Nro Compra</th>
+                                                <th style="text-align: center">Proveedor</th>
+                                                <th style="text-align: center">Número Factura</th>
+                                                <th style="text-align: center">Fecha Factura</th>
+                                                <th style="text-align: center">Fecha Registro</th>
+                                                <th style="text-align: center">Stock</th>
+                                                @if(auth()->user()->hasRole(['admin']));
+                                                <th style="text-align: center">Sucursal</th>
+                                                @endif
+                                                <th style="text-align: right">Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($income as $data)
                                                 <tr>
                                                     <td>{{$data->id}}</td>
-                                                    <td>{{$data->modalidad}} - {{$data->nrosolicitud}}</td>
-                                                    <td style="width: 200pt">{{$data->razonsocial}}<br><strong>NIT: {{$data->nit}}</strong></td>
-                                                    <td>{{$data->nrofactura}}</td>
-                                                    <td>{{\Carbon\Carbon::parse($data->fechafactura)->format('d/m/Y')}}<br><strong>Monto: {{$data->montofactura}} Bs.</strong></td>
-                                                    <td>{{date('d/m/Y H:i:s', strtotime($data->created_at))}}<br><small>{{\Carbon\Carbon::parse($data->created_at)->diffForHumans()}}.</small></td>
-                                                    <td>
+                                                    <td style="text-align: center">{{$data->modalidad}} - {{$data->nrosolicitud}}</td>
+                                                    <td style="width: 200pt; text-align: center">{{$data->razonsocial}}<br><small>NIT: {{$data->nit}}</small></td>
+                                                    <td style="text-align: center">{{$data->nrofactura}}</td>
+                                                    <td style="text-align: center">{{\Carbon\Carbon::parse($data->fechafactura)->format('d/m/Y')}}<br><small>Monto: {{$data->montofactura}} Bs.</small></td>
+                                                    <td style="text-align: center">{{date('d/m/Y H:i:s', strtotime($data->created_at))}}<br><small>{{\Carbon\Carbon::parse($data->created_at)->diffForHumans()}}.</small></td>
+                                                    <td style="text-align: center">
                                                         @if ($data->stock == 1)
                                                             <label class="label label-success">SI</label>
                                                         @else
                                                             <label class="label label-danger">NO</label>
                                                         @endif
                                                     </td>
-                                                    <td>
+                                                    @if(auth()->user()->hasRole(['admin']));
+                                                        <td style="text-align: center">{{$data->sucursal}}</td>
+                                                    @endif
+                                                    <td style="text-align: right">
                                                         <div class="no-sort no-click bread-actions text-right">
                                                             @if(auth()->user()->hasPermission('read_income'))
                                                                 <a href="{{route('income_view_stock',$data->id)}}" title="Ver" target="_blank" class="btn btn-sm btn-info view">
@@ -161,6 +167,10 @@
             color: rgb(12, 12, 12);
             font-weight: bold;
         }
+        small{font-size: 12px;
+        color: rgb(12, 12, 12);
+        font-weight: bold;
+    }
 
     </style>
     @stop

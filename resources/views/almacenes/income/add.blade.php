@@ -69,7 +69,6 @@
 
 </style>
 
-
 @if(auth()->user()->hasPermission('add_income'))
 
     @section('page_header')
@@ -79,6 +78,9 @@
                 <h1 id="subtitle" class="page-title">
                     <i class="voyager-basket"></i> Añadir Ingreso
                 </h1>
+                <a href="{{ route('income.index') }}" class="btn btn-warning btn-add-new">
+                    <i class="fa-solid fa-arrow-rotate-left"></i> <span>Volver</span>
+                </a>
             </div>
         </div>
     @stop
@@ -235,7 +237,7 @@
                                                         <div class="form-line">
                                                             <input type="date" id="fechafactura" name="fechafactura" class="form-control text">
                                                         </div>
-                                                        <small>Fecha Factura.</small>
+                                                        <small>Fecha.</small>
                                                     </div>
                                                 </div>
                                                 
@@ -245,7 +247,7 @@
                                                         <div class="form-line">
                                                             <input type="number" step="0.01" class="form-control form-control-sm text" id="montofactura" name="montofactura" placeholder="Introducir monto" autocomplete="off" required>
                                                         </div>
-                                                        <small>Monto Factura *(Bs).</small>
+                                                        <small>Monto *(Bs).</small>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
@@ -253,7 +255,7 @@
                                                         <div class="form-line">
                                                             <input type="number" id="nrofactura" name="nrofactura" class="form-control text" title="Introducir Nro de Factura" required>
                                                         </div>
-                                                        <small>Nro Factura.</small>
+                                                        <small>Numero.</small>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
@@ -556,7 +558,7 @@
             function unidad_administrativa()
             {
                 var id =  $(this).val();    
-                alert(id)
+                // alert(id)
                 if(id >=1)
                 {
                     $.get('{{route('ajax_unidad_administrativa')}}/'+id, function(data){

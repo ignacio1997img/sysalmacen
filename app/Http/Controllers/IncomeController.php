@@ -59,7 +59,22 @@ class IncomeController extends Controller
                 ->where('su.condicion',1)
                 ->first();
   
-        $income = DB::table('solicitud_compras as sol')
+        if(auth()->user()->isAdmin())
+        {
+            $income = DB::table('solicitud_compras as sol')
+            ->join('facturas as f', 'f.solicitudcompra_id', 'sol.id')
+            // ->join('invoice_details as fd', 'fd.invoice_id', 'f.id')
+            ->join('modalities as m', 'm.id', 'sol.modality_id')
+            ->join('providers as pro', 'pro.id', 'f.provider_id')
+            ->join('sucursals as s', 's.id', 'sol.sucursal_id')
+            ->select('sol.id', 'sol.stock', 's.nombre as sucursal', 'm.nombre as modalidad', 'sol.nrosolicitud' , 'pro.razonsocial', 'pro.nit', 'f.nrofactura', 'f.fechafactura', 'f.montofactura', 'sol.created_at', 'sol.condicion')
+            ->where('sol.deleted_at', null)
+            ->orderBy('sol.id', 'DESC')
+            ->get();
+        }
+        else
+        {
+            $income = DB::table('solicitud_compras as sol')
                 ->join('facturas as f', 'f.solicitudcompra_id', 'sol.id')
                 // ->join('invoice_details as fd', 'fd.invoice_id', 'f.id')
                 ->join('modalities as m', 'm.id', 'sol.modality_id')
@@ -69,6 +84,8 @@ class IncomeController extends Controller
                 ->where('sol.sucursal_id', $activo->id)
                 ->orderBy('sol.id', 'DESC')
                 ->get();
+        }
+        
                 
 
         return view('almacenes.income.browse', compact('income'));

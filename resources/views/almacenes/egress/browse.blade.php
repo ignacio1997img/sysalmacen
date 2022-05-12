@@ -52,7 +52,7 @@
                                                             <td>{{$item->nropedido}}</td>
                                                             <td>{{date('d/m/Y', strtotime($item->fechasolicitud))}}</td>
                                                             <td>{{date('d/m/Y', strtotime($item->fechaegreso))}}</td>
-                                                            <td style="text-align: center">{{$item->direccion}} <br><b id="subtitle">{{$item->unidad}}</b></td>
+                                                            <td style="text-align: center">{{$item->direccion}} <br><small>{{$item->unidad}}</small></td>
                                                             <td style="text-align: center">
                                                                 @if(auth()->user()->hasPermission('read_egres'))
                                                                     <a href="{{route('egres.show',$item->id)}}" target="_blank" title="Ver" class="btn btn-sm btn-warning view">
@@ -146,7 +146,12 @@
             background-color: #04AA6D;
             color: white;
         }
-        
+
+        small{font-size: 15px;
+            color: rgb(12, 12, 12);
+            font-weight: bold;
+        }
+            
 
     </style>
     @stop

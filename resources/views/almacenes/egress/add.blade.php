@@ -71,6 +71,9 @@
             <h1 id="subtitle" class="page-title">
                 <i class="voyager-basket"></i> Añadir Egreso
             </h1>
+            <a href="{{ route('income.index') }}" class="btn btn-warning btn-add-new">
+                <i class="fa-solid fa-arrow-rotate-left"></i> <span>Volver</span>
+            </a>
         </div>
     </div>
 @stop
@@ -465,6 +468,7 @@
             {
                 var html_unidad=    ''       
                 $('#unidadEje').html(html_unidad);
+              
             }
         }
     
@@ -487,12 +491,15 @@
 
                     $('#modalidad').html(html_modalidad);;            
                 });
+                $(".selected").remove();
+		  	    $("#total").html("Bs. 0.00");
+
             }
             else
             {
                 var html_modalidad=    ''       
                 $('#modalidad').html(html_modalidad);
-
+                
    
             }
         }

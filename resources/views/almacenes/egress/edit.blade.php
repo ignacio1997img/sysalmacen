@@ -71,6 +71,9 @@
             <h1 id="subtitle" class="page-title">
                 <i class="voyager-basket"></i> Editar Egreso
             </h1>
+            <a href="{{ route('income.index') }}" class="btn btn-warning btn-add-new">
+                <i class="fa-solid fa-arrow-rotate-left"></i> <span>Volver</span>
+            </a>
         </div>
     </div>
 @stop
