@@ -93,7 +93,8 @@ class EgressController extends Controller
             ->where('se.sucursal_id', $activo->id)
             ->orderBy('se.id', 'DESC')
             ->get();
-
+            // return $data;
+        // return SolicitudEgreso::all();
         // return $data;
 
         // $funcionarios = DB::table('siscorv2.people_exts as s')
@@ -108,7 +109,7 @@ class EgressController extends Controller
         //     ->limit(5)
         //     // ->groupBy('text')
         //     ->get();
-
+        
 
         return view('almacenes.egress.browse', compact('data'));
     }
