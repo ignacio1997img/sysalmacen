@@ -109,8 +109,8 @@
                         <th>Artículo</th>
                         <th>Codigo Articulo</th>
                         <th>Presentacion</th>
-                        <th>Cantidad</th>
-                        {{-- <th>Precio Unit.</th> --}}
+                        <th>Precio Unit.</th>
+                        <th>Cantidad</th>                        
                         <th>Total Parcial</th>
                     </tr>
                 </thead>
@@ -123,8 +123,8 @@
                                                     <td>{{$data->articulo}}</td>
                                                     <td>{{$data->codigo}}</td>
                                                     <td>{{$data->presentacion}}</td>                                                    
+                                                    <td>{{$data->precio}}</td>
                                                     <td>{{$data->cantsolicitada}}</td>
-                                                    {{-- <td>{{$data->precio}}</td> --}}
                                                     <td>{{$data->cantsolicitada * $data->precio}}</td>
                                                 </tr>
                                                 <?php
@@ -132,6 +132,10 @@
                                                     $numeroitems++;
                                                 ?>
                     @endforeach  
+                    <tr>
+                        <td colspan="7" class="text-right"><strong>TOTAL</strong></td>
+                        <td><strong>{{$total}}</strong></td>
+                    </tr>
                 </tbody>
             </table>
             <div class="row" style="font-size: 9pt">

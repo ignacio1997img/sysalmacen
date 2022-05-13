@@ -85,7 +85,7 @@ class EgressController extends Controller
                 ->where('u.id',$user->id )
                 ->where('su.condicion',1)
                 ->first();
-        $data = DB::table('sysalmacen.solicitud_egresos as se')
+        $data = DB::table('sysal.solicitud_egresos as se')
             ->join('sysadmin.unidades as u', 'u.id', 'se.unidadadministrativa')
             ->join('sysadmin.direcciones as d', 'd.id', 'u.direccion_id')
             ->select('se.id', 'se.nropedido', 'se.fechasolicitud', 'se.fechaegreso', 'u.nombre as unidad', 'd.nombre as direccion')

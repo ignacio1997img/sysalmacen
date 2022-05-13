@@ -92,13 +92,19 @@
                     <tr>
                         <th>PROVEEDOR</th>
                         <th>NIT</th>
-                        <th>FACTURA(S)</th>
+                        <th>
+                            @if ($factura->tipofactura != 'Orden_Compra')
+                                NRO FACTURA
+                            @else
+                                NRO ORDEN DE COMPRA
+                            @endif
+                        </th>
                         <th>FECHA INGRESO</th>
                     </tr>
                     <tr>
                         <td>{{$proveedor->razonsocial}}</td>
                         <td>{{$proveedor->nit}}</td>
-                        <td>{{$factura[0]->nrofactura}}</td>
+                        <td>{{$factura->nrofactura}}</td>
                         <td>{{\Carbon\Carbon::parse($sol->fechaingreso)->format('d/m/Y')}}</td>
                     </tr>
                 </table>
@@ -134,6 +140,10 @@
                                                     $numeroitems++;
                                                 ?>
                     @endforeach   
+                    <tr>
+                        <td colspan="6" class="text-right"><strong>TOTAL</strong></td>
+                        <td><strong>{{$total}}</strong></td>
+                    </tr>
                     
                 </tbody>
             </table>

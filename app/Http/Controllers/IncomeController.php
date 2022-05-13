@@ -118,9 +118,8 @@ class IncomeController extends Controller
     protected function view_ingreso($id)
     {
         $sol = SolicitudCompra::find($id);
- 
         
-        $factura = Factura::where('solicitudcompra_id', $sol->id)->get();
+        $factura = Factura::where('solicitudcompra_id', $sol->id)->where('deleted_at', null)->first();
 
         $sucursal = Sucursal::find($sol->sucursal_id);
 
@@ -139,10 +138,10 @@ class IncomeController extends Controller
                     ->where('df.hist', 0)
                     ->where('df.deleted_at', null)
                     // ->where('df.condicion', 1)
-                    ->where('df.factura_id', $factura[0]->id)
+                    ->where('df.factura_id', $factura->id)
                     ->get();
         
-        $proveedor = Provider::find($factura[0]->provider_id);
+        $proveedor = Provider::find($factura->provider_id);
 
         
         return view('almacenes.income.report',compact('sol','factura', 'detalle', 'sucursal', 'modalidad', 'unidad', 'proveedor'));
