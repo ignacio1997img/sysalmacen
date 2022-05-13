@@ -47,6 +47,7 @@ class PermissionRoleTableSeeder extends Seeder
         $role = Role::where('name', 'almacen_responsable')->firstOrFail();
         $permissions = Permission::whereRaw('table_name = "admin" or
                                             table_name = "income" or
+                                            table_name = "egres" or
                                             `key` = "browse_clear-cache"')->get();
         $role->permissions()->sync($permissions->pluck('id')->all());
 

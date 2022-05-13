@@ -186,83 +186,88 @@ class IncomeController extends Controller
     
     public function store(Request $request)
     {
-        // dd($request);
-        // return $request;
+        // dd($request);        
         $user = Auth::user();
         DB::beginTransaction();
         try {
 
-            $unidad = DB::connection('mysqlgobe')->table('unidadadminstrativa')
-                    ->select('sigla')
-                    ->where('ID',$request->unidadadministrativa)
-                    ->get();
-            // return $unidad;
-
-            $aux = SolicitudCompra::where('unidadadministrativa',$request->unidadadministrativa)
-                ->where('deleted_at', null)
-                ->get();
-
-                $length = 4;
-                $char = 0;
-                $type = 'd';
-                $format = "%{$char}{$length}{$type}"; // or "$010d";
-                
-
-
-
-            $request->merge(['nrosolicitud' => strtoupper($unidad[0]->sigla).'-'.sprintf($format, count($aux)+1)]);
-
-            // return $request;
-        
-            $gestion = Carbon::parse($request->fechaingreso)->format('Y');
-  
-        
-
-            $solicitud = SolicitudCompra::create([
-                    'sucursal_id'       => $request->branchoffice_id,
-                    'unidadadministrativa'     => $request->unidadadministrativa,
-                    'modality_id'           => $request->modality_id,
-                    'registeruser_id'       => $user->id,
-                    'nrosolicitud'          => $request->nrosolicitud,
-                    'fechaingreso'          => $request->fechaingreso,
-                    'gestion'               => $gestion
-            ]);
-            
-           
-            $factura = Factura::create([
-                    'solicitudcompra_id'   => $solicitud->id,
-                    'provider_id'           => $request->provider_id,
-                    'registeruser_id'       => $user->id,
-                    'tipofactura'           => $request->tipofactura,
-                    'fechafactura'          => $request->fechafactura,
-                    'montofactura'          => $request->montofactura,
-                    'nrofactura'            => $request->nrofactura,
-                    'nroautorizacion'       => $request->nroautorizacion,
-                    'nrocontrol'            => $request->nrocontrol,
-                    'fechaingreso'          => $request->fechaingreso, 
-                    'gestion'               => $gestion
-            ]);
-            
-            $cont = 0;
-       
-            while($cont < count($request->article_id))
+            if(floatval($request->total) === floatval($request->montofactura))
             {
-                DetalleFactura::create([
-                    'factura_id'            => $factura->id,
-                    'registeruser_id'       => $user->id,
-                    'article_id'            => $request->article_id[$cont],
-                    'cantsolicitada'        => $request->cantidad[$cont],
-                    'precio'                => $request->precio[$cont],
-                    'totalbs'               => $request->cantidad[$cont]*$request->precio[$cont],
-                    'cantrestante'          => $request->cantidad[$cont],
-                    'fechaingreso'          => $request->fechaingreso,
-                    'gestion'               => $gestion
+                // return floatval($request->total);
+                $unidad = DB::connection('mysqlgobe')->table('unidadadminstrativa')
+                        ->select('sigla')
+                        ->where('ID',$request->unidadadministrativa)
+                        ->get();
+                // return $unidad;
+
+                $aux = SolicitudCompra::where('unidadadministrativa',$request->unidadadministrativa)
+                    ->where('deleted_at', null)
+                    ->get();
+
+                    $length = 4;
+                    $char = 0;
+                    $type = 'd';
+                    $format = "%{$char}{$length}{$type}"; // or "$010d";
+                    
+
+
+
+                $request->merge(['nrosolicitud' => strtoupper($unidad[0]->sigla).'-'.sprintf($format, count($aux)+1)]);
+
+                // return $request;
+            
+                $gestion = Carbon::parse($request->fechaingreso)->format('Y');
+
+                $solicitud = SolicitudCompra::create([
+                        'sucursal_id'       => $request->branchoffice_id,
+                        'unidadadministrativa'     => $request->unidadadministrativa,
+                        'modality_id'           => $request->modality_id,
+                        'registeruser_id'       => $user->id,
+                        'nrosolicitud'          => $request->nrosolicitud,
+                        'fechaingreso'          => $request->fechaingreso,
+                        'gestion'               => $gestion
                 ]);
-                $cont++;
+                
+            
+                $factura = Factura::create([
+                        'solicitudcompra_id'   => $solicitud->id,
+                        'provider_id'           => $request->provider_id,
+                        'registeruser_id'       => $user->id,
+                        'tipofactura'           => $request->tipofactura,
+                        'fechafactura'          => $request->fechafactura,
+                        'montofactura'          => $request->montofactura,
+                        'nrofactura'            => $request->nrofactura,
+                        'nroautorizacion'       => $request->nroautorizacion,
+                        'nrocontrol'            => $request->nrocontrol,
+                        'fechaingreso'          => $request->fechaingreso, 
+                        'gestion'               => $gestion
+                ]);
+                
+                $cont = 0;
+        
+                while($cont < count($request->article_id))
+                {
+                    DetalleFactura::create([
+                        'factura_id'            => $factura->id,
+                        'registeruser_id'       => $user->id,
+                        'article_id'            => $request->article_id[$cont],
+                        'cantsolicitada'        => $request->cantidad[$cont],
+                        'precio'                => $request->precio[$cont],
+                        'totalbs'               => $request->cantidad[$cont]*$request->precio[$cont],
+                        'cantrestante'          => $request->cantidad[$cont],
+                        'fechaingreso'          => $request->fechaingreso,
+                        'gestion'               => $gestion
+                    ]);
+                    $cont++;
+                }
+                // return $request;
+                DB::commit();
+                return redirect()->route('income.index')->with(['message' => 'Registrado exitosamente.', 'alert-type' => 'success']);
             }
-            // return $request;
-            DB::commit();
-            return redirect()->route('income.index')->with(['message' => 'Registrado exitosamente.', 'alert-type' => 'success']);
+            else
+            {
+                return redirect()->route('income.index')->with(['message' => 'El monto de la factura no coincide con el total de la solicitud.', 'alert-type' => 'error']);
+            }
         } catch (\Throwable $th) {
             
             DB::rollback();
@@ -277,6 +282,7 @@ class IncomeController extends Controller
     public function edit($id)
     {
 
+        // return
         $da = $this->getDireccion();     
 
         $solicitud = SolicitudCompra::find($id);

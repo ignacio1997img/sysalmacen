@@ -234,8 +234,9 @@
                                                     <div class="form-group">
                                                         <div class="form-line">
                                                             <select name="tipofactura" id="tipofactura"class="form-control text" required>
-                                                                <option value="Manual">Manual</option>
-                                                                <option value="Electronica">Electronica</option>
+                                                                <option value="Manual" {{ 'Manual' == $factura->tipofactura ? 'selected' : '' }}>Manual</option>
+                                                                <option value="Electronica" {{ 'Electronica' == $factura->tipofactura ? 'selected' : '' }}>Electronica</option>
+                                                                <option value="Orden_Compra" {{ 'Orden_Compra' == $factura->tipofactura ? 'selected' : '' }}>Orden de Compra</option>
                                                             </select>
                                                         </div>
                                                         <small>Tipo Factura.</small>
@@ -256,7 +257,7 @@
                                                         <div class="form-line">
                                                             <input type="number" step="0.01" class="form-control form-control-sm text" id="montofactura" value="{{$factura->montofactura}}" name="montofactura" placeholder="Introducir monto" autocomplete="off" required>
                                                         </div>
-                                                        <small>Monto Factura *(Bs).</small>
+                                                        <small>Monto *(Bs).</small>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
@@ -264,19 +265,28 @@
                                                         <div class="form-line">
                                                             <input type="number" id="nrofactura" name="nrofactura" class="form-control text" value="{{$factura->nrofactura}}" title="Introducir Nro de Factura" required>
                                                         </div>
-                                                        <small>Nro Factura.</small>
+                                                        <small>Numero.</small>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="number"  name="nroautorizacion" id="nroautorizacion" class="form-control text" value="{{$factura->nroautorizacion}}" title="Introducir Nro Autorizacion de la Factura" required>
+                                                    @if ($factura->tipofactura == 'Manual' || $factura->tipofactura == 'Electronica')
+                                                        <div class="form-group" id="nroautorizacion">
+                                                            <div class="form-line">
+                                                                <input type="number"  name="nroautorizacion" id="nroautorizacion" class="form-control text" value="{{$factura->nroautorizacion}}" title="Introducir Nro Autorizacion de la Factura" required>
+                                                            </div>
+                                                            <small>Nro Autorizacion Fact.</small>
                                                         </div>
-                                                        <small>Nro Autorizacion Fact.</small>
-                                                    </div>
+                                                    @endif                                                    
                                                 </div>
                                                 <div class="col-sm-2" id="nrocontrol">
-                                                    {{-- add tipo de factura --}}
+                                                    @if ($factura->tipofactura == 'Electronica')
+                                                        <div class="form-group" id="nrocontrol">
+                                                            <div class="form-line">
+                                                                <input type="number"  name="nrocontrol" id="nrocontrol" class="form-control text" value="{{$factura->nrocontrol}}" title="Introducir Nro de Control" required>
+                                                            </div>
+                                                            <small>Nro Autorizacion Fact.</small>
+                                                        </div>
+                                                    @endif
                                                 </div>
                                             </div>
                                             <hr>
@@ -678,9 +688,17 @@
                 var html_factura = '';
                 if(tipo == 'Electronica')
                 {
+                    html_nroautorizacion =  '<div class="form-group">'
+                    html_nroautorizacion+=       '<div class="form-line">'
+                    html_nroautorizacion+=            '<input type="number" name="nroautorizacion" placeholder="Introducir Nro Autorizacion" class="form-control text" title="Introducir Nro de Autorización">'
+                    html_nroautorizacion+=       '</div>'
+                    html_nroautorizacion+=       '<small>Nro Autorizacion.</small>'
+                    html_nroautorizacion+=  '</div>'
+                    $('#nroautorizacion').html(html_nroautorizacion);
+
                     html_factura =  '<div class="form-group">'
                     html_factura+=       '<div class="form-line">'
-                    html_factura+=            '<input type="number" name="nrocontrol" class="form-control text" title="Introducir Nro Control Factura">'
+                    html_factura+=            '<input type="number" name="nrocontrol" class="form-control text" placeholder="Introducir Nro Control" title="Introducir Nro Control Factura">'
                     html_factura+=       '</div>'
                     html_factura+=       '<small>Nro Control.</small>'
                     html_factura+=  '</div>'
@@ -688,8 +706,29 @@
                 }
                 else
                 {
-                    html_factura ='';
-                    $('#nrocontrol').html(html_factura);
+                    if(tipo == 'Orden_Compra')
+                    {      
+                        html_nroautorizacion=  '';
+                        $('#nroautorizacion').html(html_nroautorizacion);                  
+                        html_factura ='';
+                        $('#nrocontrol').html(html_factura);
+                    }
+                    else
+                    {
+
+                        html_nroautorizacion =  '<div class="form-group">'
+                        html_nroautorizacion+=       '<div class="form-line">'
+                        html_nroautorizacion+=            '<input type="number" name="nroautorizacion" class="form-control text" placeholder="Introducir Nro Autorizacion" title="Introducir Nro de Autorización">'
+                        html_nroautorizacion+=       '</div>'
+                        html_nroautorizacion+=       '<small>Nro Control.</small>'
+                        html_nroautorizacion+=  '</div>'
+                        $('#nroautorizacion').html(html_nroautorizacion);
+
+                        html_factura ='';
+                        $('#nrocontrol').html(html_factura);
+                    }
+                    // html_factura ='';
+                    // $('#nrocontrol').html(html_factura);
                 }
             }
 

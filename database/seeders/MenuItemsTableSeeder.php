@@ -357,54 +357,6 @@ class MenuItemsTableSeeder extends Seeder
             ),
             21 => 
             array (
-                'id' => 35,
-                'menu_id' => 1,
-                'title' => 'Solicitudes',
-                'url' => '',
-                'target' => '_self',
-                'icon_class' => 'voyager-news',
-                'color' => '#000000',
-                'parent_id' => 36,
-                'order' => 2,
-                'created_at' => '2022-02-08 10:59:05',
-                'updated_at' => '2022-02-09 04:42:05',
-                'route' => 'solicitud.index',
-                'parameters' => 'null',
-            ),
-            22 => 
-            array (
-                'id' => 36,
-                'menu_id' => 1,
-                'title' => 'Solicitudes Egreso',
-                'url' => '',
-                'target' => '_self',
-                'icon_class' => 'voyager-news',
-                'color' => '#000000',
-                'parent_id' => NULL,
-                'order' => 3,
-                'created_at' => '2022-02-09 04:36:56',
-                'updated_at' => '2022-02-09 04:38:13',
-                'route' => NULL,
-                'parameters' => '',
-            ),
-            23 => 
-            array (
-                'id' => 37,
-                'menu_id' => 1,
-                'title' => 'Bandeja',
-                'url' => '',
-                'target' => '_self',
-                'icon_class' => 'voyager-paper-plane',
-                'color' => '#000000',
-                'parent_id' => 36,
-                'order' => 1,
-                'created_at' => '2022-02-09 04:41:30',
-                'updated_at' => '2022-02-09 04:59:05',
-                'route' => 'bandeja.index',
-                'parameters' => 'null',
-            ),
-            24 => 
-            array (
                 'id' => 40,
                 'menu_id' => 1,
                 'title' => 'Categorias',
@@ -419,7 +371,7 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => 'voyager.donacion-categorias.index',
                 'parameters' => NULL,
             ),
-            25 => 
+            22 => 
             array (
                 'id' => 41,
                 'menu_id' => 1,
@@ -435,7 +387,7 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => 'voyager.donacion-articulos.index',
                 'parameters' => 'null',
             ),
-            26 => 
+            23 => 
             array (
                 'id' => 42,
                 'menu_id' => 1,
@@ -451,7 +403,7 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => NULL,
                 'parameters' => '',
             ),
-            27 => 
+            24 => 
             array (
                 'id' => 43,
                 'menu_id' => 1,
@@ -467,7 +419,7 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => 'voyager.centro-categorias.index',
                 'parameters' => 'null',
             ),
-            28 => 
+            25 => 
             array (
                 'id' => 44,
                 'menu_id' => 1,
@@ -483,7 +435,7 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => 'voyager.centros.index',
                 'parameters' => NULL,
             ),
-            29 => 
+            26 => 
             array (
                 'id' => 46,
                 'menu_id' => 1,
@@ -499,7 +451,7 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => 'voyager.donador-personas.index',
                 'parameters' => NULL,
             ),
-            30 => 
+            27 => 
             array (
                 'id' => 47,
                 'menu_id' => 1,
@@ -515,7 +467,7 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => 'voyager.donador-empresas.index',
                 'parameters' => NULL,
             ),
-            31 => 
+            28 => 
             array (
                 'id' => 48,
                 'menu_id' => 1,
@@ -531,7 +483,7 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => NULL,
                 'parameters' => '',
             ),
-            32 => 
+            29 => 
             array (
                 'id' => 49,
                 'menu_id' => 1,
@@ -547,7 +499,7 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => 'incomedonor.index',
                 'parameters' => NULL,
             ),
-            33 => 
+            30 => 
             array (
                 'id' => 50,
                 'menu_id' => 1,
@@ -563,7 +515,7 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => 'egressdonor.index',
                 'parameters' => NULL,
             ),
-            34 => 
+            31 => 
             array (
                 'id' => 51,
                 'menu_id' => 1,
@@ -579,7 +531,7 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => 'view_stock_donacion.index',
                 'parameters' => 'null',
             ),
-            35 => 
+            32 => 
             array (
                 'id' => 52,
                 'menu_id' => 1,
@@ -595,7 +547,7 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => 'donation.stock.view',
                 'parameters' => 'null',
             ),
-            36 => 
+            33 => 
             array (
                 'id' => 54,
                 'menu_id' => 1,

@@ -225,11 +225,12 @@
                                                     <div class="form-group">
                                                         <div class="form-line">
                                                             <select name="tipofactura" id="tipofactura"class="form-control text" required>
-                                                                <option value="Manual">Manual</option>
-                                                                <option value="Electronica">Electronica</option>
+                                                                <option value="Manual">Factura Manual</option>
+                                                                <option value="Electronica">Factura Electronica</option>
+                                                                <option value="Orden_Compra">Orden de Compra</option>
                                                             </select>
                                                         </div>
-                                                        <small>Tipo Factura.</small>
+                                                        <small>Tipo.</small>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
@@ -253,15 +254,15 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number" id="nrofactura" name="nrofactura" class="form-control text" title="Introducir Nro de Factura" required>
+                                                            <input type="number" id="nrofactura" name="nrofactura" placeholder="Introducir Numero" class="form-control text" title="Introducir Nro de Factura" required>
                                                         </div>
                                                         <small>Numero.</small>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-2">
+                                                <div class="col-sm-2" id="nroautorizacion">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number"  name="nroautorizacion" id="nroautorizacion" class="form-control text" title="Introducir Nro Autorizacion de la Factura" required>
+                                                            <input type="number"  name="nroautorizacion" id="nroautorizacion" placeholder="Introducir Nro Autorizacion" class="form-control text" title="Introducir Nro Autorizacion de la Factura" required>
                                                         </div>
                                                         <small>Nro Autorizacion Fact.</small>
                                                     </div>
@@ -307,7 +308,7 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number" id="cantidad" class="form-control text" title="Cantidad">
+                                                            <input type="number" id="cantidad" placeholder="Cantidad Articulo" class="form-control text" title="Cantidad">
                                                         </div>
                                                         <small>Cantidad Artículo.</small>
                                                     </div>
@@ -315,7 +316,7 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number" id="precio" class="form-control text" title="Precio Unitario Bs">
+                                                            <input type="number" id="precio" placeholder="Precio Unitario" class="form-control text" title="Precio Unitario Bs">
                                                         </div>
                                                         <small>Precio Artículo *(Bs).</small>
                                                     </div>
@@ -344,6 +345,7 @@
                                                 <tfoot>
                                                     <th colspan="6" style="text-align:right"><h5>TOTAL</h5></th>
                                                     <th><h4 id="total">Bs. 0.00</h4></th>
+                                                    <input type="text" step="0.01" name="total" id="totals">
                                                 </tfoot>
                                                 
                                             </table>
@@ -486,6 +488,7 @@
                             limpiar();
                             $('#detalles').append(fila);
                             $("#total").html("Bs. "+calcular_total().toFixed(2));
+                            $("#totals").val(calcular_total().toFixed(2));
                             if (calcular_total().toFixed(2)==monto_factura.toFixed(2)) {
                                 $('#btn_guardar').removeAttr('disabled');
                             }
@@ -535,6 +538,7 @@
                 // $("#total").html("Bs/." + total);
                 $("#fila" + index).remove();
                 $("#total").html("Bs. "+calcular_total().toFixed(2));
+                $("#totals").val(calcular_total().toFixed(2));
                 // evaluar();
                 // $('#btn_guardar').attr('disabled', true);
                 $('#btn_guardar').attr('disabled', true);
@@ -593,9 +597,17 @@
                 var html_factura = '';
                 if(tipo == 'Electronica')
                 {
+                    html_nroautorizacion =  '<div class="form-group">'
+                        html_nroautorizacion+=       '<div class="form-line">'
+                        html_nroautorizacion+=            '<input type="number" name="nroautorizacion" placeholder="Introducir Nro Autorizacion" class="form-control text" title="Introducir Nro de Autorización">'
+                        html_nroautorizacion+=       '</div>'
+                        html_nroautorizacion+=       '<small>Nro Control.</small>'
+                        html_nroautorizacion+=  '</div>'
+                    $('#nroautorizacion').html(html_nroautorizacion);
+
                     html_factura =  '<div class="form-group">'
                     html_factura+=       '<div class="form-line">'
-                    html_factura+=            '<input type="number" name="nrocontrol" class="form-control" title="Introducir Nro Control Factura">'
+                    html_factura+=            '<input type="number" name="nrocontrol" class="form-control text" placeholder="Introducir Nro Control" title="Introducir Nro Control Factura">'
                     html_factura+=       '</div>'
                     html_factura+=       '<small>Nro Control.</small>'
                     html_factura+=  '</div>'
@@ -603,8 +615,28 @@
                 }
                 else
                 {
-                    html_factura ='';
-                    $('#nrocontrol').html(html_factura);
+                    if(tipo == 'Orden_Compra')
+                    {      
+                        html_nroautorizacion=  '';
+                        $('#nroautorizacion').html(html_nroautorizacion);                  
+                        html_factura ='';
+                        $('#nrocontrol').html(html_factura);
+                    }
+                    else
+                    {
+
+                        html_nroautorizacion =  '<div class="form-group">'
+                        html_nroautorizacion+=       '<div class="form-line">'
+                        html_nroautorizacion+=            '<input type="number" name="nroautorizacion" class="form-control text" placeholder="Introducir Nro Autorizacion" title="Introducir Nro de Autorización">'
+                        html_nroautorizacion+=       '</div>'
+                        html_nroautorizacion+=       '<small>Nro Control.</small>'
+                        html_nroautorizacion+=  '</div>'
+                        $('#nroautorizacion').html(html_nroautorizacion);
+
+                        html_factura ='';
+                        $('#nrocontrol').html(html_factura);
+                    }
+                    
                 }
             }
 
