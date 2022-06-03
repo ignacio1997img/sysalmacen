@@ -345,7 +345,7 @@
                                                 <tfoot>
                                                     <th colspan="6" style="text-align:right"><h5>TOTAL</h5></th>
                                                     <th><h4 id="total">Bs. 0.00</h4></th>
-                                                    <input type="text" step="0.01" name="total" id="totals">
+                                                    <input type="hidden" step="0.01" name="total" id="totals">
                                                 </tfoot>
                                                 
                                             </table>
