@@ -126,7 +126,7 @@
                                                 <div class="col-sm-3">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <select id="das" class="form-control select2" required>
+                                                            <select id="das" name="direccionadministrativa" class="form-control select2" required>
                                                                 <option value="">Seleccione una Direccion Administrativa</option>
                                                                 @foreach ($da as $data)
                                                                     <option value="{{$data->id}}" {{$data->id == $direccion->direccion_id? 'selected':''}}>{{$data->nombre}}</option>
@@ -656,7 +656,7 @@
                     $.get('{{route('ajax_unidad_administrativa')}}/'+id, function(data){
                         var html_unidad=    '<option value="">Seleccione Una Unidad Administrativa..</option>'
                             for(var i=0; i<data.length; ++i)
-                            html_unidad += '<option value="'+data[i].ID+'">'+data[i].Nombre+'</option>'
+                            html_unidad += '<option value="'+data[i].id+'">'+data[i].nombre+'</option>'
 
                         $('#unidadEje').html(html_unidad);;            
                     });

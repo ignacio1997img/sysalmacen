@@ -366,6 +366,7 @@ class IncomeController extends Controller
 
                 SolicitudCompra::where('id',$request->id)->update([
                         'sucursal_id'       => $request->branchoffice_id,
+                        'direccionadministrativa' => $request->direccionadministrativa,
                         'unidadadministrativa'     => $request->unidadadministrativa,
                         'modality_id'           => $request->modality_id,
                         'registeruser_id'       => $user->id,
