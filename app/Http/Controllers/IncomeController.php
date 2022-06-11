@@ -126,9 +126,9 @@ class IncomeController extends Controller
         $modalidad = Modality::find($sol->modality_id);
 
        
-        $unidad = DB::connection('mysqlgobe')->table('unidadadminstrativa')
-                ->select('Nombre')
-                ->where('ID', $sol->unidadadministrativa)
+        $unidad = DB::connection('mamore')->table('unidades')
+                ->select('nombre')
+                ->where('id', $sol->unidadadministrativa)
                 ->get();
 
         $detalle = DB::table('detalle_facturas as df')
