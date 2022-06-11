@@ -17,7 +17,8 @@ class CreateSolicitudComprasTable extends Migration
             $table->id();
             $table->foreignId('sucursal_id')->nullable()->constrained('sucursals');
             // $table->foreignId('requestingunit_id')->constrained('requesting_units');
-            $table->integer('unidadadministrativa');
+            $table->integer('direccionadministrativa')->nullable();
+            $table->integer('unidadadministrativa')->nullable();
             $table->foreignId('modality_id')->constrained('modalities');
             $table->foreignId('registeruser_id')->nullable()->constrained('users');
 

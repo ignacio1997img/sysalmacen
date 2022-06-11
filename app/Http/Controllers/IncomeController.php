@@ -159,9 +159,9 @@ class IncomeController extends Controller
         $modalidad = Modality::find($sol->modality_id);
 
        
-        $unidad = DB::connection('mysqlgobe')->table('unidadadminstrativa')
-                ->select('Nombre')
-                ->where('ID', $sol->unidadadministrativa)
+        $unidad = DB::connection('mamore')->table('unidades')
+                ->select('nombre')
+                ->where('id', $sol->unidadadministrativa)
                 ->get();
 
         $detalle = DB::table('detalle_facturas as df')
@@ -187,15 +187,16 @@ class IncomeController extends Controller
     {
         // dd($request);        
         $user = Auth::user();
+        // return $request;
         DB::beginTransaction();
         try {
 
             if(floatval($request->total) === floatval($request->montofactura))
             {
                 // return floatval($request->total);
-                $unidad = DB::connection('mysqlgobe')->table('unidadadminstrativa')
+                $unidad = DB::connection('mamore')->table('unidades')
                         ->select('sigla')
-                        ->where('ID',$request->unidadadministrativa)
+                        ->where('id',$request->unidadadministrativa)
                         ->get();
                 // return $unidad;
 
@@ -219,6 +220,7 @@ class IncomeController extends Controller
 
                 $solicitud = SolicitudCompra::create([
                         'sucursal_id'       => $request->branchoffice_id,
+                        'direccionadministrativa' => $request->direccionadministrativa,
                         'unidadadministrativa'     => $request->unidadadministrativa,
                         'modality_id'           => $request->modality_id,
                         'registeruser_id'       => $user->id,
@@ -270,11 +272,12 @@ class IncomeController extends Controller
         } catch (\Throwable $th) {
             
             DB::rollback();
+            return 1;
             return redirect()->route('income.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
             
         }
         // return redirect()->route('income.index');
-        return redirect('admin/income');
+        // return redirect('admin/income');
     }
 
  

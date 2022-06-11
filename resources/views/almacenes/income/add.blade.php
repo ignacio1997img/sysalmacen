@@ -116,7 +116,7 @@
                                                 <div class="col-sm-4">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <select id="das" class="form-control select2" required>
+                                                            <select id="das" name="direccionadministrativa" class="form-control select2" required>
                                                                 <option value="">Seleccione una Direccion Administrativa</option>
                                                                 @foreach ($da as $data)
                                                                     <option value="{{$data->id}}">{{$data->nombre}}</option>
