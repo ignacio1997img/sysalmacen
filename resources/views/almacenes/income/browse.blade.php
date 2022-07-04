@@ -41,7 +41,7 @@
                                                 <th style="text-align: center">Fecha Factura</th>
                                                 <th style="text-align: center">Fecha Registro</th>
                                                 <th style="text-align: center">Stock</th>
-                                                @if(auth()->user()->hasRole(['admin']));
+                                                @if(auth()->user()->hasRole(['admin']))
                                                 <th style="text-align: center">Sucursal</th>
                                                 @endif
                                                 <th style="text-align: right">Acciones</th>
@@ -63,7 +63,7 @@
                                                             <label class="label label-danger">NO</label>
                                                         @endif
                                                     </td>
-                                                    @if(auth()->user()->hasRole(['admin']));
+                                                    @if(auth()->user()->hasRole(['admin']))
                                                         <td style="text-align: center">{{$data->sucursal}}</td>
                                                     @endif
                                                     <td style="text-align: right">
