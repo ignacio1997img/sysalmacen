@@ -464,16 +464,17 @@ class EgressController extends Controller
     protected function ajax_solicitud_compra($id)
     {
         $solicitud = DB::table('solicitud_compras as com')
-        ->join('facturas as f', 'f.solicitudcompra_id', 'com.id')
-        ->join('detalle_facturas as fd', 'fd.factura_id', 'f.id')
-        ->join('modalities as m', 'm.id', 'com.modality_id')
-        ->select('com.id', 'm.nombre', 'com.nrosolicitud')
-        ->where('fd.condicion', 1)
-        ->where('f.condicion', 1)
-        ->where('com.unidadadministrativa', $id)
-        ->groupBy('com.id', 'm.nombre', 'com.nrosolicitud')
-        ->orderBy('com.fechaingreso')
-        ->get();
+            ->join('facturas as f', 'f.solicitudcompra_id', 'com.id')
+            ->join('detalle_facturas as fd', 'fd.factura_id', 'f.id')
+            ->join('modalities as m', 'm.id', 'com.modality_id')
+            ->select('com.id', 'm.nombre', 'com.nrosolicitud')
+            ->where('fd.condicion', 1)
+            ->where('f.condicion', 1)
+            // ->where('com.unidadadministrativa', $id)
+            ->whereRaw('com.unidadadministrativa ='.$id.' or com.unidadadministrativa = 192')
+            ->groupBy('com.id', 'm.nombre', 'com.nrosolicitud')
+            ->orderBy('com.fechaingreso')
+            ->get();
         return $solicitud;
     }
 

@@ -481,7 +481,8 @@
                 var html_articulo=    ''       
                 $('#article_id').html(html_articulo);
 
-            var id =  $(this).val();    
+            var id =  $(this).val(); 
+            // alert(id)   
             if(id >=1)
             {
                 $.get('{{route('ajax_solicitud_compra')}}/'+id, function(data){

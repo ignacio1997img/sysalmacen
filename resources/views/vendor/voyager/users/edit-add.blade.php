@@ -75,7 +75,7 @@
                                 // <input type="hidden" name="user_id" value="{{$dataTypeContent->id}}">
 
                             ?>
-                            {{-- @if (auth()->user()->isAdmin()) --}}
+                            @if (auth()->user()->isAdmin())
                             <div class="form-group">
                                 <label for="default_role">{{ __('Funcionario') }}</label>
                                 <select name="funcionario_id" class="form-control select2">
@@ -89,7 +89,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            {{-- @endif --}}
+                            @endif
                             <div class="form-group">
                                 <label for="email">{{ __('voyager::generic.email') }}</label>
                                 <input type="email" class="form-control" id="email" name="email" placeholder="{{ __('voyager::generic.email') }}"
@@ -160,16 +160,16 @@
                     </div>
                 </div>
             </div>
-
+            @if (auth()->user()->isAdmin())
             <button type="submit" class="btn btn-primary pull-right save">
                 {{ __('voyager::generic.save') }}
             </button>
+            @endif
         </form>
 
 
-            @if(!is_null($dataTypeContent->getKey()))
-            
-            
+            @if(!is_null($dataTypeContent->getKey()) && auth()->user()->isAdmin())
+         
 
             <div class="row">
                 <div class="col-md-8">
