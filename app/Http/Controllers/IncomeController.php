@@ -311,6 +311,7 @@ class IncomeController extends Controller
                 ->join('partidas as p', 'p.id', 'a.partida_id')
                 ->select('df.id as de','a.id as articulo_id', 'a.nombre as articulo', 'a.presentacion', 'p.codigo', 'p.nombre as partida', 'df.cantsolicitada', 'df.precio', 'df.totalbs')
                 ->where('df.factura_id', $factura->id)
+                ->where('df.deleted_at', null)
                 ->get();
 
         $proveedorselect = Provider::find($factura->provider_id);
