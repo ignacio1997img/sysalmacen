@@ -392,10 +392,12 @@ class IncomeController extends Controller
                 $factura = Factura::where('solicitudcompra_id',$request->id)->first();
                 // return $factura;
                 
-                // DetalleFactura::where('factura_id', $factura->id)->update(['deleted_at' => Carbon::now(), 'condicion' => 0]);
-                DetalleFactura::where('factura_id', $factura->id)->delete();
+                DetalleFactura::where('factura_id', $factura->id)->update(['deleted_at' => Carbon::now(), 'condicion' => 0]);
+                // DetalleFactura::where('factura_id', $factura->id)->delete();
+                // return 1;
                 $cont = 0;
 
+                // return 1;
         
                 while($cont < count($request->article_id))
                 {
