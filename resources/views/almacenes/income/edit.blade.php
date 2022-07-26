@@ -255,7 +255,7 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number" step="0.01" class="form-control form-control-sm text" id="montofactura" value="{{$factura->montofactura}}" name="montofactura" placeholder="Introducir monto" autocomplete="off" required>
+                                                            <input type="number" step="0.01" onchange="subTotal()" onkeyup="subTotal()" class="form-control form-control-sm text" id="montofactura" value="{{$factura->montofactura}}" name="montofactura" placeholder="Introducir monto" autocomplete="off" required>
                                                         </div>
                                                         <small>Monto *(Bs).</small>
                                                     </div>
@@ -386,8 +386,8 @@
                                                             <td>{{$item->codigo}} - {{$item->partida}}</td>
                                                             <td><input type="hidden" class="input_article" name="article_id[]" value="{{ $item->articulo_id}}">{{$item->articulo}}</td>
                                                             <td>{{ $item->presentacion}}</td>
-                                                            <td><input type="hidden" name="precio[]" value="{{ $item->precio }}">{{ $item->cantsolicitada }}</td>
                                                             <td><input type="hidden" name="cantidad[]" value="{{ $item->cantsolicitada }}">{{ $item->cantsolicitada }}</td>
+                                                            <td><input type="hidden" name="precio[]" value="{{ $item->precio }}">{{ $item->precio }}</td>
                                                             <td><input type="hidden" class="input_subtotal" name="totalbs[]" value="{{ $item->totalbs }}">{{ $item->totalbs }}</td>
                                                         </tr>
                                                     @endforeach
@@ -621,33 +621,23 @@
 
             }
 
-            //funcion que da mensaje de confirmacion al tratar de agrehar artículo.
-            // function confirmarguardado()
-            // {
-            //   	var mensaje = confirm("Esta seguro de guardar este detalle de compra");
-            //     if (mensaje == true) {
-            //     	return true;
-            //     }else {
-            //         return false;
-            //     	}
-            // }
+            function subTotal(index){
 
-            // //Select filtro + extraccion de datos de articulos y categoria
-            // $("#idarticulo_select2bs4").change(mostrarValoresArticulo);
-            // function mostrarValoresArticulo()
-            // {
-            // 	datoArticulo = document.getElementById('idarticulo_select2bs4').value.split('_');
-            //   	$("#codigoarticulo").val(datoArticulo[0]);
-            //   	$("#presentacion").val(datoArticulo[1]);
-            //   	$("#nombrecategoria").val(datoArticulo[2]);
-            // }
+                
+                let cant = $(`#montofactura`).val() ? parseFloat($(`#montofactura`).val()) : 0;
+                let totals = $(`#totals`).val() ? parseFloat($(`#totals`).val()) : 0;
 
-            // //mensaje de espera de enviado de formulario
-            // $('#form').on('submit', function(e) {
-            //     $('.loader').css('display', 'block')
-            //     document.getElementById("btn_guardar").disabled = true;
-            //     //e.preventDefault();
-            // });
+                if(cant == totals)
+                {
+                    $('#btn_guardar').removeAttr('disabled');
+                }
+                else
+                {
+                    $('#btn_guardar').attr('disabled', true);
+                }
+
+            }
+
             function unidad_administrativa()
             {
                 var id =  $(this).val();    

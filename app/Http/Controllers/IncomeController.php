@@ -272,7 +272,7 @@ class IncomeController extends Controller
         } catch (\Throwable $th) {
             
             DB::rollback();
-            return 1;
+            // return 1;
             return redirect()->route('income.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
             
         }
@@ -414,6 +414,7 @@ class IncomeController extends Controller
                 }
 
                 DB::commit();
+                // return 1;
                 return redirect()->route('income.index')->with(['message' => 'Actualizado exitosamente.', 'alert-type' => 'success']);
             }
             else
@@ -423,11 +424,12 @@ class IncomeController extends Controller
         } catch (\Throwable $th) {
             
             DB::rollback();
+            // return 0;
             return redirect()->route('income.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
             
         }
         // return redirect()->route('income.index');
-        return redirect('admin/income');
+        // return redirect('admin/income');
     }
 
 
