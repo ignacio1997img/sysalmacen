@@ -44,6 +44,16 @@
         .voyager .breadcrumb a{
             color:{{ config('voyager.primary_color','#22A7F0') }};
         }
+        
+    </style>
+
+
+    {{-- style personalizado --}}
+    <style>
+        small{font-size: 12px;
+            color: rgb(12, 12, 12);
+            font-weight: bold;
+        }
     </style>
 
     @if(!empty(config('voyager.additional_css')))<!-- Additional CSS -->

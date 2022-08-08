@@ -28,21 +28,20 @@
                     <div class="panel panel-bordered">
                         <div class="panel-body">
                             <div class="table-responsive">
-                                
-                                            <table id="dataTable" class="dataTable table-hover">
-                                                <thead>
-                                                    <tr >
-                                                        <th class="text-center">Id</th>
-                                                        <th class="text-center">Nro Pedido</th>
-                                                        <th class="text-center">Fecha Solicitud</th>
-                                                        <th class="text-center">Fecha Salida</th>
-                                                        <th class="text-center">Oficina</th>
-                                                        @if(auth()->user()->hasPermission('read_egres')||auth()->user()->hasPermission('edit_egres')||auth()->user()->hasPermission('delete_egres'))
+                                <table id="dataTable" class="dataTable table-hover">
+                                    <thead>
+                                        <tr >
+                                            <th class="text-center">Id</th>
+                                            <th class="text-center">Nro Pedido</th>
+                                            <th class="text-center">Fecha Solicitud</th>
+                                            <th class="text-center">Fecha Salida</th>
+                                            <th class="text-center">Oficina</th>
+                                            @if(auth()->user()->hasPermission('read_egres')||auth()->user()->hasPermission('edit_egres')||auth()->user()->hasPermission('delete_egres'))
                                                             <th>Accion</th>
-                                                        @endif
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
+                                            @endif
+                                        </tr>
+                                    </thead>
+                                    <tbody>
                                                     <?php
                                                         $i=1;
                                                     ?>
@@ -59,12 +58,12 @@
                                                                         <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
                                                                     </a>
                                                                 @endif
-                                                                {{-- @if(auth()->user()->hasPermission('edit_egres'))
+                                                                @if(auth()->user()->hasPermission('edit_egres'))
                                                                     <a href="{{route('egres.edit',$item->id)}}" title="Editar" class="btn btn-sm btn-info view">
                                                                         <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Editar</span>
                                                                     </a>
-                                                                @endif --}}
-                                                                @if(auth()->user()->hasPermission('delete_egres'))
+                                                                @endif
+                                                                @if(auth()->user()->hasPermission('delete_egres') && !auth()->user()->hasRole('admin'))
                                                                     <a data-toggle="modal" data-id="{{$item->id}}" data-target="#myModalEliminar" title="Eliminar" class="btn btn-sm btn-danger view">
                                                                         <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Eliminar</span>
                                                                     </a>

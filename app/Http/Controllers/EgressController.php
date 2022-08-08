@@ -23,7 +23,7 @@ class EgressController extends Controller
     public function index()
     {
        
-        $user =Auth::user();
+        
     
         // $activo = DB::table('users as u')
         //         ->join('sucursal_users as su', 'su.user_id', 'u.id')
@@ -78,38 +78,34 @@ class EgressController extends Controller
         //     $pendiente[$i]->unidad = $unidad[0]->Nombre;
         //     $i++;
         // }
-        $activo = DB::table('users as u')
-                ->join('sucursal_users as su', 'su.user_id', 'u.id')
-                ->join('sucursals as s', 's.id', 'su.sucursal_id')
-                ->select('u.id as user', 'u.name', 's.id', 's.nombre')
-                ->where('u.id',$user->id )
-                ->where('su.condicion',1)
-                ->first();
+
+        
+        if(Auth::user()->hasRole('admin'))
+        {
+            $query_filter = 1;
+        }
+        else
+        {
+            $user =Auth::user();
+            $activo = DB::table('users as u')
+                    ->join('sucursal_users as su', 'su.user_id', 'u.id')
+                    ->join('sucursals as s', 's.id', 'su.sucursal_id')
+                    ->select('u.id as user', 'u.name', 's.id', 's.nombre')
+                    ->where('u.id',$user->id )
+                    ->where('su.condicion',1)
+                    ->first();
+    
+            $query_filter = 'se.sucursal_id ='.$activo->id;
+        }
+
         $data = DB::table('sysalmacen.solicitud_egresos as se')
             ->join('sysadmin.unidades as u', 'u.id', 'se.unidadadministrativa')
             ->join('sysadmin.direcciones as d', 'd.id', 'u.direccion_id')
             ->select('se.id', 'se.nropedido', 'se.fechasolicitud', 'se.fechaegreso', 'u.nombre as unidad', 'd.nombre as direccion')
             ->where('se.deleted_at', null)
-            ->where('se.sucursal_id', $activo->id)
-            ->orderBy('se.id', 'DESC')
+            ->whereRaw($query_filter)
+            // ->orderBy('se.id', 'DESC')
             ->get();
-            // return $data;
-        // return SolicitudEgreso::all();
-        // return $data;
-
-        // $funcionarios = DB::table('siscorv2.people_exts as s')
-        //     ->join('sysadmin.people as m', 'm.id', '=', 's.person_id')
-        //     ->select(
-        //         'm.id',
-        //         DB::raw("upper(CONCAT(m.first_name, ' ', m.last_name)) as text"),
-        //         'm.first_name', 'm.last_name',
-        //         'm.ci',
-        //     )
-        //     ->whereRaw('(m.ci like "%' .$search . '%" or '.DB::raw("CONCAT(m.first_name, ' ', m.last_name)").' like "%' .$search . '%")')
-        //     ->limit(5)
-        //     // ->groupBy('text')
-        //     ->get();
-        
 
         return view('almacenes.egress.browse', compact('data'));
     }
@@ -305,28 +301,29 @@ class EgressController extends Controller
 
                     $cont++;
             }
+            // return 1;
             
             DB::commit();
             return redirect()->route('egres.index')->with(['message' => 'Registrado exitosamente.', 'alert-type' => 'success']);
 
         } catch (\Throwable $th) {
             DB::rollBack();
-            return 0;
+            // return 0;
             return redirect()->route('egres.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
         }
     }
 
     public function edit($id)
     {
-        // return $id;
+        return $id;
         $solicitud = SolicitudEgreso::find($id);
-        $user = Auth::user();
-        $da = $this->getdireccion(); 
-        $sucursales = Sucursal::join('sucursal_users as u','u.sucursal_id', 'sucursals.id')
-                    ->select('sucursals.id','sucursals.nombre','u.condicion')
-                    ->where('u.condicion',1)
-                    ->where('u.user_id', $user->id)
-                    ->get();
+        // $user = Auth::user();
+        // $da = $this->getdireccion(); 
+        // $sucursales = Sucursal::join('sucursal_users as u','u.sucursal_id', 'sucursals.id')
+        //             ->select('sucursals.id','sucursals.nombre','u.condicion')
+        //             ->where('u.condicion',1)
+        //             ->where('u.user_id', $user->id)
+        //             ->get();
 
         $compra = DB::table('solicitud_compras as com')
                     ->join('facturas as f', 'f.solicitudcompra_id', 'com.id')

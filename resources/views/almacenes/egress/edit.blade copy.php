@@ -1,75 +1,13 @@
-<link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.css" rel="stylesheet" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.js"></script>
-
 @extends('voyager::master')
 
 @section('page_title', 'añadir Egresos')
-<style>
-    input:focus {
-        background: rgb(197, 252, 215);
-    }
 
-    input:focus{        
-        background: rgb(255, 245, 229);
-        border-color: rgb(255, 161, 10);
-        /* border-radius: 50px; */
-    }
-    input.text, select.text, textarea.text{ 
-        border-radius: 5px 5px 5px 5px;
-        color: #000000;
-        border-color: rgb(63, 63, 63);
-    }
-
-   
-    small{font-size: 32px;
-        color: rgb(12, 12, 12);
-        font-weight: bold;
-    }
-    #subtitle{
-        font-size: 18px;
-        color: rgb(12, 12, 12);
-        font-weight: bold;
-    }
-
-
-    #detalles {
-    font-family: Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
-    }
-
-    #detalles td, #detalles th {
-    border: 1px solid #ddd;
-    padding: 8px;
-    }
-
-    #detalles tr:nth-child(even){background-color: #f2f2f2;}
-
-    #detalles tr:hover {background-color: #ddd;}
-
-    #detalles th {
-        padding-top: 12px;
-        padding-bottom: 12px;
-        text-align: left;
-        background-color: #04AA6D;
-        color: white;
-    }
-
-    .form-control .select2{
-        border-radius: 5px 5px 5px 5px;
-        color: #000000;
-        border-color: rgb(63, 63, 63);
-    }
-    
-
-</style>
 @section('page_header')
     
     <div class="container-fluid">
         <div class="row">
             <h1 id="subtitle" class="page-title">
-                <i class="voyager-basket"></i> Añadir Egreso
+                <i class="voyager-basket"></i> Editar Egreso
             </h1>
             <a href="{{ route('income.index') }}" class="btn btn-warning btn-add-new">
                 <i class="fa-solid fa-arrow-rotate-left"></i> <span>Volver</span>
@@ -88,10 +26,23 @@
                         <div class="panel-body">                            
                             <div class="table-responsive">
                                 <main class="main">      
-                                {!! Form::open(['route' => 'egres.store', 'class' => 'was-validated'])!!}  
+                                {!! Form::open(['route' => 'egres_update', 'class' => 'was-validated'])!!}  
                                     <div class="card-body">
                                         <h5 id="subtitle">Solicitud de Compras</h5>
                                         <div class="row">
+                                                @php
+                                                    $direccion = \DB::connection('mamore')->table('unidades')
+                                                                    ->where('id', $solicitud->unidadadministrativa)
+                                                                    ->select('*')
+                                                                    ->orderBy('nombre','asc')
+                                                                    ->first();
+                                                    $unidades = \DB::connection('mamore')->table('unidades')
+                                                                    ->where('direccion_id', $direccion->direccion_id)
+                                                                    ->select('*')
+                                                                    ->orderBy('nombre','asc')
+                                                                    ->get();
+                                                    // dd($unidades);
+                                                @endphp
                                             <!-- === -->
                                             <div class="col-sm-3">
                                                 <div class="form-group">
@@ -99,7 +50,7 @@
                                                         <select name="sucursal_id" class="form-control select2" required>
                                                             <option value="">Seleccione una sucursal</option>
                                                             @foreach ($sucursales as $sucursal)
-                                                                <option value="{{$sucursal->id}}">{{$sucursal->nombre}}</option>
+                                                                <option value="{{$sucursal->id}}" {{$solicitud->sucursal_id? 'selected':''}}>{{$sucursal->nombre}}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -113,7 +64,7 @@
                                                         <select id="das" class="form-control select2" required>
                                                             <option value="">Seleccione una Direccion Administrativa</option>
                                                             @foreach ($da as $data)
-                                                                <option value="{{$data->id}}">{{$data->nombre}}</option>
+                                                                <option value="{{$data->id}}" {{$data->id == $direccion->direccion_id? 'selected':''}}>{{$data->nombre}}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -125,7 +76,9 @@
                                                 <div class="form-group">
                                                     <div class="form-line">
                                                         <select id="unidadEje" name="unidadadministrativa" class="form-control select2" required>
-                                                            
+                                                            @foreach ($unidades as $item)
+                                                                    <option value="{{$item->id}}" {{$item->id == $solicitud->unidadadministrativa? 'selected':''}}>{{$item->nombre}}</option>
+                                                            @endforeach
                                                         </select>
                                                     </div>
                                                     <small>Seleccionar Unidad Administrativa.</small>
@@ -138,7 +91,10 @@
                                                 <div class="form-group">
                                                     <div class="form-line">
                                                         <select id="modalidad" class="form-control select2" >
-                                                            
+                                                            <option value="">Seleccione una modalidad de compra</option>
+                                                            @foreach ($compra as $item)
+                                                                    <option value="{{$item->id}}">{{$item->nombre}} - {{$item->nrosolicitud}}</option>
+                                                            @endforeach
                                                         </select>
                                                     </div>
                                                     <small>Seleccionar Modalidad de Compra.</small>
@@ -259,6 +215,66 @@
 
 @section('css')
 <script src="{{ asset('js/app.js') }}" defer></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.css" rel="stylesheet" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.js"></script>
+
+<style>
+    input:focus {
+        background: rgb(197, 252, 215);
+    }
+
+    input:focus{        
+        background: rgb(255, 245, 229);
+        border-color: rgb(255, 161, 10);
+        /* border-radius: 50px; */
+    }
+    input.text, select.text, textarea.text{ 
+        border-radius: 5px 5px 5px 5px;
+        color: #000000;
+        border-color: rgb(63, 63, 63);
+    }
+
+   
+    
+    #subtitle{
+        font-size: 18px;
+        color: rgb(12, 12, 12);
+        font-weight: bold;
+    }
+
+
+    #detalles {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    }
+
+    #detalles td, #detalles th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    }
+
+    #detalles tr:nth-child(even){background-color: #f2f2f2;}
+
+    #detalles tr:hover {background-color: #ddd;}
+
+    #detalles th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #04AA6D;
+        color: white;
+    }
+
+    .form-control .select2{
+        border-radius: 5px 5px 5px 5px;
+        color: #000000;
+        border-color: rgb(63, 63, 63);
+    }
+    
+
+</style>
 @stop
 
 @section('javascript')
@@ -334,7 +350,7 @@
 
 
                     let detalle_subtotal = parseFloat(calcular_total()+cantidad * precio ).toFixed(2);
-                    if (cantidad >0 &&  cantidad <= stok && stok != 0 ) {
+                    if (cantidad >= 1 &&  cantidad <= stok && stok != 0 ) {
 
                         $(".detallefactura_id").each(function(){
                             arrayarticle[i]= parseFloat($(this).val());
@@ -468,7 +484,6 @@
             {
                 var html_unidad=    ''       
                 $('#unidadEje').html(html_unidad);
-              
             }
         }
     
@@ -481,8 +496,7 @@
                 var html_articulo=    ''       
                 $('#article_id').html(html_articulo);
 
-            var id =  $(this).val(); 
-            // alert(id)   
+            var id =  $(this).val();    
             if(id >=1)
             {
                 $.get('{{route('ajax_solicitud_compra')}}/'+id, function(data){
@@ -492,15 +506,12 @@
 
                     $('#modalidad').html(html_modalidad);;            
                 });
-                $(".selected").remove();
-		  	    $("#total").html("Bs. 0.00");
-
             }
             else
             {
                 var html_modalidad=    ''       
                 $('#modalidad').html(html_modalidad);
-                
+
    
             }
         }
