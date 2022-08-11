@@ -331,7 +331,28 @@ class EgressController extends Controller
 
 
         $solicitud = SolicitudEgreso::find($id);
-        $detail = DetalleEgreso::where('solicitudegreso_id', $solicitud->id)->get();
+
+
+
+
+
+        // $detail = DetalleEgreso::where('solicitudegreso_id', $solicitud->id)->get();
+        // return $detail;
+
+        $detail = DB::table('detalle_egresos as de')
+                    ->join('detalle_facturas as df', 'df.id', 'de.detallefactura_id')
+                    ->join('facturas as f', 'f.id', 'df.factura_id')
+                    ->join('solicitud_compras as cp', 'cp.id', 'f.solicitudcompra_id')
+                    ->join('modalities as m', 'm.id', 'cp.modality_id')
+                    ->join('articles as a', 'a.id', 'df.article_id')
+                    ->where('de.solicitudegreso_id', $solicitud->id)
+                    ->select('de.id', 'de.detallefactura_id', 'de.cantsolicitada', 'de.precio', 'de.totalbs',
+                    'de.gestion', 'de.condicion', 'm.nombre as modalidad', 'a.nombre as article', 'a.presentacion', 'cp.nrosolicitud')->get();
+
+
+
+
+
 // 
 // return $detail;
 

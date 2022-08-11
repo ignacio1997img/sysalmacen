@@ -362,7 +362,6 @@
                                                 </thead>
                                                 <tbody>
                                                     @php
-                                                        // $cont = 0;
                                                         $total = 0;
                                                     @endphp
                                                     @foreach($detalle as $item)

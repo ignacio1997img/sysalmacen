@@ -250,6 +250,37 @@
                 
                                                 </tr>
                                             </thead>
+                                            <tbody>
+                                                @php
+                                                    $total = 0;
+                                                @endphp
+                                                @foreach($detail as $item)                                                   
+                                                    <tr class="selected" id="fila{{$item->detallefactura_id}}">
+                                                        <td>                                                        
+                                                            <button 
+                                                                type="button" 
+                                                                title="Eliminar articulo"
+                                                                class="btn btn-danger" 
+                                                                onclick="eliminar('{{$item->detallefactura_id}}')";
+                                                            >
+                                                            <i class="voyager-trash"></i>
+                                                            </button>                                                            
+                                                        </td>
+                                                        <td>{{$item->detallefactura_id}}</td>
+                                                        <td>{{$item->modalidad}} - {{$item->nrosolicitud}}</td>
+                                                        <td>{{$item->article}}</td>
+                                                        <td>{{$item->presentacion}}</td>
+                                                        <td>{{$item->cantsolicitada}}</td>
+                                                        <td>{{$item->precio}}</td>
+                                                        <td>{{$item->totalbs}}</td>
+                                                        {{-- <td><input type="hidden" class="input_article" name="article_id[]" value="{{ $item->articulo_id}}">{{$item->articulo}}</td>
+                                                        <td>{{ $item->presentacion}}</td>
+                                                        <td><input type="hidden" name="cantidad[]" value="{{ $item->cantsolicitada }}">{{ $item->cantsolicitada }}</td>
+                                                        <td><input type="hidden" name="precio[]" value="{{ $item->precio }}">{{ $item->precio }}</td>
+                                                        <td><input type="hidden" class="input_subtotal" name="totalbs[]" value="{{ $item->totalbs }}">{{ $item->totalbs }}</td> --}}
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
                                             <tfoot>
                                                 <th colspan="7" style="text-align:right"><h5>TOTAL</h5></th>
                                                 <th><h4 id="total">Bs. 0.00</h4></th>
