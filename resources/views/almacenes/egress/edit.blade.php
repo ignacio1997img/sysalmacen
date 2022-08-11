@@ -89,11 +89,13 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="panel panel-bordered">
-                            <div class="panel-body">                            
+                            <div class="panel-body">  
+                                {!! Form::open(['route' => 'egres_update', 'id'=>'1', 'class' => 'was-validated'])!!}                          
                                 <div class="table-responsive">
                                      
                                        
                                         <div class="card-body">
+                                            <input type="text" name="id" value="{{$solicitud->id}}">
                                             <h5 id="subtitle">Solicitud de Compras</h5>
                                             <div class="row">
                                                 @php
@@ -272,7 +274,7 @@
                                                         </td>
                                                         <td><input type="text" class="detallefactura_id" name="detallefactura_id[]" value="{{$item->detallefactura_id}}">{{$item->detallefactura_id}}</td>
                                                         <td>{{$item->modalidad}} - {{$item->nrosolicitud}}</td>
-                                                        <td>{{$item->article}}</td>
+                                                        <td><input type="text" name="detalle_id[]" value="{{$item->id}}">{{$item->article}}</td>
                                                         <td>{{$item->presentacion}}</td>
                                                         <td><input type="text" name="cantidad[]" value="{{$item->cantsolicitada}}">{{$item->cantsolicitada}}</td>
                                                         <td><input type="text" name="precio[]" value="{{$item->precio}}">{{$item->precio}}</td>
@@ -292,6 +294,8 @@
                                                       
                                   
                                 </div>
+                                {!! Form::close() !!}                     
+
                             </div>
                         </div>
                     </div>
@@ -375,7 +379,7 @@
                             fila+='<td><button type="button" class="btn btn-danger" onclick="eliminar('+detallefactura_id+')";><i class="voyager-trash"></i></button></td>'
                             fila+='<td><input type="text" class="detallefactura_id" name="detallefactura_id[]" value="'+detallefactura_id+'">'+detallefactura_id+'</td>' 
                             fila+='<td>'+modalidad+'</td>'                         
-                            fila+='<td>'+nombre_articulo+'</td>'
+                            fila+='<td><input type="text" name="detalle_id[]" value="NO"'+nombre_articulo+'</td>'
                             fila+='<td>'+presentacion+'</td>' 
                             fila+='<td><input type="text" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td>'                       
                             fila+='<td><input type="text" name="precio[]" value="'+precio+'">'+precio+'</td>'                        

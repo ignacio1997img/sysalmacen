@@ -333,12 +333,6 @@ class EgressController extends Controller
         $solicitud = SolicitudEgreso::find($id);
 
 
-
-
-
-        // $detail = DetalleEgreso::where('solicitudegreso_id', $solicitud->id)->get();
-        // return $detail;
-
         $detail = DB::table('detalle_egresos as de')
                     ->join('detalle_facturas as df', 'df.id', 'de.detallefactura_id')
                     ->join('facturas as f', 'f.id', 'df.factura_id')
@@ -346,61 +340,189 @@ class EgressController extends Controller
                     ->join('modalities as m', 'm.id', 'cp.modality_id')
                     ->join('articles as a', 'a.id', 'df.article_id')
                     ->where('de.solicitudegreso_id', $solicitud->id)
+                    ->where('de.deleted_at', null)
                     ->select('de.id', 'de.detallefactura_id', 'de.cantsolicitada', 'de.precio', 'de.totalbs',
                     'de.gestion', 'de.condicion', 'm.nombre as modalidad', 'a.nombre as article', 'a.presentacion', 'cp.nrosolicitud')->get();
-
-
-
-
-
-// 
-// return $detail;
-
-//         $compra = DB::table('solicitud_compras as com')
-//                     ->join('facturas as f', 'f.solicitudcompra_id', 'com.id')
-//                     ->join('detalle_facturas as fd', 'fd.factura_id', 'f.id')
-//                     ->join('modalities as m', 'm.id', 'com.modality_id')
-//                     ->select('com.id', 'm.nombre', 'com.nrosolicitud')
-//                     ->where('fd.condicion', 1)
-//                     ->where('f.condicion', 1)
-//                     ->where('com.unidadadministrativa', $solicitud->unidadadministrativa)
-//                     ->groupBy('com.id', 'm.nombre', 'com.nrosolicitud')
-//                     ->orderBy('com.fechaingreso')
-//                     ->get();
-// return $detail;
 
         return view('almacenes.egress.edit', compact('solicitud', 'detail', 'da', 'sucursales'));
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
+        // return $request;
+        $user = Auth::user();
         DB::beginTransaction();
         try {
+            $egreso = SolicitudEgreso::find($request->id);
+            
+            // return $egreso;
+            $egreso->update(['sucursal_id'=>$request->branchoffice_id, 'unidadadministrativa'=>$request->unidadadministrativa,
+                'nropedido'=>$request->nropedido, 'fechasolicitud'=>$request->fechasolicitud, 'fechaegreso'=>$request->fechaegreso
+            ]);
+            // return $egreso;
+
+            // DetalleEgreso::where('solicitudegreso_id',$egreso->id)->update(['deleted_at'=>Carbon::now()]);
+            $detalle = DetalleEgreso::where('solicitudegreso_id', $egreso->id)->where('deleted_at', null)->get();
+     
+            $i=0;
+            while($i < count($detalle))
+            {
+                DetalleFactura::where('id', $detalle[$i]->detallefactura_id)->increment('cantrestante', $detalle[$i]->cantsolicitada);
+
+                $aux = DetalleFactura::find($detalle[$i]->detallefactura_id);
+
+                $df = DetalleFactura::where('factura_id',$aux->factura_id)->where('deleted_at', null)->get();
+                $f = Factura::find($aux->factura_id);
+                $s = SolicitudCompra::find($f->solicitudcompra_id);
+
+
+                $j=0;
+                $ok=true;
+                while($j < count($df))
+                {
+                    if($df[$j]->cantsolicitada == $df[$j]->cantrestante)
+                    {
+                        $df[$j]->update(['condicion' => 1]);
+                        $s->update(['stock' => 1]);
+
+                    }
+                    else
+                    {
+                        if($df[$j]->cantrestante > 0)
+                        {
+                            $df[$j]->update(['condicion' => 1]);
+                            $s->update(['stock' => 1]);
+                        }
+                        $ok=false;
+                    }
+                    $j++;
+                }
+                if($ok)
+                {           
+                    $s->update(['condicion' => 1]);
+                }
+
+                
+                $i++;
+
+            }    
+            DetalleEgreso::where('solicitudegreso_id', $egreso->id)->update(['deleted_at'=> Carbon::now()]);
+
+            // return 1;
+            $k=0;
+            while($k< count($request->detallefactura_id))
+            {
+                if($request->detalle_id[$k] != 'NO')
+                {   
+                    $detal = DetalleEgreso::where('id', $request->detalle_id[$k])->where('detallefactura_id', $request->detallefactura_id[$k])->first();
+                    if(!$detal)
+                    {
+                        return redirect()->route('egres.index')->with(['message' => 'Contactese con el administrador.', 'alert-type' => 'error']);
+                    }
+                    // return $detal;
+                    DetalleEgreso::where('id', $request->detalle_id[$k])->update(['deleted_at' => null]);
+
+
+
+                    // return $detal;
+
+                    DetalleFactura::where('id',$detal->detallefactura_id)->decrement('cantrestante', $detal->cantsolicitada);
+                    // return 1;
+
+                    $aux = DetalleFactura::find($detal->detallefactura_id);                    
+                    $f = Factura::find($aux->factura_id);
+                    $s = SolicitudCompra::find($f->solicitudcompra_id);
+                    // return 1;
+
+                    $s->update(['condicion' => 0]);
+
+                    if($aux->cantrestante == 0)
+                    {
+                        $aux->update(['condicion'=>0]);
+                    }
+
+                    $df = DetalleFactura::where('factura_id',$aux->factura_id)->where('deleted_at', null)->get();
+                    $ok= true;
+                    $m = 0;
+                    // return 1;
+
+                    while($m < count($df))
+                    {
+                        if($df[$m]->cantrestante != 0)
+                        {
+                            $ok = false;
+                            
+                        }
+                        $m++;
+                    }
+                    if($ok)
+                    {
+                        SolicitudCompra::where('id',$f->solicitudcompra_id)->update(['condicion' => 0, 'stock' => 0]);
+                    }
+                    
+                    // return 1;
+
+                }
+                else
+                {
+                    
+                    DetalleEgreso::create([
+                        'solicitudegreso_id'    => $egreso->id,
+                        'registeruser_id'       => $user->id,
+                        'detallefactura_id'     => $request->detallefactura_id[$k],
+                        'cantsolicitada'        => $request->cantidad[$k],
+                        'precio'                => $request->precio[$k],
+                        'totalbs'               => $request->cantidad[$k]*$request->precio[$k],
+                        'gestion'               => $egreso->gestion
+                    ]);
+
+
+                    DetalleFactura::where('id',$request->detallefactura_id[$k])->decrement('cantrestante', $request->cantidad[$k]);
+
+                    $aux = DetalleFactura::find($request->detallefactura_id[$k]);                    
+                    $f = Factura::find($aux->factura_id);
+                    $s = SolicitudCompra::find($f->solicitudcompra_id);
+
+                    $s->update(['condicion' => 0]);
+
+                    if($aux->cantrestante == 0)
+                    {
+                        $aux->update(['condicion'=>0]);
+                    }
+                    $df = DetalleFactura::where('factura_id',$aux->factura_id)->where('deleted_at', null)->get();
+                    $ok= true;
+                    $m = 0;
+                    while($m < count($df))
+                    {
+                        if($df[$m]->cantrestante != 0)
+                        {
+                            $ok = false;
+
+                        }
+                        $m++;
+                    }
+                    // return 1;
+
+                    if($ok)
+                    {
+                        SolicitudCompra::where('id',$f->solicitudcompra_id)->update(['condicion' => 0, 'stock' => 0]);
+                    }
+                }
+
+
+                $k++;
+
+
+
+
+
+
+            }
+            // return 1010110;
+
+
+
+            // return 2;
             DB::commit();
             return redirect()->route('egres.index')->with(['message' => 'Actualizado exitosamente.', 'alert-type' => 'success']);
         } catch (\Throwable $th) {
@@ -409,6 +531,15 @@ class EgressController extends Controller
             return redirect()->route('egres.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
         }
     }
+
+
+
+
+
+
+
+
+
 
     public function destroy(Request $request)
     {       
@@ -422,8 +553,6 @@ class EgressController extends Controller
            
 
             $detalle = DetalleEgreso::where('solicitudegreso_id', $sol->id)->where('deleted_at', null)->where('condicion',1)->get();
-
-            // return $detalle;
             $i=0;
 
             while($i < count($detalle))
