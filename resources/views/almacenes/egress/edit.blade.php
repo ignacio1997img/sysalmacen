@@ -272,13 +272,13 @@
                                                             <i class="voyager-trash"></i>
                                                             </button>                                                            
                                                         </td>
-                                                        <td><input type="text" class="detallefactura_id" name="detallefactura_id[]" value="{{$item->detallefactura_id}}">{{$item->detallefactura_id}}</td>
+                                                        <td><input type="hidden" class="detallefactura_id" name="detallefactura_id[]" value="{{$item->detallefactura_id}}">{{$item->detallefactura_id}}</td>
                                                         <td>{{$item->modalidad}} - {{$item->nrosolicitud}}</td>
-                                                        <td><input type="text" name="detalle_id[]" value="{{$item->id}}">{{$item->article}}</td>
+                                                        <td><input type="hidden" name="detalle_id[]" value="{{$item->id}}">{{$item->article}}</td>
                                                         <td>{{$item->presentacion}}</td>
-                                                        <td><input type="text" name="cantidad[]" value="{{$item->cantsolicitada}}">{{$item->cantsolicitada}}</td>
-                                                        <td><input type="text" name="precio[]" value="{{$item->precio}}">{{$item->precio}}</td>
-                                                        <td><input type="text" class="input_subtotal" value="{{$item->totalbs}}">{{$item->totalbs}}</td>
+                                                        <td><input type="hidden" name="cantidad[]" value="{{$item->cantsolicitada}}">{{$item->cantsolicitada}}</td>
+                                                        <td><input type="hidden" name="precio[]" value="{{$item->precio}}">{{$item->precio}}</td>
+                                                        <td><input type="hidden" class="input_subtotal" value="{{$item->totalbs}}">{{$item->totalbs}}</td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -377,13 +377,13 @@
                     
                         var fila='<tr class="selected" id="fila'+detallefactura_id+'">'
                             fila+='<td><button type="button" class="btn btn-danger" onclick="eliminar('+detallefactura_id+')";><i class="voyager-trash"></i></button></td>'
-                            fila+='<td><input type="text" class="detallefactura_id" name="detallefactura_id[]" value="'+detallefactura_id+'">'+detallefactura_id+'</td>' 
+                            fila+='<td><input type="hidden" class="detallefactura_id" name="detallefactura_id[]" value="'+detallefactura_id+'">'+detallefactura_id+'</td>' 
                             fila+='<td>'+modalidad+'</td>'                         
-                            fila+='<td><input type="text" name="detalle_id[]" value="NO"'+nombre_articulo+'</td>'
+                            fila+='<td><input type="hidden" name="detalle_id[]" value="NO"'+nombre_articulo+'</td>'
                             fila+='<td>'+presentacion+'</td>' 
-                            fila+='<td><input type="text" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td>'                       
-                            fila+='<td><input type="text" name="precio[]" value="'+precio+'">'+precio+'</td>'                        
-                            fila+='<td><input type="text" class="input_subtotal" value="'+cantidad * precio+'">'+cantidad * precio+'</td>'
+                            fila+='<td><input type="hidden" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td>'                       
+                            fila+='<td><input type="hidden" name="precio[]" value="'+precio+'">'+precio+'</td>'                        
+                            fila+='<td><input type="hidden" class="input_subtotal" value="'+cantidad * precio+'">'+cantidad * precio+'</td>'
                         fila+='</tr>';
 
 
