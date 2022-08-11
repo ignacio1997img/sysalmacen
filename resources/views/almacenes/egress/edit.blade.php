@@ -254,7 +254,11 @@
                                                 @php
                                                     $total = 0;
                                                 @endphp
-                                                @foreach($detail as $item)                                                   
+                                                @foreach($detail as $item)    
+                                                        @php
+                                                            // $cont++;
+                                                            $total += $item->totalbs;
+                                                        @endphp                                               
                                                     <tr class="selected" id="fila{{$item->detallefactura_id}}">
                                                         <td>                                                        
                                                             <button 
@@ -266,13 +270,14 @@
                                                             <i class="voyager-trash"></i>
                                                             </button>                                                            
                                                         </td>
-                                                        <td>{{$item->detallefactura_id}}</td>
+                                                        <td><input type="text" class="detallefactura_id" name="detallefactura_id[]" value="{{$item->detallefactura_id}}">{{$item->detallefactura_id}}</td>
                                                         <td>{{$item->modalidad}} - {{$item->nrosolicitud}}</td>
                                                         <td>{{$item->article}}</td>
                                                         <td>{{$item->presentacion}}</td>
-                                                        <td>{{$item->cantsolicitada}}</td>
-                                                        <td>{{$item->precio}}</td>
-                                                        <td>{{$item->totalbs}}</td>
+                                                        <td><input type="text" name="cantidad[]" value="{{$item->cantsolicitada}}">{{$item->cantsolicitada}}</td>
+                                                        <td><input type="text" name="precio[]" value="{{$item->precio}}">{{$item->precio}}</td>
+                                                        <td><input type="text" class="input_subtotal" value="{{$item->totalbs}}">{{$item->totalbs}}</td>
+                                                        
                                                         {{-- <td><input type="hidden" class="input_article" name="article_id[]" value="{{ $item->articulo_id}}">{{$item->articulo}}</td>
                                                         <td>{{ $item->presentacion}}</td>
                                                         <td><input type="hidden" name="cantidad[]" value="{{ $item->cantsolicitada }}">{{ $item->cantsolicitada }}</td>
@@ -283,7 +288,7 @@
                                             </tbody>
                                             <tfoot>
                                                 <th colspan="7" style="text-align:right"><h5>TOTAL</h5></th>
-                                                <th><h4 id="total">Bs. 0.00</h4></th>
+                                                <th><h4 id="total">{{$total}}</h4></th>
                                             </tfoot>
                                             
                                         </table>

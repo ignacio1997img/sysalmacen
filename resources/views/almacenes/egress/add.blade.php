@@ -323,7 +323,7 @@
                 
                     var fila='<tr class="selected" id="fila'+detallefactura_id+'">'
                         fila+='<td><button type="button" class="btn btn-danger" onclick="eliminar('+detallefactura_id+')";><i class="voyager-trash"></i></button></td>'
-                        fila+='<td><input type="hidden" class="detallefactura_id" name="detallefactura_id[]"value="'+detallefactura_id+'">'+detallefactura_id+'</td>' 
+                        fila+='<td><input type="hidden" class="detallefactura_id" name="detallefactura_id[]" value="'+detallefactura_id+'">'+detallefactura_id+'</td>' 
                         fila+='<td>'+modalidad+'</td>'                         
                         fila+='<td>'+nombre_articulo+'</td>'
                         fila+='<td>'+presentacion+'</td>' 
