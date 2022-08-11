@@ -315,29 +315,66 @@ class EgressController extends Controller
 
     public function edit($id)
     {
-        return $id;
-        $solicitud = SolicitudEgreso::find($id);
-        // $user = Auth::user();
-        // $da = $this->getdireccion(); 
-        // $sucursales = Sucursal::join('sucursal_users as u','u.sucursal_id', 'sucursals.id')
-        //             ->select('sucursals.id','sucursals.nombre','u.condicion')
-        //             ->where('u.condicion',1)
-        //             ->where('u.user_id', $user->id)
-        //             ->get();
-
-        $compra = DB::table('solicitud_compras as com')
-                    ->join('facturas as f', 'f.solicitudcompra_id', 'com.id')
-                    ->join('detalle_facturas as fd', 'fd.factura_id', 'f.id')
-                    ->join('modalities as m', 'm.id', 'com.modality_id')
-                    ->select('com.id', 'm.nombre', 'com.nrosolicitud')
-                    ->where('fd.condicion', 1)
-                    ->where('f.condicion', 1)
-                    ->where('com.unidadadministrativa', $solicitud->unidadadministrativa)
-                    ->groupBy('com.id', 'm.nombre', 'com.nrosolicitud')
-                    ->orderBy('com.fechaingreso')
+        // return 1;
+        
+        $user = Auth::user();
+        $sucursales = Sucursal::join('sucursal_users as u','u.sucursal_id', 'sucursals.id')
+                    ->select('sucursals.id','sucursals.nombre','u.condicion')
+                    ->where('u.condicion',1)
+                    ->where('u.user_id', $user->id)
                     ->get();
-        return view('almacenes.egress.edit', compact('solicitud', 'sucursales', 'da', 'compra'));
+
+        $da = $this->getdireccion();
+
+
+
+
+
+        $solicitud = SolicitudEgreso::find($id);
+        $detail = DetalleEgreso::where('solicitudegreso_id', $solicitud->id)->get();
+// 
+// return $detail;
+
+//         $compra = DB::table('solicitud_compras as com')
+//                     ->join('facturas as f', 'f.solicitudcompra_id', 'com.id')
+//                     ->join('detalle_facturas as fd', 'fd.factura_id', 'f.id')
+//                     ->join('modalities as m', 'm.id', 'com.modality_id')
+//                     ->select('com.id', 'm.nombre', 'com.nrosolicitud')
+//                     ->where('fd.condicion', 1)
+//                     ->where('f.condicion', 1)
+//                     ->where('com.unidadadministrativa', $solicitud->unidadadministrativa)
+//                     ->groupBy('com.id', 'm.nombre', 'com.nrosolicitud')
+//                     ->orderBy('com.fechaingreso')
+//                     ->get();
+// return $detail;
+
+        return view('almacenes.egress.edit', compact('solicitud', 'detail', 'da', 'sucursales'));
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public function update(Request $request, $id)
     {
@@ -359,7 +396,7 @@ class EgressController extends Controller
         try{
 
             $sol = SolicitudEgreso::find($request->id);
-            SolicitudEgreso::where('id', $sol->id)->update(['deleted_at' => Carbon::now(), 'condicion' => 0]);
+            SolicitudEgreso::where('id', $sol->id)->update(['deleted_at' => Carbon::now()]);
     
            
 
@@ -408,7 +445,7 @@ class EgressController extends Controller
             }
 
 
-            DetalleEgreso::where('solicitudegreso_id', $sol->id)->update(['deleted_at' => Carbon::now(), 'condicion' => 0]);
+            DetalleEgreso::where('solicitudegreso_id', $sol->id)->update(['deleted_at' => Carbon::now()]);
 
 
             DB::commit();
@@ -458,6 +495,7 @@ class EgressController extends Controller
 
    
 
+    // metodo para buscar las compras de la unidad correspondiente
     protected function ajax_solicitud_compra($id)
     {
         $solicitud = DB::table('solicitud_compras as com')
@@ -465,10 +503,12 @@ class EgressController extends Controller
             ->join('detalle_facturas as fd', 'fd.factura_id', 'f.id')
             ->join('modalities as m', 'm.id', 'com.modality_id')
             ->select('com.id', 'm.nombre', 'com.nrosolicitud')
+            // ->where('com.stock',0)
             ->where('fd.condicion', 1)
             ->where('f.condicion', 1)
             // ->where('com.unidadadministrativa', $id)
             ->whereRaw('com.unidadadministrativa ='.$id.' or com.unidadadministrativa = 192')
+        
             ->groupBy('com.id', 'm.nombre', 'com.nrosolicitud')
             ->orderBy('com.fechaingreso')
             ->get();

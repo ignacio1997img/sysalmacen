@@ -6,7 +6,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.js"></script>
 @extends('voyager::master')
 
-@section('page_title', 'Viendo Ingresos')
+@section('page_title', 'Editar Egreso')
 
 <style>
     input:focus {
@@ -73,7 +73,7 @@
         <div class="container-fluid">
             <div class="row">
                 <h1 id="subtitle" class="page-title">
-                    <i class="voyager-basket"></i> Editar Ingreso
+                    <i class="voyager-basket"></i> Editar Egresos
                 </h1>
                 <a href="{{ route('income.index') }}" class="btn btn-warning btn-add-new">
                     <i class="fa-solid fa-arrow-rotate-left"></i> <span>Volver</span>
@@ -91,8 +91,8 @@
                         <div class="panel panel-bordered">
                             <div class="panel-body">                            
                                 <div class="table-responsive">
-                                    <main class="main">        
-                                        {!! Form::open(['route' => 'income_update', 'id'=>'1', 'class' => 'was-validated'])!!}
+                                     
+                                       
                                         <div class="card-body">
                                             <h5 id="subtitle">Solicitud de Compras</h5>
                                             <div class="row">
@@ -114,7 +114,7 @@
                                                     <div class="form-group">
                                                         <div class="form-line">
                                                             <select name="branchoffice_id" class="form-control select2" required>
-                                                                <option value="">Seleccione una sucursal</option>
+                                                                <option value="" disabled selected>Seleccione una sucursal</option>
                                                                 @foreach ($sucursales as $sucursal)
                                                                     <option value="{{$sucursal->id}}" {{ $sucursal->id == $solicitud->sucursal_id ? 'selected' : '' }}>{{$sucursal->nombre}}</option>
                                                                 @endforeach
@@ -127,7 +127,7 @@
                                                     <div class="form-group">
                                                         <div class="form-line">
                                                             <select id="das" name="direccionadministrativa" class="form-control select2" required>
-                                                                <option value="">Seleccione una Direccion Administrativa</option>
+                                                                <option value="" disabled selected>Seleccione una Direccion Administrativa</option>
                                                                 @foreach ($da as $data)
                                                                     <option value="{{$data->id}}" {{$data->id == $direccion->direccion_id? 'selected':''}}>{{$data->nombre}}</option>
                                                                 @endforeach
@@ -149,264 +149,118 @@
                                                         <small>Seleccionar Unidad Administrativa.</small>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-3">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="date" name="fechaingreso" class="form-control text" value="{{$sol->fechaingreso}}" required>
-                                                        </div>
-                                                        <small>Fecha Ingreso.</small>
-                                                    </div>
-                                                </div>
-                                                <!-- === -->
                                             </div>
                                             <div class="row">
                                                 <div class="col-sm-3">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <select name="modality_id" class="form-control select2" required>
-                                                                <option value="">Seleccione una Modalidad de Compra</option>
-                                                                @foreach ($modalidad as $data)
-                                                                    <option value="{{$data->id}}" {{ $data->id == $sol->modality_id ? 'selected' : '' }}>{{$data->nombre}}</option>
-                                                                @endforeach
+                                                            <select id="modalidad" class="form-control select2" >
+                                                                
                                                             </select>
                                                         </div>
                                                         <small>Seleccionar Modalidad de Compra.</small>
                                                     </div>
                                                 </div>
-                                                <!-- === -->
-                                                <!-- <div class="col-sm-3">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="text" disabled class="form-control form-control-sm" name="nrosolicitud" value="{{$sol->nrosolicitud}}" placeholder="Introducir número de solicitud" autocomplete="off" required>
-                                                        </div>
-                                                        <small>Número Solicitud.</small>
-                                                    </div>
-                                                </div> -->
-                                                <!-- === -->
-                                                
-                                                <!-- === -->
-                                            </div>
-                                            <hr>
-                                            <h5 id="subtitle">Proveedor + Detalle de Factura:</h5>
-                                                {{-- <div class="form-group">
-                                                    <div class="form-line">
-                                                        <input type="file" name="file" id="archivo" class="form-control form-control-sm" placeholder="Seleccione un Proveedor" accept="application/pdf">
-                                                    </div>
-                                                    <small>Archivos.</small>
-                                                </div> --}}
-    
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <select id="provider" name="provider_id"  class="form-control select2" required>
-                                                                <option value="">Seleccione un Proveedor</option>
-                                                                @foreach ($proveedor as $data)
-                                                                    <option value="{{$data->id}}_{{$data->nit}}_{{$data->responsable}}" {{ $data->id == $factura->provider_id ? 'selected' : '' }}>{{$data->razonsocial}}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                        <small>Seleccionar Proveedor.</small>
-                                                    </div>
-                                                </div>
-                                                <input type="hidden" id="provider_id" name="provider_id" value="{{$proveedorselect->id}}">
-                                            
                                                 <div class="col-sm-3">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="text" id="nit" class="form-control form-control-sm text" placeholder="Seleccione un Proveedor" value="{{$proveedorselect->nit}}" disabled readonly>
+                                                            <input type="number" name="nropedido" class="form-control form-control-sm text" placeholder="Numero de Pedido" value="{{$solicitud->nropedido}}" required>
                                                         </div>
-                                                        <small>NIT.</small>
+                                                        <small>Numero de Pedido.</small>
                                                     </div>
                                                 </div>
-                                                <!-- === -->
                                                 <div class="col-sm-3">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="text" id="responsable" class="form-control form-control-sm text" placeholder="Seleccione un Proveedor" value="{{$proveedorselect->responsable}}" disabled >
+                                                            <input type="date" name="fechasolicitud" class="form-control text" value="{{$solicitud->fechasolicitud}}" required>
                                                         </div>
-                                                        <small>Responsable.</small>
+                                                        <small>Fecha Solicitud.</small>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-2">
+                                                <div class="col-sm-3">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <select name="tipofactura" id="tipofactura"class="form-control text" required>
-                                                                <option value="Manual" {{ 'Manual' == $factura->tipofactura ? 'selected' : '' }}>Manual</option>
-                                                                <option value="Electronica" {{ 'Electronica' == $factura->tipofactura ? 'selected' : '' }}>Electronica</option>
-                                                                <option value="Orden_Compra" {{ 'Orden_Compra' == $factura->tipofactura ? 'selected' : '' }}>Orden de Compra</option>
-                                                            </select>
+                                                            <input type="date" name="fechaegreso" class="form-control text" value="{{$solicitud->fechaegreso}}" required>
                                                         </div>
-                                                        <small>Tipo Factura.</small>
+                                                        <small>Fecha Egreso.</small>
                                                     </div>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="date" id="fechafactura" name="fechafactura" value="{{$factura->fechafactura}}" class="form-control text">
-                                                        </div>
-                                                        <small>Fecha Factura.</small>
-                                                    </div>
-                                                </div>
-                                                
-                                                <!-- === -->
-                                                <div class="col-sm-2">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="number" step="0.01" onchange="subTotal()" onkeyup="subTotal()" class="form-control form-control-sm text" id="montofactura" value="{{$factura->montofactura}}" name="montofactura" placeholder="Introducir monto" autocomplete="off" required>
-                                                        </div>
-                                                        <small>Monto *(Bs).</small>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="number" id="nrofactura" name="nrofactura" class="form-control text" value="{{$factura->nrofactura}}" title="Introducir Nro de Factura" required>
-                                                        </div>
-                                                        <small>Numero.</small>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    @if ($factura->tipofactura == 'Manual' || $factura->tipofactura == 'Electronica')
-                                                        <div class="form-group" id="nroautorizacion">
-                                                            <div class="form-line">
-                                                                <input type="number"  name="nroautorizacion" id="nroautorizacion" class="form-control text" value="{{$factura->nroautorizacion}}" title="Introducir Nro Autorizacion de la Factura" required>
-                                                            </div>
-                                                            <small>Nro Autorizacion Fact.</small>
-                                                        </div>
-                                                    @endif                                                    
-                                                </div>
-                                                <div class="col-sm-2" id="nrocontrol">
-                                                    @if ($factura->tipofactura == 'Electronica')
-                                                        <div class="form-group" id="nrocontrol">
-                                                            <div class="form-line">
-                                                                <input type="number"  name="nrocontrol" id="nrocontrol" class="form-control text" value="{{$factura->nrocontrol}}" title="Introducir Nro de Control" required>
-                                                            </div>
-                                                            <small>Nro Autorizacion Fact.</small>
-                                                        </div>
-                                                    @endif
                                                 </div>
                                             </div>
                                             <hr>
-                                            <h5 id="subtitle">Partida + Articulo:</h5>
-                                            <div class="row">
+                                        <h5 id="subtitle">Articulo:</h5>
+                                        <div class="row">
                                             <div class="col-sm-4">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <select id="partida"class="form-control select2">
-                                                                <option value="">Seleccione una Partida..</option>
-                                                                @foreach($partida as $data)
-                                                                    <option value="{{$data->id}}">{{$data->codigo}} - {{$data->nombre}}</option>                                                                
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                        <small>Partidas.</small>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <div class="form-group">
-                                                        <select id="article_id" class="form-control select2">
-                                                            
-                                                        </select>
-                                                        <small>Articulo.</small>
-                                                    </div>
-                                                </div>
-                                                
-                                                <!-- === -->
-                                                <div class="col-sm-1">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="text"disabled class="form-control form-control-sm text" id="presentacion" autocomplete="off">
-                                                        </div>
-                                                        <small>Presentacion.</small>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="number" id="cantidad" class="form-control text" title="Cantidad">
-                                                        </div>
-                                                        <small>Cantidad Artículo.</small>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="number" id="precio" class="form-control text" title="Precio Unitario Bs">
-                                                        </div>
-                                                        <small>Precio Artículo *(Bs).</small>
-                                                    </div>
+                                                <div class="form-group">
+                                                    <select id="article_id" class="form-control select2">
+                                                        
+                                                    </select>
+                                                    <small>Articulo.</small>
                                                 </div>
                                             </div>
-                                            
-                                            <div class="form-group">
-                                                <div class="form-line">
-                                                    <button type="button" id="bt_add" class="btn btn-success"><i class="voyager-basket"></i> Agregar Artículo</button>
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        <input type="text" id="presentacion" class="form-control form-control-sm text" placeholder="Seleccione un Articulo" readonly>
+                                                    </div>
+                                                    <small>Presentación.</small>
                                                 </div>
                                             </div>
-                                        
-                                            <table id="detalles" class="table table-bordered table-striped table-sm">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Opciones</th>
-                                                        <th>Partida</th>
-                                                        <th>Articulo</th>
-                                                        <th>Presentación</th>
-                                                        <th>Cantidad</th>
-                                                        <th>Precio Art.</th>
-                                                        <th>SubTotal</th>
-                    
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @php
-                                                        // $cont = 0;
-                                                        $total = 0;
-                                                    @endphp
-                                                    @foreach($detalle as $item)
-                                                        @php
-                                                            // $cont++;
-                                                            $total += $item->totalbs;
-                                                        @endphp
-                                                        <tr class="selected" id="fila{{$item->articulo_id}}">
-                                                            <td>
-                                                            
-                                                                <button 
-                                                                    type="button" 
-                                                                    title="Eliminar articulo"
-                                                                    class="btn btn-danger" 
-                                                                    onclick="eliminar('{{$item->articulo_id}}')";
-                                                                >
-                                                                <i class="voyager-trash"></i>
-                                                                </button>
-                                                                
-                                                            </td>
-                                                            <td>{{$item->codigo}} - {{$item->partida}}</td>
-                                                            <td><input type="hidden" class="input_article" name="article_id[]" value="{{ $item->articulo_id}}">{{$item->articulo}}</td>
-                                                            <td>{{ $item->presentacion}}</td>
-                                                            <td><input type="hidden" name="cantidad[]" value="{{ $item->cantsolicitada }}">{{ $item->cantsolicitada }}</td>
-                                                            <td><input type="hidden" name="precio[]" value="{{ $item->precio }}">{{ $item->precio }}</td>
-                                                            <td><input type="hidden" class="input_subtotal" name="totalbs[]" value="{{ $item->totalbs }}">{{ $item->totalbs }}</td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                                <tfoot>
-                                                    <th colspan="6" style="text-align:right"><h5>TOTAL</h5></th>
-                                                    <th><h4  id="total">Bs. {{ $total }}</h4></th>
-                                                    <input type="hidden" step="0.01" name="total" value="{{ $total }}" id="totals">
-                                                </tfoot>
-                                                
-                                            </table>
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        <input type="text" id="precio" class="form-control form-control-sm text" placeholder="Seleccione un Articulo" readonly>
+                                                    </div>
+                                                    <small>Precio.</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        <input type="text" id="stok" class="form-control form-control-sm text" placeholder="Seleccione un Articulo" readonly>
+                                                    </div>
+                                                    <small>Stock Artículo.</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        <input type="number" id="cantidad" step="0.01" class="form-control form-control-sm text" placeholder="Introducir monto" autocomplete="off">
+                                                    </div>
+                                                    <small>Cantidad.</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <button type="button" id="bt_add" class="btn btn-success"><i class="voyager-basket"></i> Agregar Artículo</button>
+                                            </div>
+                                        </div>
+                                    
+                                        <table id="detalles" class="table table-bordered table-striped table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Opciones</th>
+                                                    <th>Id</th>
+                                                    <th>Modalidad + Nro Solicitud Compra</th>                                                    
+                                                    <th>Articulo</th>
+                                                    <th>Presentación</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Precio Art.</th>
+                                                    <th>SubTotal</th>
+                
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <th colspan="7" style="text-align:right"><h5>TOTAL</h5></th>
+                                                <th><h4 id="total">Bs. 0.00</h4></th>
+                                            </tfoot>
                                             
-                                        </div>   
-                                        <input type="hidden" name="id" value="{{$sol->id}}">
+                                        </table>
                                         <div class="card-footer">
                                             <button id="btn_guardar" type="submit"  class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
-                                        </div>   
-                                        {!! Form::close() !!}                     
-                                    </main>
+                                        </div>  
+                                                      
+                                  
                                 </div>
                             </div>
                         </div>
@@ -430,13 +284,27 @@
 
                 $('#das').on('change', unidad_administrativa);
 
+                $('#unidadEje').on('change', onselect_modalidad_compra);
+
+                $('#modalidad').on('change', onselect_article);
+
+                $('#article_id').on('change', onselect_presentacion);
+
+
+
+                
+                // var cod ='{{$solicitud->unidadadministrativa}}';
+                // alert(cod)
+
+                // modalidad_comp(cod);
+
 
 
                 $('#provider').on('change', onselect_proveedor_llenar);
                 $('#tipofactura').on('change', onselect_tipo);
 
-                $('#partida').on('change', onselect_article);
-                $('#article_id').on('change', onselect_presentacion);
+        
+                
 
                 $('#bt_add').click(function() {
                     agregar();
@@ -638,7 +506,11 @@
 
             }
 
-            function unidad_administrativa()
+
+
+
+
+            function unidad_administrativa() //funciona
             {
                 var id =  $(this).val();    
                 if(id >=1)
@@ -646,7 +518,7 @@
                     $.get('{{route('ajax_unidad_administrativa')}}/'+id, function(data){
                         var html_unidad=    '<option value="">Seleccione Una Unidad Administrativa..</option>'
                             for(var i=0; i<data.length; ++i)
-                            html_unidad += '<option value="'+data[i].id+'">'+data[i].nombre+'</option>'
+                            html_unidad += '<option value="'+data[i].id+'">'+data[i].id+'-'+data[i].nombre+'</option>'
 
                         $('#unidadEje').html(html_unidad);;            
                     });
@@ -658,121 +530,126 @@
                 }
             }
 
-
-
-
-
-
-
-            
-
-
-
-
-
-
-            function onselect_tipo()
+            function onselect_modalidad_compra()
             {
-                
-                var tipo =  $(this).val();   
-                var html_factura = '';
-                if(tipo == 'Electronica')
-                {
-                    html_nroautorizacion =  '<div class="form-group">'
-                    html_nroautorizacion+=       '<div class="form-line">'
-                    html_nroautorizacion+=            '<input type="number" name="nroautorizacion" placeholder="Introducir Nro Autorizacion" class="form-control text" title="Introducir Nro de Autorización">'
-                    html_nroautorizacion+=       '</div>'
-                    html_nroautorizacion+=       '<small>Nro Autorizacion.</small>'
-                    html_nroautorizacion+=  '</div>'
-                    $('#nroautorizacion').html(html_nroautorizacion);
+                // alert(4)
+                $("#presentacion").val('');
+                    $("#stok").val('');
+                    $("#precio").val('');
+                    var html_articulo=    ''       
+                    $('#article_id').html(html_articulo);
 
-                    html_factura =  '<div class="form-group">'
-                    html_factura+=       '<div class="form-line">'
-                    html_factura+=            '<input type="number" name="nrocontrol" class="form-control text" placeholder="Introducir Nro Control" title="Introducir Nro Control Factura">'
-                    html_factura+=       '</div>'
-                    html_factura+=       '<small>Nro Control.</small>'
-                    html_factura+=  '</div>'
-                    $('#nrocontrol').html(html_factura);
+                var id =  $(this).val(); 
+                // alert(id)   
+                if(id >=1)
+                {
+                    $.get('{{route('ajax_solicitud_compra')}}/'+id, function(data){
+                        var html_modalidad=    '<option value="">Seleccionar Modalidad Compra..</option>'
+                            for(var i=0; i<data.length; ++i)
+                            html_modalidad += '<option value="'+data[i].id+'">'+data[i].nombre+' - '+data[i].nrosolicitud+'</option>'
+
+                        $('#modalidad').html(html_modalidad);;            
+                    });
+                    $(".selected").remove();
+                    $("#total").html("Bs. 0.00");
+
                 }
                 else
                 {
-                    if(tipo == 'Orden_Compra')
-                    {      
-                        html_nroautorizacion=  '';
-                        $('#nroautorizacion').html(html_nroautorizacion);                  
-                        html_factura ='';
-                        $('#nrocontrol').html(html_factura);
-                    }
-                    else
-                    {
-
-                        html_nroautorizacion =  '<div class="form-group">'
-                        html_nroautorizacion+=       '<div class="form-line">'
-                        html_nroautorizacion+=            '<input type="number" name="nroautorizacion" class="form-control text" placeholder="Introducir Nro Autorizacion" title="Introducir Nro de Autorización">'
-                        html_nroautorizacion+=       '</div>'
-                        html_nroautorizacion+=       '<small>Nro Control.</small>'
-                        html_nroautorizacion+=  '</div>'
-                        $('#nroautorizacion').html(html_nroautorizacion);
-
-                        html_factura ='';
-                        $('#nrocontrol').html(html_factura);
-                    }
-                    // html_factura ='';
-                    // $('#nrocontrol').html(html_factura);
+                    var html_modalidad=    ''       
+                    $('#modalidad').html(html_modalidad);
+                    
+    
                 }
             }
 
-            function onselect_proveedor_llenar()
-            {
-                datoProveedor = document.getElementById('provider').value.split('_');
-                // alert(datoProveedor[2]);
-                $("#provider_id").val(datoProveedor[0]);
-                $("#nit").val(datoProveedor[1]);
-                $("#responsable").val(datoProveedor[2]);
-            }
 
             function onselect_article()
             {
                 var id =  $(this).val();    
+                $("#presentacion").val('');
+                    $("#stok").val('');
+                    $("#precio").val('');
                 if(id >=1)
                 {
-                    $.get('{{route('ajax_article')}}/'+id, function(data){
-                        var html_article=    '<option value="">Seleccione un Articulo..</option>'
+                    $.get('{{route('ajax_egres_select_article')}}/'+id, function(data){
+                        var html_articulo=    '<option value="">Seleccione un Articulo..</option>'
                             for(var i=0; i<data.length; ++i)
-                            html_article += '<option value="'+data[i].id+'">'+data[i].nombre+'</option>'
+                            html_articulo += '<option value="'+data[i].id+'">'+data[i].nombre+'</option>'
 
-                        $('#article_id').html(html_article);           
+                        $('#article_id').html(html_articulo);;            
                     });
                 }
                 else
                 {
-                    var html_article=    ''       
-                    $('#article_id').html(html_article);
-                    $("#presentacion").val('');
+                    var html_articulo=    ''       
+                    $('#article_id').html(html_articulo);
+                    
                 }
             }
+
+
+
+
             function onselect_presentacion()
             {
-                // datoProveedor = document.getElementById('provider').value.split('_');
-                // alert(datoProveedor[2]);
                 var id =  $(this).val();    
                 if(id >=1)
                 {
-                    $.get('{{route('ajax_presentacion')}}/'+id, function(data){
-                                // alert(data.presentacion)
-                        $("#presentacion").val(data.presentacion);
+                    $.get('{{route('ajax_egres_select_article_detalle')}}/'+id, function(data){
+                        $("#precio").val(data[0].precio);
+                        $("#stok").val(data[0].cantrestante);
+                        $("#presentacion").val(data[0].presentacion);
+                                    
                     });
                 }
                 else
                 {
                     $("#presentacion").val('');
-                    
-                }
-                // $("#provider_id").val(datoProveedor[0]);
-                // $("#nit").val(datoProveedor[1]);
-                // $("#responsable").val(datoProveedor[2]);
+                    $("#stok").val('');
+                    $("#precio").val('');
+    
+                }            
             }
 
+
+
+            function modalidad_comp(id)
+            {
+                // alert(4)
+                $("#presentacion").val('');
+                    $("#stok").val('');
+                    $("#precio").val('');
+                    var html_articulo=    ''       
+                    $('#article_id').html(html_articulo);
+
+                var id = id;
+                // alert(id)   
+                if(id >=1)
+                {
+                    $.get('{{route('ajax_solicitud_compra')}}/'+id, function(data){
+                        var html_modalidad=    '<option value="">Seleccionar Modalidad Compra..</option>'
+                            for(var i=0; i<data.length; ++i)
+                            html_modalidad += '<option value="'+data[i].id+'">'+data[i].nombre+' - '+data[i].nrosolicitud+'</option>'
+
+                        $('#modalidad').html(html_modalidad);;            
+                    });
+                    $(".selected").remove();
+                    $("#total").html("Bs. 0.00");
+
+                }
+                else
+                {
+                    var html_modalidad=    ''       
+                    $('#modalidad').html(html_modalidad);
+                    
+    
+                }
+            }
+
+
+
+        
         </script>
     @stop
     @section('content')

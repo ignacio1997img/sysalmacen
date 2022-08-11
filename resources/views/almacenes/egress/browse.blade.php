@@ -47,7 +47,7 @@
                                                     ?>
                                                     @foreach($data as $item)
                                                         <tr>
-                                                            <td>{{$i}}</td>
+                                                            <td>{{$item->id}}</td>
                                                             <td>{{$item->nropedido}}</td>
                                                             <td>{{date('d/m/Y', strtotime($item->fechasolicitud))}}</td>
                                                             <td>{{date('d/m/Y', strtotime($item->fechaegreso))}}</td>
