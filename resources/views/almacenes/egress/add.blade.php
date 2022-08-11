@@ -488,7 +488,7 @@
                 $.get('{{route('ajax_solicitud_compra')}}/'+id, function(data){
                     var html_modalidad=    '<option value="">Seleccionar Modalidad Compra..</option>'
                         for(var i=0; i<data.length; ++i)
-                        html_modalidad += '<option value="'+data[i].id+'">'+data[i].id+'--'+data[i].nombre+' - '+data[i].nrosolicitud+'</option>'
+                        html_modalidad += '<option value="'+data[i].id+'">'+i+data[i].nombre+' - '+data[i].nrosolicitud+'</option>'
 
                     $('#modalidad').html(html_modalidad);;            
                 });

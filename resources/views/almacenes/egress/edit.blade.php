@@ -277,12 +277,6 @@
                                                         <td><input type="text" name="cantidad[]" value="{{$item->cantsolicitada}}">{{$item->cantsolicitada}}</td>
                                                         <td><input type="text" name="precio[]" value="{{$item->precio}}">{{$item->precio}}</td>
                                                         <td><input type="text" class="input_subtotal" value="{{$item->totalbs}}">{{$item->totalbs}}</td>
-                                                        
-                                                        {{-- <td><input type="hidden" class="input_article" name="article_id[]" value="{{ $item->articulo_id}}">{{$item->articulo}}</td>
-                                                        <td>{{ $item->presentacion}}</td>
-                                                        <td><input type="hidden" name="cantidad[]" value="{{ $item->cantsolicitada }}">{{ $item->cantsolicitada }}</td>
-                                                        <td><input type="hidden" name="precio[]" value="{{ $item->precio }}">{{ $item->precio }}</td>
-                                                        <td><input type="hidden" class="input_subtotal" name="totalbs[]" value="{{ $item->totalbs }}">{{ $item->totalbs }}</td> --}}
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -329,15 +323,15 @@
 
 
                 
-                // var cod ='{{$solicitud->unidadadministrativa}}';
+                var cod ='{{$solicitud->unidadadministrativa}}';
                 // alert(cod)
 
-                // modalidad_comp(cod);
+                modalidad_comp(cod);
 
 
 
-                $('#provider').on('change', onselect_proveedor_llenar);
-                $('#tipofactura').on('change', onselect_tipo);
+                // $('#provider').on('change', onselect_proveedor_llenar);
+                // $('#tipofactura').on('change', onselect_tipo);
 
         
                 
@@ -347,109 +341,103 @@
                 });
             });
 
-
-            //variables.
-            var cont=0;
-            total=0;
-            subtotal=[];
-
-
             var cont=0;
             var total=0;
             subtotal=[];
 
             function agregar()
             {
-            
-                partida=$("#partida option:selected").text();
-                montofactura=$("#montofactura").val();
-                article_id=$("#article_id").val();
+                // montofactura=$("#montofactura").val();
+                modalidad=$("#modalidad option:selected").text();
+                solicitudcompra_id =$("#modalidad").val();
+                detallefactura_id =$("#article_id").val();
                 presentacion=$("#presentacion").val();
-                cantidad=$("#cantidad").val();
                 precio=$("#precio").val();
+                stok=$("#stok").val();
+                cantidad=parseFloat($("#cantidad").val());
+
                 nombre_articulo=$("#article_id option:selected").text();
 
                 var arrayarticle = [];
                 var i=0;
-                var j=0;
                 ok=false;
-                if (partida != 'Seleccione una Partida..' && nombre_articulo != 'Seleccione un Articulo..' && cantidad != "" && precio != "") {
+
+                // alert(detallefactura_id);
+                // alert(stok);
+
+                
+
+                if (nombre_articulo != '' && nombre_articulo != 'Seleccione un Articulo..' && cantidad != '') {
                     
-
-
-                    var fila='<tr class="selected" id="fila'+article_id+'">'
-                            fila+='<td><button type="button" class="btn btn-danger" onclick="eliminar('+article_id+')";><i class="voyager-trash"></i></button></td>'
-                            fila+='<td>'+partida+'</td>'
-                            fila+='<td><input type="hidden" class="input_article" name="article_id[]"value="'+article_id+'">'+nombre_articulo+'</td>'
-                            fila+='<td>'+presentacion+'</td>'
-                            fila+='<td><input type="hidden"  class="form-control" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td>'
-                            fila+='<td><input type="hidden"  class="form-control" name="precio[]" value="'+precio+'">'+precio+'</td>'
-                            fila+='<td><input type="hidden" class="input_subtotal" name="totalbs[]" value="'+cantidad * precio+'">'+cantidad * precio+'</td>'
+                        // alert(2);
+                    
+                        var fila='<tr class="selected" id="fila'+detallefactura_id+'">'
+                            fila+='<td><button type="button" class="btn btn-danger" onclick="eliminar('+detallefactura_id+')";><i class="voyager-trash"></i></button></td>'
+                            fila+='<td><input type="text" class="detallefactura_id" name="detallefactura_id[]" value="'+detallefactura_id+'">'+detallefactura_id+'</td>' 
+                            fila+='<td>'+modalidad+'</td>'                         
+                            fila+='<td>'+nombre_articulo+'</td>'
+                            fila+='<td>'+presentacion+'</td>' 
+                            fila+='<td><input type="text" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td>'                       
+                            fila+='<td><input type="text" name="precio[]" value="'+precio+'">'+precio+'</td>'                        
+                            fila+='<td><input type="text" class="input_subtotal" value="'+cantidad * precio+'">'+cantidad * precio+'</td>'
                         fila+='</tr>';
-                        
 
-                    let detalle_subtotal = parseFloat(calcular_total()+cantidad * precio ).toFixed(2);
-                    let monto_factura = parseFloat($('#montofactura').val());
-                        
 
-                    if (detalle_subtotal <= monto_factura) {
+                        let detalle_subtotal = parseFloat(calcular_total()+cantidad * precio ).toFixed(2);
+                        if (cantidad >0 &&  cantidad <= stok && stok != 0 ) {
 
-                        $(".input_article").each(function(){
-                            arrayarticle[i]= parseFloat($(this).val());
-                            i++;
-                        }); 
-                        var ok=true;
-                        // alert(arrayarticle.length)
-                        for(j=0;j<arrayarticle.length; j++)
-                        {
+                            $(".detallefactura_id").each(function(){
+                                arrayarticle[i]= parseFloat($(this).val());
+                                i++;
+                            }); 
+                            var ok=true;
+                            // alert(arrayarticle.length)
+                            for(j=0;j<arrayarticle.length; j++)
+                            {
+                                
+                                if(arrayarticle[j] == detallefactura_id)
+                                {
+                                    // cont--;
+                                    limpiar();
+                                    ok = false;
+                                    // eliminar(arrayarticle.length-1)
+                                    swal({
+                                        title: "Error",
+                                        text: "El Articulo ya Existe en la Lista",
+                                        type: "error",
+                                        showCancelButton: false,
+                                        });
+                                    div = document.getElementById('flotante');
+                                    div.style.display = '';
+                                    return;                                
+                                }
+                            }
+                            if(ok==true)
+                            {
+                                // cont++;
                             
-                            if(arrayarticle[j] == article_id)
-                            {
-                                // cont--;
                                 limpiar();
-                                ok = false;
-                                // eliminar(arrayarticle.length-1)
-                                swal({
-                                    title: "Error",
-                                    text: "El Articulo ya Existe en la Lista",
-                                    type: "error",
-                                    showCancelButton: false,
-                                    });
-                                div = document.getElementById('flotante');
-                                div.style.display = '';
-                                return;                                
+                                $('#detalles').append(fila);
+                                $("#total").html("Bs. "+calcular_total().toFixed(2));
+                                if (calcular_total().toFixed(2)==monto_factura.toFixed(2)) {
+                                    $('#btn_guardar').removeAttr('disabled');
+                                }
                             }
+                            
                         }
-                        if(ok==true)
+                        else
                         {
-                            // cont++;
-                        
-                            limpiar();
-                            $('#detalles').append(fila);
-                            $("#total").html("Bs. "+calcular_total().toFixed(2));
-                            // $("#totals").html(calcular_total().toFixed(2));
-                            $("#totals").val(calcular_total().toFixed(2));
-                            if (calcular_total().toFixed(2)==monto_factura.toFixed(2)) {
-                                $('#btn_guardar').removeAttr('disabled');
-                            }
-                            else
-                            {
-                                $('#btn_guardar').attr('disabled', true);
-                            }
+                            // alert(total);
+                            swal({
+                                title: "Error",
+                                text: "Cantidad de Stok seleccionada Incorrecta",
+                                type: "error",
+                                showCancelButton: false,
+                                });
+                            div = document.getElementById('flotante');
+                            div.style.display = '';
+                            return;
                         }
-                    }
-                    else
-                    {
-                        swal({
-                            title: "Error",
-                            text: "El monto total supera al monto de la factura",
-                            type: "error",
-                            showCancelButton: false,
-                            });
-                        div = document.getElementById('flotante');
-                        div.style.display = '';
-                        return;
-                    }
                 }
                 else
                 {
@@ -464,48 +452,24 @@
                         return;
                 }
 
-            }      
-
-
-            function check(e,index) 
-            {   
-                alert(index)
-                    tecla = (document.all) ? e.keyCode : e.which;
-
-                    //Tecla de retroceso para borrar, siempre la permite
-                    if (tecla == 8) {
-                
-                        return true;
-                    }
-
-                    var numero =0;
-                    var letra =0;
-                    // Patron de entrada, en este caso solo acepta numeros y letras
-                    patron = /[0-9]/;
-                    tecla_final = String.fromCharCode(tecla);
-                    alert(tecla_final)
-                                
-                        
-                                    
-            }
-            
+            }        
             function limpiar()
             {
                 $("#precio").val("");
                 $("#cantidad").val("");
+                $("#stok").val("");
+                $("#presentacion").val("");
             }
 
-
+            //eliminar filas en la tabla
             function eliminar(index)
             {
-                // total=total-subtotal[index];
-                // alert(subtotal[index])
-                // $("#total").html("Bs/." + total);
+                total=total-subtotal[index];
+                $("#total").html("Bs/." + total);
                 $("#fila" + index).remove();
                 $("#total").html("Bs. "+calcular_total().toFixed(2));
-                $("#totals").val(calcular_total().toFixed(2));
                 // evaluar();
-                $('#btn_guardar').attr('disabled', true);
+                // $('#btn_guardar').attr('disabled', true);
             }
 
             //calcular total de factura
@@ -519,27 +483,6 @@
                 // console.log(total);
                 
                 return total;
-            }
-            function sumfila()
-            {
-
-            }
-
-            function subTotal(index){
-
-                
-                let cant = $(`#montofactura`).val() ? parseFloat($(`#montofactura`).val()) : 0;
-                let totals = $(`#totals`).val() ? parseFloat($(`#totals`).val()) : 0;
-
-                if(cant == totals)
-                {
-                    $('#btn_guardar').removeAttr('disabled');
-                }
-                else
-                {
-                    $('#btn_guardar').attr('disabled', true);
-                }
-
             }
 
 
@@ -652,14 +595,13 @@
 
             function modalidad_comp(id)
             {
-                // alert(4)
                 $("#presentacion").val('');
                     $("#stok").val('');
                     $("#precio").val('');
                     var html_articulo=    ''       
                     $('#article_id').html(html_articulo);
 
-                var id = id;
+                var id = id; 
                 // alert(id)   
                 if(id >=1)
                 {
@@ -670,16 +612,14 @@
 
                         $('#modalidad').html(html_modalidad);;            
                     });
-                    $(".selected").remove();
-                    $("#total").html("Bs. 0.00");
+                    // $(".selected").remove();
+                    // $("#total").html("Bs. 0.00");
 
                 }
                 else
                 {
                     var html_modalidad=    ''       
-                    $('#modalidad').html(html_modalidad);
-                    
-    
+                    $('#modalidad').html(html_modalidad);               
                 }
             }
 

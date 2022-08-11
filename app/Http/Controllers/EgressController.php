@@ -531,7 +531,7 @@ class EgressController extends Controller
             ->whereRaw('com.unidadadministrativa ='.$id.' or com.unidadadministrativa = 192')
         
             ->groupBy('com.id', 'm.nombre', 'com.nrosolicitud')
-            ->orderBy('com.fechaingreso')
+            ->orderBy('com.id')
             ->get();
         return $solicitud;
     }
