@@ -95,7 +95,7 @@
                                      
                                        
                                         <div class="card-body">
-                                            <input type="text" name="id" value="{{$solicitud->id}}">
+                                            <input type="hidden" name="id" value="{{$solicitud->id}}">
                                             <h5 id="subtitle">Solicitud de Compras</h5>
                                             <div class="row">
                                                 @php
