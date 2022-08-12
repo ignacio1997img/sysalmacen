@@ -435,6 +435,35 @@ class IncomeController extends Controller
         // return redirect('admin/income');
     }
 
+    public function salida($id)
+    {
+        // return $id;
+        $factura = Factura::where('solicitudcompra_id', $id)->first();
+        $detalle = DetalleFactura::where('factura_id', $factura->id)->where('deleted_at', null)->get();
+
+        $detalle = DB::table('solicitud_egresos as se')
+                    ->join('detalle_egresos as de', 'de.solicitudegreso_id', 'se.id')
+                    ->join('detalle_facturas as df', 'df.id', 'de.detallefactura_id')
+                    ->join('facturas as f', 'f.id', 'df.factura_id')
+
+                    ->where('se.deleted_at', null)
+                    ->where('de.deleted_at', null)
+                    ->where('df.deleted_at', null)//opcional
+                    ->where('f.deleted_at', null)
+                    ->where('f.solicitudcompra_id', $id)
+                    // ->select('se.id', 'se.nropedido', 'se.fechasolicitud', 'se.fechaegreso')
+                    // ->orderBy('se.nropedido')->get();
+
+                    ->select('se.id', 'se.nropedido', 'se.fechasolicitud', 'se.fechaegreso')
+                    ->groupBy('se.id', 'se.nropedido', 'se.fechasolicitud', 'se.fechaegreso')
+                    ->orderBy('se.nropedido')->get();
+
+
+                    // return $detalle;
+
+        return view('almacenes.income.salida', compact('detalle'));
+    }
+
 
 
 

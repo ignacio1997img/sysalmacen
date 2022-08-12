@@ -68,6 +68,11 @@
                                                     @endif
                                                     <td style="text-align: right">
                                                         <div class="no-sort no-click bread-actions text-right">
+                                                            @if($data->condicion == 0)
+                                                                <a href="{{route('incomes-browse.salida',['income'=>$data->id])}}" title="Editar" class="btn btn-sm btn-dark">
+                                                                    <i class="fa-solid fa-clipboard-list"></i> <span class="hidden-xs hidden-sm">Salidas</span>
+                                                                </a>
+                                                            @endif
                                                             @if(auth()->user()->hasPermission('read_income'))
                                                                 <a href="{{route('income_view_stock',$data->id)}}" title="Ver" target="_blank" class="btn btn-sm btn-info view">
                                                                     <i class="voyager-basket"></i> <span class="hidden-xs hidden-sm">Stock</span>

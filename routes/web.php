@@ -49,8 +49,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('incomes/browse/view/{id?}', [IncomeController::class, 'view_ingreso'])->name('income_view');
     Route::get('incomes/browse/view/stock/{id?}', [IncomeController::class, 'view_ingreso_stock'])->name('income_view_stock');
     Route::delete('incomes/browse/delete', [IncomeController::class, 'destroy'])->name('income_delete');
-
     Route::post('incomes/update', [IncomeController::class, 'update'])->name('income_update');
+    Route::get('incomes/browse/{income?}/salida', [IncomeController::class, 'salida'])->name('incomes-browse.salida');
 
     // Route::get('incomes/browse/edit/{id?}', [IncomeController::class, 'edit'])->name('edit_income');
 
