@@ -14,4 +14,9 @@ class Factura extends Model
                             'nroautorizacion', 'nrocontrol' ,'fechaingreso', 'gestion',
                             'condicion', 'deleteuser_id'
                         ];
+
+    public function solicitud()
+    {
+        return $this->belongsTo(SolicitudCompra::class, 'solicitudcompra_id');
+    }
 }

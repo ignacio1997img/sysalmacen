@@ -15,6 +15,7 @@ use App\Http\Controllers\DonacionSolicitudController;
 
 
 use App\Http\Controllers\DonationStockController;
+use App\Http\Controllers\ReportAlmacenController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,8 +68,27 @@ Route::group(['prefix' => 'admin'], function () {
     // Route::get('egres/view/{id?}', [EgressController::class, 'view_egreso'])->name('egreso_view_entregado');// en mantenimiento sin funcionamiento 
 
 
+    // reporte
+
+    Route::get('print/almacen-inventarioAnual-da', [ReportAlmacenController::class, 'directionIncomeSalida'])->name('almacen-inventarioAnual-da.report');
+    Route::post('print/almacen-inventarioAnual-da/list', [ReportAlmacenController::class, 'directionIncomeSalidaList'])->name('almacen-direction-income-egress.list');
+
+    Route::get('print/almacen-inventarioAnual-partida', [ReportAlmacenController::class, 'inventarioPartida'])->name('almacen-inventarioAnual-partida.report');
+    // Route::post('print/almacen-direccion-income-egress/list', [ReportAlmacenController::class, 'directionIncomeSalidaList'])->name('almacen-direction-income-egress.list');
 
 
+    Route::get('print/almacen-article-inventory', [ReportAlmacenController::class, 'articleInventory'])->name('almacen-article-inventory.report');
+    Route::post('print/almacen-article-inventory/list', [ReportAlmacenController::class, 'articleInventoryList'])->name('almacen-article-inventory.list');
+
+    Route::get('print/almacen-article-stock', [ReportAlmacenController::class, 'articleStock'])->name('almacen-article-stock.report');
+    Route::post('print/almacen-article-stock/list', [ReportAlmacenController::class, 'articleStockList'])->name('almacen-article-stock.list');
+
+    Route::get('print/almacen-article-egresado', [ReportAlmacenController::class, 'articleEgresado'])->name('almacen-article-egresado.report');
+    Route::post('print/almacen-article-egresado/list', [ReportAlmacenController::class, 'articleEgresadoList'])->name('almacen-article-egresado.list');
+
+
+    Route::get('print/almacen-article-unidades', [ReportAlmacenController::class, 'articleUnidades'])->name('almacen-article-unidades.report');
+    Route::post('print/almacen-article-unidades/list', [ReportAlmacenController::class, 'articleUnidadesList'])->name('almacen-article-unidades.list');
 
 
 

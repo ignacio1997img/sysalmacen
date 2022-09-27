@@ -132,7 +132,7 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
 
 <script>
 
-
+    
     @if(Session::has('alerts'))
         let alerts = {!! json_encode(Session::get('alerts')) !!};
         helpers.displayAlerts(alerts, toastr);
@@ -159,7 +159,7 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
 
         $(function() {
 
-
+            $(".select2").select2({theme: "classic"});
 
 
 

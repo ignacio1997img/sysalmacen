@@ -3,6 +3,11 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+// use TCG\Voyager\Voyager;
+use TCG\Voyager\Facades\Voyager;
+use Illuminate\Pagination\Paginator;
+
+use App\FormFields\DireccionAdministrativaFormField;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +18,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        Voyager::addFormField(DireccionAdministrativaFormField::class);
     }
 
     /**

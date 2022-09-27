@@ -438,8 +438,8 @@ class IncomeController extends Controller
     public function salida($id)
     {
         // return $id;
-        $factura = Factura::where('solicitudcompra_id', $id)->first();
-        $detalle = DetalleFactura::where('factura_id', $factura->id)->where('deleted_at', null)->get();
+        // $factura = Factura::where('solicitudcompra_id', $id)->first();
+        // $detalle = DetalleFactura::where('factura_id', $factura->id)->where('deleted_at', null)->get();
 
         $detalle = DB::table('solicitud_egresos as se')
                     ->join('detalle_egresos as de', 'de.solicitudegreso_id', 'se.id')

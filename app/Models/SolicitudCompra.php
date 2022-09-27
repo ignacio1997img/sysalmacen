@@ -13,4 +13,12 @@ class SolicitudCompra extends Model
                             'nrosolicitud', 'fechaingreso', 'gestion', 'condicion', 'deleteuser_id','stock'
                             ];
                             
+    public function direccion()
+    {
+        return $this->belongsTo(Direction::class, 'direccionadministrativa');
+    }
+    public function factura()
+    {
+        return $this->hasMany(Factura::class);
+    }
 }

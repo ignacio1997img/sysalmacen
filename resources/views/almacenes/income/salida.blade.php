@@ -94,8 +94,6 @@
                                     <main class="main">   
                                         <div class="card-body">
                                             <h5 id="subtitle">Egresos</h5>
-                                            
-                                           
                                         
                                             <table id="detalles" class="table table-bordered table-striped table-sm">
                                                 <thead>
