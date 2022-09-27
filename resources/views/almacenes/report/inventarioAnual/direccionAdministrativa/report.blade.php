@@ -1,7 +1,7 @@
 @extends('voyager::master')
 
 @section('page_title', 'Reporte de stock disponible')
-{{-- @if(auth()->user()->hasPermission('browse_report_list-document')) --}}
+@if(auth()->user()->hasRole('browse_report_list-document'))
 
 @section('page_header')
 
@@ -257,8 +257,8 @@
         }
     </script>
 @stop
-{{-- @else
+@else
     @section('content')
         @include('errors.403')
     @stop
-@endif --}}
+@endif
