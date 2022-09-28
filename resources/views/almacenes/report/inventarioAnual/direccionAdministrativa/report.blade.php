@@ -1,7 +1,7 @@
 @extends('voyager::master')
 
 @section('page_title', 'Reporte de stock disponible')
-@if(auth()->user()->hasRole('browse_report_list-document'))
+@if(auth()->user()->hasRole('admin'))
 
 @section('page_header')
 
