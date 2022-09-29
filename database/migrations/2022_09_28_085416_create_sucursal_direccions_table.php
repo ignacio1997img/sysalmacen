@@ -13,7 +13,7 @@ class CreateSucursalDirecionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('sucursal_direcions', function (Blueprint $table) {
+        Schema::create('sucursal_direccions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('sucursal_id')->nullable()->constrained('sucursals');
             $table->integer('direccionAdministrativa_id')->nullable();

@@ -16,4 +16,9 @@ class Sucursal extends Model
     {
         return $this->hasMany(sucursalUser::class);
     }
+
+    public function sucursalDirecion()
+    {
+        return $this->hasMany(SucursalDireccion::class);
+    }
 }

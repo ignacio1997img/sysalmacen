@@ -12,10 +12,12 @@ use App\Http\Controllers\IncomeDonorController;
 use App\Http\Controllers\EgressDonorController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DonacionSolicitudController;
+use App\Http\Controllers\SucursalController;
 
 
 use App\Http\Controllers\DonationStockController;
 use App\Http\Controllers\ReportAlmacenController;
+use App\Models\Sucursal;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +68,14 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('egres/update', [EgressController::class, 'update'])->name('egres_update');
     Route::post('egres/delete', [EgressController::class, 'destroy'])->name('egres_delete');
     // Route::get('egres/view/{id?}', [EgressController::class, 'view_egreso'])->name('egreso_view_entregado');// en mantenimiento sin funcionamiento 
+
+    Route::get('sucursals', [SucursalController::class, 'index'])->name('voyager.sucursals.index');
+    Route::get('sucursals/{sucursal?}/da/index', [SucursalController::class, 'indexDireccion'])->name('sucursal-da.index');
+    Route::post('sucursals/da/store', [SucursalController::class, 'storeDireccion'])->name('sucursal-da.store');
+    Route::delete('sucursals/da/delete', [SucursalController::class, 'destroyDireccion'])->name('sucursal-da.destroy');
+    Route::post('sucursals/da/habilitar', [SucursalController::class, 'habilitarDireccion'])->name('sucursal-da.habilitar');
+    Route::post('sucursals/da/inhabilitar', [SucursalController::class, 'inhabilitarDireccion'])->name('sucursal-da.inhabilitar');
+    
 
 
     // reporte

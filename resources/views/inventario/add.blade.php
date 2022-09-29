@@ -82,7 +82,54 @@
                 </div>
             </div>
         </div>
-    </div>          
+    </div> 
+    
+    <div class="modal fade modal-success" role="dialog" id="modal-create">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">                
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><i class="voyager-plus"></i>Registrar</h4>
+                </div>
+                {!! Form::open(['route' => 'people-perfil-experience.store','class' => 'was-validated'])!!}
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><b>Tipo de Trabajo:</b></span>
+                                </div>
+                                <select name="rubro_id" id="rubro_id" class="form-control select2" required>
+                                    <option value="">Seleccione un tipo..</option>
+                                    @foreach($rubro as $item)
+                                        @if ($item->id != 4 && auth()->user()->hasRole('trabajador'))
+                                            <option value="{{$item->id}}">{{$item->name}}</option>
+                                        @endif
+                                        
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-12" id="div_model">
+                            </div>
+                        </div>     
+
+                    </div>
+                    
+                    <!-- Modal footer -->
+                    <div class="modal-footer justify-content-between">
+                        <button type="button text-left" class="btn btn-danger" data-dismiss="modal" data-toggle="tooltip" title="Volver">Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-success btn-sm" title="Registrar..">
+                            Registrar
+                        </button>
+                    </div>
+                {!! Form::close()!!} 
+                
+            </div>
+        </div>
+    </div>
 @stop
 
 
