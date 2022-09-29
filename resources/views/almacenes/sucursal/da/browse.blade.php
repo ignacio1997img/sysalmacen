@@ -78,6 +78,10 @@
                     </div>
                 </div>
             </div>
+            {{-- @php
+    $data = \App\Models\SucursalUser::where('user_id',Auth::user()->id)->where('condicion',1)->first();
+    dd($data->sucursal_id);
+@endphp --}}
             <div class="modal fade modal-success" role="dialog" id="modal-create">
                 <div class="modal-dialog modal-md">
                     <div class="modal-content">                

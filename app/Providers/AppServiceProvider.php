@@ -8,6 +8,7 @@ use TCG\Voyager\Facades\Voyager;
 use Illuminate\Pagination\Paginator;
 
 use App\FormFields\DireccionAdministrativaFormField;
+use App\FormFields\SucursalFormField;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         Voyager::addFormField(DireccionAdministrativaFormField::class);
+        Voyager::addFormField(SucursalFormField::class);
     }
 
     /**

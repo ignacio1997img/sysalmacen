@@ -13,10 +13,12 @@ use App\Http\Controllers\EgressDonorController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DonacionSolicitudController;
 use App\Http\Controllers\SucursalController;
+use App\Http\Controllers\ProviderController;
 
 
 use App\Http\Controllers\DonationStockController;
 use App\Http\Controllers\ReportAlmacenController;
+use App\Models\Provider;
 use App\Models\Sucursal;
 
 /*
@@ -75,6 +77,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::delete('sucursals/da/delete', [SucursalController::class, 'destroyDireccion'])->name('sucursal-da.destroy');
     Route::post('sucursals/da/habilitar', [SucursalController::class, 'habilitarDireccion'])->name('sucursal-da.habilitar');
     Route::post('sucursals/da/inhabilitar', [SucursalController::class, 'inhabilitarDireccion'])->name('sucursal-da.inhabilitar');
+
+    Route::get('providers', [ProviderController::class, 'index'])->name('voyager.providers.index');
     
 
 

@@ -23,7 +23,9 @@ class CreateProvidersTable extends Migration
             $table->string('fax', 512)->nullable();
             $table->string('comentario', 512)->nullable();
             $table->boolean('condicion')->default(1);
+            $table->foreignId('sucursal_id')->nullable()->constrained('sucursals');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
