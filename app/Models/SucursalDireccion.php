@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class SucursalDireccion extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'sucursal_id', 'direccionAdministrativa_id', 'status', 'deleted_at'
     ];

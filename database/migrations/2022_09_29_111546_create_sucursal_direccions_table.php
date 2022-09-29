@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSucursalDirecionsTable extends Migration
+class CreateSucursalDireccionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -30,6 +30,6 @@ class CreateSucursalDirecionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sucursal_direcions');
+        Schema::dropIfExists('sucursal_direccions');
     }
 }
