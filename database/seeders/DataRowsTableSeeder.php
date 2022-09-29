@@ -896,7 +896,7 @@ class DataRowsTableSeeder extends Seeder
                 'edit' => 1,
                 'add' => 1,
                 'delete' => 1,
-                'details' => '{"model":"App\\\\Models\\\\Partida","table":"partidas","type":"belongsTo","column":"partida_id","key":"id","label":"nombre","pivot_table":"administrative_directions","pivot":"0","taggable":"0"}',
+                'details' => '{"model":"App\\\\Models\\\\Partida","table":"partidas","type":"belongsTo","column":"partida_id","key":"id","label":"nombre","pivot_table":"archivos","pivot":"0","taggable":"0"}',
                 'order' => 9,
             ),
             55 => 
@@ -2098,6 +2098,38 @@ class DataRowsTableSeeder extends Seeder
                 'delete' => 1,
                 'details' => '{}',
                 'order' => 4,
+            ),
+            130 => 
+            array (
+                'id' => 223,
+                'data_type_id' => 14,
+                'field' => 'sucursal_id',
+                'type' => 'sucursal',
+                'display_name' => '',
+                'required' => 0,
+                'browse' => 0,
+                'read' => 0,
+                'edit' => 0,
+                'add' => 1,
+                'delete' => 0,
+                'details' => '{}',
+                'order' => 12,
+            ),
+            131 => 
+            array (
+                'id' => 224,
+                'data_type_id' => 16,
+                'field' => 'sucursal_id',
+                'type' => 'sucursal',
+                'display_name' => '',
+                'required' => 0,
+                'browse' => 0,
+                'read' => 0,
+                'edit' => 0,
+                'add' => 1,
+                'delete' => 0,
+                'details' => '{}',
+                'order' => 10,
             ),
         ));
         
