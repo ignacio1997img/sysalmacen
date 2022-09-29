@@ -159,7 +159,7 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
 
         $(function() {
 
-            // $(".select2").select2({theme: "classic"});
+            $(".select2").select2({theme: "classic"});
 
 
 
