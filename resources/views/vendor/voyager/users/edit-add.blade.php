@@ -126,7 +126,7 @@
                                 </div>                                
                             @endcan
 
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label for="direccionAdministrativa_id">Dirección Administrativa</label>
                                 <select name="direccionAdministrativa_id" class="form-control select2">
                                     <option value="">No definida</option>
@@ -134,7 +134,7 @@
                                         <option @if($dataTypeContent->direccionAdministrativa_id == $direccion->id) selected @endif value="{{ $direccion->id }}">{{ $direccion->nombre }}</option>
                                     @endforeach
                                 </select>
-                            </div>
+                            </div> --}}
                             @php
                             if (isset($dataTypeContent->locale)) {
                                 $selected_locale = $dataTypeContent->locale;

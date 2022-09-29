@@ -2,24 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use Illuminate\Http\Request;
-use App\Models\Provider;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\SucursalUser;
 
-class ProviderController extends Controller
+class ArticleController extends Controller
 {
     public function index()
     {
-        // $user = Auth::user();
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->first();
       
         $query_filter = 'sucursal_id = '.$sucursal->sucursal_id;
         if (Auth::user()->hasRole('admin')) {
             $query_filter = 1;
         }
-        // $category = Category::where('deleted_at', null)->where('status', 1)->whereRaw($query_filtro)->get();
-        $provider = Provider::whereRaw($query_filter)->get();
-        return view('almacenes.provider.browse', compact('provider'));
+
+        $article = Article::whereRaw($query_filter)->get();
+        // return $article;
+
+        return view('almacenes.article.browse', compact('article'));
     }
 }

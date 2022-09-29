@@ -20,6 +20,7 @@ class CreateArticlesTable extends Migration
             // $table->string('marca', 512);
             $table->string('presentacion', 512);
             $table->boolean('condicion')->default(1);
+            $table->foreignId('sucursal_id')->nullable()->constrained('sucursals');
             $table->timestamps();
             $table->softDeletes();      
         });

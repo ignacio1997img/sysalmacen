@@ -23,6 +23,6 @@ class Provider extends Model
 
     public function sucursal()
     {
-        return $this->belongsTo(Sucursal::class. 'sucursal_id');
+        return $this->belongsTo(Sucursal::class, 'sucursal_id');
     }
 }

@@ -1,17 +1,17 @@
 @extends('voyager::master')
 
-@section('page_title', 'Viendo Proveedores')
+@section('page_title', 'Viendo Ariculos')
 
-@if(auth()->user()->hasPermission('browse_providers'))
+@if(auth()->user()->hasPermission('browse_articles'))
     @section('page_header')
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-8">
                     <h1 id="subtitle" class="page-title">
-                        <i class="voyager-milestone"></i> Proveedores
+                        <i class="voyager-basket"></i> Artículos
                     </h1>
-                    @if(auth()->user()->hasPermission('add_providers') && !auth()->user()->hasRole('admin'))
-                        <a href="{{ route('voyager.providers.create') }}" class="btn btn-success btn-add-new">
+                    @if(auth()->user()->hasPermission('add_articles') && !auth()->user()->hasRole('admin'))
+                        <a href="{{ route('voyager.articles.create') }}" class="btn btn-success btn-add-new">
                             <i class="voyager-plus"></i> <span>Crear</span>
                         </a>
                     @endif
@@ -35,10 +35,9 @@
                                         <thead>
                                             <tr>
                                                 <th style="text-align: center">Nro&deg;</th>
-                                                <th style="text-align: center">Nit</th>
-                                                <th style="text-align: center">Razón Social</th>
-                                                <th style="text-align: center">Responsable</th>
-                                                {{-- <th style="text-align: center">direcion</th> --}}
+                                                <th style="text-align: center">Nombre</th>
+                                                <th style="text-align: center">Presentación</th>
+                                                <th style="text-align: center">Partida</th>
                                                 @if (auth()->user()->hasRole('admin'))
                                                     <th style="text-align: center">Sucursal</th>
                                                 @endif
@@ -47,12 +46,12 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($provider as $item)
+                                            @foreach ($article as $item)
                                                 <tr>
                                                     <td>{{$item->id}}</td>
-                                                    <td style="text-align: center">{{$item->nit}}</td>
-                                                    <td style="text-align: center">{{$item->razonsocial}}</td>
-                                                    <td style="text-align: center">{{$item->responsable}}</td>
+                                                    <td style="text-align: center">{{$item->nombre}}</td>
+                                                    <td style="text-align: center">{{$item->presentacion}}</td>
+                                                    <td style="text-align: center">{{$item->partida->nombre}}</td>
                                                     {{-- <td style="text-align: center">{{$item->direccion}}</td> --}}
                                                     @if (auth()->user()->hasRole('admin'))
                                                         <td style="text-align: center"><label class="label label-primary">{{$item->sucursal->nombre}}</label></td>                                                        
@@ -66,21 +65,16 @@
                                                     </td>
                                                     <td style="text-align: right">
                                                         <div class="no-sort no-click bread-actions text-right">
-                                                            @if(auth()->user()->hasPermission('read_providers'))
-                                                                <a href="{{route('voyager.providers.show',$item->id)}}" title="Ver" class="btn btn-sm btn-warning view">
+                                                            @if(auth()->user()->hasPermission('read_articles'))
+                                                                <a href="{{route('voyager.articles.show',$item->id)}}" title="Ver" class="btn btn-sm btn-warning view">
                                                                     <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
                                                                 </a>                                                          
                                                             @endif
-                                                            @if(auth()->user()->hasPermission('edit_providers'))
-                                                                <a href="{{route('voyager.providers.edit',$item->id)}}" title="Editar" class="btn btn-sm btn-primary view">
+                                                            @if(auth()->user()->hasPermission('edit_articles'))
+                                                                <a href="{{route('voyager.articles.edit',$item->id)}}" title="Editar" class="btn btn-sm btn-primary view">
                                                                     <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Editar</span>
                                                                 </a>                                                          
                                                             @endif
-                                                            {{-- @if(auth()->user()->hasPermission('edit_sucursals'))
-                                                                <a href="{{route('sucursal-da.index',['sucursal'=>$item->id])}}" title="Direcciones Administrativa" class="btn btn-sm btn-warning view">
-                                                                    <i class="fa-solid fa-file"></i> <span class="hidden-xs hidden-sm">DA</span>
-                                                                </a>                                                          
-                                                            @endif --}}
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -175,15 +169,15 @@
                 });
 
 
-                $('#myModalEliminar').on('show.bs.modal', function (event) {
-                    var button = $(event.relatedTarget) //captura valor del data-empresa=""
+                // $('#myModalEliminar').on('show.bs.modal', function (event) {
+                //     var button = $(event.relatedTarget) //captura valor del data-empresa=""
 
-                    var id = button.data('id')
+                //     var id = button.data('id')
 
-                    var modal = $(this)
-                    modal.find('.modal-body #id').val(id)
+                //     var modal = $(this)
+                //     modal.find('.modal-body #id').val(id)
                     
-                });
+                // });
 
             </script>
     @stop

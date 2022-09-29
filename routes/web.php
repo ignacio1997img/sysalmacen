@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\EgressController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\ProviderController;
 
 use App\Http\Controllers\DonationStockController;
 use App\Http\Controllers\ReportAlmacenController;
+use App\Models\Article;
 use App\Models\Provider;
 use App\Models\Sucursal;
 
@@ -79,6 +81,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('sucursals/da/inhabilitar', [SucursalController::class, 'inhabilitarDireccion'])->name('sucursal-da.inhabilitar');
 
     Route::get('providers', [ProviderController::class, 'index'])->name('voyager.providers.index');
+
+    Route::get('articles', [ArticleController::class, 'index'])->name('voyager.articles.index');
     
 
 
