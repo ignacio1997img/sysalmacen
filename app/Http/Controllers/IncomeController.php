@@ -101,7 +101,7 @@ class IncomeController extends Controller
     public function create()
     {
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
-        
+
         if(count($sucursal) > 1 && count($sucursal) < 1)
         {
             return "Contactese con el administrador";
@@ -281,18 +281,26 @@ class IncomeController extends Controller
     public function edit($id)
     {
 
-        // return
-        $da = $this->getDireccion();     
+        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
+
+        if(count($sucursal) > 1 && count($sucursal) < 1)
+        {
+            return "Contactese con el administrador";
+        }
+
+        // $da = $this->getDireccion();     
+        $da = $this->direccionSucursal($sucursal->first()->sucursal_id);
+
 
         $solicitud = SolicitudCompra::find($id);
 
 
-        $user = Auth::user();
-        $sucursales = Sucursal::join('sucursal_users as u','u.sucursal_id', 'sucursals.id')
-                    ->select('sucursals.id','sucursals.nombre','u.condicion')
-                    ->where('u.condicion',1)
-                    ->where('u.user_id', $user->id)
-                    ->get();
+        // $user = Auth::user();
+        // $sucursales = Sucursal::join('sucursal_users as u','u.sucursal_id', 'sucursals.id')
+        //             ->select('sucursals.id','sucursals.nombre','u.condicion')
+        //             ->where('u.condicion',1)
+        //             ->where('u.user_id', $user->id)
+        //             ->get();
 
 
         $sol = SolicitudCompra::find($id);
@@ -315,15 +323,13 @@ class IncomeController extends Controller
 
 
 
-        $proveedor = Provider::all();
+        // $proveedor = Provider::all();
+        $proveedor = Provider::where('condicion',1)->where('sucursal_id',$sucursal->first()->sucursal_id)->get();
         $partida = Partida::all();
 
         $modalidad = Modality::all();
-        // return $da;
 
-
-
-        return view('almacenes.income.edit', compact('da', 'solicitud',       'sucursales', 'detalle', 'partida', 'proveedor', 'sol', 'factura', 'proveedorselect','modalidad'));
+        return view('almacenes.income.edit', compact('da', 'solicitud', 'sucursal', 'detalle', 'partida', 'proveedor', 'sol', 'factura', 'proveedorselect','modalidad'));
 
     }
 
