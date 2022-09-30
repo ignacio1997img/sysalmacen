@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class UpdateDetalleFacturaTable extends Migration
+class UpdateDetalleEgresoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class UpdateDetalleFacturaTable extends Migration
      */
     public function up()
     {
-        Schema::table('detalle_facturas', function (Blueprint $table) {
+        Schema::table('detalle_egresos', function (Blueprint $table) {
             $table->foreignId('sucursal_id')->nullable()->constrained('sucursals');
-            
         });
     }
 

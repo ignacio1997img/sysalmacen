@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use App\Models\DonacionArticulo;
+use App\Models\SucursalUser;
 
 class EgressController extends Controller
 {
@@ -78,7 +79,12 @@ class EgressController extends Controller
         //     $pendiente[$i]->unidad = $unidad[0]->Nombre;
         //     $i++;
         // }
-
+        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
+        
+        if(count($sucursal) > 1 && count($sucursal) < 1)
+        {
+            return "Contactese con el administrador";
+        }
         
         if(Auth::user()->hasRole('admin'))
         {
@@ -221,16 +227,25 @@ class EgressController extends Controller
 
     public function create()
     {
-        $user = Auth::user();
-        $sucursales = Sucursal::join('sucursal_users as u','u.sucursal_id', 'sucursals.id')
-                    ->select('sucursals.id','sucursals.nombre','u.condicion')
-                    ->where('u.condicion',1)
-                    ->where('u.user_id', $user->id)
-                    ->get();
 
-        $da = $this->getdireccion(); 
+        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
+        
+        if(count($sucursal) > 1 && count($sucursal) < 1)
+        {
+            return "Contactese con el administrador";
+        }
 
-        return view('almacenes.egress.add', compact('sucursales', 'da'));
+        // $user = Auth::user();
+        // $sucursales = Sucursal::join('sucursal_users as u','u.sucursal_id', 'sucursals.id')
+        //             ->select('sucursals.id','sucursals.nombre','u.condicion')
+        //             ->where('u.condicion',1)
+        //             ->where('u.user_id', $user->id)
+        //             ->get();
+
+        // $da = $this->getdireccion(); 
+        $da = $this->direccionSucursal($sucursal->first()->sucursal_id);
+
+        return view('almacenes.egress.add', compact('sucursal', 'da'));
     }//anulado 
 
  

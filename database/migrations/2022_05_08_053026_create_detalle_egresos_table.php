@@ -24,6 +24,7 @@ class CreateDetalleEgresosTable extends Migration
             $table->decimal('totalbs', 11, 2);
             $table->string('gestion', 10)->nullable();
             $table->smallInteger('condicion')->default(1);
+            $table->foreignId('sucursal_id')->nullable()->constrained('sucursals');
             $table->timestamps();
             $table->foreignId('deleteuser_id')->nullable()->constrained('users');
             $table->softDeletes();

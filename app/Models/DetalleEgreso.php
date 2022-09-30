@@ -20,6 +20,7 @@ class DetalleEgreso extends Model
         'gestion',
         'condicion',
         'deleteuser_id',
+        'sucursal_id'
     ];
     
 }

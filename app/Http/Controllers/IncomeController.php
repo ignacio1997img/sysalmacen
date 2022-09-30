@@ -102,7 +102,7 @@ class IncomeController extends Controller
     {
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
         
-        if(count($sucursal)>1)
+        if(count($sucursal) > 1 && count($sucursal) < 1)
         {
             return "Contactese con el administrador";
         }
