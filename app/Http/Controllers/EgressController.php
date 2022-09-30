@@ -280,7 +280,8 @@ class EgressController extends Controller
                             'cantsolicitada'        => $request->cantidad[$cont],
                             'precio'                => $request->precio[$cont],
                             'totalbs'               => $request->cantidad[$cont]*$request->precio[$cont],
-                            'gestion'               => $gestion
+                            'gestion'               => $gestion,
+                            'sucursal_id'           => $request->sucursal_id
                     ]);
 
 
