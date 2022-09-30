@@ -64,7 +64,7 @@
                                                         @endif
                                                     </td>
                                                     @if(auth()->user()->hasRole(['admin']))
-                                                        <td style="text-align: center">{{$data->sucursal}}</td>
+                                                        <td style="text-align: center"><label class="label label-dark">{{$data->sucursal}}</label></td>
                                                     @endif
                                                     <td style="text-align: right">
                                                         <div class="no-sort no-click bread-actions text-right">

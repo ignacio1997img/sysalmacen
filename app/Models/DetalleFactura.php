@@ -11,6 +11,6 @@ class DetalleFactura extends Model
     protected $fillable = [
         'factura_id','registeruser_id', 'article_id', 'cantsolicitada', 'precio', 'totalbs',
         'cantrestante', 'fechaingreso', 'gestion','histcantsolicitada', 'histprecio', 'histtotalbs',
-        'histcantrestante', 'histfechaingreso', 'histgestion', 'hist', 'condicion', 'deleteuser_id'
+        'histcantrestante', 'histfechaingreso', 'histgestion', 'hist', 'condicion', 'deleteuser_id', 'sucursal_id'
       ];
 }

@@ -52,22 +52,25 @@
                                                             <td>{{date('d/m/Y', strtotime($item->fechasolicitud))}}</td>
                                                             <td>{{date('d/m/Y', strtotime($item->fechaegreso))}}</td>
                                                             <td style="text-align: center">{{$item->direccion}} <br><small>{{$item->unidad}}</small></td>
+
                                                             <td style="text-align: center">
-                                                                @if(auth()->user()->hasPermission('read_egres'))
-                                                                    <a href="{{route('egres.show',$item->id)}}" target="_blank" title="Ver" class="btn btn-sm btn-warning view">
-                                                                        <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
-                                                                    </a>
-                                                                @endif
-                                                                @if(auth()->user()->hasPermission('edit_egres'))
-                                                                    <a href="{{route('egres.edit',$item->id)}}" title="Editar" class="btn btn-sm btn-info view">
-                                                                        <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Editar</span>
-                                                                    </a>
-                                                                @endif
-                                                                @if(auth()->user()->hasPermission('delete_egres') && !auth()->user()->hasRole('admin'))
-                                                                    <a data-toggle="modal" data-id="{{$item->id}}" data-target="#myModalEliminar" title="Eliminar" class="btn btn-sm btn-danger view">
-                                                                        <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Eliminar</span>
-                                                                    </a>
-                                                                @endif
+                                                                <div class="no-sort no-click bread-actions text-right">
+                                                                    @if(auth()->user()->hasPermission('read_egres'))
+                                                                        <a href="{{route('egres.show',$item->id)}}" target="_blank" title="Ver" class="btn btn-sm btn-warning view">
+                                                                            <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
+                                                                        </a>
+                                                                    @endif
+                                                                    @if(auth()->user()->hasPermission('edit_egres'))
+                                                                        <a href="{{route('egres.edit',$item->id)}}" title="Editar" class="btn btn-sm btn-info view">
+                                                                            <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Editar</span>
+                                                                        </a>
+                                                                    @endif
+                                                                    @if(auth()->user()->hasPermission('delete_egres') && !auth()->user()->hasRole('admin'))
+                                                                        <a data-toggle="modal" data-id="{{$item->id}}" data-target="#myModalEliminar" title="Eliminar" class="btn btn-sm btn-danger view">
+                                                                            <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Eliminar</span>
+                                                                        </a>
+                                                                    @endif
+                                                                </div>
                                                             </td>
                                                             
                                                         </tr>

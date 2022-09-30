@@ -19,6 +19,7 @@ class CreateSucursalUsersTable extends Migration
             $table->foreignId('sucursal_id')->constrained('sucursals');
             $table->boolean('condicion')->default(1); 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

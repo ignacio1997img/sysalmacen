@@ -30,6 +30,7 @@ class CreateFacturasTable extends Migration
             $table->date('fechaingreso');
             $table->string('gestion', 10);
             $table->boolean('condicion')->default(1); 
+            $table->foreignId('sucursal_id')->nullable()->constrained('sucursals');
             $table->timestamps();
 
 

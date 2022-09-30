@@ -18,6 +18,7 @@ use DateTime;
 use Doctrine\DBAL\Exception\RetryableException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\SucursalUser;
 
 
 
@@ -46,7 +47,12 @@ class IncomeController extends Controller
         
 
 
-
+        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
+        
+        if(count($sucursal) > 1 && count($sucursal) < 1)
+        {
+            return "Contactese con el administrador";
+        }
 
 
         $user =Auth::user();
@@ -81,7 +87,7 @@ class IncomeController extends Controller
                 ->join('providers as pro', 'pro.id', 'f.provider_id')
                 ->select('sol.id', 'sol.stock', 'm.nombre as modalidad', 'sol.nrosolicitud' , 'pro.razonsocial', 'pro.nit', 'f.nrofactura', 'f.fechafactura', 'f.montofactura', 'sol.created_at', 'sol.condicion')
                 ->where('sol.deleted_at', null)
-                ->where('sol.sucursal_id', $activo->id)
+                ->where('sol.sucursal_id', $sucursal->first()->sucursal_id)
                 ->orderBy('sol.id', 'DESC')
                 ->get();
         }
@@ -94,24 +100,22 @@ class IncomeController extends Controller
 
     public function create()
     {
-        $user = Auth::user();
-        $sucursales = Sucursal::join('sucursal_users as u','u.sucursal_id', 'sucursals.id')
-                    ->select('sucursals.id','sucursals.nombre','u.condicion')
-                    ->where('u.condicion',1)
-                    ->where('u.user_id', $user->id)
-                    ->get();
-        // $da = AdministrativeDirection::all();
-        // return $this->getIdDireccionInfo(); 
+        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
+        
+        if(count($sucursal)>1)
+        {
+            return "Contactese con el administrador";
+        }
 
-        $da = $this->getDireccion(); 
+        $da = $this->direccionSucursal($sucursal->first()->sucursal_id);
 
-        $proveedor = Provider::all();
+        $proveedor = Provider::where('condicion',1)->where('sucursal_id',$sucursal->first()->sucursal_id)->get();
         // $partida = Partida::where('codigo','like','3%')->get();
         $partida = Partida::all();
         $modalidad = Modality::all();
         // return $partida;
 
-        return view('almacenes.income.add', compact('sucursales', 'da', 'proveedor', 'partida', 'modalidad'));
+        return view('almacenes.income.add', compact('sucursal', 'da', 'proveedor', 'partida', 'modalidad'));
 
     }
 
@@ -193,7 +197,6 @@ class IncomeController extends Controller
 
             if(floatval($request->total) === floatval($request->montofactura))
             {
-                // return floatval($request->total);
                 $unidad = DB::connection('mamore')->table('unidades')
                         ->select('sigla')
                         ->where('id',$request->unidadadministrativa)
@@ -213,8 +216,6 @@ class IncomeController extends Controller
 
 
                 $request->merge(['nrosolicitud' => strtoupper($unidad[0]->sigla).'-'.sprintf($format, count($aux)+1)]);
-
-                // return $request;
             
                 $gestion = Carbon::parse($request->fechaingreso)->format('Y');
 
@@ -241,7 +242,8 @@ class IncomeController extends Controller
                         'nroautorizacion'       => $request->nroautorizacion,
                         'nrocontrol'            => $request->nrocontrol,
                         'fechaingreso'          => $request->fechaingreso, 
-                        'gestion'               => $gestion
+                        'gestion'               => $gestion,
+                        'sucursal_id'       => $request->branchoffice_id
                 ]);
                 
                 $cont = 0;
@@ -257,11 +259,11 @@ class IncomeController extends Controller
                         'totalbs'               => $request->cantidad[$cont]*$request->precio[$cont],
                         'cantrestante'          => $request->cantidad[$cont],
                         'fechaingreso'          => $request->fechaingreso,
-                        'gestion'               => $gestion
+                        'gestion'               => $gestion,
+                        'sucursal_id'       => $request->branchoffice_id
                     ]);
                     $cont++;
                 }
-                // return $request;
                 DB::commit();
                 return redirect()->route('income.index')->with(['message' => 'Registrado exitosamente.', 'alert-type' => 'success']);
             }
@@ -270,14 +272,9 @@ class IncomeController extends Controller
                 return redirect()->route('income.index')->with(['message' => 'El monto de la factura no coincide con el total de la solicitud.', 'alert-type' => 'error']);
             }
         } catch (\Throwable $th) {
-            
             DB::rollback();
-            // return 1;
-            return redirect()->route('income.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
-            
+            return redirect()->route('income.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);            
         }
-        // return redirect()->route('income.index');
-        // return redirect('admin/income');
     }
 
  
@@ -527,7 +524,8 @@ class IncomeController extends Controller
     // }
     protected function ajax_article($id)
     {
-        return Article::where('partida_id', $id)->get();
+        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
+        return Article::where('partida_id', $id)->where('sucursal_id', $sucursal->sucursal_id)->get();
     }
     protected function ajax_presentacion($id)
     {

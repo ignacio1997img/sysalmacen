@@ -105,8 +105,8 @@
                                                         <div class="form-line">
                                                             <select name="branchoffice_id" class="form-control select2" required>
                                                                 <!-- <option value="">Seleccione una sucursal</option> -->
-                                                                @foreach ($sucursales as $sucursal)
-                                                                    <option value="{{$sucursal->id}}" selected>{{$sucursal->nombre}}</option>
+                                                                @foreach ($sucursal as $item)
+                                                                    <option value="{{$item->sucursal->id}}" selected>{{$item->sucursal->nombre}}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
@@ -117,7 +117,7 @@
                                                     <div class="form-group">
                                                         <div class="form-line">
                                                             <select id="das" name="direccionadministrativa" class="form-control select2" required>
-                                                                <option value="">Seleccione una Direccion Administrativa</option>
+                                                                <option value="" selected disabled>Seleccione una Direccion Administrativa</option>
                                                                 @foreach ($da as $data)
                                                                     <option value="{{$data->id}}">{{$data->nombre}}</option>
                                                                 @endforeach

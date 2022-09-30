@@ -23,4 +23,17 @@ class Controller extends BaseController
             return 'ERROR';
         }
     }
+
+    public function direccionSucursal($id)
+    {
+        return DB::connection('mamore')->table('direcciones as d')
+            ->join('sysalmacen.sucursal_direccions as sd', 'sd.direccionAdministrativa_id', 'd.id')
+            ->where('sd.sucursal_id', $id)
+            ->where('sd.status', 1)
+            ->where('sd.deleted_at', null)
+            ->select('d.id', 'd.nombre', 'd.sigla')
+            ->orderBy('d.nombre','asc')
+            ->get();
+
+    }
 }

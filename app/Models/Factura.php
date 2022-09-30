@@ -12,7 +12,7 @@ class Factura extends Model
     protected $fillable = ['solicitudcompra_id', 'provider_id', 'registeruser_id',
                             'tipofactura', 'fechafactura', 'montofactura', 'nrofactura',
                             'nroautorizacion', 'nrocontrol' ,'fechaingreso', 'gestion',
-                            'condicion', 'deleteuser_id'
+                            'condicion', 'deleteuser_id', 'sucursal_id'
                         ];
 
     public function solicitud()

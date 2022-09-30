@@ -9,7 +9,7 @@ class SucursalUser extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'sucursal_id', 'condicion'];
+    protected $fillable = ['user_id', 'sucursal_id', 'condicion', 'deleted_at'];
 
     public function sucursal()
     {

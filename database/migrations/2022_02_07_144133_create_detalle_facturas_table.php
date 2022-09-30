@@ -37,6 +37,7 @@ class CreateDetalleFacturasTable extends Migration
             $table->integer('hist')->default(0);
 
             $table->boolean('condicion')->default(1);  //si el articulo se encuentra vigente 
+            $table->foreignId('sucursal_id')->nullable()->constrained('sucursals');
             
             $table->timestamps();
             $table->foreignId('deleteuser_id')->nullable()->constrained('users');
