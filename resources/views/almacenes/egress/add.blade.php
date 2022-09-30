@@ -97,9 +97,9 @@
                                                 <div class="form-group">
                                                     <div class="form-line">
                                                         <select name="sucursal_id" class="form-control select2" required>
-                                                            <option value="">Seleccione una sucursal</option>
-                                                            @foreach ($sucursal as $sucursal)
-                                                                <option value="{{$sucursal->id}}">{{$sucursal->nombre}}</option>
+                                                            {{-- <option value="">Seleccione una sucursal</option> --}}
+                                                            @foreach ($sucursal as $item)
+                                                                <option value="{{$item->sucursal->id}}">{{$item->sucursal->nombre}}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -488,7 +488,7 @@
                 $.get('{{route('ajax_solicitud_compra')}}/'+id, function(data){
                     var html_modalidad=    '<option value="">Seleccionar Modalidad Compra..</option>'
                         for(var i=0; i<data.length; ++i)
-                        html_modalidad += '<option value="'+data[i].id+'">'+i+data[i].nombre+' - '+data[i].nrosolicitud+'</option>'
+                        html_modalidad += '<option value="'+data[i].id+'">'+data[i].nombre+' - '+data[i].nrosolicitud+'</option>'
 
                     $('#modalidad').html(html_modalidad);;            
                 });

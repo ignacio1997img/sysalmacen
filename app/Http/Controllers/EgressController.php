@@ -229,7 +229,7 @@ class EgressController extends Controller
     {
 
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
-        
+
         if(count($sucursal) > 1 && count($sucursal) < 1)
         {
             return "Contactese con el administrador";
@@ -333,14 +333,21 @@ class EgressController extends Controller
     {
         // return 1;
         
-        $user = Auth::user();
-        $sucursales = Sucursal::join('sucursal_users as u','u.sucursal_id', 'sucursals.id')
-                    ->select('sucursals.id','sucursals.nombre','u.condicion')
-                    ->where('u.condicion',1)
-                    ->where('u.user_id', $user->id)
-                    ->get();
+        // $user = Auth::user();
+        // $sucursales = Sucursal::join('sucursal_users as u','u.sucursal_id', 'sucursals.id')
+        //             ->select('sucursals.id','sucursals.nombre','u.condicion')
+        //             ->where('u.condicion',1)
+        //             ->where('u.user_id', $user->id)
+        //             ->get();
+        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
 
-        $da = $this->getdireccion();
+        if(count($sucursal) > 1 && count($sucursal) < 1)
+        {
+            return "Contactese con el administrador";
+        }
+
+        // $da = $this->getdireccion();
+        $da = $this->direccionSucursal($sucursal->first()->sucursal_id);
 
 
 
@@ -360,7 +367,7 @@ class EgressController extends Controller
                     ->select('de.id', 'de.detallefactura_id', 'de.cantsolicitada', 'de.precio', 'de.totalbs',
                     'de.gestion', 'de.condicion', 'm.nombre as modalidad', 'a.nombre as article', 'a.presentacion', 'cp.nrosolicitud')->get();
 
-        return view('almacenes.egress.edit', compact('solicitud', 'detail', 'da', 'sucursales'));
+        return view('almacenes.egress.edit', compact('solicitud', 'detail', 'da', 'sucursal'));
     }
 
     public function update(Request $request)
