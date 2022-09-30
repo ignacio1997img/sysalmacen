@@ -524,8 +524,8 @@ class IncomeController extends Controller
     // }
     protected function ajax_article($id)
     {
-        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
-        return Article::where('partida_id', $id)->where('sucursal_id', $sucursal->sucursal_id)->get();
+        // $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
+        return Article::where('partida_id', $id)->where('condicion', 1)->get();
     }
     protected function ajax_presentacion($id)
     {
