@@ -13,6 +13,7 @@ class PermissionsTableSeeder extends Seeder
     public function run()
     {
         \DB::table('permissions')->delete();
+        
         Permission::firstOrCreate([
             'key'        => 'browse_admin',
             'table_name' => 'admin',
@@ -94,12 +95,31 @@ class PermissionsTableSeeder extends Seeder
         Permission::generateFor('sucursals');
 
 
-
-
-
-
         Permission::generateFor('income');
         Permission::generateFor('egres');
+
+
+        // Reports anual
+        // print/almacen-inventarioAnual-da
+        $keys = [
+            // reportes anuales
+            'browse_printalmacen-inventarioAnual-da',
+            'browse_printalmacen-inventarioAnual-partida',
+            'browse_printalmacen-inventarioAnual-detalle',
+
+            // articulos
+            'browse_printalmacen-article-stock',
+            // 'browse_reportshumans-resourcesprojectsdetails',
+            // 'browse_reportspaymentschedulesdetails-status',
+        ];
+
+        foreach ($keys as $key) {
+            Permission::firstOrCreate([
+                'key'        => $key,
+                'table_name' => 'reports_anual',
+            ]);
+        }
+
         // Permission::generateFor('bandeja');
         // Permission::generateFor('solicitud');
 

@@ -1,7 +1,7 @@
 @extends('voyager::master')
 
 @section('page_title', 'Reporte de stock disponible')
-@if(auth()->user()->hasRole('admin'))
+@if(auth()->user()->hasPermission('browse_printalmacen-inventarioAnual-da'))
 
 @section('page_header')
 
@@ -45,8 +45,7 @@
                                 <div class="form-group">
                                     <div class="form-line">
                                         <select name="sucursal_id" class="form-control select2" required>
-                                            <option value=""disabled selected>Seleccione un articulo..</option>
-                                            <option value="">Seleccione un articulo..</option>
+                                            <option value=""disabled selected>Seleccione una opcion..</option>
                                             @foreach ($sucursal as $item)
                                                 <option value="{{$item->sucursal->id}}">{{$item->sucursal->nombre}}</option>
                                             @endforeach                                             

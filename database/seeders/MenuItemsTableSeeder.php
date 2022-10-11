@@ -611,6 +611,38 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => 'almacen-inventarioAnual-da.report',
                 'parameters' => NULL,
             ),
+            37 => 
+            array (
+                'id' => 58,
+                'menu_id' => 1,
+                'title' => 'Inventario Detalle "Item"',
+                'url' => '',
+                'target' => '_self',
+                'icon_class' => 'fa-solid fa-print',
+                'color' => '#000000',
+                'parent_id' => 56,
+                'order' => 3,
+                'created_at' => '2022-10-10 09:29:01',
+                'updated_at' => '2022-10-10 09:29:20',
+                'route' => 'almacen-inventarioAnual-detalle.report',
+                'parameters' => NULL,
+            ),
+            38 => 
+            array (
+                'id' => 59,
+                'menu_id' => 1,
+                'title' => 'Artículo Stock',
+                'url' => '',
+                'target' => '_self',
+                'icon_class' => 'fa-solid fa-print',
+                'color' => '#000000',
+                'parent_id' => 56,
+                'order' => 4,
+                'created_at' => '2022-10-11 09:14:17',
+                'updated_at' => '2022-10-11 09:14:58',
+                'route' => 'almacen-article-stock.report',
+                'parameters' => 'null',
+            ),
         ));
         
         
