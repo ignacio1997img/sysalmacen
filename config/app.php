@@ -181,6 +181,9 @@ return [
 
         OwenIt\Auditing\AuditingServiceProvider::class,
 
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+        // Maatwebsite\Excel\ExcelServiceProvider::class,
+
     ],
 
     /*
@@ -236,7 +239,9 @@ return [
 
         'Toastr'  => Brian2694\Toastr\Facades\Toastr::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
+        // 'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];

@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Sucursal;
 use App\Models\SucursalUser;
 use App\Models\Direction;
+use Maatwebsite\Excel\Facades\Excel;
+
+use App\Exports\AnualPartidaExport;
+use App\Exports\AnualDetalleExport;
+use App\Exports\ArticleStockExport;
 
 class ReportAlmacenController extends Controller
 {
@@ -108,6 +113,9 @@ class ReportAlmacenController extends Controller
     {
         // dd($request);
         $gestion = $request->gestion;
+
+        $date = Carbon::now();
+        $sucursal = Sucursal::find($request->sucursal_id);
 
         if($gestion == '2022')
         {
@@ -238,17 +246,28 @@ class ReportAlmacenController extends Controller
         //         $item->salida="0.0";
         //     }
         // }
-        if($request->print){
+        if($request->print==1)
+        {
             return view('almacenes/report/inventarioAnual/partidaGeneral/print', compact('data', 'gestion'));
-        }else
+        }
+        if($request->print==2)
+        {
+            // dd(1);
+            return Excel::download(new AnualPartidaExport($data, $gestion), $sucursal->nombre.' - Partida Anual '.$gestion.'.xlsx');
+        }
+        // if($request->print==3)
+        // {
+        //     $pdf = Pdf::loadView('almacenes/report/inventarioAnual/partidaGeneral/pdf');
+        //     return $pdf->download('pdfs.pdf');
+        // }
+        if($request->print ==NULL)
         {            
             return view('almacenes/report/inventarioAnual/partidaGeneral/list', compact('data'));
         }
     }
-
     // ################################################################################
 
-    //para el inventario anual Detalldo por ITEM
+    //para el inventario anual Detallado por ITEM
     public function inventarioDetalle()
     {
 
@@ -274,8 +293,10 @@ class ReportAlmacenController extends Controller
 
     public function inventarioDetalleList(Request $request)
     {
-        // dd($request);
         $gestion = $request->gestion;
+
+        $date = Carbon::now();
+        $sucursal = Sucursal::find($request->sucursal_id);
 
         if($gestion == '2022')
         {
@@ -310,9 +331,15 @@ class ReportAlmacenController extends Controller
 
 
 
-        if($request->print){
+        if($request->print==1){
             return view('almacenes/report/inventarioAnual/detalleGeneral/print', compact('data', 'gestion'));
-        }else
+        }
+        if($request->print==2)
+        {
+            return Excel::download(new AnualDetalleExport($data, $gestion), $sucursal->nombre.' - Detalle Anual '.$gestion.'.xlsx');
+        }
+
+        if($request->print==NULL)
         {            
             return view('almacenes/report/inventarioAnual/detalleGeneral/list', compact('data'));
         }
@@ -344,6 +371,8 @@ class ReportAlmacenController extends Controller
 
     public function articleStockList(Request $request)
     {
+        $date = Carbon::now();
+        $sucursal = Sucursal::find($request->sucursal_id);
         // dd($request);
         // $start = $request->start;
         // $finish = $request->finish;
@@ -384,11 +413,16 @@ class ReportAlmacenController extends Controller
         //         ->select('*')
         //         ->get();
         // dd($data);
-        if($request->print){
-            return view('almacenes/report/article/stock/print', compact('data'));
-        }else
+        if($request->print==1){
+            return view('almacenes.report.article.stock.print', compact('data'));
+        }
+        if($request->print==2)
+        {
+            return Excel::download(new ArticleStockExport($data), $sucursal->nombre.'_'.$date.'.xlsx');
+        }
+        if($request->print==NULL)
         {            
-            return view('almacenes/report/article/stock/list', compact('data'));
+            return view('almacenes.report.article.stock.list', compact('data'));
         }
     }
 
