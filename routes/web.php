@@ -103,7 +103,10 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('print/almacen-article-stock', [ReportAlmacenController::class, 'articleStock'])->name('almacen-article-stock.report');
     Route::post('print/almacen/article/stock/list', [ReportAlmacenController::class, 'articleStockList'])->name('almacen-article-stock.list');
 
+    Route::get('print/almacen-article-list', [ReportAlmacenController::class, 'articleList'])->name('almacen-article-list.report');
+    Route::post('print/almacen/article/list/list', [ReportAlmacenController::class, 'articleListList'])->name('almacen-article-list.list');
 
+    // Proveedores
     Route::get('print/almacen-provider-list', [ReportAlmacenController::class, 'provider'])->name('almacen-provider-list.report');
     Route::post('print/almacen/provider/list/list', [ReportAlmacenController::class, 'providerList'])->name('almacen-provider-list.list');
 

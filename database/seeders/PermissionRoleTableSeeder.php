@@ -112,7 +112,9 @@ class PermissionRoleTableSeeder extends Seeder
                                             `key` = "browse_printalmacen-inventarioAnual-partida" or
                                             `key` = "browse_printalmacen-inventarioAnual-detalle" or
                                             
+                                            `key` = "browse_printalmacen-article-list" or
                                             `key` = "browse_printalmacen-article-stock" or
+                                            
                                             `key` = "bbrowse_printalmacen-provider-list" or
 
                                             `key` = "browse_clear-cache"')->get();

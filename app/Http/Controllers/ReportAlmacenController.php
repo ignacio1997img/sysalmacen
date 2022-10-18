@@ -21,6 +21,7 @@ use App\Exports\AnualPartidaExport;
 use App\Exports\AnualDetalleExport;
 use App\Exports\ArticleStockExport;
 use App\Exports\ProviderListExport;
+use App\Exports\ArticleListExport;
 
 class ReportAlmacenController extends Controller
 {
@@ -348,7 +349,9 @@ class ReportAlmacenController extends Controller
     }
 
 
-    //################################################################################3
+    // #######################################################################
+    // #######################################################################
+    // #######################################################################
     //para ver el stock de articulo disponible en el almacen
     public function articleStock()
     {
@@ -427,9 +430,57 @@ class ReportAlmacenController extends Controller
             return view('almacenes.report.article.stock.list', compact('data'));
         }
     }
+    // _________________________________________________
+    public function articleList()
+    {
+        $user = Auth::user();
+        $query_filter = 'user_id ='.Auth::user()->id;
+        
+        if(Auth::user()->hasRole('admin'))
+        {
+            $query_filter = 1;
+        }
 
+        $sucursal = SucursalUser::where('condicion', 1)
+                        ->where('deleted_at', null)
+                        ->whereRaw($query_filter)
+                        ->GroupBy('sucursal_id')
+                        ->get();
+                         
 
-    // #######################################################################3333
+        return view('almacenes.report.article.list.report', compact('sucursal'));
+    }
+
+    public function articleListList(Request $request)
+    {
+        $date = Carbon::now();
+        $sucursal = Sucursal::find($request->sucursal_id);
+
+        $data = DB::table('partidas as p')
+                    ->join('articles as a', 'a.partida_id', 'p.id')
+                    ->where('a.condicion', 1)
+                    ->where('a.deleted_at', null)
+                    ->select('p.nombre as partida', 'p.codigo', 'a.nombre', 'a.presentacion')
+                    ->orderBy('a.nombre', 'ASC')
+                    ->get();
+        // dd($data);
+
+        if($request->print==1){
+            return view('almacenes.report.article.list.print', compact('data', 'sucursal'));
+        }
+        if($request->print==2)
+        {
+            return Excel::download(new ArticleListExport($data), $sucursal->nombre.'_'.$date.'.xlsx');
+        }
+        if($request->print==NULL)
+        {            
+            return view('almacenes.report.article.list.list', compact('data'));
+        }
+    }
+
+    // #######################################################################
+    // #######################################################################
+    // #######################################################################
     // para los proveedores
     public function provider()
     {
