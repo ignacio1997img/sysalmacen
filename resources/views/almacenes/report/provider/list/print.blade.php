@@ -13,8 +13,8 @@
                 </h2>
                 <h3 style="margin-bottom: 0px; margin-top: 5px">
                     UNIDAD DE ALMACENES MATERIALES Y SUMINISTROS<br>
-                    [Lista de Proveedores - {{$sucursal->nombre}}]
-                    {{-- [{{date('d/m/Y', strtotime($start))}} Hasta {{date('d/m/Y', strtotime($finish))}}] --}}
+                    
+                    [Lista de Proveedores - {{$sucursal->nombre}} {{date('d/m/Y')}}]
                 </h3>
             </td>
             <td style="text-align: right; width:30%">
