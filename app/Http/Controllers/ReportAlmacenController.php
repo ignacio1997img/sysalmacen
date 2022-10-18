@@ -14,11 +14,13 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Sucursal;
 use App\Models\SucursalUser;
 use App\Models\Direction;
+use App\Models\Provider;
 use Maatwebsite\Excel\Facades\Excel;
 
 use App\Exports\AnualPartidaExport;
 use App\Exports\AnualDetalleExport;
 use App\Exports\ArticleStockExport;
+use App\Exports\ProviderListExport;
 
 class ReportAlmacenController extends Controller
 {
@@ -426,6 +428,50 @@ class ReportAlmacenController extends Controller
         }
     }
 
+
+    // #######################################################################3333
+    // para los proveedores
+    public function provider()
+    {
+        $user = Auth::user();
+        $query_filter = 'user_id ='.Auth::user()->id;
+        
+        if(Auth::user()->hasRole('admin'))
+        {
+            $query_filter = 1;
+        }
+
+        $sucursal = SucursalUser::where('condicion', 1)
+                        ->where('deleted_at', null)
+                        ->whereRaw($query_filter)
+                        ->GroupBy('sucursal_id')
+                        ->get();
+                        
+        $direction = $this->getDireccion();        
+
+        return view('almacenes.report.provider.list.report', compact('sucursal', 'direction'));
+    }
+
+    public function providerList(Request $request)
+    {
+        $date = Carbon::now();
+        $sucursal = Sucursal::find($request->sucursal_id);
+
+        $data = Provider::where('sucursal_id', $request->sucursal_id)->where('condicion', 1)->get();
+        // dd($request);
+ 
+        if($request->print==1){
+            return view('almacenes.report.provider.list.print', compact('data', 'sucursal'));
+        }
+        if($request->print==2)
+        {
+            return Excel::download(new ProviderListExport($data), $sucursal->nombre.'_Lista Proveedores '.$date.'xlsx');
+        }
+        if($request->print==NULL)
+        {            
+            return view('almacenes.report.provider.list.list', compact('data'));
+        }
+    }
 
 
 

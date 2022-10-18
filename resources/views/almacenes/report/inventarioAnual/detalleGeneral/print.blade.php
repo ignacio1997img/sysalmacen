@@ -33,7 +33,7 @@
     <table style="width: 100%; font-size: 12px" border="1" cellspacing="0" cellpadding="5">
         <thead>
             <tr>
-                <th rowspan="2" style="width:5px">NRO&deg;</th>
+                <th rowspan="2" style="width:5px">N&deg;</th>
                 <th rowspan="2" style="text-align: center">DESCRIPCION (ITEM)</th>
                 <th rowspan="2" style="text-align: center">U. DE MEDIDA</th>
                 <th rowspan="2" style="text-align: center">PRECIO UNITARIO</th>
@@ -68,9 +68,9 @@
 
             @endphp
             @forelse ($data as $item)
-                <tr style="text-align: center">
+                <tr>
                     <td>{{ $count }}</td>
-                    <td>{{ $item->id }} - {{ $item->nombre }}</td>
+                    <td style="text-align: left">{{ $item->id }} - {{ $item->nombre }}</td>
                     <td style="text-align: right">{{ $item->presentacion}}</td>
                     <td style="text-align: right">{{ $item->precio}}</td>
                     <td style="text-align: right">{{ number_format($item->cInicial,2)}}</td>

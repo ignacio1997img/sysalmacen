@@ -50,9 +50,9 @@
                         $total2 =0;
                     @endphp
                     @forelse ($data as $item)
-                        <tr style="text-align: center">
+                        <tr>
                             <td>{{ $count }}</td>
-                            <td>{{ $item->codigo }} - {{ $item->nombre }}</td>
+                            <td style="text-align: left">{{ $item->codigo }} - {{ $item->nombre }}</td>
                             <td style="text-align: right">{{ number_format($item->cantidadinicial,2)}}</td>
                             <td style="text-align: right">{{ number_format($item->totalinicial,2)}}</td>
                             <td style="text-align: right">{{ number_format($item->cantfinal,2)}}</td>

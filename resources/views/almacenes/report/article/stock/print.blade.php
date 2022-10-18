@@ -30,15 +30,15 @@
         <thead>
             <tr>
                 <th style="width:5%">NRO&deg;</th>
-                <th style="width:15%">F. INGRESO</th>
-                <th style="width:25%">ENTIDAD + NRO COMPRA</th>
-                <th style="width:25%">PROVEEDOR</th>
-                <th style="width:25%">NRO</th>
-                <th style="width:25%">ARTICULO</th>
-                <th style="width:25%">PRESENTACION</th>
-                <th style="width:25%">PRECIO</th>
-                <th style="width:25%">CANT.</th>
-                <th style="width:15%">SUBTOTAL</th>
+                <th>F. INGRESO</th>
+                <th>ENTIDAD + NRO COMPRA</th>
+                <th>PROVEEDOR</th>
+                <th>NRO</th>
+                <th>ARTICULO</th>
+                <th style="width:30px">PRESENTACION</th>
+                <th style="width:60px">PRECIO</th>
+                <th style="width:60px">CANT.</th>
+                <th style="width:60px">SUBTOTAL</th>
             </tr>
         </thead>
         <tbody>
@@ -48,14 +48,14 @@
                 $cant = 0;
             @endphp
             @forelse ($data as $item)
-                <tr style="text-align: center">
+                <tr>
                     <td>{{ $count }}</td>
                     <td>{{date('d/m/Y', strtotime($item->fechaingreso))}}</td>
-                    <td>{{ $item->modalidad }} <br>{{$item->nrosolicitud}} </td>
-                    <td>{{ $item->proveedor }}</td>
-                    <td>{{ $item->tipofactura=='Orden_Compra'? 'Orden de Compra':'Nro Factura'}}<br>{{$item->nrofactura}}</td>
-                    <td>{{ $item->articulo }}</td>
-                    <td>{{ $item->presentacion }}</td>
+                    <td style="text-align: left">{{ $item->modalidad }} <br>{{$item->nrosolicitud}} </td>
+                    <td style="text-align: left">{{ $item->proveedor }}</td>
+                    <td style="text-align: left">{{ $item->tipofactura=='Orden_Compra'? 'Orden de Compra':'Nro Factura'}}<br>{{$item->nrofactura}}</td>
+                    <td style="text-align: left">{{ $item->articulo }}</td>
+                    <td style="text-align: left">{{ $item->presentacion }}</td>
                     <td style="text-align: right">{{ number_format($item->precio,2) }}</td>
                     <td style="text-align: right">{{ number_format($item->cantrestante,2) }}</td>
                     <td style="text-align: right">{{ number_format($item->precio * $item->cantrestante,2) }}</td>                                                                                          

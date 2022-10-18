@@ -109,6 +109,8 @@ class PermissionsTableSeeder extends Seeder
 
             // articulos
             'browse_printalmacen-article-stock',
+            'browse_printalmacen-provider-list'
+            
             // 'browse_reportshumans-resourcesprojectsdetails',
             // 'browse_reportspaymentschedulesdetails-status',
         ];
