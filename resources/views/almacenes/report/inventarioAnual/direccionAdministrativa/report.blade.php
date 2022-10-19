@@ -55,7 +55,7 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="form-line">
-                                        <select name="direction_id" class="form-control select2" required>
+                                        <select name="gestion" class="form-control select2" required>
                                             <option value="2022" selected>2022</option>
                                             {{-- @foreach ($direction as $item)
                                                 <option value="{{$item->id}}">{{$item->nombre}}</option>

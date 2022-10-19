@@ -18,6 +18,7 @@ use App\Models\Provider;
 use Maatwebsite\Excel\Facades\Excel;
 
 use App\Exports\AnualPartidaExport;
+use App\Exports\AnualDaExport;
 use App\Exports\AnualDetalleExport;
 use App\Exports\ArticleStockExport;
 use App\Exports\ProviderListExport;
@@ -28,61 +29,169 @@ class ReportAlmacenController extends Controller
     //para los reportes mediantes direciones admistrativa Income y Egress en Bolivianos  saldo
     public function directionIncomeSalida()
     {
+
+//         select sum(cantsolicitada * precio), totalbs from detalle_facturas where deleted_at is null
+            // GROUP BY id, precio
+        $data = DB::table('detalle_facturas as d')
+        ->where('d.deleted_at', null)
+        ->select('d.id', DB::raw("SUM(d.cantsolicitada * d.precio) as ingreso"), 'd.totalbs')
+        ->groupBy('d.id')
+        // ->groupBy('d.precio')
+        ->get();
+        // return count($data);
+        // foreach($data as $item)
+        // {
+        //     if($item->ingreso != $item->totalbs)
+        //     {
+        //         DetalleFactura::where('id', $item->id)->update(['totalbs'=>$item->ingreso]);
+        //     }
+        // }
+
+        // dd($data);
+
+        // foreach($data as $item)
+        // {
+        //     if($item->ingreso != $item->totalbs && $item->id !=585)
+        //     {
+        //         dd($item->id);
+        //     }
+        // }
+
+
+//         SELECT f.id, f.montofactura, SUM(df.totalbs) FROM facturas as f inner join detalle_facturas as df on df.factura_id = f.id
+// where df.deleted_at is null
+// GROUP BY df.factura_id;
+
+            $datas = DB::table('facturas as f')
+                ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
+                ->where('f.deleted_at', null)
+                ->where('df.deleted_at', null)
+                ->select('f.id', 'f.montofactura', DB::raw("SUM(df.totalbs) as totalbs"))
+                ->groupBy('df.factura_id')
+                ->get();
+
+            foreach($datas as $item)
+            {
+                if($item->montofactura != $item->totalbs)
+                {
+                    Factura::where('id',$item->id)->update(['montofactura'=>$item->totalbs]);
+                }
+            }
+
+            
+
+
+
+
+
+
+
+
+
+
+
         $user = Auth::user();
-        $sucursal = SucursalUser::where('user_id', $user->id)->get();
+        $query_filter = 'user_id ='.Auth::user()->id;
+        
+        if(Auth::user()->hasRole('admin'))
+        {
+            $query_filter = 1;
+        }
+
+        $sucursal = SucursalUser::where('condicion', 1)
+                        ->where('deleted_at', null)
+                        ->whereRaw($query_filter)
+                        ->GroupBy('sucursal_id')
+                        ->get();
+        
         $direction = $this->getDireccion();        
 
         return view('almacenes/report/inventarioAnual/direccionAdministrativa/report', compact('sucursal', 'direction'));
     }
     public function directionIncomeSalidaList(Request $request)
     {
-        $start = $request->start;
-        $finish = $request->finish;
+        // dd($request);
+        $gestion = $request->gestion;
 
-        $data = DB::connection('mamore')->table('direcciones as d')
+        $date = Carbon::now();
+        $sucursal = Sucursal::find($request->sucursal_id);
+        if($request->gestion == '2022')
+        {
+            $data = DB::connection('mamore')->table('direcciones as d')
+                    ->join('sysalmacen.sucursal_direccions as s', 's.direccionAdministrativa_id', 'd.id')
                     ->leftJoin('sysalmacen.solicitud_compras as sc', 'sc.direccionadministrativa', 'd.id')
-                    ->leftJoin('sysalmacen.facturas as f', 'f.solicitudcompra_id', 'sc.id')
+                    ->leftJoin('sysalmacen.facturas as f', 'f.solicitudcompra_id', 'sc.id')       
+                    // ->leftJoin('sysalmacen.detalle_facturas as df', 'df.factura_id', 'f.id')             
                     ->where('sc.deleted_at', null)
-                    // ->where('d.direcciones_tipo_id', 1)
+                    ->where('f.deleted_at', null)
+                    // ->where('df.deleted_at', null)
+                    ->where('s.deleted_at', null)
+                    ->where('s.status', 1)
+                    ->where('s.sucursal_id', $request->sucursal_id)
+
                     ->select('d.id', 'd.nombre',DB::raw("SUM(f.montofactura) as ingreso"))
                     ->groupBy('d.id')
                     ->get();
 
-        $salida = DB::connection('mamore')->table('direcciones as d')
-                    ->leftJoin('unidades as u', 'u.direccion_id', 'd.id')
-                    ->leftJoin('sysalmacen.solicitud_egresos as se', 'se.unidadadministrativa', 'u.id')
-                    ->leftJoin('sysalmacen.detalle_egresos as de', 'de.solicitudegreso_id', 'se.id')
-                    ->where('se.deleted_at', null)
-                    ->where('de.deleted_at', null)
-                    // ->where('d.direcciones_tipo_id', 1)
-                    ->select('d.id', 'd.nombre',DB::raw("SUM(de.totalbs) as egreso"))
-                    ->groupBy('d.id')
-                    ->get();
-        
-        foreach($data as $item)
-        {
-            if(!$item->ingreso)
+
+            // $data = DB::connection('mamore')->table('direcciones as d')
+            //             ->leftJoin('sysalmacen.solicitud_compras as sc', 'sc.direccionadministrativa', 'd.id')
+            //             ->leftJoin('sysalmacen.facturas as f', 'f.solicitudcompra_id', 'sc.id')
+            //             ->where('sc.deleted_at', null)
+            //             // ->where('d.direcciones_tipo_id', 1)
+            //             ->select('d.id', 'd.nombre',DB::raw("SUM(f.montofactura) as ingreso"))
+            //             ->groupBy('d.id')
+            //             ->get();
+
+            $salida = DB::connection('mamore')->table('direcciones as d')
+                        ->leftJoin('unidades as u', 'u.direccion_id', 'd.id')
+                        ->leftJoin('sysalmacen.solicitud_egresos as se', 'se.unidadadministrativa', 'u.id')
+                        ->leftJoin('sysalmacen.detalle_egresos as de', 'de.solicitudegreso_id', 'se.id')
+                        ->where('se.deleted_at', null)
+                        ->where('de.deleted_at', null)
+                        // ->where('d.direcciones_tipo_id', 1)
+                        ->select('d.id',DB::raw("SUM(de.totalbs) as egreso"))
+                        // ->groupBy('u.id')
+                        ->groupBy('d.id')
+                        ->get();
+            // dd($salida);
+            
+            foreach($data as $item)
             {
-                $item->ingreso="0.0";
-            }
-            foreach($salida as $sal)
-            {
-                if($item->id == $sal->id)
+                $item->inicio=0;
+                if(!$item->ingreso)
                 {
-                    $item->salida = $sal->egreso;
+                    $item->ingreso="0.0";
+                }
+                foreach($salida as $sal)
+                {
+                    if($item->id == $sal->id)
+                    {
+                        $item->salida = $sal->egreso;
+                    }
                 }
             }
-        }
-        foreach($data as $item)
-        {
-            if(!$item->salida)
+            foreach($data as $item)
             {
-                $item->salida="0.0";
+                if(!$item->salida)
+                {
+                    $item->salida="0.0";
+                }
             }
+            // dd($data);
         }
-        if($request->print){
-            return view('almacenes/report/inventarioAnual/direccionAdministrativa/print', compact('start', 'finish'));
-        }else
+
+       
+
+        if($request->print==1)
+        {
+            return view('almacenes/report/inventarioAnual/direccionAdministrativa/print', compact('data', 'gestion'));
+        }
+        if($request->print==2)
+        {
+            return Excel::download(new AnualDaExport($data), $sucursal->nombre.' - DA Anual '.$gestion.'.xlsx');
+        }
+        if($request->print ==NULL)
         {            
             return view('almacenes/report/inventarioAnual/direccionAdministrativa/list', compact('data'));
         }
@@ -107,9 +216,9 @@ class ReportAlmacenController extends Controller
                         ->GroupBy('sucursal_id')
                         ->get();
 
-        $direction = $this->getDireccion();        
+        // $direction = $this->getDireccion();        
 
-        return view('almacenes/report/inventarioAnual/partidaGeneral/report', compact('sucursal', 'direction'));
+        return view('almacenes/report/inventarioAnual/partidaGeneral/report', compact('sucursal'));
     }
 
     public function inventarioPartidaList(Request $request)

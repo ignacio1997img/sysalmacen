@@ -1,7 +1,7 @@
 
 <div class="col-md-12 text-right">
 
-    <button type="button" onclick="report_print()" class="btn btn-success"><i class="fa-solid fa-file-excel"></i> Exportar a Excel</button>
+    <button type="button" onclick="report_excel()" class="btn btn-success"><i class="fa-solid fa-file-excel"></i> Excel</button>
     <button type="button" onclick="report_print()" class="btn btn-dark"><i class="glyphicon glyphicon-print"></i> Imprimir</button>
 
 </div>
@@ -12,56 +12,60 @@
             <table style="width:100%"  class="table table-bordered table-striped table-sm">
                 <thead>
                     <tr>
-                        <th style="width:5px">NRO&deg;</th>
-                        <th style="text-align: center">DA</th>
-                        <th style="text-align: center">DIRECCIONES ADMINISTRATIVA</th>
+                        <th rowspan="2" style="width:5px">N&deg;</th>
+                        <th rowspan="2" style="text-align: center">DIRECCIONES ADMINISTRATIVA</th>
+                        <th colspan="4" style="text-align: center">BS.</th>
+                    </tr>
+                    <tr>
+                        {{-- <th style="width:5px">NRO&deg;</th> --}}
                         <th style="text-align: center">SALDO INICIAL</th>
                         <th style="text-align: center">INGRESO</th>
-                        <th style="text-align: center">SALIDA</th>
-                        <th style="text-align: center">SALDO FINAL</th>
+                        <th style="text-align: center">SALIDAS</th>
+                        {{-- <th style="text-align: center">SALDO FINAL</th> --}}
                     </tr>
                 </thead>
                 <tbody>
                     @php
                         $count = 1;
-                        $tingreso =0;
-                        $tsalida =0;
+                        $si = 0;
+                        $i = 0;
+                        $s = 0;
+                        $sf = 0;
                     @endphp
                     @forelse ($data as $item)
-                        <tr style="text-align: center">
+                        <tr>
                             <td>{{ $count }}</td>
-                            <td>{{ $item->id }}</td>
-                            <td>{{ $item->nombre }}</td>
-                            <td style="text-align: right">0.00</td>
-                            <td style="text-align: right">{{ $item->ingreso}}</td>
-                            <td style="text-align: right">{{ $item->salida}}</td>
-                            <td style="text-align: right">{{ $item->salida}}</td>
-
-
+                            <td style="text-align: left">{{ $item->nombre }}</td>
+                            <td style="text-align: right">{{ number_format($item->inicio,2)}}</td>
+                            <td style="text-align: right">{{ number_format($item->ingreso,2)}}</td>
+                            <td style="text-align: right">{{ number_format($item->salida,2)}}</td>
+                            {{-- @php
+                                $aux =0;
+                                if (($item->inicio + $item->ingreso) > $item->salida)
+                                {
+                                    $aux = ($item->inicio + $item->ingreso) - $item->salida;
+                                }
+                                else
+                                {
+                                    $aux = $item->salida - ($item->inicio + $item->ingreso);
+                                }                                                       
+                            @endphp
+                            <td style="text-align: right">{{ number_format($aux,2)}}</td>                             --}}
                                                                                     
                         </tr>
-                        @php
+                        {{-- @php
                             $count++;
-                            $tingreso = $tingreso + $item->ingreso;
-                            $tsalida = $tsalida + $item->salida;
-                        @endphp
+                            $si = $si + $item->ingreso;
+                            $i = $i + $item->ingreso;
+                            // $s = $s + 
+                            // $sf = 0;
+                            
+                        @endphp --}}
                     @empty
                         <tr style="text-align: center">
-                            <td colspan="6">No se encontraron registros.</td>
+                            <td colspan="5">No se encontraron registros.</td>
                         </tr>
                     @endforelse
-                    <tr style="text-align: center">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td style="text-align: right">0.00</td>
-                        <td style="text-align: right">{{ $tingreso}}</td>
-                        <td style="text-align: right">{{ $tsalida}}</td>
-                        <td style="text-align: right"></td>
-
-
-                                                                                
-                    </tr>
                 </tbody>
             </table>
         </div>

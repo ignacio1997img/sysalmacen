@@ -8,13 +8,18 @@
         <tr>
             <td style="width: 20%"><img src="{{ asset('images/icon.png') }}" alt="GADBENI" width="100px"></td>
             <td style="text-align: center;  width:70%">
-                <h2 style="margin-bottom: 0px; margin-top: 5px">
-                    GOBIERNO AUTONOMO DEPARTAMENTAL DEL BENI<br>
-                </h2>
                 <h3 style="margin-bottom: 0px; margin-top: 5px">
-                    DETALLE DE ALMACENES (BIENES DE CONSUMO)<br>
-                    Stock Disponible {{date('d/m/Y', strtotime($start))}} Hasta {{date('d/m/Y', strtotime($finish))}}
+                    GOBIERNO AUTONOMO DEPARTAMENTAL DEL BENI<br>
                 </h3>
+                <h4 style="margin-bottom: 0px; margin-top: 5px">
+                        RESUMEN DE VALORES FISCALES
+                    {{-- Stock Disponible {{date('d/m/Y', strtotime($start))}} Hasta {{date('d/m/Y', strtotime($finish))}} --}}
+                </h4>
+                <small style="margin-bottom: 0px; margin-top: 5px">
+                    01 de enero {{$gestion}} Al 31 diciembre {{$gestion}}
+                    <br>
+                    (Expresado en Bolivianos)
+                </small>
             </td>
             <td style="text-align: right; width:30%">
                 <h3 style="margin-bottom: 0px; margin-top: 5px">
@@ -28,35 +33,67 @@
     <table style="width: 100%; font-size: 12px" border="1" cellspacing="0" cellpadding="5">
         <thead>
             <tr>
-                <th style="width:5%" rowspan="2">Nro&deg;</th>
-                <th rowspan="2">Descripción (Item)</th>
-                <th rowspan="2">Unidad de Medida</th>
-                <th rowspan="2">Precio Unitario</th>
-                <th style="text-align: center" colspan="4">Cantidad</th>
-                <th style="text-align: center" colspan="4">Valores</th>
+                <th rowspan="2" style="width:5px">N&deg;</th>
+                <th rowspan="2" style="text-align: center">DIRECCIONES ADMINISTRATIVA</th>
+                <th colspan="3" style="text-align: center">BS.</th>
             </tr>
             <tr>
-                <th>Saldo Inicial</th>
-                <th >Entradas</th>
-                <th >Salidas</th>
-                <th >Saldo Final</th>
-                <th>Saldo Inicial</th>
-                <th >Entradas</th>
-                <th >Salidas</th>
-                <th >Saldo Final</th>
+                {{-- <th style="width:5px">NRO&deg;</th> --}}
+                <th style="text-align: center">SALDO INICIAL</th>
+                <th style="text-align: center">INGRESO</th>
+                <th style="text-align: center">SALIDAS</th>
+                {{-- <th style="text-align: center">SALDO FINAL</th> --}}
             </tr>
         </thead>
         <tbody>
+            @php
+                        $count = 1;
+                        $si = 0;
+                        $i = 0;
+                        $s = 0;
+                        $sf = 0;
+                    @endphp
+                    @forelse ($data as $item)
+                        <tr>
+                            <td>{{ $count }}</td>
+                            <td style="text-align: left">{{ $item->nombre }}</td>
+                            <td style="text-align: right">{{ number_format($item->inicio,2)}}</td>
+                            <td style="text-align: right">{{ number_format($item->ingreso,2)}}</td>
+                            <td style="text-align: right">{{ number_format($item->salida,2)}}</td>
+                            @php
+                                $aux =0;
+                                if (($item->inicio + $item->ingreso) >= $item->salida)
+                                {
+                                    $aux = ($item->inicio + $item->ingreso) - $item->salida;
+                                }
+                                else
+                                {
+                                    $aux = $item->salida - ($item->inicio + $item->ingreso);
+                                }   
+                                $sf = $sf + $aux;                                                    
+                            @endphp
+                            {{-- <td style="text-align: right">{{ number_format($aux,2)}}</td>                             --}}
+                                                                                    
+                        </tr>
+                        @php
+                            $count++;
+                            $si = $si + $item->inicio;
+                            $i = $i + $item->ingreso;
+                            $s = $s + $item->salida;
+                            // $sf = 0;
+                            
+                        @endphp
+                    @empty
+                        <tr style="text-align: center">
+                            <td colspan="5">No se encontraron registros.</td>
+                        </tr>
+                    @endforelse
             <tr>
-                <th colspan="4" style="text-align: right">Total</th>
-                <th>Saldo Inicial</th>
-                <th >Entradas</th>
-                <th >Salidas</th>
-                <th >Saldo Final</th>
-                <th>Saldo Inicial</th>
-                <th >Entradas</th>
-                <th >Salidas</th>
-                <th >Saldo Final</th>
+                <th colspan="2" style="text-align: right">Total</th>
+                <th style="text-align: right">{{number_format($si,2)}}</th>
+                <th style="text-align: right">{{number_format($i,2)}}</th>
+                <th style="text-align: right">{{number_format($s,2)}}</th>
+                {{-- <th style="text-align: right">{{number_format($sf,2)}}</th> --}}
             </tr>
         </tbody>
        
@@ -79,14 +116,34 @@
                 <b>Firma Contabilidad</b>
             </td>
             <td style="text-align: center">
+                {{-- ______________________
+                <br>
+                <b>Firma Responsable</b> --}}
+            </td>
+            <td style="text-align: center">
                 ______________________
                 <br>
                 <b>Firma Responsable</b>
+            </td>
+        </tr>
+    </table>
+    <br>
+    <table width="100%">
+        <tr>
+            <td style="text-align: center">
+                {{-- ______________________
+                <br>
+                <b>Firma Contabilidad</b> --}}
             </td>
             <td style="text-align: center">
                 ______________________
                 <br>
                 <b>Firma DGAA - DAF</b>
+            </td>
+            <td style="text-align: center">
+                {{-- ______________________
+                <br>
+                <b>Firma DGAA - DAF</b> --}}
             </td>
         </tr>
     </table>
