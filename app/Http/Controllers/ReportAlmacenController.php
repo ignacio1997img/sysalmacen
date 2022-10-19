@@ -242,8 +242,6 @@ class ReportAlmacenController extends Controller
                         ->where('df.deleted_at', null)
                         // ->where('de.deleted_at', null)
                         ->select('p.id', 'p.codigo', 'p.nombre',DB::raw("SUM(df.cantsolicitada) as cantidadinicial"), DB::raw("SUM(df.totalbs) as totalinicial"),
-                                // ,DB::raw("SUM(de.cantsolicitada) as cantidadFinal"), DB::raw("SUM(de.totalbs) as totalFinal")
-                                // DB::raw("SUM(df.cantsolicitada - df.cantrestante) as cantfinal"), DB::raw("SUM((df.cantsolicitada - df.cantrestante) * df.precio) as totalfinal")
                                 DB::raw("SUM(df.cantrestante) as cantfinal"), DB::raw("SUM((df.cantrestante) * df.precio) as totalfinal")
                                 )
                         ->groupBy('p.id')
@@ -253,111 +251,6 @@ class ReportAlmacenController extends Controller
         {
             return 'para mas gestiones';
         }
-
-      
-    
-        // $aux = DB::table('solicitud_compras as sc')
-        //                 ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')
-        //                 ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
-        //                 ->join('articles as a', 'a.id', 'df.article_id')
-        //                 ->join('partidas as p', 'p.id', 'a.partida_id')
-        //                 ->join('detalle_egresos as de', 'de.detallefactura_id', 'df.id')
-        //                 ->where('sc.deleted_at', null)
-        //                 ->where('f.deleted_at', null)
-        //                 ->where('df.deleted_at', null)
-        //                 ->where('de.deleted_at', null)
-        //                 ->select('p.id', 'p.nombre', 
-        //                     DB::raw("SUM(de.cantsolicitada) as cantidadFinal"), DB::raw("SUM(de.totalbs) as totalFinal"))
-        //                 ->groupBy('p.id')
-        //                 ->get();
-
-        // foreach($data as $item)
-        // {
-        //     $item->cantfinal=0.0;
-        //     $item->totalfinal="0.0";
-        //     // if(!$item->ingreso)
-        //     // {
-        //     //     
-        //     // }
-        //     foreach($aux as $sal)
-        //     {
-        //         if($item->id == $sal->id)
-        //         {
-        //             $item->cantfinal = $item->cantfinal + $sal->cantidadFinal;
-        //             $item->totalfinal = $item->totalfinal + $sal->totalFinal;
-        //         }
-        //     }
-        // }
-
-
-    
-
-
-
-
-
-        // $data = DB::table('solicitud_compras as sc')
-        //                 ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')
-        //                 ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
-        //                 ->join('articles as a', 'a.id', 'df.article_id')
-        //                 ->join('partidas as p', 'p.id', 'a.partida_id')
-        //                 ->where('sc.deleted_at', null)
-        //                 ->where('f.deleted_at', null)
-        //                 ->where('df.deleted_at', null)
-        //                 ->where('p.id', 31)
-        //                 ->select('p.id', 'p.nombre',DB::raw("SUM(df.cantsolicitada) as cantidadinicial"), DB::raw("SUM(df.totalbs) as total"))
-        //                 ->groupBy('p.id')
-        //                 ->get();
-
-
-        // dd($data);
-
-
-
-
-        // $data = DB::connection('mamore')->table('direcciones as d')
-        //             ->leftJoin('sysalmacen.solicitud_compras as sc', 'sc.direccionadministrativa', 'd.id')
-        //             ->leftJoin('sysalmacen.facturas as f', 'f.solicitudcompra_id', 'sc.id')
-        //             ->where('sc.deleted_at', null)
-        //             // ->where('d.direcciones_tipo_id', 1)
-        //             ->select('d.id', 'd.nombre',DB::raw("SUM(f.montofactura) as ingreso"))
-        //             ->groupBy('d.id')
-        //             ->get();
-
-
-
-
-        // $salida = DB::connection('mamore')->table('direcciones as d')
-        //             ->leftJoin('unidades as u', 'u.direccion_id', 'd.id')
-        //             ->leftJoin('sysalmacen.solicitud_egresos as se', 'se.unidadadministrativa', 'u.id')
-        //             ->leftJoin('sysalmacen.detalle_egresos as de', 'de.solicitudegreso_id', 'se.id')
-        //             ->where('se.deleted_at', null)
-        //             // ->where('d.direcciones_tipo_id', 1)
-        //             ->select('d.id', 'd.nombre',DB::raw("SUM(de.totalbs) as egreso"))
-        //             ->groupBy('d.id')
-        //             ->get();
-        
-        // foreach($data as $item)
-        // {
-        //     if(!$item->ingreso)
-        //     {
-        //         $item->ingreso="0.0";
-        //     }
-        //     foreach($salida as $sal)
-        //     {
-        //         if($item->id == $sal->id)
-        //         {
-        //             $item->salida = $sal->egreso;
-        //         }
-        //     }
-        // }
-        // foreach($data as $item)
-        // {
-        //     if(!$item->salida)
-        //     {
-        //         $item->salida="0.0";
-        //     }
-        // }
         if($request->print==1)
         {
             return view('almacenes/report/inventarioAnual/partidaGeneral/print', compact('data', 'gestion'));
@@ -429,18 +322,20 @@ class ReportAlmacenController extends Controller
                         ->groupBy('a.id')
                         ->groupBy('df.precio')
                         ->get();
+                        // $aux=0;
 
                 foreach($data as $item)
                 {
                     $item->cInicial=0.0;
                     $item->vInicial=0.0;
+                    // $aux = $aux + $item->vFinal;
                 }
         }
         else 
         {
             return 'para mas gestiones';
         }
-
+        // dd($aux);
 
 
         if($request->print==1){

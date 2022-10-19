@@ -81,7 +81,7 @@
                     <td style="text-align: right">{{ number_format($item->vInicial,2)}}</td>
                     <td style="text-align: right">{{ number_format($item->vEntrada,2)}}</td>
                     <td style="text-align: right">{{ number_format($item->vSalida,2)}}</td>
-                    <td style="text-align: right">{{ number_format($item->vEntrada - $item->vSalida,2)}}</td>
+                    <td style="text-align: right">{{ number_format($item->vFinal,2)}}</td>
                                                                             
                 </tr>
                 @php
@@ -96,7 +96,8 @@
                     $vSal = $vSal + $item->vSalida;
 
                     $cFin = $cFin + $item->cFinal;
-                    $vFin = $vFin + ($item->vEntrada - $item->vSalida);
+                    $vFin = $vFin + $item->vFinal;
+                    // $vFin = $vFin + (number_format($item->vEntrada - $item->vSalida,2));
                     
                     
                 @endphp
