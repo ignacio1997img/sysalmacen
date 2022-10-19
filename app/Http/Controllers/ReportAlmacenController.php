@@ -470,7 +470,7 @@ class ReportAlmacenController extends Controller
         }
         if($request->print==2)
         {
-            return Excel::download(new ArticleListExport($data), $sucursal->nombre.'_'.$date.'.xlsx');
+            return Excel::download(new ArticleListExport($data), $sucursal->nombre.'-Lista de articulos'.'_'.$date.'.xlsx');
         }
         if($request->print==NULL)
         {            
