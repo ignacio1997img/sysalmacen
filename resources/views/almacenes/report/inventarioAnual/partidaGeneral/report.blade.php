@@ -1,6 +1,6 @@
 @extends('voyager::master')
 
-@section('page_title', 'Reporte de stock disponible')
+@section('page_title', 'Reporte anual por Partida')
 @if(auth()->user()->hasPermission('browse_printalmacen-inventarioAnual-partida'))
 
 @section('page_header')
