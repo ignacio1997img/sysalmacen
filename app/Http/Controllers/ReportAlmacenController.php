@@ -39,13 +39,13 @@ class ReportAlmacenController extends Controller
         // ->groupBy('d.precio')
         ->get();
         // return count($data);
-        // foreach($data as $item)
-        // {
-        //     if($item->ingreso != $item->totalbs)
-        //     {
-        //         DetalleFactura::where('id', $item->id)->update(['totalbs'=>$item->ingreso]);
-        //     }
-        // }
+        foreach($data as $item)
+        {
+            if($item->ingreso != $item->totalbs)
+            {
+                DetalleFactura::where('id', $item->id)->update(['totalbs'=>$item->ingreso]);
+            }
+        }
 
         // dd($data);
 
