@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>@yield('page_title') | {{ env('APP_NAME', 'SYSADMIN') }}</title>
+    <title>@yield('page_title') | {{ env('APP_NAME', 'SYSALMACEN') }}</title>
     <!-- Favicon -->
     <?php $admin_favicon = Voyager::setting('admin.icon_image', ''); ?>
     @if($admin_favicon == '')
