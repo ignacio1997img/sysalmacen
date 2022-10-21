@@ -12,7 +12,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function getDireccion() {
+    public function getDirecciones() {
         try {
             return DB::connection('mamore')->table('direcciones as d')
                         ->where('deleted_at', null)
@@ -46,4 +46,26 @@ class Controller extends BaseController
             ->orderBy('u.nombre','asc')
             ->get();
     }
+
+
+
+    public function getDireccion($id) {
+        try {
+            return DB::connection('mamore')->table('direcciones as d')
+                        ->where('d.id', $id)
+                        ->select('*')
+                        ->first();
+        } catch (\Throwable $th) {
+            return 'ERROR';
+        }
+    }
+
+    public function getUnidad($id)
+    {
+        return DB::connection('mamore')->table('unidades as u')
+            ->where('u.id', $id)
+            ->select('*')
+            ->first();
+    }
+
 }

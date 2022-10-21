@@ -1,6 +1,6 @@
 @extends('voyager::master')
 
-@section('page_title', 'Reporte de stock disponible')
+@section('page_title', 'Reporte egreso por rango de facha')
 @if(auth()->user()->hasPermission('browse_printalmacen-article-egressoffice'))
 
 
@@ -13,7 +13,7 @@
                     <div class="panel-body" style="padding: 0px">
                         <div class="col-md-6" style="padding: 0px">
                             <h1 class="page-title">
-                                <i class="voyager-calendar"></i> Reporte De egresos Por Oficinas
+                                <i class="voyager-calendar"></i> Reporte De Egresos Por Oficinas
                             </h1>
                         </div>
                         <div class="col-md-6" style="margin-top: 30px">

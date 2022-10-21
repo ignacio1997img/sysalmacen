@@ -1,6 +1,6 @@
 @extends('voyager::master')
 
-@section('page_title', 'Reporte de stock disponible')
+@section('page_title', 'Reporte de ingreso por rango de facha')
 @if(auth()->user()->hasPermission('browse_printalmacen-article-incomeoffice'))
 
 
