@@ -31,8 +31,8 @@ class MenuItemsTableSeeder extends Seeder
                 'parent_id' => NULL,
                 'order' => 1,
                 'created_at' => '2021-06-02 17:55:32',
-                'updated_at' => '2021-06-02 14:51:15',
-                'route' => 'voyager.profile',
+                'updated_at' => '2022-10-21 15:31:25',
+                'route' => 'voyager.dashboard',
                 'parameters' => 'null',
             ),
             1 => 
