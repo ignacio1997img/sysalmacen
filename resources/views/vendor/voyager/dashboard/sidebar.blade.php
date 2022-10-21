@@ -10,6 +10,8 @@
                         @else
                             <img src="{{ Voyager::image($admin_logo_img) }}" alt="Logo Icon">
                         @endif
+                        <img src="{{ asset('images/icon-sidebar.png') }}" alt="Logo Icon">
+
                     </div>
                     <div class="title">{{Voyager::setting('admin.title', 'VOYAGER')}}</div>
                 </a>
