@@ -23,6 +23,8 @@ use App\Exports\AnualDetalleExport;
 use App\Exports\ArticleStockExport;
 use App\Exports\ProviderListExport;
 use App\Exports\ArticleListExport;
+use App\Exports\ArticleIncomeOfficeExport;
+use App\Exports\ArticleEgressOfficeExport;
 
 class ReportAlmacenController extends Controller
 {
@@ -353,9 +355,9 @@ class ReportAlmacenController extends Controller
     }
 
 
-    // #######################################################################
-    // #######################################################################
-    // #######################################################################
+    // #####################################################################################################################################################################################################################
+    // ################################                 ARTCLE                 ###########################################################################################################
+    // #####################################################################################################################################################################################################################
     //para ver el stock de articulo disponible en el almacen
     public function articleStock()
     {
@@ -481,6 +483,205 @@ class ReportAlmacenController extends Controller
             return view('almacenes.report.article.list.list', compact('data'));
         }
     }
+    
+    //  ___________________________________________
+
+    public function incomeOffice()
+    {
+        $user = Auth::user();
+        $query_filter = 'user_id ='.Auth::user()->id;
+        
+        if(Auth::user()->hasRole('admin'))
+        {
+            $query_filter = 1;
+        }
+
+        $sucursal = SucursalUser::where('condicion', 1)
+                        ->where('deleted_at', null)
+                        ->whereRaw($query_filter)
+                        ->GroupBy('sucursal_id')
+                        ->get();    
+
+        return view('almacenes.report.article.incomeOffice.report', compact('sucursal'));
+    }
+
+    public function incomeOfficeList(Request $request)
+    {
+        // dd($request->start);
+        $finish = $request->finish;
+        $start = $request->start;
+        $date = Carbon::now();
+        $sucursal = Sucursal::find($request->sucursal_id);
+
+        if($request->unidad_id == 'TODO')
+        {
+            $data = DB::connection('mamore')->table('unidades as u')
+                        ->join('sysalmacen.solicitud_compras as cp', 'cp.unidadadministrativa', 'u.id')
+                        ->join('sysalmacen.facturas as f', 'f.solicitudcompra_id', 'cp.id')
+                        ->join('sysalmacen.detalle_facturas as df', 'df.factura_id', 'f.id')
+                        ->join('sysalmacen.articles as a', 'df.article_id', 'a.id')
+                        ->join('sysalmacen.partidas as p', 'p.id', 'a.partida_id')
+                        ->where('df.deleted_at', null)
+                        ->where('f.deleted_at', null)
+                        ->where('cp.deleted_at', null)
+                        ->where('u.direccion_id', $request->direccion_id)
+                        ->where('cp.fechaingreso', '>=', $request->start)
+                        ->where('cp.fechaingreso', '<=', $request->finish)
+                        ->select('u.nombre as unidad','cp.fechaingreso',  'a.nombre as articulo', 'p.nombre as partida', 'nrosolicitud', 'a.presentacion', 'df.precio', 'df.cantsolicitada', 'df.totalbs')
+                        ->orderBy('u.id')
+                        ->orderBy('cp.fechaingreso')
+                        ->get();
+        }
+        else      
+        {
+            $data = DB::connection('mamore')->table('unidades as u')
+                        ->join('sysalmacen.solicitud_compras as cp', 'cp.unidadadministrativa', 'u.id')
+                        ->join('sysalmacen.facturas as f', 'f.solicitudcompra_id', 'cp.id')
+                        ->join('sysalmacen.detalle_facturas as df', 'df.factura_id', 'f.id')
+                        ->join('sysalmacen.articles as a', 'df.article_id', 'a.id')
+                        ->join('sysalmacen.partidas as p', 'p.id', 'a.partida_id')
+                        ->where('df.deleted_at', null)
+                        ->where('f.deleted_at', null)
+                        ->where('cp.deleted_at', null)
+                        ->where('u.id', $request->unidad_id)
+                        ->where('cp.fechaingreso', '>=', $request->start)
+                        ->where('cp.fechaingreso', '<=', $request->finish)
+                        ->select('u.nombre as unidad','cp.fechaingreso',  'a.nombre as articulo', 'p.nombre as partida', 'nrosolicitud', 'a.presentacion', 'df.precio', 'df.cantsolicitada', 'df.totalbs')
+                        ->orderBy('u.id')
+                        ->orderBy('cp.fechaingreso')
+                        ->get();
+        }
+        if($request->print==1){
+            return view('almacenes.report.article.incomeOffice.print', compact('data', 'sucursal'));
+        }
+        if($request->print==2)
+        {
+            return Excel::download(new ArticleIncomeOfficeExport($data), $sucursal->nombre.' - Ingreso Artículo '.'_'.$date.'.xlsx');
+        }
+        if($request->print==NULL)
+        {            
+            return view('almacenes.report.article.incomeOffice.list', compact('data'));
+        }
+    }
+
+    public function ajax_incomeOffice_direccion($id)
+    {
+        return $this->direccionSucursal($id);
+    }
+
+    public function ajax_incomeOffice_unidad($id)
+    {
+        return $this->getUnidades($id);
+    }
+
+    // _________________________________________________________
+    //  para los egresos por todas las oficina de una direcion o por oficinas.......
+    public function egressOffice()
+    {
+        $user = Auth::user();
+        $query_filter = 'user_id ='.Auth::user()->id;
+        
+        if(Auth::user()->hasRole('admin'))
+        {
+            $query_filter = 1;
+        }
+
+        $sucursal = SucursalUser::where('condicion', 1)
+                        ->where('deleted_at', null)
+                        ->whereRaw($query_filter)
+                        ->GroupBy('sucursal_id')
+                        ->get();    
+        // return $sucursal;
+
+        return view('almacenes.report.article.egressOffice.report', compact('sucursal'));
+    }
+
+    public function egressOfficeList(Request $request)
+    {
+        // dd($request->start);
+        $finish = $request->finish;
+        $start = $request->start;
+        $date = Carbon::now();
+        $sucursal = Sucursal::find($request->sucursal_id);
+
+        if($request->unidad_id == 'TODO')
+        {
+            $data = DB::connection('mamore')->table('unidades as u')
+                        ->join('sysalmacen.solicitud_egresos as se', 'se.unidadadministrativa', 'u.id')
+                        ->join('sysalmacen.detalle_egresos as de', 'de.solicitudegreso_id', 'se.id')
+                        ->join('sysalmacen.detalle_facturas as df', 'df.id', 'de.detallefactura_id')
+                        ->join('sysalmacen.articles as a', 'df.article_id', 'a.id')
+                        ->join('sysalmacen.partidas as p', 'p.id', 'a.partida_id')
+                        ->where('se.deleted_at', null)
+                        ->where('de.deleted_at', null)
+                        ->where('u.direccion_id', $request->direccion_id)
+
+                        // ->where('df.deleted_at', null)
+                        // ->select('*')
+                        ->select('u.nombre as unidad','se.fechaegreso', 'a.nombre as articulo', 'p.nombre as partida', 'se.nropedido', 'a.presentacion', 'de.precio', 'de.cantsolicitada', 'de.totalbs')
+                        ->orderBy('u.id')
+                        ->orderBy('se.fechaegreso')
+                        ->get();
+            // dd($data);
+
+
+            // $data = DB::connection('mamore')->table('unidades as u')
+            //             ->join('sysalmacen.solicitud_compras as cp', 'cp.unidadadministrativa', 'u.id')
+            //             ->join('sysalmacen.facturas as f', 'f.solicitudcompra_id', 'cp.id')
+            //             ->join('sysalmacen.detalle_facturas as df', 'df.factura_id', 'f.id')
+            //             ->join('sysalmacen.articles as a', 'df.article_id', 'a.id')
+            //             ->join('sysalmacen.partidas as p', 'p.id', 'a.partida_id')
+            //             ->where('df.deleted_at', null)
+            //             ->where('f.deleted_at', null)
+            //             ->where('cp.deleted_at', null)
+            //             ->where('u.direccion_id', $request->direccion_id)
+            //             ->where('cp.fechaingreso', '>=', $request->start)
+            //             ->where('cp.fechaingreso', '<=', $request->finish)
+            //             ->select('u.nombre as unidad','cp.fechaingreso',  'a.nombre as articulo', 'p.nombre as partida', 'nropedido', 'a.presentacion', 'df.precio', 'df.cantsolicitada', 'df.totalbs')
+            //             ->orderBy('u.id')
+            //             ->orderBy('cp.fechaingreso')
+            //             ->get();
+        }
+        else      
+        {
+            $data = DB::connection('mamore')->table('unidades as u')
+                        ->join('sysalmacen.solicitud_compras as cp', 'cp.unidadadministrativa', 'u.id')
+                        ->join('sysalmacen.facturas as f', 'f.solicitudcompra_id', 'cp.id')
+                        ->join('sysalmacen.detalle_facturas as df', 'df.factura_id', 'f.id')
+                        ->join('sysalmacen.articles as a', 'df.article_id', 'a.id')
+                        ->join('sysalmacen.partidas as p', 'p.id', 'a.partida_id')
+                        ->where('df.deleted_at', null)
+                        ->where('f.deleted_at', null)
+                        ->where('cp.deleted_at', null)
+                        ->where('u.id', $request->unidad_id)
+                        ->where('cp.fechaingreso', '>=', $request->start)
+                        ->where('cp.fechaingreso', '<=', $request->finish)
+                        ->select('u.nombre as unidad','cp.fechaingreso',  'a.nombre as articulo', 'p.nombre as partida', 'nrosolicitud', 'a.presentacion', 'df.precio', 'df.cantsolicitada', 'df.totalbs')
+                        ->orderBy('u.id')
+                        ->orderBy('cp.fechaingreso')
+                        ->get();
+        }
+        if($request->print==1){
+            return view('almacenes.report.article.egressOffice.print', compact('data', 'sucursal'));
+        }
+        if($request->print==2)
+        {
+            return Excel::download(new ArticleEgressOfficeExport($data), $sucursal->nombre.' - Egreso Artículo '.'_'.$date.'.xlsx');
+        }
+        if($request->print==NULL)
+        {            
+            return view('almacenes.report.article.egressOffice.list', compact('data'));
+        }
+    }
+
+
+
+
+
+
+
+
+
 
     // #######################################################################
     // #######################################################################

@@ -106,6 +106,16 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('print/almacen-article-list', [ReportAlmacenController::class, 'articleList'])->name('almacen-article-list.report');
     Route::post('print/almacen/article/list/list', [ReportAlmacenController::class, 'articleListList'])->name('almacen-article-list.list');
 
+    Route::get('print/almacen-article-incomeoffice', [ReportAlmacenController::class, 'incomeOffice'])->name('almacen-article-incomeOffice.report');
+    Route::post('print/almacen/article/incomeoffice/list', [ReportAlmacenController::class, 'incomeOfficeList'])->name('almacen-article-incomeOffice.list');
+    Route::get('ajaxPrint/almacen-article-incomeoffice/direccion/{id?}', [ReportAlmacenController::class, 'ajax_incomeOffice_direccion'])->name('ajax-incomeOffice.direccion');
+    Route::get('ajaxPrint/almacen-article-incomeoffice/unidad/{id?}', [ReportAlmacenController::class, 'ajax_incomeOffice_unidad'])->name('ajax-incomeOffice.unidad');
+
+    Route::get('print/almacen-article-egressoffice', [ReportAlmacenController::class, 'egressOffice'])->name('almacen-article-egressOffice.report');
+    Route::post('print/almacen/article/egressoffice/list', [ReportAlmacenController::class, 'egressOfficeList'])->name('almacen-article-egressOffice.list');
+
+
+
     // Proveedores
     Route::get('print/almacen-provider-list', [ReportAlmacenController::class, 'provider'])->name('almacen-provider-list.report');
     Route::post('print/almacen/provider/list/list', [ReportAlmacenController::class, 'providerList'])->name('almacen-provider-list.list');

@@ -114,6 +114,9 @@ class PermissionRoleTableSeeder extends Seeder
                                             
                                             `key` = "browse_printalmacen-article-list" or
                                             `key` = "browse_printalmacen-article-stock" or
+                                            `key` = "browse_printalmacen-article-incomeoffice" or     
+                                            `key` = "browse_printalmacen-article-egressoffice" or                                                
+                                            
                                             
                                             `key` = "browse_printalmacen-provider-list" or
 

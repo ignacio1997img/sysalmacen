@@ -34,6 +34,16 @@ class Controller extends BaseController
             ->select('d.id', 'd.nombre', 'd.sigla')
             ->orderBy('d.nombre','asc')
             ->get();
+    }
 
+    public function getUnidades($id)
+    {
+        return DB::connection('mamore')->table('unidades as u')
+            ->where('u.estado', 1)
+            ->where('u.deleted_at', null)
+            ->where('u.direccion_id', $id)
+            ->select('u.id', 'u.nombre', 'u.sigla')
+            ->orderBy('u.nombre','asc')
+            ->get();
     }
 }
