@@ -1,8 +1,3 @@
-<style>
-
-}
-</style>
-
 <nav class="navbar navbar-default navbar-fixed-top navbar-top">
     <div class="container-fluid">
         <div class="navbar-header">
