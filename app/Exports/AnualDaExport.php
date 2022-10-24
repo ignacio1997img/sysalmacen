@@ -14,7 +14,7 @@ class AnualDaExport implements FromView
 
     public function view(): View
     {
-        return view('almacenes.report.inventarioAnual.da.excel',
+        return view('almacenes.report.inventarioAnual.direccionAdministrativa.excel',
         [
             'data'=>$this->datas,
         ]);

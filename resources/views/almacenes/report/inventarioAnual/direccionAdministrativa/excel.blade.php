@@ -10,71 +10,58 @@
                 <th><strong>SALDO INICIAL</strong></th>
                 <th><strong>INGRESO</strong></th>
                 <th><strong>SALIDAS</strong></th>
-                <th><strong>SALDO FINAL</strong></th>
+                {{-- <th><strong>SALDO FINAL</strong></th> --}}
             </tr>
         </thead>
         <tbody>
             @php
-                $count = 1;
-                $cIni = 0;
-                $vIni = 0;
-                $cEnt = 0;
-                $vEnt = 0;
-                $cSal = 0;
-                $vSal = 0;
-                $cFin = 0;
-                $vFin = 0;
-
-            @endphp
-            @forelse ($data as $item)
-                <tr>
-                    <td>{{ $count }}</td>
-                    <td>{{ $item->id }} - {{ $item->nombre }}</td>
-                    <td>{{ $item->presentacion}}</td>
-                    <td style="text-align: right">{{ $item->precio}}</td>
-                    <td style="text-align: right">{{ number_format($item->cInicial,2)}}</td>
-                    <td style="text-align: right">{{ number_format($item->cEntrada,2)}}</td>
-                    <td style="text-align: right">{{ number_format($item->cSalida,2)}}</td>
-                    <td style="text-align: right">{{ number_format($item->cFinal,2)}}</td>
-
-                    <td style="text-align: right">{{ number_format($item->vInicial,2)}}</td>
-                    <td style="text-align: right">{{ number_format($item->vEntrada,2)}}</td>
-                    <td style="text-align: right">{{ number_format($item->vSalida,2)}}</td>
-                    <td style="text-align: right">{{ number_format($item->vFinal,2)}}</td>
-                                                                            
-                </tr>
-                @php
-                    $count++;
-                    $cIni = $cIni + $item->cInicial;
-                    $vIni = $cIni + $item->vInicial;
-
-                    $cEnt = $cEnt + $item->cEntrada;
-                    $vEnt = $vEnt + $item->vEntrada;
-
-                    $cSal = $cSal + $item->cSalida;
-                    $vSal = $vSal + $item->vSalida;
-
-                    $cFin = $cFin + $item->cFinal;
-                    $vFin = $vFin + $item->vFinal;
-                    
-                    
-                @endphp
-            @empty
-                <tr style="text-align: center">
-                    <td colspan="6">No se encontraron registros.</td>
-                </tr>
-            @endforelse
+                    $count = 1;
+                        $si = 0;
+                        $i = 0;
+                        $s = 0;
+                        $sf = 0;
+                    @endphp
+                    @forelse ($data as $item)
+                        <tr>
+                            <td>{{ $count }}</td>
+                            <td style="text-align: left">{{ $item->nombre }}</td>
+                            <td style="text-align: right">{{ number_format($item->inicio,2)}}</td>
+                            <td style="text-align: right">{{ number_format($item->ingreso,2)}}</td>
+                            <td style="text-align: right">{{ number_format($item->salida,2)}}</td>
+                            @php
+                                $aux =0;
+                                if (($item->inicio + $item->ingreso) >= $item->salida)
+                                {
+                                    $aux = ($item->inicio + $item->ingreso) - $item->salida;
+                                }
+                                else
+                                {
+                                    $aux = $item->salida - ($item->inicio + $item->ingreso);
+                                }   
+                                $sf = $sf + $aux;                                                    
+                            @endphp
+                            {{-- <td style="text-align: right">{{ number_format($aux,2)}}</td>                             --}}
+                                                                                    
+                        </tr>
+                        @php
+                            $count++;
+                            $si = $si + $item->inicio;
+                            $i = $i + $item->ingreso;
+                            $s = $s + $item->salida;
+                            // $sf = 0;
+                            
+                        @endphp
+                    @empty
+                        <tr style="text-align: center">
+                            <td colspan="5">No se encontraron registros.</td>
+                        </tr>
+                    @endforelse
             <tr>
-                <th colspan="4" style="text-align: right">Total</th>
-                <th style="text-align: right">{{number_format($cIni,2)}}</th>
-                <th style="text-align: right">{{number_format($cEnt,2)}}</th>
-                <th style="text-align: right">{{number_format($cSal,2)}}</th>
-                <th style="text-align: right">{{number_format($cFin,2)}}</th>
-
-                <th style="text-align: right">{{number_format($vIni,2)}}</th>
-                <th style="text-align: right">{{number_format($vEnt,2)}}</th>
-                <th style="text-align: right">{{number_format($vSal,2)}}</th>
-                <th style="text-align: right">{{number_format($vFin,2)}}</th>
+                <th colspan="2" style="text-align: right">Total</th>
+                <th style="text-align: right">{{number_format($si,2)}}</th>
+                <th style="text-align: right">{{number_format($i,2)}}</th>
+                <th style="text-align: right">{{number_format($s,2)}}</th>
+                {{-- <th style="text-align: right">{{number_format($sf,2)}}</th> --}}
             </tr>
         </tbody>
     
