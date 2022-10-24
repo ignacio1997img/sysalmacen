@@ -186,17 +186,25 @@ class IncomeController extends Controller
     }
 
 
-    
+    // funcion para guardar los registro de un ingreso en general
     public function store(Request $request)
-    {
-        // dd($request);        
-        $user = Auth::user();
+    {      
         // return $request;
+        $user = Auth::user();
         DB::beginTransaction();
         try {
-
-            if(floatval($request->total) === floatval($request->montofactura))
+            $total =0;
+            $x = 0;
+        
+            while($x < count($request->subtotal))
             {
+                $total = $total + $request->subtotal[$x];
+                $x++;
+            }
+
+            if($request->total == $request->montofactura && $request->total == $total && $request->montofactura == $total)
+            {
+                // return $total;
                 $unidad = DB::connection('mamore')->table('unidades')
                         ->select('sigla')
                         ->where('id',$request->unidadadministrativa)
@@ -237,7 +245,7 @@ class IncomeController extends Controller
                         'registeruser_id'       => $user->id,
                         'tipofactura'           => $request->tipofactura,
                         'fechafactura'          => $request->fechafactura,
-                        'montofactura'          => $request->montofactura,
+                        'montofactura'          => $total,
                         'nrofactura'            => $request->nrofactura,
                         'nroautorizacion'       => $request->nroautorizacion,
                         'nrocontrol'            => $request->nrocontrol,
@@ -256,11 +264,11 @@ class IncomeController extends Controller
                         'article_id'            => $request->article_id[$cont],
                         'cantsolicitada'        => $request->cantidad[$cont],
                         'precio'                => $request->precio[$cont],
-                        'totalbs'               => $request->cantidad[$cont]*$request->precio[$cont],
+                        'totalbs'               => $request->subtotal[$cont],
                         'cantrestante'          => $request->cantidad[$cont],
                         'fechaingreso'          => $request->fechaingreso,
                         'gestion'               => $gestion,
-                        'sucursal_id'       => $request->branchoffice_id
+                        'sucursal_id'           => $request->branchoffice_id
                     ]);
                     $cont++;
                 }
@@ -269,10 +277,12 @@ class IncomeController extends Controller
             }
             else
             {
+                // return 0;
                 return redirect()->route('income.index')->with(['message' => 'El monto de la factura no coincide con el total de la solicitud.', 'alert-type' => 'error']);
             }
         } catch (\Throwable $th) {
             DB::rollback();
+            // return 10;
             return redirect()->route('income.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);            
         }
     }

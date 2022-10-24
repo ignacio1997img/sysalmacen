@@ -34,20 +34,18 @@ class ReportAlmacenController extends Controller
 
 //         select sum(cantsolicitada * precio), totalbs from detalle_facturas where deleted_at is null
             // GROUP BY id, precio
-        $data = DB::table('detalle_facturas as d')
-        ->where('d.deleted_at', null)
-        ->select('d.id', DB::raw("SUM(d.cantsolicitada * d.precio) as ingreso"), 'd.totalbs')
-        ->groupBy('d.id')
-        // ->groupBy('d.precio')
-        ->get();
-        // return count($data);
-        foreach($data as $item)
-        {
-            if($item->ingreso != $item->totalbs)
-            {
-                DetalleFactura::where('id', $item->id)->update(['totalbs'=>$item->ingreso]);
-            }
-        }
+        // $data = DB::table('detalle_facturas as d')
+        // ->where('d.deleted_at', null)
+        // ->select('d.id', DB::raw("SUM(d.cantsolicitada * d.precio) as ingreso"), 'd.totalbs')
+        // ->groupBy('d.id')
+        // ->get();
+        // foreach($data as $item)
+        // {
+        //     if($item->ingreso != $item->totalbs)
+        //     {
+        //         DetalleFactura::where('id', $item->id)->update(['totalbs'=>$item->ingreso]);
+        //     }
+        // }
 
         // dd($data);
 
@@ -64,21 +62,21 @@ class ReportAlmacenController extends Controller
 // where df.deleted_at is null
 // GROUP BY df.factura_id;
 
-            $datas = DB::table('facturas as f')
-                ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
-                ->where('f.deleted_at', null)
-                ->where('df.deleted_at', null)
-                ->select('f.id', 'f.montofactura', DB::raw("SUM(df.totalbs) as totalbs"))
-                ->groupBy('df.factura_id')
-                ->get();
+            // $datas = DB::table('facturas as f')
+            //     ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
+            //     ->where('f.deleted_at', null)
+            //     ->where('df.deleted_at', null)
+            //     ->select('f.id', 'f.montofactura', DB::raw("SUM(df.totalbs) as totalbs"))
+            //     ->groupBy('df.factura_id')
+            //     ->get();
 
-            foreach($datas as $item)
-            {
-                if($item->montofactura != $item->totalbs)
-                {
-                    Factura::where('id',$item->id)->update(['montofactura'=>$item->totalbs]);
-                }
-            }
+            // foreach($datas as $item)
+            // {
+            //     if($item->montofactura != $item->totalbs)
+            //     {
+            //         Factura::where('id',$item->id)->update(['montofactura'=>$item->totalbs]);
+            //     }
+            // }
 
             
 

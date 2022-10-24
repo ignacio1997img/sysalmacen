@@ -447,7 +447,7 @@
                             fila+='<td>'+presentacion+'</td>'
                             fila+='<td><input type="hidden" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td>'
                             fila+='<td><input type="hidden" name="precio[]" value="'+precio+'">'+precio+'</td>'
-                            fila+='<td><input type="hidden" class="input_subtotal" value="'+cantidad * precio+'">'+cantidad * precio+'</td>'
+                            fila+='<td><input type="hidden" class="input_subtotal" name="subtotal[]" value="'+(cantidad * precio).toFixed(2)+'">'+(cantidad * precio).toFixed(2)+'</td>'
                         fila+='</tr>';
                     
                     let detalle_subtotal = parseFloat(calcular_total()+cantidad * precio ).toFixed(2);
