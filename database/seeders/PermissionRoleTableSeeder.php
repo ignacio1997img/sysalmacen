@@ -107,6 +107,31 @@ class PermissionRoleTableSeeder extends Seeder
                                             `key` = "edit_modalities" or
                                             `key` = "add_modalities" or
 
+                                            `key` = "browse_providers" or
+                                            `key` = "read_providers" or
+                                            `key` = "edit_providers" or
+                                            
+                                            `key` = "browse_printalmacen-inventarioAnual-da" or
+                                            `key` = "browse_printalmacen-inventarioAnual-partida" or
+                                            `key` = "browse_printalmacen-inventarioAnual-detalle" or
+                                            
+                                            `key` = "browse_printalmacen-article-list" or
+                                            `key` = "browse_printalmacen-article-stock" or
+                                            `key` = "browse_printalmacen-article-incomeoffice" or     
+                                            `key` = "browse_printalmacen-article-egressoffice" or                                                
+                                            
+                                            
+                                            `key` = "browse_printalmacen-provider-list" or
+
+                                            `key` = "browse_clear-cache"')->get();
+        $role->permissions()->sync($permissions->pluck('id')->all());
+
+
+        $role = Role::where('name', 'almacen_subadmin')->firstOrFail();
+        $permissions = Permission::whereRaw('table_name = "admin" or
+                                            `key` = "browse_providers" or
+                                            `key` = "read_providers" or
+                                            `key` = "edit_providers" or
                                             
                                             `key` = "browse_printalmacen-inventarioAnual-da" or
                                             `key` = "browse_printalmacen-inventarioAnual-partida" or

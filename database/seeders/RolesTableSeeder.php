@@ -19,13 +19,6 @@ class RolesTableSeeder extends Seeder
             ])->save();
         }
 
-        $role = Role::firstOrNew(['name' => 'user']);
-        if (!$role->exists) {
-            $role->fill([
-                'display_name' => __('user'),
-            ])->save();
-        }
-
         //  DONACIONES SEDEGES ROLES
         $role = Role::firstOrNew(['name' => 'sedeges_admin']);
         if (!$role->exists) {
@@ -52,10 +45,26 @@ class RolesTableSeeder extends Seeder
 
 
         // FIN DONACIONES SEDEGES
+
+        $role = Role::firstOrNew(['name' => 'almacen_admin']);
+        if (!$role->exists) {
+            $role->fill([
+                'display_name' => __('Almacen - Administrador del Almacen'),
+            ])->save();
+        }
+
+        $role = Role::firstOrNew(['name' => 'almacen_subadmin']);
+        if (!$role->exists) {
+            $role->fill([
+                'display_name' => __('Almacen - Sub Administrador del Almacen'),
+            ])->save();
+        }
+
+
         $role = Role::firstOrNew(['name' => 'almacen_responsable']);
         if (!$role->exists) {
             $role->fill([
-                'display_name' => __('Responsable de almacen'),
+                'display_name' => __('Almacen - Responsable de almacen'),
             ])->save();
         }
 
