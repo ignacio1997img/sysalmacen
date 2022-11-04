@@ -229,7 +229,7 @@ class EgressController extends Controller
     {
         // return 1;
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
-
+        return $sucursal;
         if(count($sucursal) > 1 && count($sucursal) < 1)
         {
             return "Contactese con el administrador";
