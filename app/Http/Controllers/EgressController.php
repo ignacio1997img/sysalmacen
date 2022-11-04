@@ -227,7 +227,7 @@ class EgressController extends Controller
 
     public function create()
     {
-        return 1;
+        // return 1;
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
 
         if(count($sucursal) > 1 && count($sucursal) < 1)
@@ -671,6 +671,14 @@ class EgressController extends Controller
     // metodo para buscar las compras de la unidad correspondiente
     protected function ajax_solicitud_compra($id)
     {
+        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
+        
+        if($sucursal->sucursal_id != 1)
+        {
+            $sucursal = 1;
+        }
+        
+
         $solicitud = DB::table('solicitud_compras as com')
             ->join('facturas as f', 'f.solicitudcompra_id', 'com.id')
             ->join('detalle_facturas as fd', 'fd.factura_id', 'f.id')
