@@ -673,10 +673,10 @@ class EgressController extends Controller
     {
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
         
-        if($sucursal->sucursal_id != 1)
-        {
-            $sucursal = 1;
-        }
+        // if($sucursal->sucursal_id != 1)
+        // {
+        //     $sucursal = 1;
+        // }
         
 
         $solicitud = DB::table('solicitud_compras as com')
