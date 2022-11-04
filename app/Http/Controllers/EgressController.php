@@ -227,7 +227,7 @@ class EgressController extends Controller
 
     public function create()
     {
-
+        return 1;
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
 
         if(count($sucursal) > 1 && count($sucursal) < 1)
