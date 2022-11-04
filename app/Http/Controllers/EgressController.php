@@ -229,7 +229,7 @@ class EgressController extends Controller
     {
         // return 1;
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
-        return $sucursal;
+
         if(count($sucursal) > 1 && count($sucursal) < 1)
         {
             return "Contactese con el administrador";
@@ -671,11 +671,11 @@ class EgressController extends Controller
     // metodo para buscar las compras de la unidad correspondiente
     protected function ajax_solicitud_compra($id)
     {
-        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
-        
+        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
+        $query_filter = ' or com.unidadadministrativa = 192';
         if($sucursal->sucursal_id != 1)
         {
-            $sucursal = 1;
+            $query_filter = 1;
         }
         
 
@@ -688,7 +688,7 @@ class EgressController extends Controller
             ->where('fd.condicion', 1)
             ->where('f.condicion', 1)
             // ->where('com.unidadadministrativa', $id)
-            ->whereRaw('com.unidadadministrativa ='.$id.' or com.unidadadministrativa = 192')
+            ->whereRaw('com.unidadadministrativa ='.$id.''.$query_filter)
         
             ->groupBy('com.id', 'm.nombre', 'com.nrosolicitud')
             ->orderBy('com.id')
