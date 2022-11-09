@@ -672,14 +672,12 @@ class EgressController extends Controller
     protected function ajax_solicitud_compra($id)
     {
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
-        $query_filter = ' com.unidadadministrativa = 192';
-        if($sucursal->sucursal_id != 1)
-        {
-            $query_filter = 1;
-        }
-        
+        $query_filter = 'or com.unidadadministrativa = 192';
 
-        $solicitud = DB::table('solicitud_compras as com')
+        if($sucursal->sucursal_id == 1)
+        {
+            // $query_filter = 1;
+            $solicitud = DB::table('solicitud_compras as com')
             ->join('facturas as f', 'f.solicitudcompra_id', 'com.id')
             ->join('detalle_facturas as fd', 'fd.factura_id', 'f.id')
             ->join('modalities as m', 'm.id', 'com.modality_id')
@@ -688,11 +686,45 @@ class EgressController extends Controller
             ->where('fd.condicion', 1)
             ->where('f.condicion', 1)
             // ->where('com.unidadadministrativa', $id)
-            ->whereRaw('com.unidadadministrativa ='.$id.' and '.$query_filter)
+            ->whereRaw('com.unidadadministrativa ='.$id.' or com.unidadadministrativa = 192')
         
             ->groupBy('com.id', 'm.nombre', 'com.nrosolicitud')
             ->orderBy('com.id')
             ->get();
+        }
+        else
+        {
+            $solicitud = DB::table('solicitud_compras as com')
+            ->join('facturas as f', 'f.solicitudcompra_id', 'com.id')
+            ->join('detalle_facturas as fd', 'fd.factura_id', 'f.id')
+            ->join('modalities as m', 'm.id', 'com.modality_id')
+            ->select('com.id', 'm.nombre', 'com.nrosolicitud')
+            // ->where('com.stock',0)
+            ->where('fd.condicion', 1)
+            ->where('f.condicion', 1)
+            // ->where('com.unidadadministrativa', $id)
+            ->whereRaw('com.unidadadministrativa ='.$id)
+        
+            ->groupBy('com.id', 'm.nombre', 'com.nrosolicitud')
+            ->orderBy('com.id')
+            ->get();
+        }
+        
+
+        // $solicitud = DB::table('solicitud_compras as com')
+        //     ->join('facturas as f', 'f.solicitudcompra_id', 'com.id')
+        //     ->join('detalle_facturas as fd', 'fd.factura_id', 'f.id')
+        //     ->join('modalities as m', 'm.id', 'com.modality_id')
+        //     ->select('com.id', 'm.nombre', 'com.nrosolicitud')
+        //     // ->where('com.stock',0)
+        //     ->where('fd.condicion', 1)
+        //     ->where('f.condicion', 1)
+        //     // ->where('com.unidadadministrativa', $id)
+        //     ->whereRaw('com.unidadadministrativa ='.$id.' '.$query_filter)
+        
+        //     ->groupBy('com.id', 'm.nombre', 'com.nrosolicitud')
+        //     ->orderBy('com.id')
+        //     ->get();
         return $solicitud;
     }
 
