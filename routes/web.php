@@ -16,6 +16,7 @@ use App\Http\Controllers\DonacionSolicitudController;
 use App\Http\Controllers\SucursalController;
 use App\Http\Controllers\ProviderController;
 
+use App\Http\Controllers\MaintenanceController;
 
 use App\Http\Controllers\DonationStockController;
 use App\Http\Controllers\ReportAlmacenController;
@@ -41,6 +42,10 @@ Route::get('login', function () {
 Route::get('/', function () {
     return redirect('admin');
 });
+
+
+Route::get('/maintenance', [MaintenanceController::class , 'maintenance'])->name('maintenance');
+
 
 
 Route::group(['prefix' => 'admin'], function () {

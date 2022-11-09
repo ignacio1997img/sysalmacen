@@ -25,33 +25,18 @@ use App\Models\SucursalUser;
 class IncomeController extends Controller
 {
     public function index()
-    {
-        // $datetime1 	= new DateTime('2020-10-13 16:52:52');
-        // $datetime2 	= new DateTime('2020-10-11 16:52:52');
-        // $interval 	= $datetime1->diff($datetime2);
-
-        // return $interval->format('%a days');
-
-
-
-
-        // $ok = DB::table('donacion_ingresos as di')
-        //         ->join('donacion_ingreso_detalles as did', 'did.donacioningreso_id', 'di.id')
-        //         ->join('donacion_articulos as da', 'da.id', 'did.donacionarticulo_id')
-        //         ->select('di.nrosolicitud', 'da.nombre', 'did.caducidad')
-        //         ->where('did.deleted_at', null)
-        //         ->where('did.condicion', 1)
-        //         ->where('did.cantrestante','>', 0)
-        //         ->get();
-
-        
-
-
-        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
-        
-        if(count($sucursal) > 1 && count($sucursal) < 1)
+    {      
+        if(env('APP_MAINTENANCE') && !auth()->user()->hasRole('admin'))
         {
-            return "Contactese con el administrador";
+            Auth::logout();
+            return redirect()->route('maintenance');
+        }
+
+        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
+        // return $sucursal;
+        if(!$sucursal && !auth()->user()->hasRole('admin'))
+        {
+            return view('errors.error');
         }
 
 
@@ -87,7 +72,7 @@ class IncomeController extends Controller
                 ->join('providers as pro', 'pro.id', 'f.provider_id')
                 ->select('sol.id', 'sol.stock', 'm.nombre as modalidad', 'sol.nrosolicitud' , 'pro.razonsocial', 'pro.nit', 'f.nrofactura', 'f.fechafactura', 'f.montofactura', 'sol.created_at', 'sol.condicion')
                 ->where('sol.deleted_at', null)
-                ->where('sol.sucursal_id', $sucursal->first()->sucursal_id)
+                ->where('sol.sucursal_id', $sucursal->sucursal_id)
                 ->orderBy('sol.id', 'DESC')
                 ->get();
         }
