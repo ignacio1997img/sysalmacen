@@ -688,7 +688,7 @@ class EgressController extends Controller
             ->where('fd.condicion', 1)
             ->where('f.condicion', 1)
             // ->where('com.unidadadministrativa', $id)
-            ->whereRaw('com.unidadadministrativa ='.$id.' or '.$query_filter)
+            ->whereRaw('com.unidadadministrativa ='.$id.' and '.$query_filter)
         
             ->groupBy('com.id', 'm.nombre', 'com.nrosolicitud')
             ->orderBy('com.id')
