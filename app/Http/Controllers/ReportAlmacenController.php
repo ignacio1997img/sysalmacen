@@ -154,7 +154,7 @@ class ReportAlmacenController extends Controller
                         // ->groupBy('u.id')
                         ->groupBy('d.id')
                         ->get();
-            // dd($salida);
+            // dd($data);
             
             foreach($data as $item)
             {
@@ -240,6 +240,8 @@ class ReportAlmacenController extends Controller
                         ->where('sc.deleted_at', null)
                         ->where('f.deleted_at', null)
                         ->where('df.deleted_at', null)
+                        ->where('sc.sucursal_id', $request->sucursal_id)
+                        
                         // ->where('de.deleted_at', null)
                         ->select('p.id', 'p.codigo', 'p.nombre',DB::raw("SUM(df.cantsolicitada) as cantidadinicial"), DB::raw("SUM(df.totalbs) as totalinicial"),
                                 DB::raw("SUM(df.cantrestante) as cantfinal"), DB::raw("SUM((df.cantrestante) * df.precio) as totalfinal")
@@ -257,14 +259,8 @@ class ReportAlmacenController extends Controller
         }
         if($request->print==2)
         {
-            // dd(1);
             return Excel::download(new AnualPartidaExport($data, $gestion), $sucursal->nombre.' - Partida Anual '.$gestion.'.xlsx');
         }
-        // if($request->print==3)
-        // {
-        //     $pdf = Pdf::loadView('almacenes/report/inventarioAnual/partidaGeneral/pdf');
-        //     return $pdf->download('pdfs.pdf');
-        // }
         if($request->print ==NULL)
         {            
             return view('almacenes/report/inventarioAnual/partidaGeneral/list', compact('data'));
@@ -312,6 +308,7 @@ class ReportAlmacenController extends Controller
                         ->where('sc.deleted_at', null)
                         ->where('f.deleted_at', null)
                         ->where('df.deleted_at', null)
+                        ->where('sc.sucursal_id', $request->sucursal_id)
                         ->select('a.id', 'a.presentacion', 'a.nombre', 'df.precio',
                                 DB::raw("SUM(df.cantsolicitada) as cEntrada"), DB::raw("SUM(df.cantsolicitada - df.cantrestante) as cSalida"), DB::raw("SUM(df.cantrestante) as cFinal"),
 
@@ -395,6 +392,8 @@ class ReportAlmacenController extends Controller
                     ->where('df.cantrestante', '>', 0)
                     // ->where('df.fechaingreso', '>=', $request->start)
                     // ->where('df.fechaingreso', '<=', $request->finish)
+                    ->where('sc.sucursal_id', $request->sucursal_id)
+
                     ->where('df.deleted_at', null)
                     ->where('f.deleted_at', null)
                     ->where('sc.deleted_at', null)
@@ -527,6 +526,9 @@ class ReportAlmacenController extends Controller
                         ->where('u.direccion_id', $request->direccion_id)
                         ->where('cp.fechaingreso', '>=', $request->start)
                         ->where('cp.fechaingreso', '<=', $request->finish)
+
+                        ->where('cp.sucursal_id', $request->sucursal_id)
+
                         ->select('u.nombre as unidad','cp.fechaingreso',  'a.nombre as articulo', 'p.nombre as partida', 'nrosolicitud', 'a.presentacion', 'df.precio', 'df.cantsolicitada', 'df.totalbs')
                         ->orderBy('u.id')
                         ->orderBy('cp.fechaingreso')
@@ -547,6 +549,8 @@ class ReportAlmacenController extends Controller
                         ->where('u.id', $request->unidad_id)
                         ->where('cp.fechaingreso', '>=', $request->start)
                         ->where('cp.fechaingreso', '<=', $request->finish)
+                        ->where('cp.sucursal_id', $request->sucursal_id)
+
                         ->select('u.nombre as unidad','cp.fechaingreso',  'a.nombre as articulo', 'p.nombre as partida', 'nrosolicitud', 'a.presentacion', 'df.precio', 'df.cantsolicitada', 'df.totalbs')
                         ->orderBy('u.id')
                         ->orderBy('cp.fechaingreso')
@@ -620,6 +624,9 @@ class ReportAlmacenController extends Controller
                         ->where('u.direccion_id', $request->direccion_id)
                         ->where('se.fechaegreso', '>=', $request->start)
                         ->where('se.fechaegreso', '<=', $request->finish)
+
+                        ->where('se.sucursal_id', $request->sucursal_id)
+
                         ->select('u.nombre as unidad','se.fechaegreso', 'a.nombre as articulo', 'p.nombre as partida', 'se.nropedido', 'a.presentacion', 'de.precio', 'de.cantsolicitada', 'de.totalbs')
                         ->orderBy('u.id')
                         ->orderBy('se.fechaegreso')
@@ -639,6 +646,9 @@ class ReportAlmacenController extends Controller
                         ->where('u.id', $request->unidad_id)
                         ->where('se.fechaegreso', '>=', $request->start)
                         ->where('se.fechaegreso', '<=', $request->finish)
+
+                        ->where('se.sucursal_id', $request->sucursal_id)
+
                         ->select('u.nombre as unidad','se.fechaegreso', 'a.nombre as articulo', 'p.nombre as partida', 'se.nropedido', 'a.presentacion', 'de.precio', 'de.cantsolicitada', 'de.totalbs')
                         ->orderBy('u.id')
                         ->orderBy('se.fechaegreso')
