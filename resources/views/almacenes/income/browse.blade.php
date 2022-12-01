@@ -2,6 +2,7 @@
 
 @section('page_title', 'Viendo Ingresos')
 
+
 @if(auth()->user()->hasPermission('browse_income'))
     @section('page_header')
         <div class="container-fluid">
@@ -181,7 +182,9 @@
     @stop
 
     @section('javascript')
+
             <script>
+                
                 $(document).ready(function(){
                     $('.dataTable').DataTable({
                         language: {

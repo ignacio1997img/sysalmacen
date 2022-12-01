@@ -85,7 +85,7 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
 }
 ?>
 
-<div class="app-container">
+<div id="bodyMain" class="app-container">
     <div class="fadetoblack visible-xs"></div>
     <div class="row content-container">
         @include('voyager::dashboard.navbar')
@@ -117,7 +117,7 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
             })();
         </script>
         <!-- Main Content -->
-        <div class="container-fluid">
+        <div id="divMain" class="container-fluid">
             <div class="side-body padding-top">
                 @yield('page_header')
                 <div id="voyager-notifications"></div>
@@ -132,6 +132,21 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
 
 
 <script type="text/javascript" src="{{ voyager_asset('js/app.js') }}"></script>
+
+
+
+
+@if (setting('plantilla.navidad'))
+    {{-- <link href="{{asset('navidad/css/style.css')}}" rel="stylesheet" type="text/css" /> --}}
+    {{-- <script type="text/javascript" src="{{asset('navidad/js/jquery-latest.min.js')}}"></script> --}}
+    {{-- <script src="{{asset('navidad/js/snowfall.jquery.js')}}"></script> --}}
+    <script type="text/javascript" src="{{asset('navidad/snow.js')}}"></script>
+    <script type="text/javascript">
+        $(function() {
+            $(document).snow({ SnowImage: "{{ asset('navidad/image/icon.png') }}" });
+        });
+    </script>
+@endif
 
 <script>
 
