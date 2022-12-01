@@ -95,7 +95,7 @@ function __ShowSnow(settings)
   
     var settings = $.extend({
             SnowImage:      undefined,
-            Quantity:       25,
+            Quantity:       10,
             HideSnowTime:   0
         }, options);
 
