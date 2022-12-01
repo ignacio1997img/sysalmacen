@@ -107,7 +107,7 @@
                 </tr>
             @endforelse
             <tr>
-                <th colspan="4" style="text-align: right">Total</th>
+                <th colspan="4" style="text-align: left">Total</th>
                 <th style="text-align: right">{{number_format($cIni,2)}}</th>
                 <th style="text-align: right">{{number_format($cEnt,2)}}</th>
                 <th style="text-align: right">{{number_format($cSal,2)}}</th>

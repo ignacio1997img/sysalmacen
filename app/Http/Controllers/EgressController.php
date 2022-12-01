@@ -107,7 +107,8 @@ class EgressController extends Controller
         $data = DB::table('sysalmacen.solicitud_egresos as se')
             ->join('sysadmin.unidades as u', 'u.id', 'se.unidadadministrativa')
             ->join('sysadmin.direcciones as d', 'd.id', 'u.direccion_id')
-            ->select('se.id', 'se.nropedido', 'se.fechasolicitud', 'se.fechaegreso', 'u.nombre as unidad', 'd.nombre as direccion')
+            ->join('sysalmacen.sucursals as s', 's.id', 'se.sucursal_id')
+            ->select('se.id', 'se.nropedido', 'se.fechasolicitud', 'se.fechaegreso', 'u.nombre as unidad', 'd.nombre as direccion', 's.nombre as sucursal')
             ->where('se.deleted_at', null)
             ->whereRaw($query_filter)
             // ->orderBy('se.id', 'DESC')
@@ -636,7 +637,8 @@ class EgressController extends Controller
     protected function show($id)
     {
         // return $id;
-        $sol = SolicitudEgreso::find($id);
+        $sol = SolicitudEgreso::with(['sucursal'])
+            ->where('id', $id)->first();
 
         // return $sol;
 

@@ -77,8 +77,8 @@
                                                                 <a href="{{route('income_view_stock',$data->id)}}" title="Ver" target="_blank" class="btn btn-sm btn-info view">
                                                                     <i class="voyager-basket"></i> <span class="hidden-xs hidden-sm">Stock</span>
                                                                 </a>
-                                                                <a href="{{route('income_view',$data->id)}}" title="Ver" target="_blank" class="btn btn-sm btn-info view">
-                                                                    <i class="voyager-file-text"></i> <span class="hidden-xs hidden-sm">Ver</span>
+                                                                <a href="{{route('income_view',$data->id)}}" title="Ver" target="_blank" class="btn btn-sm btn-success view">
+                                                                    <i class="glyphicon glyphicon-print"></i>
                                                                 </a>                                                                
                                                             @endif
                                                             @if($data->condicion == 1)

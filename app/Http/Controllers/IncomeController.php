@@ -106,7 +106,9 @@ class IncomeController extends Controller
 
     protected function view_ingreso($id)
     {
-        $sol = SolicitudCompra::find($id);
+        // $sol = SolicitudCompra::find($id);
+        $sol = SolicitudCompra::with(['sucursal'])
+            ->where('id', $id)->first();
         
         $factura = Factura::where('solicitudcompra_id', $sol->id)->where('deleted_at', null)->first();
 

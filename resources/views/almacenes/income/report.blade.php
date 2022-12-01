@@ -1,210 +1,131 @@
-<html mmoznomarginboxes="" mozdisallowselectionprint="">
-    <head>
-        <title>Comprobante Ingreso</title>
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/print.style.css') }}" media="print">
-        <style type="text/css">
-            html
-            {
-                background-color: #FFFFFF; 
-                margin: 0px;  /* this affects the margin on the html before sending to printer */
-            }
-            body {
-                font-size: 14px !important;
-            }
-            table {
-                font-size: 10px !important;
-            }
-            .centrar{
-                width: 240mm;
-                margin-left: auto;
-                margin-right: auto;
-                /*border: 1px solid #777;*/
-                display: grid;
-                padding: 10mm !important;
-                -webkit-box-shadow: inset 2px 2px 46px 1px rgba(209,209,209,1);
-                -moz-box-shadow: inset 2px 2px 46px 1px rgba(209,209,209,1);
-                box-shadow: inset 2px 2px 46px 1px rgba(209,209,209,1);
-            }
-            /*For each sections*/
-            .box-section {
-                margin-top: 1mm;
-                border: 1px solid #000;
-                padding: 8px;
-            }
-            .alltables {
-                width: 100%;
-            }
-            .alltables td{
-                padding: 2px;
-            }
-            .box-margin {
-                border: 1px solid #000;
-                width: 120px;
-            }
-            .caja {
-                border: 1px solid #000;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="noImprimir text-center">
-            <button onclick="javascript:window.print()" class="btn btn-link">
-                IMPRIMIR
-            </button>
-        </div>
-        <div class="centrar">
-            {{-- ENCABEZADO --}}
-            <table class="alltables text-center">
-                <tbody>
-                    <tr>
-                        <td><img src="{{ asset('images/lg.png') }}" width="100px"></td>
-                        <td>
-                            <table class="alltables">
-                                <tr>
-                                    <td  class="text-center">
-                                        <h4 style="font-size: 22px;"><strong>GOBIERNO AUTONOMO DEPARTAMENTAL DEL BENI</strong></h4>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center" style="width: 40%">
-                                        <span style="font-size: 20px;">
-                                            <strong>UNIDAD DE ALMACENES MATERIALES Y SUMINISTROS</strong>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center" style="width: 40%">
-                                        <span style="font-size: 15px;">
-                                            <strong>Acta de Recepción de Materiales y Suministros <br>Solicitud de Compra [{{$modalidad->nombre}} - {{$sol->nrosolicitud}}/{{$sol->gestion}}]</strong>
-                                        </span>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <br>
-        
-                <table class="text-center" width="100%" style="font-size: 8pt">
-                    <tr>
-                        <th>PROVEEDOR</th>
-                        <th>NIT</th>
-                        <th>
-                            @if ($factura->tipofactura != 'Orden_Compra')
-                                NRO FACTURA
-                            @else
-                                NRO ORDEN DE COMPRA
-                            @endif
-                        </th>
-                        <th>FECHA INGRESO</th>
-                    </tr>
-                    <tr>
-                        <td>{{$proveedor->razonsocial}}</td>
-                        <td>{{$proveedor->nit}}</td>
-                        <td>{{$factura->nrofactura}}</td>
-                        <td>{{\Carbon\Carbon::parse($sol->fechaingreso)->format('d/m/Y')}}</td>
-                    </tr>
-                </table>
+@extends('layouts.template-print-alt')
+
+@section('page_title', 'Reporte')
+
+@section('content')
+    @php
+        $months = array('', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre');    
+    @endphp
+    <table width="100%">
+        <tr>
+            <td style="width: 20%"><img src="{{ asset('images/icon.png') }}" alt="GADBENI" width="100px"></td>
+            <td style="text-align: center;  width:70%">
+                <h3 style="margin-bottom: 0px; margin-top: 5px">
+                    GOBIERNO AUTONOMO DEPARTAMENTAL DEL BENI<br>
+                </h3>
+                <h4 style="margin-bottom: 0px; margin-top: 5px">
+                    UNIDAD DE ALMACENES MATERIALES Y SUMINISTROS
+                    {{-- Stock Disponible {{date('d/m/Y', strtotime($start))}} Hasta {{date('d/m/Y', strtotime($finish))}} --}}
+                </h4>
+                <small style="margin-bottom: 0px; margin-top: 5px; text-transform: uppercase;">
+                    Acta de Recepción de Materiales y Suministros <br>
+                    {{$sol->sucursal->nombre}}<br>                    
+                    {{$modalidad->nombre}} - {{$sol->nrosolicitud}}
+                    <br>
+                    {{ date('d', strtotime($sol->fechaingreso)) }} de {{ $months[intval(date('m', strtotime($sol->fechaingreso)))] }} de {{ date('Y', strtotime($sol->fechaingreso)) }}
+                </small>
+            </td>
+            <td style="text-align: right; width:30%">
+                <h3 style="margin-bottom: 0px; margin-top: 5px">
+                   
+                    <small style="font-size: 11px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/M/Y H:i:s') }}</small>
+                </h3>
+            </td>
+        </tr>
+    </table>
+    <br><br>
+    <table class="text-center" width="100%" style="font-size: 8pt">
+        <tr>
+            <th style="text-align: center">PROVEEDOR</th>
+            <th style="text-align: center">NIT</th>
+            <th style="text-align: center">
+                @if ($factura->tipofactura != 'Orden_Compra')
+                    NRO FACTURA
+                @else
+                    NRO ORDEN DE COMPRA
+                @endif
+            </th>
+            <th style="text-align: center">FECHA INGRESO</th>
+        </tr>
+        <tr>
+            <td style="text-align: center">{{$proveedor->razonsocial}}</td>
+            <td style="text-align: center">{{$proveedor->nit}}</td>
+            <td style="text-align: center">{{$factura->nrofactura}}</td>
+            <td style="text-align: center">{{\Carbon\Carbon::parse($sol->fechaingreso)->format('d/m/Y')}}</td>
+        </tr>
+    </table>
+    <br>
+    <table style="width: 100%; font-size: 12px" border="1" cellspacing="0" cellpadding="5">
+        <thead>
+
+            <tr>
+                <th style="width:5px">N&deg;</th>
+                <th style="text-align: center">Artículo</th>
+                <th style="text-align: center">Codigo Articulo</th>
+                <th style="text-align: center">Presentacion</th>
+                <th style="text-align: center">Cantidad</th>
+                <th style="text-align: center">Precio Unit.</th>
+                <th style="text-align: center">Total Parcial</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php
+                $numeroitems = 1; $suma_Total = 0; $total =0;
+            @endphp
+            @forelse ($detalle as $data)
+                <tr>
+                    <td>{{$numeroitems}}</td>
+                    <td style="text-align: left">{{$data->articulo}}</td>
+                    <td style="text-align: right">{{$data->codigo}}</td>
+                    <td style="text-align: center">{{$data->presentacion}}</td>                                                    
+                    <td style="text-align: right">{{number_format($data->cantidad,2)}}</td>
+                    <td style="text-align: right">{{number_format($data->precio,2)}}</td>
+                    <td style="text-align: right">{{number_format($data->cantidad * $data->precio,2)}}</td>
+                </tr>
+                <?php
+                    $total+= $data->cantidad * $data->precio;
+                    $numeroitems++;
+                ?>
+            @empty
+                <tr style="text-align: center">
+                    <td colspan="7">No se encontraron registros.</td>
+                </tr>
+            @endforelse
+            <tr>
+                <td colspan="6"style="text-align: letf"><strong>TOTAL</strong></td>
+                <td style="text-align: right"><strong>{{number_format($total,2)}}</strong></td>
+            </tr>
+        </tbody>
+       
+    </table>
+    <div class="row" style="font-size: 9pt">
+        <p style="text-align: right">Total - Artículo Disponible: BS. {{NumerosEnLetras::convertir($total,'Bolivianos',true)}}</p>
+    </div>
+
+    <div class="text">
+        <p style="font-size: 13px;"><b>NOTA:</b> La información expuesta en el presente cuadro cuenta con la documentación de soporte correspondiente, en el marco de las Normas Básicas del Sistema de Contabilidad Integrada.</p>
+    </div>
+    <br>
+    <br><br>
+    <br>
+    <table width="100%">
+        <tr>
+            <td style="text-align: center">
+                ______________________
                 <br>
+                <b>Responsable Almacen</b>
+            </td>
+            <td style="text-align: center">
+                {{-- ______________________
+                <br>
+                <b>Firma Responsable</b> --}}
+            </td>
+            <td style="text-align: center">
+                ______________________
+                <br>
+                <b>Jefe de Contrataciones</b>
+            </td>
+        </tr>
+    </table>
 
-           
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>Nº</th>
-                        <th>Artículo</th>
-                        <th>Codigo Articulo</th>
-                        <th>Presentacion</th>
-                        <th>Cantidad</th>
-                        <th>Precio Unit.</th>
-                        <th>Total Parcial</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php $numeroitems = 1; $suma_Total = 0; $total =0;?>
-                    @foreach($detalle as $data)
-                                                <tr>
-                                                    <td>{{$numeroitems}}</td>
-                                                    <td>{{$data->articulo}}</td>
-                                                    <td>{{$data->codigo}}</td>
-                                                    <td>{{$data->presentacion}}</td>                                                    
-                                                    <td>{{$data->cantidad}}</td>
-                                                    <td>{{$data->precio}}</td>
-                                                    <td>{{$data->cantidad * $data->precio}}</td>
-                                                </tr>
-                                                <?php
-                                                    $total+= $data->cantidad * $data->precio;
-                                                    $numeroitems++;
-                                                ?>
-                    @endforeach   
-                    <tr>
-                        <td colspan="6" class="text-right"><strong>TOTAL</strong></td>
-                        <td><strong>{{$total}}</strong></td>
-                    </tr>
-                    
-                </tbody>
-            </table>
-            <div class="row" style="font-size: 9pt">
-                <p style="text-align: right">Total - Detalle de Compra: {{NumerosEnLetras::convertir($total,'Bolivianos',true)}}</p>
-            </div>
-            
-
-            <div class="card-body">
-                <div class="row">
-                    <div class="text-center col-6">
-                        <br>
-                        <br>
-                        <br>
-                        ________________________________________
-                        <br>
-                        <b>RESPONSABLE ALMACENES </b>
-                    </div>
-                    <div class="text-center col-6">
-                        <br>
-                        <br>
-                        <br>
-                        ________________________________________
-                        <br>
-                        <b>JEFE DE CONTRATACIONES</b>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="text-center col-3">
-                        
-                    </div>
-                    <div class="text-center col-6">
-                        <br>
-                        <br>
-                        <br>
-                        ________________________________________
-                        <br>
-                        <b>PROVEEDOR</b>
-                        <br>
-                    </div>
-                    <div class="text-center col-3">
-                        
-                    </div>
-                </div>
-            </div> 
-
-
-
-
-            {{-- end section body --}}
-            <!-- <div class="text-center">
-                <p style="font-size: 13px;"><b>NOTA:</b> Este reporte muestra a detalle los productos egresados de fecha .</p>
-            </div> -->
-            <div>
-                <table style="width: 100%;">
-                    <tr>
-                        <td class="text-left" style="font-size: 10px;"></td>
-                        <td class="text-right" style="font-size: 10px;"></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </body>
-</html>
+@endsection

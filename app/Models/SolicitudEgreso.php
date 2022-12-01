@@ -19,4 +19,9 @@ class SolicitudEgreso extends Model
         'condicion',
         'deleteuser_id',
     ];
+
+    public function sucursal()
+    {
+        return $this->belongsTo(Sucursal::class, 'sucursal_id');
+    }
 }

@@ -36,6 +36,9 @@
                                             <th class="text-center">Fecha Solicitud</th>
                                             <th class="text-center">Fecha Salida</th>
                                             <th class="text-center">Oficina</th>
+                                            @if(auth()->user()->hasRole(['admin']))
+                                                <th style="text-align: center">Sucursal</th>
+                                            @endif
                                             @if(auth()->user()->hasPermission('read_egres')||auth()->user()->hasPermission('edit_egres')||auth()->user()->hasPermission('delete_egres'))
                                                             <th>Accion</th>
                                             @endif
@@ -52,13 +55,19 @@
                                                             <td>{{date('d/m/Y', strtotime($item->fechasolicitud))}}</td>
                                                             <td>{{date('d/m/Y', strtotime($item->fechaegreso))}}</td>
                                                             <td style="text-align: center">{{$item->direccion}} <br><small>{{$item->unidad}}</small></td>
+                                                            @if(auth()->user()->hasRole(['admin']))
+                                                                <td style="text-align: center"><label class="label label-dark">{{$item->sucursal}}</label></td>
+                                                            @endif
 
                                                             <td style="text-align: center">
                                                                 <div class="no-sort no-click bread-actions text-right">
                                                                     @if(auth()->user()->hasPermission('read_egres'))
-                                                                        <a href="{{route('egres.show',$item->id)}}" target="_blank" title="Ver" class="btn btn-sm btn-warning view">
+                                                                        {{-- <a href="{{route('egres.show',$item->id)}}" target="_blank" title="Ver" class="btn btn-sm btn-warning view">
                                                                             <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
-                                                                        </a>
+                                                                        </a> --}}
+                                                                        <a href="{{route('egres.show',$item->id)}}" title="Imprimir" target="_blank" class="btn btn-sm btn-success view">
+                                                                            <i class="glyphicon glyphicon-print"></i>
+                                                                        </a>   
                                                                     @endif
                                                                     @if(auth()->user()->hasPermission('edit_egres'))
                                                                         <a href="{{route('egres.edit',$item->id)}}" title="Editar" class="btn btn-sm btn-info view">

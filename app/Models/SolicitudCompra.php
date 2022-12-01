@@ -12,6 +12,11 @@ class SolicitudCompra extends Model
     protected $fillable = ['sucursal_id','direccionadministrativa', 'unidadadministrativa', 'modality_id', 'registeruser_id',
                             'nrosolicitud', 'fechaingreso', 'gestion', 'condicion', 'deleteuser_id','stock'
                             ];
+
+    public function sucursal()
+    {
+        return $this->belongsTo(Sucursal::class, 'sucursal_id');
+    }
                             
     public function direccion()
     {
