@@ -25,7 +25,7 @@
                 <p class="fs-3"> <span class="text-danger">Aviso!</span> Sistema en mantenimiento.</p>
                 <p class="lead">
                     {{-- En estos momentos el sistema se encuentra en mantenimiento, por favor intente más tarde. --}}
-                    En estos momentos el sistema se encuentra en mantenimiento, por favor intente dentro de 15 minutos <br> :)
+                    En estos momentos el sistema se encuentra en mantenimiento, por favor intente mas tardes <br>Gracias por su comprensión
 
                 </p>
                 <img src="{{asset('images/maintenance.gif')}}" width="250" height="200" border="0">
