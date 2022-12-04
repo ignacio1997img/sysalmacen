@@ -136,7 +136,7 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
 
 
 
-@if (setting('plantilla.navidad'))
+@if (setting('configuracion.navidad'))
     {{-- <link href="{{asset('navidad/css/style.css')}}" rel="stylesheet" type="text/css" /> --}}
     {{-- <script type="text/javascript" src="{{asset('navidad/js/jquery-latest.min.js')}}"></script> --}}
     {{-- <script src="{{asset('navidad/js/snowfall.jquery.js')}}"></script> --}}

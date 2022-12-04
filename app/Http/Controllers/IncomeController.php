@@ -26,7 +26,7 @@ class IncomeController extends Controller
 {
     public function index()
     {      
-        if(env('APP_MAINTENANCE') && !auth()->user()->hasRole('admin'))
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin'))
         {
             Auth::logout();
             return redirect()->route('maintenance');
@@ -85,6 +85,13 @@ class IncomeController extends Controller
 
     public function create()
     {
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin'))
+        {
+            Auth::logout();
+            return redirect()->route('maintenance');
+        }
+
+
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
 
         if(count($sucursal) > 1 && count($sucursal) < 1)
@@ -106,6 +113,13 @@ class IncomeController extends Controller
 
     protected function view_ingreso($id)
     {
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin'))
+        {
+            Auth::logout();
+            return redirect()->route('maintenance');
+        }
+
+
         // $sol = SolicitudCompra::find($id);
         $sol = SolicitudCompra::with(['sucursal'])
             ->where('id', $id)->first();
@@ -140,6 +154,12 @@ class IncomeController extends Controller
     }
     protected function view_ingreso_stock($id)
     {
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin'))
+        {
+            Auth::logout();
+            return redirect()->route('maintenance');
+        }
+
         $sol = SolicitudCompra::find($id);
  
         
@@ -176,6 +196,11 @@ class IncomeController extends Controller
     // funcion para guardar los registro de un ingreso en general
     public function store(Request $request)
     {      
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin'))
+        {
+            Auth::logout();
+            return redirect()->route('maintenance');
+        }
         // return $request;
         $user = Auth::user();
         DB::beginTransaction();
@@ -277,6 +302,11 @@ class IncomeController extends Controller
  
     public function edit($id)
     {
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin'))
+        {
+            Auth::logout();
+            return redirect()->route('maintenance');
+        }
 
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
 
@@ -334,6 +364,12 @@ class IncomeController extends Controller
 
     public function update(Request $request)
     {  
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin'))
+        {
+            Auth::logout();
+            return redirect()->route('maintenance');
+        }
+
         $user = Auth::user();
         $gestion = Carbon::parse($request->fechaingreso)->format('Y');
         DB::beginTransaction();
@@ -437,6 +473,13 @@ class IncomeController extends Controller
 
     public function salida($id)
     {
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin'))
+        {
+            Auth::logout();
+            return redirect()->route('maintenance');
+        }
+
+
         // return $id;
         // $factura = Factura::where('solicitudcompra_id', $id)->first();
         // $detalle = DetalleFactura::where('factura_id', $factura->id)->where('deleted_at', null)->get();
@@ -478,7 +521,12 @@ class IncomeController extends Controller
 
 
     public function destroy(Request $request)
-    {       
+    {    
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin'))
+        {
+            Auth::logout();
+            return redirect()->route('maintenance');
+        }
         
         DB::beginTransaction();
         try{
@@ -507,6 +555,7 @@ class IncomeController extends Controller
 
     protected function ajax_unidad_administrativa($id)//para la view de ingreso y egreso
     {
+        
         return DB::connection('mamore')->table('unidades')
                         ->where('deleted_at', null)
                         ->where('direccion_id',$id)

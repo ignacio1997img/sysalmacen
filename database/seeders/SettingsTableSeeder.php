@@ -137,8 +137,19 @@ class SettingsTableSeeder extends Seeder
                 'value' => '1',
                 'details' => NULL,
                 'type' => 'checkbox',
-                'order' => 6,
+                'order' => 7,
                 'group' => 'Plantilla',
+            ),
+            11 => 
+            array (
+                'id' => 16,
+                'key' => 'configuration.maintenance',
+                'display_name' => 'Sistema en Mantenimiento',
+                'value' => '1',
+                'details' => NULL,
+                'type' => 'checkbox',
+                'order' => 8,
+                'group' => 'Configuración',
             ),
         ));
         

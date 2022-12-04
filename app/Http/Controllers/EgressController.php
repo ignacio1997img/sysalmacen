@@ -23,6 +23,11 @@ class EgressController extends Controller
 {
     public function index()
     {
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin'))
+        {
+            Auth::logout();
+            return redirect()->route('maintenance');
+        }
        
         
     
@@ -228,6 +233,11 @@ class EgressController extends Controller
 
     public function create()
     {
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin'))
+        {
+            Auth::logout();
+            return redirect()->route('maintenance');
+        }
         // return 1;
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
 
@@ -252,6 +262,11 @@ class EgressController extends Controller
  
     public function store(Request $request)
     {
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin'))
+        {
+            Auth::logout();
+            return redirect()->route('maintenance');
+        }
         // return $request;
 
         $user = Auth::user();
@@ -332,6 +347,11 @@ class EgressController extends Controller
 
     public function edit($id)
     {
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin'))
+        {
+            Auth::logout();
+            return redirect()->route('maintenance');
+        }
         // return 1;
         
         // $user = Auth::user();
@@ -373,6 +393,11 @@ class EgressController extends Controller
 
     public function update(Request $request)
     {
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin'))
+        {
+            Auth::logout();
+            return redirect()->route('maintenance');
+        }
         // return $request;
         $user = Auth::user();
         DB::beginTransaction();
@@ -567,6 +592,11 @@ class EgressController extends Controller
 
     public function destroy(Request $request)
     {       
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin'))
+        {
+            Auth::logout();
+            return redirect()->route('maintenance');
+        }
         // return $request;
         DB::beginTransaction();
         try{
@@ -636,6 +666,11 @@ class EgressController extends Controller
 
     protected function show($id)
     {
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin'))
+        {
+            Auth::logout();
+            return redirect()->route('maintenance');
+        }
         // return $id;
         $sol = SolicitudEgreso::with(['sucursal'])
             ->where('id', $id)->first();
