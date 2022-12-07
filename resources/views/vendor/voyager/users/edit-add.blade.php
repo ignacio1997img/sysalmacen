@@ -84,7 +84,7 @@
                                         @if($usuario == null)                                
                                             <option value="{{$data->id}}" >{{$data->last_name}} {{$data->first_name}}</option>     
                                         @else
-                                            <option value="{{$data->id}}" {{$data->id == $usuario->funcionario_id? 'selected' : '' }}>{{$data->last_name}} {{$data->first_name}}</option>    
+                                            <option value="{{$data->id}}" {{$data->id == $usuario->funcionario_id? 'selected' : '' }}>{{$data->first_name}} {{$data->last_name}}</option>    
                                         @endif                            
                                     @endforeach
                                 </select>
@@ -100,7 +100,7 @@
                                 <label for="password">{{ __('voyager::generic.password') }}</label>
                                 @if(isset($dataTypeContent->password))
                                     <br>
-                                    <small>{{ __('voyager::profile.password_hint') }}</small>
+                                    <small>{{ __('voyager::profile.password_hint') }}</small> {{-- Dejar vacío para mantener el mismo --}}
                                 @endif
                                 <input type="password" class="form-control" id="password" name="password" value="" autocomplete="new-password">
                             </div>

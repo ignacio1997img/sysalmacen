@@ -37,8 +37,22 @@ class UserController extends Controller
     public function store(Request $request)
     {
         // return $request;
+        // $ok = SucursalUser::where('sucursal_id', $request->branchoffice_id)->where('user_id', $request->user_id)->where('condicion',1)->first();
+        // $ok = SucursalUser::where('sucursal_id', $request->branchoffice_id)->where('condicion',1)->first();
+        // if($ok)
+        // {
+        //     return redirect('admin/users')->with(['message' => 'La sucursal ya se encuentra asignada a una persona.', 'alert-type' => 'error']);
+        // }
+
+        $ok = SucursalUser::where('user_id', $request->user_id)->where('condicion',1)->first();
+        if($ok)
+        {
+            return redirect('admin/users')->with(['message' => 'La persona se encuentra asignada a una sucursal activa.', 'alert-type' => 'error']);
+        }
         SucursalUser::create(['sucursal_id' => $request->branchoffice_id, 'user_id' => $request->user_id]);
-        return redirect('admin/users/'.$request->user_id.'/edit');
+        return redirect()->route('admin/users')->with(['message' => 'Sucursal asignada exitosamente', 'alert-type' => 'success']);
+
+        // return redirect('admin/users/'.$request->user_id.'/edit');
     }
 
 
