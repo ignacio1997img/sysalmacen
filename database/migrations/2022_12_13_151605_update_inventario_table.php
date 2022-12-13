@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class UpdateSolicitudCompraTable extends Migration
+class UpdateInventarioTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class UpdateSolicitudCompraTable extends Migration
      */
     public function up()
     {
-        Schema::table('solicitud_compras', function (Blueprint $table) {
-            $table->foreignId('inventarioAlmacen_id')->nullable()->constrained('inventario_almacens');
+        Schema::table('inventario_almacens', function (Blueprint $table) {
+            $table->text('observation1')->nullable();
         });
     }
 

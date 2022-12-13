@@ -25,6 +25,7 @@ class CreateInventarioAlmacensTable extends Migration
 
 
             $table->text('observation')->nullable();
+            $table->text('observation1')->nullable();
 
             $table->string('status')->default(1);
             $table->timestamps();
