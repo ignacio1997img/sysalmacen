@@ -20,10 +20,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SucursalUser;
 
-
-
 class IncomeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {      
         if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin'))

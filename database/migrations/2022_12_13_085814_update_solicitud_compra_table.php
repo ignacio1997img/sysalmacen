@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEmbargosTable extends Migration
+class UpdateSolicitudCompraTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class CreateEmbargosTable extends Migration
      */
     public function up()
     {
-        Schema::create('embargos', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('solicitud_compras', function (Blueprint $table) {
+            $table->foreignId('inventarioAlmacen_id')->nullable()->constrained('inventario_almacens');
         });
     }
 
@@ -26,6 +25,6 @@ class CreateEmbargosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('embargos');
+        //
     }
 }

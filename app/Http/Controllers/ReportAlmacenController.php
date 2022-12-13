@@ -28,6 +28,11 @@ use App\Exports\ArticleEgressOfficeExport;
 
 class ReportAlmacenController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     //para los reportes mediantes direciones admistrativa Income y Egress en Bolivianos  saldo
     public function directionIncomeSalida()
     {

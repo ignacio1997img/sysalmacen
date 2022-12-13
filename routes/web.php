@@ -19,6 +19,7 @@ use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\MaintenanceController;
 
 use App\Http\Controllers\DonationStockController;
+use App\Http\Controllers\InventarioAlmacenController;
 use App\Http\Controllers\ReportAlmacenController;
 use App\Models\Article;
 use App\Models\Provider;
@@ -43,6 +44,7 @@ Route::get('/', function () {
     return redirect('admin');
 });
 
+Route::get('login', 'Auth\LoginController@showLoginForm')->name('logins');
 
 Route::get('/maintenance', [MaintenanceController::class , 'maintenance'])->name('maintenance');
 
@@ -88,6 +90,14 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('providers', [ProviderController::class, 'index'])->name('voyager.providers.index');
 
     Route::get('articles', [ArticleController::class, 'index'])->name('voyager.articles.index');
+
+
+
+    // Inventario Para cada Almacen
+    Route::resource('inventory', InventarioAlmacenController::class);
+
+
+
     
 
 

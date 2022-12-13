@@ -21,6 +21,11 @@ use App\Models\SucursalUser;
 
 class EgressController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index()
     {
         if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin'))

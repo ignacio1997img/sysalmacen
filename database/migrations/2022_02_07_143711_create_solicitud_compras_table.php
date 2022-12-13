@@ -16,6 +16,8 @@ class CreateSolicitudComprasTable extends Migration
         Schema::create('solicitud_compras', function (Blueprint $table) {
             $table->id();
             $table->foreignId('sucursal_id')->nullable()->constrained('sucursals');
+            $table->foreignId('inventarioAlmacen_id')->nullable()->constrained('inventario_almacens');
+
             // $table->foreignId('requestingunit_id')->constrained('requesting_units');
             $table->integer('direccionadministrativa')->nullable();
             $table->integer('unidadadministrativa')->nullable();
