@@ -165,7 +165,9 @@
                                             <div class="col-sm-3">
                                                 <div class="form-group">
                                                     <div class="form-line">
-                                                        <input type="date" name="fechasolicitud" class="form-control text" @if($gestion) min="{{$gestion->gestion.'-01-01'}}" max="{{$gestion->gestion.'-12-31'}}" @endif required>
+                                                        <input type="date" name="fechasolicitud" id="fechasolicitud" onchange="fechaVerification()" onkeyup="fechaVerification()" class="form-control text" @if($gestion) min="{{$gestion->gestion.'-01-01'}}" max="{{$gestion->gestion.'-12-31'}}" @endif required>
+                                                        <b class="text-danger" id="label-solicitud" style="display:none">La gestion Correspondiente es incorrecta..</b>
+
                                                     </div>
                                                     <small>Fecha Solicitud.</small>
                                                 </div>
@@ -173,7 +175,9 @@
                                             <div class="col-sm-3">
                                                 <div class="form-group">
                                                     <div class="form-line">
-                                                        <input type="date" name="fechaegreso" class="form-control text" @if($gestion) min="{{$gestion->gestion.'-01-01'}}" max="{{$gestion->gestion.'-12-31'}}" @endif required>
+                                                        <input type="date" name="fechaegreso" id="fechaegreso" onchange="fechaVerification()" onkeyup="fechaVerification()" class="form-control text" @if($gestion) min="{{$gestion->gestion.'-01-01'}}" max="{{$gestion->gestion.'-12-31'}}" @endif required>
+                                                        <b class="text-danger" id="label-egreso" style="display:none">La gestion Correspondiente es incorrecta..</b>
+
                                                     </div>
                                                     <small>Fecha Egreso.</small>
                                                 </div>
@@ -253,7 +257,7 @@
                                         </table>
                                         @if ($gestion)
                                             <div class="card-footer">
-                                                <button id="btn_guardar" type="submit"  class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
+                                                <button id="btn_guardar" style="display:none" type="submit"  class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
                                             </div> 
                                         @endif 
                                     </div>
@@ -299,7 +303,48 @@
 		    	agregar();
 		  	});
 
+            fechaVerification();
+
         })
+
+
+        function fechaVerification()
+        {
+                let fsolicitud = $(`#fechasolicitud`).val() ? parseFloat($(`#fechasolicitud`).val()) : 0;
+                let fegreso = $(`#fechaegreso`).val() ? parseFloat($(`#fechaegreso`).val()) : 0;
+                
+                let gestion = {{$gestion ? $gestion->gestion : 0}};
+    
+                if(fsolicitud != gestion || fegreso != gestion)
+                {
+                    if(fsolicitud != gestion)
+                    {
+                        $('#label-solicitud').css('display', 'block');
+                    }
+                    else
+                    {
+                        $('#label-solicitud').css('display', 'none');
+                    }
+
+                    if(fegreso != gestion)
+                    {
+                        $('#label-egreso').css('display', 'block');                        
+                    }
+                    else
+                    {
+                        $('#label-egreso').css('display', 'none');
+                    }
+                    
+                    $('#btn_guardar').css('display', 'none');
+                }
+                else
+                {
+                    $('#btn_guardar').css('display', 'block');
+
+                    $('#label-solicitud').css('display', 'none');
+                    $('#label-egreso').css('display', 'none');
+                }
+        }
         
 
 
