@@ -118,9 +118,6 @@ class PermissionsTableSeeder extends Seeder
 
             // reportes adicionales
             'browse_printalmacen-user-list'
-            
-            // 'browse_reportshumans-resourcesprojectsdetails',
-            // 'browse_reportspaymentschedulesdetails-status',
         ];
 
         foreach ($keys as $key) {
@@ -130,37 +127,18 @@ class PermissionsTableSeeder extends Seeder
             ]);
         }
 
-        // Permission::generateFor('bandeja');
-        // Permission::generateFor('solicitud');
+        $keys = [
+            'browse_inventory',
+            'start_inventory',
+            'finish_inventory'
+        ];
 
-
-        
-        // // Planillas
-        
-
-        // Permission::generateFor('solicituddonor');
-        // Permission::generateFor('solicitud_compras');
-        // Permission::generateFor('facturas');
-        // Permission::generateFor('detalle_facturas');
-        // Permission::generateFor('archivos');
-        // Permission::generateFor('sucursal_users');
-
-        // Permission::generateFor('solicituds');
-        // Permission::generateFor('solicitud_detalles');
-        // Permission::generateFor('solicitud_derivadas');
-        // Permission::generateFor('solicitud_rechazos');
-
-
-        // Permission::generateFor('solicitud_egresos');//nooo
-        // Permission::generateFor('detalle_egresos');//nooo
-        // Permission::generateFor('inventarios');//nooo
-
-        // Permission::generateFor('detalle_facturas');
-        
-
-        
-
-        //grupos de direcciones administrativa
+        foreach ($keys as $key) {
+            Permission::firstOrCreate([
+                'key'        => $key,
+                'table_name' => 'inventory',
+            ]);
+        }
 
         
     }

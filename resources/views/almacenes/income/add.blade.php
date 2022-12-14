@@ -92,11 +92,24 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="panel panel-bordered">
-                            <div class="panel-body">                            
-                                <div class="table-responsive">
-                                    <main class="main">        
+                            <div class="panel-body">           
+                                                 
+                                <div class="table-responsive">                                   
+            
+                                    <main class="main"> 
+                                        @if (!$gestion)
+                                            <div class="alert alert-danger">
+                                                <strong>Aviso: </strong>
+                                                <p> No tiene una gestion activa, contactese con los administradores del sistema.</p>
+                                            </div> 
+                                        @endif
+
+                                        
                                         {!! Form::open(['route' => 'income.store', 'class' => 'was-validated'])!!}
                                         <div class="card-body">
+                                            <input type="hidden" name="inventarioAlmacen_id" @if($gestion) value="{{$gestion->id}}" @endif>
+                                            <input type="hidden" name="gestion" @if($gestion) value="{{$gestion->gestion}}" @endif>
+
                                             <h5 id="subtitle">Solicitud de Compras</h5>
                                             <div class="row">
                                                 <!-- === -->
@@ -104,7 +117,6 @@
                                                     <div class="form-group">
                                                         <div class="form-line">
                                                             <select name="branchoffice_id" class="form-control select2" required>
-                                                                <!-- <option value="">Seleccione una sucursal</option> -->
                                                                 @foreach ($sucursal as $item)
                                                                     <option value="{{$item->sucursal->id}}" selected>{{$item->sucursal->nombre}}</option>
                                                                 @endforeach
@@ -145,7 +157,9 @@
                                                 <div class="col-sm-3">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="date" name="fechaingreso" class="form-control text" required>
+                                                            <input type="date" name="fechaingreso" id="fechaingreso" class="form-control text" onchange="gestionVerification()" onkeyup="gestionVerification()" @if($gestion) min="{{$gestion->gestion.'-01-01'}}" max="{{$gestion->gestion.'-12-31'}}" @endif required>
+                                                            <b class="text-danger" id="label-date" style="display:none">La gestion Correspondiente es incorrecta..</b>
+
                                                         </div>
                                                         <small>Fecha Ingreso.</small>
                                                     </div>
@@ -351,9 +365,11 @@
                                             </table>
                                             
                                         </div>   
-                                        <div class="card-footer">
-                                            <button id="btn_guardar" disabled type="submit"  class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
-                                        </div>   
+                                        @if ($gestion)
+                                            <div class="card-footer">
+                                                <button id="btn_guardar" disabled type="submit" style="display:none" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
+                                            </div>   
+                                        @endif
                                         {!! Form::close() !!}                   
                                     </main>
                                 </div>
@@ -373,31 +389,6 @@
     @section('javascript')
     
         <script>
-//             const cargarSonido = function (fuente) {
-//     const sonido = document.createElement("audio");
-//     sonido.src = fuente;
-//     sonido.setAttribute("preload", "auto");
-//     sonido.setAttribute("controls", "none");
-//     sonido.style.display = "none"; // <-- oculto
-//     document.body.appendChild(sonido);
-//     return sonido;
-// };
-// const $botonReproducir = document.querySelector("#btnReproducir"),
-//     $botonPausar = document.querySelector("#btnPausar"),
-//     $botonReiniciar = document.querySelector("#btnReiniciar");
-// // El sonido que podemos reproducir o pausar
-// const sonido = cargarSonido("sonido.flac");
-// $botonReproducir.onclick = () => {
-//     sonido.play();
-// };
-// $botonPausar.onclick = () => {
-//     sonido.pause();
-// };
-// $botonReiniciar.onclick = () => {
-//     sonido.currentTime = 0;
-// };
-
-
             $(function()
             {    
                 $(".select2").select2({theme: "classic"});
@@ -415,7 +406,32 @@
                     agregar();
                 });
 
+                gestionVerification();
+
             })
+
+            //para establecer la gestion  solo para navegador FIREFOX
+            function gestionVerification()
+            {
+                let fecha = $(`#fechaingreso`).val() ? parseFloat($(`#fechaingreso`).val()) : 0;
+                
+                let gestion = {{$gestion ? $gestion->gestion : 0}};
+    
+                if(fecha == gestion)
+                {
+                    $('#btn_guardar').css('display', 'block');
+                    $('#label-date').css('display', 'none');
+                }
+                else
+                {
+                    $('#btn_guardar').css('display', 'none');
+
+                    $('#label-date').css('display', 'block');
+                }
+            }
+
+
+
             var cont=0;
             var total=0;
             subtotal=[];

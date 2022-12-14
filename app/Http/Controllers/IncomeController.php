@@ -19,6 +19,7 @@ use Doctrine\DBAL\Exception\RetryableException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SucursalUser;
+use App\Models\InventarioAlmacen;
 
 class IncomeController extends Controller
 {
@@ -94,6 +95,8 @@ class IncomeController extends Controller
             return redirect()->route('maintenance');
         }
 
+        $gestion = InventarioAlmacen::where('status', 1)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
+
 
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
 
@@ -110,7 +113,7 @@ class IncomeController extends Controller
         $modalidad = Modality::all();
         // return $partida;
 
-        return view('almacenes.income.add', compact('sucursal', 'da', 'proveedor', 'partida', 'modalidad'));
+        return view('almacenes.income.add', compact('sucursal', 'da', 'proveedor', 'partida', 'modalidad', 'gestion'));
 
     }
 
@@ -250,7 +253,8 @@ class IncomeController extends Controller
                         'registeruser_id'       => $user->id,
                         'nrosolicitud'          => $request->nrosolicitud,
                         'fechaingreso'          => $request->fechaingreso,
-                        'gestion'               => $gestion
+                        'gestion'               => $request->gestion,
+                        'inventarioAlmacen_id'  => $request->inventarioAlmacen_id
                 ]);
                 
             
@@ -265,7 +269,7 @@ class IncomeController extends Controller
                         'nroautorizacion'       => $request->nroautorizacion,
                         'nrocontrol'            => $request->nrocontrol,
                         'fechaingreso'          => $request->fechaingreso, 
-                        'gestion'               => $gestion,
+                        'gestion'               => $request->gestion,
                         'sucursal_id'       => $request->branchoffice_id
                 ]);
                 
@@ -282,7 +286,7 @@ class IncomeController extends Controller
                         'totalbs'               => $request->subtotal[$cont],
                         'cantrestante'          => $request->cantidad[$cont],
                         'fechaingreso'          => $request->fechaingreso,
-                        'gestion'               => $gestion,
+                        'gestion'               => $request->gestion,
                         'sucursal_id'           => $request->branchoffice_id
                     ]);
                     $cont++;

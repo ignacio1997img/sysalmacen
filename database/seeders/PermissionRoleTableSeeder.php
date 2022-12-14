@@ -124,6 +124,8 @@ class PermissionRoleTableSeeder extends Seeder
                                             
                                             `key` = "browse_printalmacen-provider-list" or
 
+                                            table_name = "inventory" or
+
                                             `key` = "browse_clear-cache"')->get();
         $role->permissions()->sync($permissions->pluck('id')->all());
 
