@@ -10,7 +10,7 @@
                     <h1 id="subtitle" class="page-title">
                         <i class="voyager-data"></i> Inventario
                     </h1>
-                    @if(auth()->user()->hasPermission('start_inventory'))
+                    @if(auth()->user()->hasPermission('start_inventory') &&)
                         <a href="{{ route('voyager.articles.create') }}" class="btn btn-success btn-add-new">
                             <i class="voyager-plus"></i> <span>Nueva Gestion</span>
                         </a>

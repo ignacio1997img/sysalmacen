@@ -603,11 +603,12 @@ class EgressController extends Controller
             return redirect()->route('maintenance');
         }
         // return $request;
+        $user =Auth::user();
         DB::beginTransaction();
         try{
 
             $sol = SolicitudEgreso::find($request->id);
-            SolicitudEgreso::where('id', $sol->id)->update(['deleted_at' => Carbon::now()]);
+            SolicitudEgreso::where('id', $sol->id)->update(['deleteuser_id'=>$user->id, 'deleted_at' => Carbon::now()]);
     
            
 
@@ -654,7 +655,7 @@ class EgressController extends Controller
             }
 
 
-            DetalleEgreso::where('solicitudegreso_id', $sol->id)->update(['deleted_at' => Carbon::now()]);
+            DetalleEgreso::where('solicitudegreso_id', $sol->id)->update(['deleteuser_id'=>$user->id, 'deleted_at' => Carbon::now()]);
 
 
             DB::commit();
