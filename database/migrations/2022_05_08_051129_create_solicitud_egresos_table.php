@@ -16,6 +16,8 @@ class CreateSolicitudEgresosTable extends Migration
         Schema::create('solicitud_egresos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('sucursal_id')->nullable()->constrained('sucursals');
+            $table->foreignId('inventarioAlmacen_id')->nullable()->constrained('inventario_almacens');
+
             $table->integer('unidadadministrativa')->nullable();
             $table->foreignId('registeruser_id')->nullable()->constrained('users');
 

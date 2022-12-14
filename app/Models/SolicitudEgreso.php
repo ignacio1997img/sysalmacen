@@ -10,6 +10,7 @@ class SolicitudEgreso extends Model
     use HasFactory;
     protected $fillable = [
         'sucursal_id',
+        'inventarioAlmacen_id',
         'unidadadministrativa',
         'registeruser_id',
         'nropedido',
