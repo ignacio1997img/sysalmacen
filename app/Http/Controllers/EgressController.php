@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use App\Models\DonacionArticulo;
 use App\Models\SucursalUser;
+use App\Models\InventarioAlmacen;
 
 class EgressController extends Controller
 {
@@ -243,6 +244,9 @@ class EgressController extends Controller
             Auth::logout();
             return redirect()->route('maintenance');
         }
+
+        $gestion = InventarioAlmacen::where('status', 1)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
+
         // return 1;
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
 
@@ -261,7 +265,7 @@ class EgressController extends Controller
         // $da = $this->getdireccion(); 
         $da = $this->direccionSucursal($sucursal->first()->sucursal_id);
 
-        return view('almacenes.egress.add', compact('sucursal', 'da'));
+        return view('almacenes.egress.add', compact('sucursal', 'da', 'gestion'));
     }//anulado 
 
  
@@ -275,7 +279,7 @@ class EgressController extends Controller
         // return $request;
 
         $user = Auth::user();
-        $gestion = Carbon::parse($request->fechaingreso)->format('Y');
+        // $gestion = Carbon::parse($request->fechaingreso)->format('Y');
         DB::beginTransaction();
         try { 
 
@@ -286,7 +290,8 @@ class EgressController extends Controller
                         'nropedido'                 => $request->nropedido,
                         'fechasolicitud'            => $request->fechasolicitud,
                         'fechaegreso'               => $request->fechaegreso,
-                        'gestion'                   => $gestion
+                        'gestion'                   => $request->gestion,
+                        'inventarioAlmacen_id'      => $request->inventarioAlmacen_id,
                     ]);
 
             $cont = 0;
@@ -301,7 +306,7 @@ class EgressController extends Controller
                             'cantsolicitada'        => $request->cantidad[$cont],
                             'precio'                => $request->precio[$cont],
                             'totalbs'               => $request->cantidad[$cont]*$request->precio[$cont],
-                            'gestion'               => $gestion,
+                            'gestion'               => $request->gestion,
                             'sucursal_id'           => $request->sucursal_id
                     ]);
 

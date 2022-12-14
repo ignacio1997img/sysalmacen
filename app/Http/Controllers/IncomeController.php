@@ -243,7 +243,7 @@ class IncomeController extends Controller
 
                 $request->merge(['nrosolicitud' => strtoupper($unidad[0]->sigla).'-'.sprintf($format, count($aux)+1)]);
             
-                $gestion = Carbon::parse($request->fechaingreso)->format('Y');
+                // $gestion = Carbon::parse($request->fechaingreso)->format('Y');
 
                 $solicitud = SolicitudCompra::create([
                         'sucursal_id'       => $request->branchoffice_id,

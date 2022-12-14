@@ -87,8 +87,18 @@
                     <div class="panel panel-bordered">
                         <div class="panel-body">                            
                             <div class="table-responsive">
+                                @if (!$gestion)
+                                            <div class="alert alert-danger">
+                                                <strong>Aviso: </strong>
+                                                <p> No tiene una gestion activa, contactese con los administradores del sistema.</p>
+                                            </div> 
+                                        @endif
                                 <main class="main">      
                                 {!! Form::open(['route' => 'egres.store', 'class' => 'was-validated'])!!}  
+
+                                <input type="hidden" name="inventarioAlmacen_id" @if($gestion) value="{{$gestion->id}}" @endif>
+                                <input type="hidden" name="gestion" @if($gestion) value="{{$gestion->gestion}}" @endif>
+
                                     <div class="card-body">
                                         <h5 id="subtitle">Solicitud de Compras</h5>
                                         <div class="row">
@@ -155,7 +165,7 @@
                                             <div class="col-sm-3">
                                                 <div class="form-group">
                                                     <div class="form-line">
-                                                        <input type="date" name="fechasolicitud" class="form-control text" required>
+                                                        <input type="date" name="fechasolicitud" class="form-control text" @if($gestion) min="{{$gestion->gestion.'-01-01'}}" max="{{$gestion->gestion.'-12-31'}}" @endif required>
                                                     </div>
                                                     <small>Fecha Solicitud.</small>
                                                 </div>
@@ -163,7 +173,7 @@
                                             <div class="col-sm-3">
                                                 <div class="form-group">
                                                     <div class="form-line">
-                                                        <input type="date" name="fechaegreso" class="form-control text" required>
+                                                        <input type="date" name="fechaegreso" class="form-control text" @if($gestion) min="{{$gestion->gestion.'-01-01'}}" max="{{$gestion->gestion.'-12-31'}}" @endif required>
                                                     </div>
                                                     <small>Fecha Egreso.</small>
                                                 </div>
@@ -241,9 +251,11 @@
                                             </tfoot>
                                             
                                         </table>
-                                        <div class="card-footer">
-                                            <button id="btn_guardar" type="submit"  class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
-                                        </div>  
+                                        @if ($gestion)
+                                            <div class="card-footer">
+                                                <button id="btn_guardar" type="submit"  class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
+                                            </div> 
+                                        @endif 
                                     </div>
                                     {!! Form::close() !!}      
                                 </main>
