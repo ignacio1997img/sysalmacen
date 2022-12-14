@@ -45,6 +45,8 @@ class IncomeController extends Controller
 
 
         $user =Auth::user();
+        $gestion = InventarioAlmacen::where('status', 1)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
+
     
         $activo = DB::table('users as u')
                 ->join('sucursal_users as su', 'su.user_id', 'u.id')
@@ -62,7 +64,7 @@ class IncomeController extends Controller
             ->join('modalities as m', 'm.id', 'sol.modality_id')
             ->join('providers as pro', 'pro.id', 'f.provider_id')
             ->join('sucursals as s', 's.id', 'sol.sucursal_id')
-            ->select('sol.id', 'sol.stock', 's.nombre as sucursal', 'm.nombre as modalidad', 'sol.nrosolicitud' , 'pro.razonsocial', 'pro.nit', 'f.nrofactura', 'f.fechafactura', 'f.montofactura', 'sol.created_at', 'sol.condicion')
+            ->select('sol.inventarioAlmacen_id as inventario_id', 'sol.gestion', 'sol.id', 'sol.stock', 's.nombre as sucursal', 'm.nombre as modalidad', 'sol.nrosolicitud' , 'pro.razonsocial', 'pro.nit', 'f.nrofactura', 'f.fechafactura', 'f.montofactura', 'sol.created_at', 'sol.condicion')
             ->where('sol.deleted_at', null)
             ->orderBy('sol.id', 'DESC')
             ->get();
@@ -74,7 +76,7 @@ class IncomeController extends Controller
                 // ->join('invoice_details as fd', 'fd.invoice_id', 'f.id')
                 ->join('modalities as m', 'm.id', 'sol.modality_id')
                 ->join('providers as pro', 'pro.id', 'f.provider_id')
-                ->select('sol.id', 'sol.stock', 'm.nombre as modalidad', 'sol.nrosolicitud' , 'pro.razonsocial', 'pro.nit', 'f.nrofactura', 'f.fechafactura', 'f.montofactura', 'sol.created_at', 'sol.condicion')
+                ->select('sol.inventarioAlmacen_id as inventario_id', 'sol.gestion', 'sol.id', 'sol.stock', 'm.nombre as modalidad', 'sol.nrosolicitud' , 'pro.razonsocial', 'pro.nit', 'f.nrofactura', 'f.fechafactura', 'f.montofactura', 'sol.created_at', 'sol.condicion')
                 ->where('sol.deleted_at', null)
                 ->where('sol.sucursal_id', $sucursal->sucursal_id)
                 ->orderBy('sol.id', 'DESC')
@@ -83,7 +85,7 @@ class IncomeController extends Controller
         
                 
 
-        return view('almacenes.income.browse', compact('income'));
+        return view('almacenes.income.browse', compact('income', 'gestion'));
     }
 
 

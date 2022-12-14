@@ -32,6 +32,7 @@
                                     <thead>
                                         <tr >
                                             <th class="text-center">Id</th>
+                                            <th style="text-align: center">Gestión</th>
                                             <th class="text-center">Nro Pedido</th>
                                             <th class="text-center">Fecha Solicitud</th>
                                             <th class="text-center">Fecha Salida</th>
@@ -51,6 +52,7 @@
                                                     @foreach($data as $item)
                                                         <tr>
                                                             <td>{{$item->id}}</td>
+                                                            <td style="text-align: center">{{$item->gestion}}</td>
                                                             <td>{{$item->nropedido}}</td>
                                                             <td>{{date('d/m/Y', strtotime($item->fechasolicitud))}}</td>
                                                             <td>{{date('d/m/Y', strtotime($item->fechaegreso))}}</td>
@@ -62,22 +64,23 @@
                                                             <td style="text-align: center">
                                                                 <div class="no-sort no-click bread-actions text-right">
                                                                     @if(auth()->user()->hasPermission('read_egres'))
-                                                                        {{-- <a href="{{route('egres.show',$item->id)}}" target="_blank" title="Ver" class="btn btn-sm btn-warning view">
-                                                                            <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
-                                                                        </a> --}}
                                                                         <a href="{{route('egres.show',$item->id)}}" title="Imprimir" target="_blank" class="btn btn-sm btn-success view">
                                                                             <i class="glyphicon glyphicon-print"></i>
                                                                         </a>   
                                                                     @endif
-                                                                    @if(auth()->user()->hasPermission('edit_egres'))
-                                                                        <a href="{{route('egres.edit',$item->id)}}" title="Editar" class="btn btn-sm btn-info view">
-                                                                            <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Editar</span>
-                                                                        </a>
-                                                                    @endif
-                                                                    @if(auth()->user()->hasPermission('delete_egres') && !auth()->user()->hasRole('admin'))
-                                                                        <a data-toggle="modal" data-id="{{$item->id}}" data-target="#myModalEliminar" title="Eliminar" class="btn btn-sm btn-danger view">
-                                                                            <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Eliminar</span>
-                                                                        </a>
+                                                                    @if($gestion)
+                                                                        @if($item->inventario_id == $gestion->id)
+                                                                            @if(auth()->user()->hasPermission('edit_egres') )
+                                                                                <a href="{{route('egres.edit',$item->id)}}" title="Editar" class="btn btn-sm btn-info view">
+                                                                                    <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Editar</span>
+                                                                                </a>
+                                                                            @endif
+                                                                            @if(auth()->user()->hasPermission('delete_egres'))
+                                                                                <a data-toggle="modal" data-id="{{$item->id}}" data-target="#myModalEliminar" title="Eliminar" class="btn btn-sm btn-danger view">
+                                                                                    <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Eliminar</span>
+                                                                                </a>
+                                                                            @endif
+                                                                        @endif
                                                                     @endif
                                                                 </div>
                                                             </td>

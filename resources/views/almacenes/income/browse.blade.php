@@ -36,6 +36,7 @@
                                         <thead>
                                             <tr>
                                                 <th style="text-align: center">Nro&deg;</th>
+                                                <th style="text-align: center">Gestión</th>
                                                 <th style="text-align: center">Entidad + Nro Compra</th>
                                                 <th style="text-align: center">Proveedor</th>
                                                 <th style="text-align: center">Número Factura</th>
@@ -52,6 +53,7 @@
                                             @foreach ($income as $data)
                                                 <tr>
                                                     <td>{{$data->id}}</td>
+                                                    <td style="text-align: center">{{$data->gestion}}</td>
                                                     <td style="text-align: center">{{$data->modalidad}} - {{$data->nrosolicitud}}</td>
                                                     <td style="width: 200pt; text-align: center">{{$data->razonsocial}}<br><small>NIT: {{$data->nit}}</small></td>
                                                     <td style="text-align: center">{{$data->nrofactura}}</td>
@@ -82,16 +84,19 @@
                                                                     <i class="glyphicon glyphicon-print"></i>
                                                                 </a>                                                                
                                                             @endif
-                                                            @if($data->condicion == 1)
-                                                                @if(auth()->user()->hasPermission('edit_income'))
-                                                                    <a href="{{route('income.edit',$data->id)}}" title="Editar" class="btn btn-sm btn-warning">
-                                                                        <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Editar</span>
-                                                                    </a>
-                                                                @endif
-                                                                @if(auth()->user()->hasPermission('delete_income'))
-                                                                    <button title="Anular" class="btn btn-sm btn-danger delete" data-toggle="modal" data-id="{{$data->id}}" data-target="#myModalEliminar">
-                                                                        <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Anular</span>
-                                                                    </button>
+                                                            
+                                                            @if($gestion)
+                                                                @if($data->condicion == 1 && $data->inventario_id == $gestion->id)
+                                                                    @if(auth()->user()->hasPermission('edit_income'))
+                                                                        <a href="{{route('income.edit',$data->id)}}" title="Editar" class="btn btn-sm btn-warning">
+                                                                            <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Editar</span>
+                                                                        </a>
+                                                                    @endif
+                                                                    @if(auth()->user()->hasPermission('delete_income'))
+                                                                        <button title="Anular" class="btn btn-sm btn-danger delete" data-toggle="modal" data-id="{{$data->id}}" data-target="#myModalEliminar">
+                                                                            <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Anular</span>
+                                                                        </button>
+                                                                    @endif
                                                                 @endif
                                                             @endif
                                                         </div>

@@ -115,17 +115,19 @@ class EgressController extends Controller
             $query_filter = 'se.sucursal_id ='.$activo->id;
         }
 
+        $gestion = InventarioAlmacen::where('status', 1)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
+
         $data = DB::table('sysalmacen.solicitud_egresos as se')
             ->join('sysadmin.unidades as u', 'u.id', 'se.unidadadministrativa')
             ->join('sysadmin.direcciones as d', 'd.id', 'u.direccion_id')
             ->join('sysalmacen.sucursals as s', 's.id', 'se.sucursal_id')
-            ->select('se.id', 'se.nropedido', 'se.fechasolicitud', 'se.fechaegreso', 'u.nombre as unidad', 'd.nombre as direccion', 's.nombre as sucursal')
+            ->select('se.inventarioAlmacen_id as inventario_id', 'se.gestion', 'se.id', 'se.nropedido', 'se.fechasolicitud', 'se.fechaegreso', 'u.nombre as unidad', 'd.nombre as direccion', 's.nombre as sucursal')
             ->where('se.deleted_at', null)
             ->whereRaw($query_filter)
             // ->orderBy('se.id', 'DESC')
             ->get();
 
-        return view('almacenes.egress.browse', compact('data'));
+        return view('almacenes.egress.browse', compact('data', 'gestion'));
     }
 
     // public function view_pendiente($id)
