@@ -38,15 +38,47 @@
                                                 <th style="text-align: center">Nombre</th>
                                                 <th style="text-align: center">Presentación</th>
                                                 <th style="text-align: center">Partida</th>
-                                                @if (auth()->user()->hasRole('admin'))
+                                                {{-- @if (auth()->user()->hasRole('admin'))
                                                     <th style="text-align: center">Sucursal</th>
-                                                @endif
+                                                @endif --}}
                                                 <th style="text-align: center">Estado</th>
                                                 <th style="text-align: right">Aciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                                                                  
+                                            @foreach ($article as $item)
+                                                <tr>
+                                                    <td>{{$item->id}}</td>
+                                                    <td style="text-align: center">{{$item->nombre}}</td>
+                                                    <td style="text-align: center">{{$item->presentacion}}</td>
+                                                    <td style="text-align: center">{{$item->partida->nombre}}</td>
+                                                    {{-- <td style="text-align: center">{{$item->direccion}}</td> --}}
+                                                    {{-- @if (auth()->user()->hasRole('admin'))
+                                                        <td style="text-align: center"><label class="label label-primary">{{$item->sucursal->nombre}}</label></td>                                                        
+                                                    @endif --}}
+                                                    <td style="text-align: center">
+                                                        @if ($item->condicion == 1)
+                                                            <label class="label label-success">Activo</label>
+                                                        @else
+                                                            <label class="label label-danger">Inactivo</label>
+                                                        @endif
+                                                    </td>
+                                                    <td style="text-align: right">
+                                                        <div class="no-sort no-click bread-actions text-right">
+                                                            @if(auth()->user()->hasPermission('read_articles'))
+                                                                <a href="{{route('voyager.articles.show',$item->id)}}" title="Ver" class="btn btn-sm btn-warning view">
+                                                                    <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
+                                                                </a>                                                          
+                                                            @endif
+                                                            @if(auth()->user()->hasPermission('edit_articles'))
+                                                                <a href="{{route('voyager.articles.edit',$item->id)}}" title="Editar" class="btn btn-sm btn-primary view">
+                                                                    <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Editar</span>
+                                                                </a>                                                          
+                                                            @endif
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach                                        
                                         </tbody>
                                     </table>
                                 </div>
