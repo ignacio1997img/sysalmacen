@@ -19,7 +19,8 @@ class ArticleController extends Controller
             $query_filter = 1;
         }
 
-        $article = Article::whereRaw($query_filter)->get();
+        $article = Article::with(['partida'])
+            ->whereRaw($query_filter)->get();
         // return $article;
 
         return view('almacenes.article.browse', compact('article'));
