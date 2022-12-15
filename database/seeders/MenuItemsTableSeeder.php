@@ -755,6 +755,22 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => 'almacen-article-egressOffice.report',
                 'parameters' => NULL,
             ),
+            46 => 
+            array (
+                'id' => 68,
+                'menu_id' => 1,
+                'title' => 'Usuarios',
+                'url' => '',
+                'target' => '_self',
+                'icon_class' => 'fa-solid fa-print',
+                'color' => '#000000',
+                'parent_id' => 62,
+                'order' => 2,
+                'created_at' => '2022-12-15 12:53:24',
+                'updated_at' => '2022-12-15 12:54:14',
+                'route' => 'almacen-user-list.report',
+                'parameters' => 'null',
+            ),
         ));
         
         
