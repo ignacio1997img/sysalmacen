@@ -51,7 +51,7 @@
                                                     <td>{{$item->id}}</td>
                                                     <td style="text-align: center">{{$item->nombre}}</td>
                                                     <td style="text-align: center">{{$item->presentacion}}</td>
-                                                    <td style="text-align: center">{{$item->partida->nombre?$item->partida->nombre:''}}</td>
+                                                    <td style="text-align: center">{{$item->partida->nombre}}</td>
                                                     {{-- <td style="text-align: center">{{$item->direccion}}</td> --}}
                                                     @if (auth()->user()->hasRole('admin'))
                                                         <td style="text-align: center"><label class="label label-primary">{{$item->sucursal->nombre}}</label></td>                                                        
