@@ -114,7 +114,10 @@ class PermissionsTableSeeder extends Seeder
             'browse_printalmacen-article-egressoffice',
             
             
-            'browse_printalmacen-provider-list'
+            'browse_printalmacen-provider-list',
+
+            // reportes adicionales
+            'browse_printalmacen-user-list'
             
             // 'browse_reportshumans-resourcesprojectsdetails',
             // 'browse_reportspaymentschedulesdetails-status',

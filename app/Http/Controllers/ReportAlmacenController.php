@@ -671,12 +671,6 @@ class ReportAlmacenController extends Controller
 
 
 
-
-
-
-
-
-
     // #######################################################################
     // #######################################################################
     // #######################################################################
@@ -722,6 +716,94 @@ class ReportAlmacenController extends Controller
             return view('almacenes.report.provider.list.list', compact('data'));
         }
     }
+
+
+
+
+
+    //################################################              REPORTE ADITIONAL           ###################################
+
+    // para los usuarios
+    public function user()
+    {
+        $user = Auth::user();
+        $query_filter = 'user_id ='.Auth::user()->id;
+        
+        if(Auth::user()->hasRole('admin'))
+        {
+            $query_filter = 1;
+        }
+
+        $sucursal = SucursalUser::where('condicion', 1)
+                        ->where('deleted_at', null)
+                        ->whereRaw($query_filter)
+                        ->GroupBy('sucursal_id')
+                        ->get();
+                        
+        $direction = $this->getDirecciones();        
+
+        // return view('almacenes.report.aditional.list.report', compact('sucursal', 'direction'));
+        return view('almacenes.report.aditional.user.report', compact('sucursal', 'direction'));
+
+    }
+
+    public function userList(Request $request)
+    {
+        $data = DB::table('sucursals as s')
+                    ->leftJoin('solicitud_compras as sc', 's.id', 'sc.sucursal_id')
+                    ->leftJoin('facturas as f', 'f.solicitudcompra_id', 'sc.id')
+                    ->leftJoin('detalle_facturas as df', 'df.factura_id', 'f.id')
+                    ->leftJoin('articles as a', 'a.id', 'df.article_id')
+                    
+
+                    // ->where('su.condicion', 1)
+
+                    ->where('sc.deleted_at', null)
+                    ->where('f.deleted_at', null)
+                    ->where('df.deleted_at', null)
+
+                    // ->whereDate('sc.fechaingreso', '>=', date('Y-m-d', strtotime($request->start)))
+                    // ->whereDate('sc.fechaingreso', '<=', date('Y-m-d', strtotime($request->finish)))
+                    ->select('s.nombre as almacen', 's.id as sucursal_id',
+
+                            // DB::raw("SUM(df.cantsolicitada) as cEntrada"), DB::raw("SUM(df.cantsolicitada - df.cantrestante) as cSalida"), DB::raw("SUM(df.cantrestante) as cFinal"),
+
+                            // DB::raw("SUM(df.totalbs) as vEntrada"), DB::raw("SUM((df.cantsolicitada - df.cantrestante) * df.precio) as vSalida"), DB::raw("SUM(df.cantrestante * df.precio) as vFinal")
+                            
+                            DB::raw("SUM(df.cantsolicitada) as cEntrada"),
+
+                            DB::raw("SUM(df.totalbs) as vEntrada")   
+                            )
+                    ->groupBy('s.id')
+                    ->get();
+        // dd($data);
+
+
+        if($request->print){
+            return view('almacenes.report.aditional.user.print', compact('data'));
+        }
+        else
+        {            
+            return view('almacenes.report.aditional.user.list', compact('data'));
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
