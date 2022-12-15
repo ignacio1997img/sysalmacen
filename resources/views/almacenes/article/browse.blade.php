@@ -37,10 +37,10 @@
                                                 <th style="text-align: center">Nro&deg;</th>
                                                 <th style="text-align: center">Nombre</th>
                                                 <th style="text-align: center">Presentación</th>
-                                                <th style="text-align: center">Partida</th>
-                                                {{-- @if (auth()->user()->hasRole('admin'))
+                                                {{-- <th style="text-align: center">Partida</th> --}}
+                                                @if (auth()->user()->hasRole('admin'))
                                                     <th style="text-align: center">Sucursal</th>
-                                                @endif --}}
+                                                @endif
                                                 <th style="text-align: center">Estado</th>
                                                 <th style="text-align: right">Aciones</th>
                                             </tr>
@@ -51,11 +51,11 @@
                                                     <td>{{$item->id}}</td>
                                                     <td style="text-align: center">{{$item->nombre}}</td>
                                                     <td style="text-align: center">{{$item->presentacion}}</td>
-                                                    <td style="text-align: center">{{$item->partida->nombre}}</td>
+                                                    {{-- <td style="text-align: center">{{$item->partida->nombre}}</td> --}}
                                                     {{-- <td style="text-align: center">{{$item->direccion}}</td> --}}
-                                                    {{-- @if (auth()->user()->hasRole('admin'))
+                                                    @if (auth()->user()->hasRole('admin'))
                                                         <td style="text-align: center"><label class="label label-primary">{{$item->sucursal->nombre}}</label></td>                                                        
-                                                    @endif --}}
+                                                    @endif
                                                     <td style="text-align: center">
                                                         @if ($item->condicion == 1)
                                                             <label class="label label-success">Activo</label>
