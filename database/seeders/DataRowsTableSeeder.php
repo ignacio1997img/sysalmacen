@@ -384,7 +384,7 @@ class DataRowsTableSeeder extends Seeder
                 'edit' => 1,
                 'add' => 1,
                 'delete' => 1,
-                'details' => '{}',
+                'details' => '{"validation":{"rule":"required|max:191"},"display":{"width":6}}',
                 'order' => 2,
             ),
             23 => 
@@ -400,7 +400,7 @@ class DataRowsTableSeeder extends Seeder
                 'edit' => 1,
                 'add' => 1,
                 'delete' => 1,
-                'details' => '{}',
+                'details' => '{"validation":{"rule":"required|max:191"},"display":{"width":6}}',
                 'order' => 3,
             ),
             24 => 
@@ -784,7 +784,7 @@ class DataRowsTableSeeder extends Seeder
                 'edit' => 1,
                 'add' => 1,
                 'delete' => 1,
-                'details' => '{}',
+                'details' => '{"validation":{"rule":"required|max:191"},"display":{"width":6}}',
                 'order' => 2,
             ),
             48 => 
@@ -800,7 +800,7 @@ class DataRowsTableSeeder extends Seeder
                 'edit' => 1,
                 'add' => 1,
                 'delete' => 1,
-                'details' => '{}',
+                'details' => '{"validation":{"rule":"required|max:191"},"display":{"width":6}}',
                 'order' => 3,
             ),
             49 => 
@@ -816,7 +816,7 @@ class DataRowsTableSeeder extends Seeder
                 'edit' => 1,
                 'add' => 1,
                 'delete' => 1,
-                'details' => '{}',
+                'details' => '{"validation":{"rule":"required|max:191"},"display":{"width":6}}',
                 'order' => 4,
             ),
             50 => 
