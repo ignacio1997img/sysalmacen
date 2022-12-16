@@ -17,7 +17,9 @@
 {{-- {{ dd($dataTypeContent->id) }} --}}
     <div class="page-content container-fluid">
         <form class="form-edit-add" role="form"
-              action="@if(!is_null($dataTypeContent->getKey())){{ route('voyager.'.$dataType->slug.'.update', $dataTypeContent->getKey()) }}@else{{ route('voyager.'.$dataType->slug.'.store') }}@endif"
+              {{-- action="@if(!is_null($dataTypeContent->getKey())){{ route('voyager.'.$dataType->slug.'.update', $dataTypeContent->getKey()) }}@else{{ route('voyager.'.$dataType->slug.'.store') }}@endif" --}}
+              action="@if(!is_null($dataTypeContent->getKey())){{ route('update.users', $dataTypeContent->getKey()) }}@else{{ route('store.users') }}@endif"
+
               method="POST" enctype="multipart/form-data" autocomplete="off">
             <!-- PUT Method if we are editing -->
             @if(isset($dataTypeContent->id))
@@ -41,55 +43,39 @@
 
                         <div class="panel-body">
                             <div class="form-group">
+                                <label class="control-label">INTERNO</label>
+                                <span class="voyager-question text-info pull-left" data-toggle="tooltip" data-placement="left" title=" Seleccione no si el funcionario es externo."></span>
+                                <input 
+                                    type="checkbox" 
+                                    name="tipo"
+                                    id="toggleswitch" 
+                                    data-toggle="toggle" 
+                                    data-on="Sí" 
+                                    data-off="No"
+                                    checked 
+                                    >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="funcionario_id">Funcionario</label>
+                                <select 
+                                    name="funcionario_id" 
+                                    id="getfuncionario"
+                                    class="form-control">
+                                </select>
+                            </div>
+                            <input type="hidden" id="people" name="name">
+
+                            
+
+
+
+                            {{-- <div class="form-group">
                                 <label for="name">{{ __('voyager::generic.name') }}</label>
                                 <input type="text" class="form-control" id="name" name="name" placeholder="{{ __('voyager::generic.name') }}"
                                        value="{{ old('name', $dataTypeContent->name ?? '') }}">
-                            </div>
+                            </div>                             --}}
                             
-                            <?php 
-                                // $funcionarios = Illuminate\Support\Facades\DB::connection('mysqlgobe')->table('contribuyente as co')                            
-                                //             ->join('contratos as c', 'c.idContribuyente', 'co.N_Carnet')     
-                                //             ->join('unidadadminstrativa as u', 'u.ID', 'c.idDependencia') 
-                                //             ->join('cargo as ca', 'ca.ID', 'c.idCargo')
-                                //             ->select('c.ID','c.idContribuyente', 'c.nombre AS nombrecontribuyente', 'ca.Descripcion as cargo', 'u.Nombre as unidad', 'c.Estado')
-                                //             ->where('c.Estado', 1)
-                                //             ->get();
-                                            
-                                $funcionarios = Illuminate\Support\Facades\DB::connection('mamore')->table('people as p')
-                                            ->join('contracts as c', 'c.person_id', 'p.id')
-                                            ->select('p.id', 'p.ci', 'p.first_name', 'p.last_name')
-                                            ->where('c.status','firmado')
-                                            ->orderBy('p.last_name', 'asc')
-                                            ->get();
-                                
-
-                                $usuario = \App\Models\User::find($dataTypeContent->id);
-                     
-                                // dd($usuario);
-                                // if($usuario == null)
-                                // {
-                                //     $usuario->merge(['funcionario_id' => 0]);
-                                // }
-                            
-                                // dd($usuario);
-                                // <input type="hidden" name="user_id" value="{{$dataTypeContent->id}}">
-
-                            ?>
-                            @if (auth()->user()->isAdmin())
-                            <div class="form-group">
-                                <label for="default_role">{{ __('Funcionario') }}</label>
-                                <select name="funcionario_id" class="form-control select2">
-                                    <option value="" selected>Seleccione</option>
-                                    @foreach ($funcionarios as $data)    
-                                        @if($usuario == null)                                
-                                            <option value="{{$data->id}}" >{{$data->last_name}} {{$data->first_name}}</option>     
-                                        @else
-                                            <option value="{{$data->id}}" {{$data->id == $usuario->funcionario_id? 'selected' : '' }}>{{$data->first_name}} {{$data->last_name}}</option>    
-                                        @endif                            
-                                    @endforeach
-                                </select>
-                            </div>
-                            @endif
                             <div class="form-group">
                                 <label for="email">{{ __('voyager::generic.email') }}</label>
                                 <input type="email" class="form-control" id="email" name="email" placeholder="{{ __('voyager::generic.email') }}"
@@ -318,7 +304,99 @@
 @stop
 
 @section('javascript')
+<script src="{{ asset('js/select2.min.js')}}"></script>
+
     <script>
+
+
+var tipouser = 1;
+
+    $('document').ready(function () {
+        $('.toggleswitch').bootstrapToggle();
+        $('#toggleswitch').on('change', function() {
+            if (this.checked) {
+                 tipouser = 1;
+            } else {
+                 tipouser = 0;
+            }
+        });
+
+         ruta = "{{ route('user.getFuncionario') }}";
+        $('#getfuncionario').select2({
+            placeholder: '<i class="fa fa-search"></i> Buscar...',
+            escapeMarkup : function(markup) {
+                return markup;
+            },
+            language: {
+                inputTooShort: function (data) {
+                    return `Por favor ingrese ${data.minimum - data.input.length} o más caracteres`;
+                },
+                noResults: function () {
+                    return `<i class="far fa-frown"></i> No hay resultados encontrados`;
+                }
+            },
+            quietMillis: 250,
+            minimumInputLength: 4,
+            
+            ajax: {
+                url: ruta,
+                type: "get",
+                dataType: 'json',
+                data:  (params) =>  {
+                    var query = {
+                        search: params.term,
+                        type: tipouser
+                    }
+                    return query;
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            },
+            // templateResult: formatResultLandingPage,
+            templateSelection: (opt) => opt.text
+        });
+
+        $('#getfuncionario').on('select2:select', function (e) {
+           
+            var data = e.params.data;
+            // alert(1)
+            if (data) {
+                // document.getElementById("nombre").value = data.nombre;
+                // document.getElementById("apellido").value = data.apellido;
+                // document.getElementById("ap_materno").value = data.ap_materno;
+                document.getElementById("people").value = data.text;
+                // document.getElementById("alfanum").value = data.alfanum;
+                // document.getElementById("departamento_id").value = data.departamento_id;
+            }					
+		});
+
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         $('document').ready(function () {
             $('.toggleswitch').bootstrapToggle();
         });

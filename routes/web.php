@@ -99,6 +99,13 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('people_ext/{people_ext}/baja', [PeopleExtController::class, 'finish'])->name('people_ext.baja');
 
 
+    // Para registrar los usuarios
+    Route::post('register-users', [UserController::class, 'create_user'])->name('store.users');
+    Route::put('update-user/{user}' ,[UserController::class ,'update_user'])->name('update.users');
+    Route::get('search', [UserController::class, 'getFuncionario'])->name('user.getFuncionario');
+
+
+
 
     // Inventario Para cada Almacen
     Route::resource('inventory', InventarioAlmacenController::class);
