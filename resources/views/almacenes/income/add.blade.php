@@ -268,7 +268,7 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number" id="nrofactura" name="nrofactura" placeholder="Introducir Numero" class="form-control text" title="Introducir Nro de Factura" required>
+                                                            <input type="text" id="nrofactura" name="nrofactura" placeholder="Introducir Numero" class="form-control text" title="Introducir Nro de Factura" required>
                                                         </div>
                                                         <small>Numero.</small>
                                                     </div>
@@ -276,7 +276,7 @@
                                                 <div class="col-sm-2" id="nroautorizacion">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number"  name="nroautorizacion" id="nroautorizacion" placeholder="Introducir Nro Autorizacion" class="form-control text" title="Introducir Nro Autorizacion de la Factura" required>
+                                                            <input type="text"  name="nroautorizacion" id="nroautorizacion" placeholder="Introducir Nro Autorizacion" class="form-control text" title="Introducir Nro Autorizacion de la Factura" required>
                                                         </div>
                                                         <small>Nro Autorizacion Fact.</small>
                                                     </div>
@@ -615,7 +615,7 @@
                 {
                     html_nroautorizacion =  '<div class="form-group">'
                         html_nroautorizacion+=       '<div class="form-line">'
-                        html_nroautorizacion+=            '<input type="number" name="nroautorizacion" placeholder="Introducir Nro Autorizacion" class="form-control text" title="Introducir Nro de Autorización">'
+                        html_nroautorizacion+=            '<input type="text" name="nroautorizacion" placeholder="Introducir Nro Autorizacion" class="form-control text" title="Introducir Nro de Autorización">'
                         html_nroautorizacion+=       '</div>'
                         html_nroautorizacion+=       '<small>Nro Control.</small>'
                         html_nroautorizacion+=  '</div>'
@@ -623,7 +623,7 @@
 
                     html_factura =  '<div class="form-group">'
                     html_factura+=       '<div class="form-line">'
-                    html_factura+=            '<input type="number" name="nrocontrol" class="form-control text" placeholder="Introducir Nro Control" title="Introducir Nro Control Factura">'
+                    html_factura+=            '<input type="text" name="nrocontrol" class="form-control text" placeholder="Introducir Nro Control" title="Introducir Nro Control Factura">'
                     html_factura+=       '</div>'
                     html_factura+=       '<small>Nro Control.</small>'
                     html_factura+=  '</div>'
@@ -643,7 +643,7 @@
 
                         html_nroautorizacion =  '<div class="form-group">'
                         html_nroautorizacion+=       '<div class="form-line">'
-                        html_nroautorizacion+=            '<input type="number" name="nroautorizacion" class="form-control text" placeholder="Introducir Nro Autorizacion" title="Introducir Nro de Autorización">'
+                        html_nroautorizacion+=            '<input type="text" name="nroautorizacion" class="form-control text" placeholder="Introducir Nro Autorizacion" title="Introducir Nro de Autorización">'
                         html_nroautorizacion+=       '</div>'
                         html_nroautorizacion+=       '<small>Nro Control.</small>'
                         html_nroautorizacion+=  '</div>'

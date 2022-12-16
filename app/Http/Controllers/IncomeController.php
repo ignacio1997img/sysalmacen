@@ -224,10 +224,11 @@ class IncomeController extends Controller
                 $total = $total + $request->subtotal[$x];
                 $x++;
             }
+            // return $total;
 
-            if($request->total == $request->montofactura && $request->total == $total && $request->montofactura == $total)
+            if($request->total == $request->montofactura)
             {
-                // return $total;
+                // return 1;
                 $unidad = DB::connection('mamore')->table('unidades')
                         ->select('sigla')
                         ->where('id',$request->unidadadministrativa)
@@ -301,7 +302,7 @@ class IncomeController extends Controller
             }
             else
             {
-                // return 0;
+                return 'Error';
                 return redirect()->route('income.index')->with(['message' => 'El monto de la factura no coincide con el total de la solicitud.', 'alert-type' => 'error']);
             }
         } catch (\Throwable $th) {
