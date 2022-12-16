@@ -1,7 +1,7 @@
 @extends('voyager::master')
 
 @section('page_title', 'Viendo Personas Externas')
-
+@if(auth()->user()->hasPermission('browse_people_ext'))
 @section('page_header')
     <div class="container-fluid">
         <div class="row">
@@ -14,9 +14,11 @@
                             </h1>
                         </div>
                         <div class="col-md-4 text-right" style="margin-top: 30px">
+                            @if(auth()->user()->hasPermission('add_people_ext'))
                             <a href="{{ route('people_ext.create') }}" class="btn btn-success">
                                 <i class="voyager-plus"></i> <span>Crear</span>
                             </a>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -88,9 +90,8 @@
                     <h4 class="modal-title"><i class="fa-solid fa-thumbs-down"></i> Finalizar</h4>
                 </div>
                 <div class="modal-footer">
-                    <form action="#" id="success_form" method="GET">
+                    <form action="#" id="finish_form" method="GET">
                         {{ csrf_field() }}
-                        <input type="hidden" name="id" id="id">
 
                             <div class="text-center" style="text-transform:uppercase">
                                 <i class="fa-solid fa-thumbs-down" style="color: rgb(68, 68, 68); font-size: 5em;"></i>
@@ -207,6 +208,16 @@
             $('#delete_form').attr('action', url);
         }
 
+        function finishItem(url)
+        {
+            $('#finish_form').attr('action', url);
+        }
+
        
     </script>
 @stop
+@else
+    @section('content')
+        <h1>No tienes permiso</h1>
+    @stop
+@endif

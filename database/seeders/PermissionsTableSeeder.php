@@ -140,6 +140,25 @@ class PermissionsTableSeeder extends Seeder
             ]);
         }
 
+
+
+        $keys = [
+            'browse_people_ext',
+            'add_people_ext',
+            'finish_people_ext',
+            'delete_people_ext'
+        ];
+
+        foreach ($keys as $key) {
+            Permission::firstOrCreate([
+                'key'        => $key,
+                'table_name' => 'people_ext',
+            ]);
+        }
+
+
+        
+
         
     }
 }

@@ -3,6 +3,7 @@
 @section('page_title', 'Crear prestamos')
 
 {{-- @if (auth()->user()->hasPermission('add_')) --}}
+@if(auth()->user()->hasPermission('add_people_ext'))
 
     @section('page_header')
         <h1 id="titleHead" class="page-title">
@@ -83,4 +84,4 @@
 
     @stop
 
-{{-- @endif --}}
+@endif

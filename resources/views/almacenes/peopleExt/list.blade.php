@@ -39,12 +39,16 @@
                          
                        
                         @if($item->status == 1)
-                            <a title="Aprobar prestamo" class="btn btn-sm btn-dark" onclick="successItem('{{ route('people_ext.baja', ['people_ext' => $item->id]) }}')" data-toggle="modal" data-target="#modal_finish">
-                                <i class="fa-solid fa-thumbs-down"></i><span class="hidden-xs hidden-sm"> Baja</span>
-                            </a>
-                            <button title="Borrar" class="btn btn-sm btn-danger delete" onclick="deleteItem('{{ route('people_ext.destroy', ['people_ext' => $item->id]) }}')" data-toggle="modal" data-target="#delete-modal">
-                                <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Borrar</span>
-                            </button>
+                            @if(auth()->user()->hasPermission('finish_people_ext'))
+                                <a title="Aprobar prestamo" class="btn btn-sm btn-dark" onclick="finishItem('{{ route('people_ext.baja', ['people_ext' => $item->id]) }}')" data-toggle="modal" data-target="#modal_finish">
+                                    <i class="fa-solid fa-thumbs-down"></i><span class="hidden-xs hidden-sm"> Baja</span>
+                                </a>
+                            @endif
+                            @if(auth()->user()->hasPermission('delete_people_ext'))
+                                <button title="Borrar" class="btn btn-sm btn-danger delete" onclick="deleteItem('{{ route('people_ext.destroy', ['people_ext' => $item->id]) }}')" data-toggle="modal" data-target="#delete-modal">
+                                    <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Borrar</span>
+                                </button>
+                            @endif
                         @endif
                     </td>
                 

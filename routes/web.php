@@ -96,7 +96,7 @@ Route::group(['prefix' => 'admin'], function () {
     // para crear personas externas en el sistemas
     Route::resource('people_ext', PeopleExtController::class);
     Route::get('people_ext/ajax/list/{search?}', [PeopleExtController::class, 'list']);
-    Route::get('people_ext/{people_ext}/baja', [PeopleExtController::class, 'finsh'])->name('people_ext.baja');
+    Route::get('people_ext/{people_ext}/baja', [PeopleExtController::class, 'finish'])->name('people_ext.baja');
 
 
 
