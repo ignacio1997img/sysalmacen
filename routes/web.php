@@ -20,6 +20,7 @@ use App\Http\Controllers\MaintenanceController;
 
 use App\Http\Controllers\DonationStockController;
 use App\Http\Controllers\InventarioAlmacenController;
+use App\Http\Controllers\PeopleExtController;
 use App\Http\Controllers\ReportAlmacenController;
 use App\Models\Article;
 use App\Models\Provider;
@@ -90,6 +91,12 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('providers', [ProviderController::class, 'index'])->name('voyager.providers.index');
 
     Route::get('articles', [ArticleController::class, 'index'])->name('voyager.articles.index');
+
+
+    // para crear personas externas en el sistemas
+    Route::resource('people_ext', PeopleExtController::class);
+    Route::get('people_ext/ajax/list/{search?}', [PeopleExtController::class, 'list']);
+    Route::get('people_ext/{people_ext}/baja', [PeopleExtController::class, 'finsh'])->name('people_ext.baja');
 
 
 

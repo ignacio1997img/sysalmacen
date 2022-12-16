@@ -25,6 +25,7 @@ use App\Exports\ProviderListExport;
 use App\Exports\ArticleListExport;
 use App\Exports\ArticleIncomeOfficeExport;
 use App\Exports\ArticleEgressOfficeExport;
+use App\Models\InventarioAlmacen;
 
 class ReportAlmacenController extends Controller
 {
@@ -36,6 +37,64 @@ class ReportAlmacenController extends Controller
     //para los reportes mediantes direciones admistrativa Income y Egress en Bolivianos  saldo
     public function directionIncomeSalida()
     {
+
+//         select sum(cantsolicitada * precio), totalbs from detalle_facturas where deleted_at is null
+            // GROUP BY id, precio
+        // $data = DB::table('detalle_facturas as d')
+        // ->where('d.deleted_at', null)
+        // ->select('d.id', DB::raw("SUM(d.cantsolicitada * d.precio) as ingreso"), 'd.totalbs')
+        // ->groupBy('d.id')
+        // ->get();
+        // foreach($data as $item)
+        // {
+        //     if($item->ingreso != $item->totalbs)
+        //     {
+        //         DetalleFactura::where('id', $item->id)->update(['totalbs'=>$item->ingreso]);
+        //     }
+        // }
+
+        // dd($data);
+
+        // foreach($data as $item)
+        // {
+        //     if($item->ingreso != $item->totalbs && $item->id !=585)
+        //     {
+        //         dd($item->id);
+        //     }
+        // }
+
+
+//         SELECT f.id, f.montofactura, SUM(df.totalbs) FROM facturas as f inner join detalle_facturas as df on df.factura_id = f.id
+// where df.deleted_at is null
+// GROUP BY df.factura_id;
+
+            // $datas = DB::table('facturas as f')
+            //     ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
+            //     ->where('f.deleted_at', null)
+            //     ->where('df.deleted_at', null)
+            //     ->select('f.id', 'f.montofactura', DB::raw("SUM(df.totalbs) as totalbs"))
+            //     ->groupBy('df.factura_id')
+            //     ->get();
+
+            // foreach($datas as $item)
+            // {
+            //     if($item->montofactura != $item->totalbs)
+            //     {
+            //         Factura::where('id',$item->id)->update(['montofactura'=>$item->totalbs]);
+            //     }
+            // }
+
+            
+
+
+
+
+
+
+
+
+
+
 
         $user = Auth::user();
         $query_filter = 'user_id ='.Auth::user()->id;
@@ -75,7 +134,6 @@ class ReportAlmacenController extends Controller
                     ->where('s.deleted_at', null)
                     ->where('s.status', 1)
                     ->where('s.sucursal_id', $request->sucursal_id)
-                    
 
                     ->select('d.id', 'd.nombre',DB::raw("SUM(f.montofactura) as ingreso"))
                     ->groupBy('d.id')
@@ -188,7 +246,6 @@ class ReportAlmacenController extends Controller
                         ->where('sc.deleted_at', null)
                         ->where('f.deleted_at', null)
                         ->where('df.deleted_at', null)
-                        ->where('df.hist', 0)
                         ->where('sc.sucursal_id', $request->sucursal_id)
                         
                         // ->where('de.deleted_at', null)
@@ -222,6 +279,7 @@ class ReportAlmacenController extends Controller
     {
 
         $user = Auth::user();
+        $gestion = InventarioAlmacen::where('deleted_at', null)->get();
         $query_filter = 'user_id ='.Auth::user()->id;
         
         if(Auth::user()->hasRole('admin'))
@@ -238,17 +296,18 @@ class ReportAlmacenController extends Controller
         // $sucursal = SucursalUser::where('user_id', $user->id)->get();
         // $direction = $this->getDireccion();        
 
-        return view('almacenes/report/inventarioAnual/detalleGeneral/report', compact('sucursal'));
+        return view('almacenes/report/inventarioAnual/detalleGeneral/report', compact('sucursal', 'gestion'));
     }
 
     public function inventarioDetalleList(Request $request)
     {
-        $gestion = $request->gestion;
+        // $gestion = $request->gestion;
+        $gestion = InventarioAlmacen::where('id', $request->gestion)->first();
 
         $date = Carbon::now();
         $sucursal = Sucursal::find($request->sucursal_id);
 
-        if($gestion == '2022')
+        if(1 == '2022')
         {
                 $data = DB::table('solicitud_compras as sc')
                         ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')
@@ -257,7 +316,6 @@ class ReportAlmacenController extends Controller
                         ->where('sc.deleted_at', null)
                         ->where('f.deleted_at', null)
                         ->where('df.deleted_at', null)
-                        ->where('df.hist', 0)
                         ->where('sc.sucursal_id', $request->sucursal_id)
                         ->select('a.id', 'a.presentacion', 'a.nombre', 'df.precio',
                                 DB::raw("SUM(df.cantsolicitada) as cEntrada"), DB::raw("SUM(df.cantsolicitada - df.cantrestante) as cSalida"), DB::raw("SUM(df.cantrestante) as cFinal"),
@@ -280,9 +338,60 @@ class ReportAlmacenController extends Controller
         }
         else 
         {
-            return 'para mas gestiones';
+            // return 'para mas gestiones';
         }
-        // dd($aux);
+        // Para Reportes con inventarios de gestion actual
+
+        $inicio = DB::table('solicitud_compras as sc')
+                ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')
+                ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
+                ->join('articles as a', 'a.id', 'df.article_id')
+                ->where('sc.deleted_at', null)
+                ->where('f.deleted_at', null)
+                ->where('df.deleted_at', null)
+                ->where('df.hist', 1)
+                ->where('df.gestion', $gestion->gestion)
+                // ->where('sc.inventarioAlmacen_id', $gestion->id)
+                ->where('sc.sucursal_id', $request->sucursal_id)
+                ->select('a.id', 'a.presentacion', 'a.nombre', 'df.precio',
+                        DB::raw("SUM(df.cantrestante) as cFinal"),
+
+                        // 'a.id as vEntrada', 'a.id as vSalida', 'a.id as vFinal'
+
+                        )
+                ->groupBy('a.id')
+                ->groupBy('df.precio')
+                ->get();
+        dd($inicio);
+
+        $data = DB::table('solicitud_compras as sc')
+                    ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')
+                    ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
+                    ->join('articles as a', 'a.id', 'df.article_id')
+                    ->where('sc.deleted_at', null)
+                    ->where('f.deleted_at', null)
+                    ->where('df.deleted_at', null)
+                    ->where('df.hist', 0)
+                    ->where('sc.inventarioAlmacen_id', $gestion->id)
+                    ->where('sc.sucursal_id', $request->sucursal_id)
+                    ->select('a.id', 'a.presentacion', 'a.nombre', 'df.precio',
+                            DB::raw("SUM(df.cantsolicitada) as cEntrada"), DB::raw("SUM(df.cantsolicitada - df.cantrestante) as cSalida"), DB::raw("SUM(df.cantrestante) as cFinal"),
+
+                            'a.id as vEntrada', 'a.id as vSalida', 'a.id as vFinal'
+
+                            )
+                    ->groupBy('a.id')
+                    ->groupBy('df.precio')
+                    ->get();
+                        // $aux=0;
+
+                foreach($data as $item)
+                {
+                    $item->cInicial=0.0;
+                    $item->vInicial=0.0;
+                    // $aux = $aux + $item->vFinal;
+                }
+
 
 
         if($request->print==1){
@@ -472,7 +581,6 @@ class ReportAlmacenController extends Controller
                         ->join('sysalmacen.articles as a', 'df.article_id', 'a.id')
                         ->join('sysalmacen.partidas as p', 'p.id', 'a.partida_id')
                         ->where('df.deleted_at', null)
-                        ->where('df.hist', 0)
                         ->where('f.deleted_at', null)
                         ->where('cp.deleted_at', null)
                         ->where('u.direccion_id', $request->direccion_id)
@@ -496,7 +604,6 @@ class ReportAlmacenController extends Controller
                         ->join('sysalmacen.articles as a', 'df.article_id', 'a.id')
                         ->join('sysalmacen.partidas as p', 'p.id', 'a.partida_id')
                         ->where('df.deleted_at', null)
-                        ->where('df.hist', 0)
                         ->where('f.deleted_at', null)
                         ->where('cp.deleted_at', null)
                         ->where('u.id', $request->unidad_id)

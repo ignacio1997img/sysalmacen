@@ -10,8 +10,8 @@
                     <h1 id="subtitle" class="page-title">
                         <i class="voyager-data"></i> Inventario
                     </h1>
-                    @if(auth()->user()->hasPermission('start_inventory') &&)
-                        <a href="{{ route('voyager.articles.create') }}" class="btn btn-success btn-add-new">
+                    @if(auth()->user()->hasPermission('start_inventory') && count($ok)==0)
+                        <a href="#" data-toggle="modal" data-target="#modal_start" class="btn btn-success btn-add-new">
                             <i class="voyager-plus"></i> <span>Nueva Gestion</span>
                         </a>
                     @endif
@@ -117,6 +117,54 @@
                     </div>                
                     <div class="modal-footer">                        
                         <input type="submit" class="btn btn-danger pull-right delete-confirm" value="Sí, cerrar">                        
+                        <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
+                    </div>
+                    {!! Form::close()!!} 
+                </div>
+            </div>
+        </div>
+
+        <div class="modal modal-success fade" tabindex="-1" id="modal_start" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    {!! Form::open(['route' => 'inventory.start', 'method' => 'post']) !!}
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title"><i class="fa-solid fa-lock-open"></i> Desea abrir nueva gestión?</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-center" style="text-transform:uppercase">
+                            <i class="fa-solid fa-lock-open" style="color: #43d17f; font-size: 5em;"></i>
+                            <br>
+                            
+                            <p><b>Desea abrir nueva gestión?</b></p>
+                        </div>
+
+                        {{-- <div class="row"> --}}
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text" class="form-control text" disabled value="{{$max+1}}">
+                                        <input type="hidden" name="gestion" class="form-control text" value="{{$max+1}}" required>
+                                        
+                                    </div>
+                                    <small>Gestión.</small>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        {{-- <input type="date" name="fechaingreso" class="form-control text" required> --}}
+                                        <textarea name="observation" id="" cols="30" rows="2" class="form-control text" required></textarea>
+                                    </div>
+                                    <small>Observación.</small>
+                                </div>
+                            </div>
+                        
+                        {{-- </div> --}}
+                    </div>                
+                    <div class="modal-footer">                        
+                        <input type="submit" class="btn btn-success pull-right delete-confirm" value="Sí, abrir">                        
                         <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
                     </div>
                     {!! Form::close()!!} 

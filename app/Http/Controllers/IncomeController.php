@@ -30,7 +30,7 @@ class IncomeController extends Controller
 
     public function index()
     {      
-        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin'))
+        if(setting('configuracion.maintenance') && !auth()->user()->hasRole('admin'))
         {
             Auth::logout();
             return redirect()->route('maintenance');
@@ -119,6 +119,7 @@ class IncomeController extends Controller
 
     }
 
+    // para imprimir el ingreso de cada almacen
     protected function view_ingreso($id)
     {
         if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin'))
@@ -160,6 +161,8 @@ class IncomeController extends Controller
         return view('almacenes.income.report',compact('sol','factura', 'detalle', 'sucursal', 'modalidad', 'unidad', 'proveedor'));
         // return view('income.view', compact('sol','factura', 'detalle', 'sucursal', 'modalidad', 'unidad'));
     }
+
+    // Para ver el Stock de cada almacen
     protected function view_ingreso_stock($id)
     {
         if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin'))
@@ -353,6 +356,7 @@ class IncomeController extends Controller
                 ->select('df.id as de','a.id as articulo_id', 'a.nombre as articulo', 'a.presentacion', 'p.codigo', 'p.nombre as partida', 'df.cantsolicitada', 'df.precio', 'df.totalbs')
                 ->where('df.factura_id', $factura->id)
                 ->where('df.deleted_at', null)
+                ->where('df.hist', 0)
                 ->get();
 
         $proveedorselect = Provider::find($factura->provider_id);
@@ -501,6 +505,8 @@ class IncomeController extends Controller
                     ->where('se.deleted_at', null)
                     ->where('de.deleted_at', null)
                     ->where('df.deleted_at', null)//opcional
+                    ->where('df.hist', 0)
+
                     ->where('f.deleted_at', null)
                     ->where('f.solicitudcompra_id', $id)
                     // ->select('se.id', 'se.nropedido', 'se.fechasolicitud', 'se.fechaegreso')
@@ -546,7 +552,7 @@ class IncomeController extends Controller
             $fac = Factura::where('solicitudcompra_id',$sol->id)->get();
             Factura::where('solicitudcompra_id', $sol->id)->update(['deleteuser_id'=>$user->id, 'deleted_at' => Carbon::now()]);
 
-            DetalleFactura::where('factura_id', $fac[0]->id)->update(['deleteuser_id'=>$user->id,'deleted_at' => Carbon::now()]);
+            DetalleFactura::where('factura_id', $fac[0]->id)->where('hist',0)->update(['deleteuser_id'=>$user->id,'deleted_at' => Carbon::now()]);
 
             DB::commit();
             return redirect()->route('income.index')->with(['message' => 'Ingreso Eliminado Exitosamente.', 'alert-type' => 'success']);

@@ -313,19 +313,21 @@ class EgressController extends Controller
                     ]);
 
 
-                    DetalleFactura::where('id',$request->detallefactura_id[$cont])->decrement('cantrestante', $request->cantidad[$cont]);
+                    DetalleFactura::where('id',$request->detallefactura_id[$cont])->where('hist', 0)->decrement('cantrestante', $request->cantidad[$cont]);
 
-                    $aux = DetalleFactura::find($request->detallefactura_id[$cont]);                    
+                    // $aux = DetalleFactura::find($request->detallefactura_id[$cont]);       
+                    $aux = DetalleFactura::where('id', $request->detallefactura_id[$cont])->where('hist', 0)->first();
+
                     $f = Factura::find($aux->factura_id);
                     $s = SolicitudCompra::find($f->solicitudcompra_id);
                     $s->update(['condicion' => 0]);
 
                     if($aux->cantrestante == 0)
                     {
-                        DetalleFactura::where('id',$request->detallefactura_id[$cont])->update(['condicion'=>0]);
+                        DetalleFactura::where('id',$request->detallefactura_id[$cont])->where('hist', 0)->update(['condicion'=>0]);
                     }
 
-                    $df = DetalleFactura::where('factura_id',$aux->factura_id)->where('deleted_at', null)->get();
+                    $df = DetalleFactura::where('factura_id',$aux->factura_id)->where('hist', 0)->where('deleted_at', null)->get();
                     $ok= true;
                     $j = 0;
                     while($j < count($df))
@@ -397,6 +399,7 @@ class EgressController extends Controller
                     ->join('articles as a', 'a.id', 'df.article_id')
                     ->where('de.solicitudegreso_id', $solicitud->id)
                     ->where('de.deleted_at', null)
+                    ->where('df.hist', 0)
                     ->select('de.id', 'de.detallefactura_id', 'de.cantsolicitada', 'de.precio', 'de.totalbs',
                     'de.gestion', 'de.condicion', 'm.nombre as modalidad', 'a.nombre as article', 'a.presentacion', 'cp.nrosolicitud')->get();
 
@@ -428,11 +431,12 @@ class EgressController extends Controller
             $i=0;
             while($i < count($detalle))
             {
-                DetalleFactura::where('id', $detalle[$i]->detallefactura_id)->increment('cantrestante', $detalle[$i]->cantsolicitada);
+                DetalleFactura::where('id', $detalle[$i]->detallefactura_id)->where('hist', 0)->increment('cantrestante', $detalle[$i]->cantsolicitada);
 
-                $aux = DetalleFactura::find($detalle[$i]->detallefactura_id);
+                // $aux = DetalleFactura::find($detalle[$i]->detallefactura_id);
+                $aux = DetalleFactura::where('id', $detalle[$i]->detallefactura_id)->where('hist', 0)->first();
 
-                $df = DetalleFactura::where('factura_id',$aux->factura_id)->where('deleted_at', null)->get();
+                $df = DetalleFactura::where('factura_id',$aux->factura_id)->where('hist', 0)->where('deleted_at', null)->get();
                 $f = Factura::find($aux->factura_id);
                 $s = SolicitudCompra::find($f->solicitudcompra_id);
 
@@ -487,10 +491,12 @@ class EgressController extends Controller
 
                     // return $detal;
 
-                    DetalleFactura::where('id',$detal->detallefactura_id)->decrement('cantrestante', $detal->cantsolicitada);
+                    DetalleFactura::where('id',$detal->detallefactura_id)->where('hist', 0)->decrement('cantrestante', $detal->cantsolicitada);
                     // return 1;
 
-                    $aux = DetalleFactura::find($detal->detallefactura_id);                    
+                    // $aux = DetalleFactura::find($detal->detallefactura_id);     
+                    $aux = DetalleFactura::where('id', $detal->detallefactura_id)->where('hist', 0)->first();
+
                     $f = Factura::find($aux->factura_id);
                     $s = SolicitudCompra::find($f->solicitudcompra_id);
                     // return 1;
@@ -502,7 +508,7 @@ class EgressController extends Controller
                         $aux->update(['condicion'=>0]);
                     }
 
-                    $df = DetalleFactura::where('factura_id',$aux->factura_id)->where('deleted_at', null)->get();
+                    $df = DetalleFactura::where('factura_id',$aux->factura_id)->where('deleted_at', null)->where('hist', 0)->get();
                     $ok= true;
                     $m = 0;
                     // return 1;
@@ -538,9 +544,11 @@ class EgressController extends Controller
                     ]);
 
 
-                    DetalleFactura::where('id',$request->detallefactura_id[$k])->decrement('cantrestante', $request->cantidad[$k]);
+                    DetalleFactura::where('id',$request->detallefactura_id[$k])->where('hist', 0)->decrement('cantrestante', $request->cantidad[$k]);
 
-                    $aux = DetalleFactura::find($request->detallefactura_id[$k]);                    
+                    // $aux = DetalleFactura::find($request->detallefactura_id[$k]); 
+                    $aux = DetalleFactura::where('id', $request->detallefactura_id[$k])->where('hist', 0)->first();
+
                     $f = Factura::find($aux->factura_id);
                     $s = SolicitudCompra::find($f->solicitudcompra_id);
 
@@ -550,7 +558,7 @@ class EgressController extends Controller
                     {
                         $aux->update(['condicion'=>0]);
                     }
-                    $df = DetalleFactura::where('factura_id',$aux->factura_id)->where('deleted_at', null)->get();
+                    $df = DetalleFactura::where('factura_id',$aux->factura_id)->where('hist', 0)->where('deleted_at', null)->get();
                     $ok= true;
                     $m = 0;
                     while($m < count($df))
@@ -624,11 +632,13 @@ class EgressController extends Controller
 
             while($i < count($detalle))
             {                
-                DetalleFactura::where('id', $detalle[$i]->detallefactura_id)->increment('cantrestante', $detalle[$i]->cantsolicitada);
+                DetalleFactura::where('id', $detalle[$i]->detallefactura_id)->where('hist', 0)->increment('cantrestante', $detalle[$i]->cantsolicitada);
 
-                $aux = DetalleFactura::find($detalle[$i]->detallefactura_id);
+                // $aux = DetalleFactura::find($detalle[$i]->detallefactura_id);
+                $aux = DetalleFactura::where('id', $detalle[$i]->detallefactura_id)->where('hist', 0)->first();
 
-                $df = DetalleFactura::where('factura_id',$aux->factura_id)->where('deleted_at', null)->get();
+
+                $df = DetalleFactura::where('factura_id',$aux->factura_id)->where('deleted_at', null)->where('hist', 0)->get();
                 $f = Factura::find($aux->factura_id);
                 $s = SolicitudCompra::find($f->solicitudcompra_id);
                 $j=0;
@@ -705,6 +715,7 @@ class EgressController extends Controller
                 ->select('a.nombre as articulo', 's.nropedido as numero', 'a.id as codigo', 'a.presentacion', 'sd.cantsolicitada','df.precio')
                 ->where('s.id',  $sol->id)
                 ->where('sd.deleted_at', null)
+                ->where('df.hist', 0)
                 ->get();
 
         // return $detalle;
@@ -732,7 +743,7 @@ class EgressController extends Controller
             ->join('detalle_facturas as fd', 'fd.factura_id', 'f.id')
             ->join('modalities as m', 'm.id', 'com.modality_id')
             ->select('com.id', 'm.nombre', 'com.nrosolicitud')
-            // ->where('com.stock',0)
+            ->where('fd.hist',0)
             ->where('fd.condicion', 1)
             ->where('f.condicion', 1)
             // ->where('com.unidadadministrativa', $id)
@@ -750,6 +761,7 @@ class EgressController extends Controller
             ->join('modalities as m', 'm.id', 'com.modality_id')
             ->select('com.id', 'm.nombre', 'com.nrosolicitud')
             // ->where('com.stock',0)
+            ->where('fd.hist',0)
             ->where('fd.condicion', 1)
             ->where('f.condicion', 1)
             // ->where('com.unidadadministrativa', $id)
@@ -790,6 +802,7 @@ class EgressController extends Controller
                     ->join('modalities as m', 'm.id', 'com.modality_id')
                     ->join('articles as a', 'a.id', 'fd.article_id')
                     ->select('fd.id', 'a.nombre')
+                    ->where('fd.hist', 0)
                     ->where('fd.condicion', 1)
                     ->where('fd.deleted_at', null)
                     ->where('com.id', $id)
@@ -805,6 +818,7 @@ class EgressController extends Controller
                     ->join('articles as a', 'a.id', 'fd.article_id')
                     ->select('fd.id', 'a.presentacion', 'fd.precio', 'fd.cantrestante')
                     ->where('fd.id', $id)
+                    ->where('fd.hist', 0)
                     ->get();
         return $detalle;
     }
