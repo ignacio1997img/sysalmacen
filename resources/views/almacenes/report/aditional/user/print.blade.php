@@ -32,9 +32,9 @@
                 <th>ALMACEN</th>
                 <th>USUARIOS</th>
                 <th style="width:60px">INGRESO <br>
-                    BS.</th>
+                    CANT.</th>
                 <th style="width:60px">INGRESO <br>
-                    CANT</th>
+                    BS</th>
             </tr>
         </thead>
         <tbody>

@@ -16,9 +16,9 @@
                         <th style="width:15%; text-align: center">ALMACEN</th>
                         <th style="width:25%; text-align: center">USUARIOS</th>
                         <th style="width:10%; text-align: center">INGRESO <br>
-                            BS.</th>
+                            CANT.</th>
                         <th style="width:10%; text-align: center">INGRESO <br>
-                            CANT</th>
+                            BS</th>
                     </tr>
                 </thead>
                 <tbody>
