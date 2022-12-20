@@ -81,12 +81,18 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('egres/delete', [EgressController::class, 'destroy'])->name('egres_delete');
     // Route::get('egres/view/{id?}', [EgressController::class, 'view_egreso'])->name('egreso_view_entregado');// en mantenimiento sin funcionamiento 
 
+
+    // SUCURSALES Y DIRECION ADMINISTRATIVA Y UNIUDAD ADMINISTRATIVA COMO ALMACEN PRINCIPAL
     Route::get('sucursals', [SucursalController::class, 'index'])->name('voyager.sucursals.index');
     Route::get('sucursals/{sucursal?}/da/index', [SucursalController::class, 'indexDireccion'])->name('sucursal-da.index');
     Route::post('sucursals/da/store', [SucursalController::class, 'storeDireccion'])->name('sucursal-da.store');
     Route::delete('sucursals/da/delete', [SucursalController::class, 'destroyDireccion'])->name('sucursal-da.destroy');
     Route::post('sucursals/da/habilitar', [SucursalController::class, 'habilitarDireccion'])->name('sucursal-da.habilitar');
     Route::post('sucursals/da/inhabilitar', [SucursalController::class, 'inhabilitarDireccion'])->name('sucursal-da.inhabilitar');
+
+    Route::post('sucursals/unidad/store', [SucursalController::class, 'storeUnidad'])->name('sucursal-unidad.store'); //para poder agregar una unidad administrativa como almacen principal
+    Route::delete('sucursals/unidad/delete', [SucursalController::class, 'destroyUnidad'])->name('sucursal-unidad.destroy');
+
 
     Route::get('providers', [ProviderController::class, 'index'])->name('voyager.providers.index');
 
@@ -159,12 +165,6 @@ Route::group(['prefix' => 'admin'], function () {
 
 
 
-
-
-
-
-    
-
     Route::get('print/almacen-article-inventory', [ReportAlmacenController::class, 'articleInventory'])->name('almacen-article-inventory.report');
     Route::post('print/almacen-article-inventory/list', [ReportAlmacenController::class, 'articleInventoryList'])->name('almacen-article-inventory.list');
 
@@ -176,6 +176,9 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::get('print/almacen-article-unidades', [ReportAlmacenController::class, 'articleUnidades'])->name('almacen-article-unidades.report');
     Route::post('print/almacen-article-unidades/list', [ReportAlmacenController::class, 'articleUnidadesList'])->name('almacen-article-unidades.list');
+
+
+
 
 
 

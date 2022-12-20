@@ -31,47 +31,78 @@
                         <div class="panel panel-bordered">
                             <div class="panel-body">
                                 <div class="table-responsive">
-                                    <table id="dataTable" class="dataTable table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th style="text-align: center">Nro&deg;</th>
-                                                <th style="text-align: center">Dirección Administrativa</th>
-                                                <th style="text-align: center">Estado</th>
-                                                <th style="text-align: right">Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($data as $item)
+                                    <div class="col-md-8">
+                                        <table id="dataTable" class="dataTable table-hover">
+                                            <thead>
                                                 <tr>
-                                                    <td>{{$item->id}}</td>
-                                                    <td style="text-align: center">{{$item->nombre}}</td>
-                                                    <td style="text-align: center">
-                                                        @if ($item->status == 1)
-                                                            <label class="label label-success">Activo</label>
-                                                        @else
-                                                            <label class="label label-danger">Inactivo</label>
-                                                        @endif
-                                                    </td>
-                                                    <td style="text-align: right">
-                                                        <div class="no-sort no-click bread-actions text-right">
-                                                            @if($item->status == 1)
-                                                                <a data-toggle="modal" data-target="#modal-inhabilitar" title="Inhabilitar Dirección" data-id="{{$item->id}}" class="btn btn-sm btn-warning view">
-                                                                    <i class="fa-solid fa-thumbs-down"></i> <span class="hidden-xs hidden-sm">Inhabilitar</span>
-                                                                </a>                                                          
-                                                            @else
-                                                                <a data-toggle="modal" data-target="#modal-habilitar" title="Habilitar Dirección" data-id="{{$item->id}}" class="btn btn-sm btn-success view">
-                                                                    <i class="fa-solid fa-thumbs-up"></i> <span class="hidden-xs hidden-sm">Habilitar</span>
-                                                                </a> 
-                                                            @endif
-                                                            <a data-toggle="modal" data-target="#myModalEliminar" title="Habilitar Dirección" data-id="{{$item->id}}" class="btn btn-sm btn-danger view">
-                                                                <i class="fa-solid fa-trash"></i> <span class="hidden-xs hidden-sm">Eliminar</span>
-                                                            </a> 
-                                                        </div>
-                                                    </td>
+                                                    <th style="text-align: center">Nro&deg;</th>
+                                                    <th style="text-align: center">Dirección Administrativa</th>
+                                                    <th style="text-align: center">Estado</th>
+                                                    <th style="text-align: right">Acciones</th>
                                                 </tr>
-                                            @endforeach                              
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($data as $item)
+                                                    <tr>
+                                                        <td>{{$item->id}}</td>
+                                                        <td style="text-align: center">{{$item->nombre}}</td>
+                                                        <td style="text-align: center">
+                                                            @if ($item->status == 1)
+                                                                <label class="label label-success">Activo</label>
+                                                            @else
+                                                                <label class="label label-danger">Inactivo</label>
+                                                            @endif
+                                                        </td>
+                                                        <td style="text-align: right">
+                                                            <div class="no-sort no-click bread-actions text-right">                                                                                                                            
+                                                                @if($item->status == 1)
+                                                                    <a data-toggle="modal" data-target="#modal-inhabilitar" title="Inhabilitar Dirección" data-id="{{$item->id}}" class="btn btn-sm btn-warning view">
+                                                                        <i class="fa-solid fa-thumbs-down"></i> <span class="hidden-xs hidden-sm">Inhabilitar</span>
+                                                                    </a>                                                          
+                                                                @else
+                                                                    <a data-toggle="modal" data-target="#modal-habilitar" title="Habilitar Dirección" data-id="{{$item->id}}" class="btn btn-sm btn-success view">
+                                                                        <i class="fa-solid fa-thumbs-up"></i> <span class="hidden-xs hidden-sm">Habilitar</span>
+                                                                    </a> 
+                                                                @endif
+                                                                <a data-toggle="modal" data-target="#myModalEliminar" title="Habilitar Dirección" data-id="{{$item->id}}" class="btn btn-sm btn-danger view">
+                                                                    <i class="fa-solid fa-trash"></i> <span class="hidden-xs hidden-sm">Eliminar</span>
+                                                                </a> 
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach                              
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <a data-toggle="modal" data-target="#modal-almacen" title="Agregar Almacen Principal" data-id="{{$item->id}}" class="btn btn-sm btn-success view">
+                                            <i class="fa-solid fa-shop"></i> <span class="hidden-xs hidden-sm"></span>
+                                        </a>  
+                                        <br>
+                                        <br>
+                                        <table id="dataTable" class="table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th style="text-align: center">Unidad</th>
+                                                    <th style="text-align: right">Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($principal as $item)
+                                                    <tr>
+                                                        <td style="text-align: center">{{$item->unidad->nombre}}</td>
+                                                        <td style="text-align: right">
+                                                            <div class="no-sort no-click bread-actions text-right">  
+                                                                <a data-toggle="modal" data-target="#modal-deleteUnidad" title="Eliminar Unidad Principal" data-id="{{$item->id}}" class="btn btn-sm btn-danger view">
+                                                                    <i class="fa-solid fa-trash"></i> <span class="hidden-xs hidden-sm">Eliminar</span>
+                                                                </a> 
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach                              
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -99,7 +130,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><b>Direcciones Administrativa:</b></span>
                                         </div>
-                                        <select name="direccion_id" id="direccion_id" class="form-control select2" required>
+                                        <select name="direccion_id" class="form-control select2" required>
                                             <option value="">Seleccione una dirección..</option>
                                             @foreach($da as $item)
                                                     <option value="{{$item->id}}">{{$item->nombre}}</option>
@@ -210,6 +241,90 @@
                     </div>
                 </div>
             </div>
+
+
+            {{-- Para agregar unidades como almacen princial --}}
+            <div class="modal fade modal-success" role="dialog" id="modal-almacen">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">                
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title"><i class="voyager-plus"></i>Almacen Principal</h4>
+                        </div>
+                        {!! Form::open(['route' => 'sucursal-unidad.store','class' => 'was-validated'])!!}
+                            <!-- Modal body -->
+                            <input type="hidden" value="{{$sucursal->id}}" name="sucursal_id">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><b>Direcciones Administrativa:</b></span>
+                                        </div>
+                                        <select name="direccion_id" id="direccion_id" class="form-control select2" required>
+                                            <option value="">Seleccione una dirección..</option>
+                                            @foreach($data as $item)
+                                                    <option value="{{$item->direccion_id}}">{{$item->nombre}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>     
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><b>Unidad Administrativa:</b></span>
+                                        </div>
+                                        <select name="unidad_id" id="unidad_id" class="form-control select2" required>
+                                            <option value="">Seleccione una unidad..</option>
+                                            
+                                        </select>
+                                    </div>
+                                </div> 
+
+                            </div>
+                            
+                            <!-- Modal footer -->
+                            <div class="modal-footer justify-content-between">
+                                <button type="button text-left" class="btn btn-danger" data-dismiss="modal" data-toggle="tooltip" title="Volver">Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-success btn-sm" title="Registrar..">
+                                    Agregar
+                                </button>
+                            </div>
+                        {!! Form::close()!!} 
+                        
+                    </div>
+                </div>
+            </div>
+            {{-- para eliminar la unidad principal --}}
+            <div class="modal modal-danger fade" tabindex="-1" id="modal-deleteUnidad" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        {!! Form::open(['route' => 'sucursal-unidad.destroy', 'method' => 'DELETE']) !!}
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title"><i class="voyager-trash"></i> Desea eliminar la Unidad Administrativa?</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="id" id="sucursalUnidad">
+                            <input type="hidden" value="{{$sucursal->id}}" name="sucursal_id">
+                            <div class="text-center" style="text-transform:uppercase">
+                                <i class="voyager-trash" style="color: red; font-size: 5em;"></i>
+                                <br>
+                                
+                                <p><b>Desea eliminar el siguiente registro?</b></p>
+                            </div>
+                        </div>                
+                        <div class="modal-footer">
+                            
+                                <input type="submit" class="btn btn-danger pull-right delete-confirm" value="Sí, eliminar">
+                            
+                            <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
+                        </div>
+                        {!! Form::close()!!} 
+                    </div>
+                </div>
+            </div>
     @stop
 
 
@@ -258,6 +373,10 @@
 
     @section('javascript')
             <script>
+                $(function()
+                {
+                    $('#direccion_id').on('change', unidad_administrativa);
+                })
                 $(document).ready(function(){
                     $('.dataTable').DataTable({
                         language: {
@@ -316,6 +435,38 @@
 
                     var modal = $(this)
                     modal.find('.modal-body #id').val(id)
+                    
+                });
+
+
+                function unidad_administrativa()
+                {
+                    var id =  $(this).val();    
+                    // alert(id)
+                    if(id >=1)
+                    {
+                        $.get('{{route('ajax_unidad_administrativa')}}/'+id, function(data){
+                            var html_unidad=    '<option value="">Seleccione una unidad..</option>'
+                                for(var i=0; i<data.length; ++i)
+                                html_unidad += '<option value="'+data[i].id+'">'+data[i].nombre+'</option>'
+
+                            $('#unidad_id').html(html_unidad);;            
+                        });
+                    }
+                    else
+                    {
+                        var html_unidad=    ''       
+                        $('#unidad_id').html(html_unidad);
+                    }
+                }
+                
+                $('#modal-deleteUnidad').on('show.bs.modal', function (event) {
+                    var button = $(event.relatedTarget) //captura valor del data-empresa=""
+
+                    var id = button.data('id')
+
+                    var modal = $(this)
+                    modal.find('.modal-body #sucursalUnidad').val(id)
                     
                 });
 
