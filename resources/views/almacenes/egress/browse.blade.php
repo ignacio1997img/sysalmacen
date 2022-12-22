@@ -37,6 +37,9 @@
                                             <th class="text-center">Fecha Solicitud</th>
                                             <th class="text-center">Fecha Salida</th>
                                             <th class="text-center">Oficina</th>
+
+                                            <th style="text-align: center">Fecha Registro</th>
+
                                             @if(auth()->user()->hasRole(['admin']))
                                                 <th style="text-align: center">Sucursal</th>
                                             @endif
@@ -57,6 +60,8 @@
                                                             <td>{{date('d/m/Y', strtotime($item->fechasolicitud))}}</td>
                                                             <td>{{date('d/m/Y', strtotime($item->fechaegreso))}}</td>
                                                             <td style="text-align: center">{{$item->direccion}} <br><small>{{$item->unidad}}</small></td>
+                                                            <td style="text-align: center">{{date('d/m/Y H:i:s', strtotime($item->created_at))}}<br><small>{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}}.</small></td>
+
                                                             @if(auth()->user()->hasRole(['admin']))
                                                                 <td style="text-align: center"><label class="label label-dark">{{$item->sucursal}}</label></td>
                                                             @endif

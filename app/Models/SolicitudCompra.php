@@ -26,4 +26,9 @@ class SolicitudCompra extends Model
     {
         return $this->hasMany(Factura::class);
     }
+    
+    public function modality()
+    {
+        return $this->belongsTo(Modality::class, 'modality_id');
+    }
 }

@@ -121,11 +121,12 @@ class EgressController extends Controller
             ->join('sysadmin.unidades as u', 'u.id', 'se.unidadadministrativa')
             ->join('sysadmin.direcciones as d', 'd.id', 'u.direccion_id')
             ->join('sysalmacen.sucursals as s', 's.id', 'se.sucursal_id')
-            ->select('se.inventarioAlmacen_id as inventario_id', 'se.gestion', 'se.id', 'se.nropedido', 'se.fechasolicitud', 'se.fechaegreso', 'u.nombre as unidad', 'd.nombre as direccion', 's.nombre as sucursal')
+            ->select('se.inventarioAlmacen_id as inventario_id', 'se.gestion', 'se.id', 'se.nropedido', 'se.fechasolicitud', 'se.fechaegreso', 'se.created_at','u.nombre as unidad', 'd.nombre as direccion', 's.nombre as sucursal')
             ->where('se.deleted_at', null)
             ->whereRaw($query_filter)
             // ->orderBy('se.id', 'DESC')
             ->get();
+        // return $data;
 
         return view('almacenes.egress.browse', compact('data', 'gestion'));
     }
