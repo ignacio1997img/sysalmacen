@@ -127,5 +127,19 @@
             </td>
         </tr>
     </table>
+    <br><br><br><br>
+    <table width="100%">
+        <tr>
+            <td style="text-align: center">
+            </td>
+            <td style="text-align: center">
+                ______________________
+                <br>
+                <b>Proveedor</b>
+            </td>
+            <td style="text-align: center">
+            </td>
+        </tr>
+    </table>
 
 @endsection

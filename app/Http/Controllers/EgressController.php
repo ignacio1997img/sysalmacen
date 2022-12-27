@@ -734,7 +734,12 @@ class EgressController extends Controller
     protected function ajax_solicitud_compra($id)
     {
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
-        $query_filter = 'or com.unidadadministrativa = 192';
+
+        $query_filter = 'com.sucursal_id = '.$sucursal->sucursal_id;
+        if(Auth::user()->hasRole('admin'))
+        {
+            $query_filter = 1;
+        }
 
         if($sucursal->sucursal_id == 1)
         {
@@ -772,22 +777,29 @@ class EgressController extends Controller
             ->orderBy('com.id')
             ->get();
         }
+
+
+
+        $solicitud = DB::table('solicitud_compras as com')
+            ->join('facturas as f', 'f.solicitudcompra_id', 'com.id')
+            ->join('detalle_facturas as fd', 'fd.factura_id', 'f.id')
+            ->join('modalities as m', 'm.id', 'com.modality_id')
+            ->select('com.id', 'm.nombre', 'com.nrosolicitud')
+            ->where('fd.hist',0)
+            ->where('fd.cantrestante', '>', 0)
+            ->where('f.condicion', 1)
+            ->where('com.unidadadministrativa', $id)
+            ->where('com.sucursal_id', $sucursal->sucursal_id)
+
+            ->where('com.deleted_at', null)
+            ->where('f.deleted_at', null)
+            ->where('fd.deleted_at', null)
+        
+            ->groupBy('com.id', 'm.nombre', 'com.nrosolicitud')
+            ->orderBy('com.id')
+            ->get();
         
 
-        // $solicitud = DB::table('solicitud_compras as com')
-        //     ->join('facturas as f', 'f.solicitudcompra_id', 'com.id')
-        //     ->join('detalle_facturas as fd', 'fd.factura_id', 'f.id')
-        //     ->join('modalities as m', 'm.id', 'com.modality_id')
-        //     ->select('com.id', 'm.nombre', 'com.nrosolicitud')
-        //     // ->where('com.stock',0)
-        //     ->where('fd.condicion', 1)
-        //     ->where('f.condicion', 1)
-        //     // ->where('com.unidadadministrativa', $id)
-        //     ->whereRaw('com.unidadadministrativa ='.$id.' '.$query_filter)
-        
-        //     ->groupBy('com.id', 'm.nombre', 'com.nrosolicitud')
-        //     ->orderBy('com.id')
-        //     ->get();
         return $solicitud;
     }
 
