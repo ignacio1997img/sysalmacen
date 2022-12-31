@@ -27,40 +27,18 @@
                 <tbody>
                     @php
                         $count = 1;
-                        $si = 0;
-                        $i = 0;
-                        $s = 0;
-                        $sf = 0;
                     @endphp
-                    @forelse ($data as $item)
+                    @forelse ($direction as $item)
                         <tr>
                             <td>{{ $count }}</td>
                             <td style="text-align: left">{{ $item->nombre }}</td>
                             <td style="text-align: right">{{ number_format($item->inicio,2)}}</td>
                             <td style="text-align: right">{{ number_format($item->ingreso,2)}}</td>
-                            <td style="text-align: right">{{ number_format($item->salida,2)}}</td>
-                            {{-- @php
-                                $aux =0;
-                                if (($item->inicio + $item->ingreso) > $item->salida)
-                                {
-                                    $aux = ($item->inicio + $item->ingreso) - $item->salida;
-                                }
-                                else
-                                {
-                                    $aux = $item->salida - ($item->inicio + $item->ingreso);
-                                }                                                       
-                            @endphp
-                            <td style="text-align: right">{{ number_format($aux,2)}}</td>                             --}}
-                                                                                    
+                            <td style="text-align: right">{{ number_format($item->salida,2)}}</td>                                                                                    
                         </tr>
-                        {{-- @php
-                            $count++;
-                            $si = $si + $item->ingreso;
-                            $i = $i + $item->ingreso;
-                            // $s = $s + 
-                            // $sf = 0;
-                            
-                        @endphp --}}
+                        @php
+                            $count++;                            
+                        @endphp
                     @empty
                         <tr style="text-align: center">
                             <td colspan="5">No se encontraron registros.</td>

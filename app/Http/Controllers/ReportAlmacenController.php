@@ -9,6 +9,7 @@ use App\Models\SolicitudCompra;
 use App\Models\Article;
 use App\Models\Factura;
 use App\Models\DetalleFactura;
+use App\Models\InventarioAlmacen;
 use Faker\Provider\ar_JO\Company;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Sucursal;
@@ -25,6 +26,9 @@ use App\Exports\ProviderListExport;
 use App\Exports\ArticleListExport;
 use App\Exports\ArticleIncomeOfficeExport;
 use App\Exports\ArticleEgressOfficeExport;
+use App\Models\DetalleEgreso;
+use App\Models\SolicitudEgreso;
+use App\Models\Unit;
 
 class ReportAlmacenController extends Controller
 {
@@ -37,6 +41,82 @@ class ReportAlmacenController extends Controller
     public function directionIncomeSalida()
     {
 
+//     $data = DB::table('solicitud_compras as s')
+//     ->join('facturas as f', 'f.solicitudcompra_id', 's.id')
+//     ->join('detalle_facturas as d', 'd.factura_id', 'f.id')
+
+//     ->where('s.gestion', 2022)
+//     ->where('s.sucursal_id', 1)
+//     // ->where('s.deleted_at', null)
+
+//     ->where('f.deleted_at', null)
+
+
+//     ->where('d.deleted_at', null)
+//     ->where('d.hist', 0)
+
+//     // ->select(DB::raw("SUM(d.cantsolicitada * d.precio) as ingreso"))
+//     ->select('s.id', DB::raw("SUM(d.cantsolicitada * d.precio) as ingreso"), 'd.totalbs')
+//     ->groupBy('s.id')
+//     ->get();
+
+// // _____________________________________________________________________________________________
+//     $data = DB::table('solicitud_compras as s')
+//     ->join('facturas as f', 'f.solicitudcompra_id', 's.id')
+
+//     ->where('s.gestion', 2022)
+//     ->where('s.sucursal_id', 1)
+//     ->where('s.deleted_at', null)
+
+//     ->where('f.deleted_at', null)
+
+//     ->select('s.id', 'f.id as factura', DB::raw("SUM(f.montofactura) as ingreso"))
+//     ->groupBy('s.id')
+//     ->get();
+//     // return $data;
+    
+
+
+
+//     foreach($data as $item)
+//     {
+//         // return $item;
+//         $ok = DB::table('detalle_facturas as d')
+
+//             ->where('d.factura_id', $item->factura)
+
+
+//             ->where('d.deleted_at', null)
+//             ->where('d.hist', 0)
+
+//             // ->select(DB::raw("SUM(d.cantsolicitada * d.precio) as ingreso"))
+//             ->select(DB::raw("SUM(d.cantsolicitada * d.precio) as ingreso"), DB::raw("SUM(d.totalbs) as totalbs"))
+//             ->get();
+//         // return $ok[0]->ingreso;
+//         // return $item;
+
+
+//         if($item->ingreso != $ok[0]->totalbs)
+//         {
+//             return $item->id;
+//             // return $ok[0]->totalbs;
+//             return $item->ingreso;
+//         }
+//     }
+
+
+// para agregar las direciones 
+        // $ok = SolicitudEgreso::all();
+
+        // foreach($ok as $item)
+        // {
+        //     SolicitudEgreso::where('id',$item->id)->update(['direccionadministrativa'=>$this->getUnidad($item->unidadadministrativa)->direccion_id]);
+        // }
+
+
+        $gestion = InventarioAlmacen::where('deleted_at', null)->where('status', 0)->get();
+
+
         $user = Auth::user();
         $query_filter = 'user_id ='.Auth::user()->id;
         
@@ -49,91 +129,125 @@ class ReportAlmacenController extends Controller
                         ->where('deleted_at', null)
                         ->whereRaw($query_filter)
                         ->GroupBy('sucursal_id')
-                        ->get();
-        
-        $direction = $this->getDirecciones();        
+                        ->get();       
 
-        return view('almacenes/report/inventarioAnual/direccionAdministrativa/report', compact('sucursal', 'direction'));
+        return view('almacenes/report/inventarioAnual/direccionAdministrativa/report', compact('sucursal','gestion'));
     }
     public function directionIncomeSalidaList(Request $request)
     {
-        // dd($request);
         $gestion = $request->gestion;
-
-        $date = Carbon::now();
         $sucursal = Sucursal::find($request->sucursal_id);
-        if($request->gestion == '2022')
-        {
-            $data = DB::connection('mamore')->table('direcciones as d')
-                    ->join('sysalmacen.sucursal_direccions as s', 's.direccionAdministrativa_id', 'd.id')
-                    ->leftJoin('sysalmacen.solicitud_compras as sc', 'sc.direccionadministrativa', 'd.id')
-                    ->leftJoin('sysalmacen.facturas as f', 'f.solicitudcompra_id', 'sc.id')       
-                    // ->leftJoin('sysalmacen.detalle_facturas as df', 'df.factura_id', 'f.id')             
-                    ->where('sc.deleted_at', null)
-                    ->where('f.deleted_at', null)
-                    // ->where('df.deleted_at', null)
-                    ->where('s.deleted_at', null)
-                    ->where('s.status', 1)
-                    ->where('s.sucursal_id', $request->sucursal_id)
-                    
-
-                    ->select('d.id', 'd.nombre',DB::raw("SUM(f.montofactura) as ingreso"))
-                    ->groupBy('d.id')
-                    ->get();
 
 
-            // $data = DB::connection('mamore')->table('direcciones as d')
-            //             ->leftJoin('sysalmacen.solicitud_compras as sc', 'sc.direccionadministrativa', 'd.id')
-            //             ->leftJoin('sysalmacen.facturas as f', 'f.solicitudcompra_id', 'sc.id')
-            //             ->where('sc.deleted_at', null)
-            //             // ->where('d.direcciones_tipo_id', 1)
-            //             ->select('d.id', 'd.nombre',DB::raw("SUM(f.montofactura) as ingreso"))
-            //             ->groupBy('d.id')
-            //             ->get();
+        // para obtener todas las direciones de cada almacen
+        $direction = DB::connection('mamore')->table('direcciones as d')
+            ->join('sysalmacen.sucursal_direccions as s', 's.direccionAdministrativa_id', 'd.id')
+            ->where('s.deleted_at', null)
+            ->where('s.sucursal_id', $request->sucursal_id)
 
-            $salida = DB::connection('mamore')->table('direcciones as d')
-                        ->leftJoin('unidades as u', 'u.direccion_id', 'd.id')
-                        ->leftJoin('sysalmacen.solicitud_egresos as se', 'se.unidadadministrativa', 'u.id')
-                        ->leftJoin('sysalmacen.detalle_egresos as de', 'de.solicitudegreso_id', 'se.id')
-                        ->where('se.deleted_at', null)
-                        ->where('de.deleted_at', null)
+            ->select('d.id as direcion_id', 'd.nombre')
+            ->orderBy('d.id', 'ASC')
+
+            ->get();
+
+        
+        //Para obtener los saldos de cada almacen de las GESTIONES anteriores 
+        $saldos = DB::table('solicitud_compras as sc')
+                ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')       
+                ->join('detalle_facturas as df', 'df.factura_id', 'f.id')  
+
+                ->where('sc.deleted_at', null)
+                ->where('sc.sucursal_id', $request->sucursal_id)
+
+                ->where('f.deleted_at', null)
+
+                ->where('df.hist', 1)
+                ->where('df.gestion', $gestion)
+                ->where('df.deleted_at', null)
+                
+
+                ->select('sc.direccionadministrativa as id', DB::raw("SUM(df.cantrestante * df.precio) as saldo"))
+                ->groupBy('sc.direccionadministrativa')
+                ->orderBy('sc.direccionadministrativa', 'ASC')
+                ->get();
+
+
+
+        // Para obtener los ingresos de la gestion actual de cada almacen
+        $data = DB::table('solicitud_compras as sc')
+                ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')       
+                ->join('detalle_facturas as df', 'df.factura_id', 'f.id')   
+
+                ->where('sc.deleted_at', null)
+                ->where('sc.sucursal_id', $request->sucursal_id)
+                ->where('sc.gestion', $gestion)
+
+                ->where('f.deleted_at', null)
+
+                ->where('df.hist', 0)
+                ->where('df.gestion', $gestion)
+                ->where('df.deleted_at', null)                    
+
+                ->select('sc.direccionadministrativa as id', DB::raw("SUM(df.cantsolicitada * df.precio) as ingreso"))
+                    // ->select('sc.direccionadministrativa as id',DB::raw("SUM(f.montofactura) as ingreso"))
+                ->groupBy('sc.direccionadministrativa')
+                ->get();
+
+                 
+        // Para obtener las salidas de la gestion  actual de cada almacen
+        $salida = DB::table('solicitud_egresos as se')
+                ->join('detalle_egresos as de', 'de.solicitudegreso_id', 'se.id')
+
+                ->where('se.gestion', $gestion)
+                ->where('se.sucursal_id', $request->sucursal_id)
+                ->where('se.deleted_at', null)
+
+                ->where('de.deleted_at', null)
                         // ->where('d.direcciones_tipo_id', 1)
-                        ->select('d.id',DB::raw("SUM(de.totalbs) as egreso"))
-                        // ->groupBy('u.id')
-                        ->groupBy('d.id')
-                        ->get();
-            // dd($data);
-            
-            foreach($data as $item)
+                ->select('se.direccionadministrativa as id', DB::raw("SUM(de.cantsolicitada * de.precio) as salida"))
+                        // ->select('d.id',DB::raw("SUM(de.totalbs) as salida"))
+
+                ->groupBy('se.direccionadministrativa')
+                ->get();
+
+        
+            foreach($direction as $item)
             {
-                $item->inicio=0;
-                if(!$item->ingreso)
+                $item->inicio="0.0";
+
+                foreach($saldos as $sitem)
                 {
-                    $item->ingreso="0.0";
-                }
-                foreach($salida as $sal)
-                {
-                    if($item->id == $sal->id)
+                    if($item->direcion_id == $sitem->id)
                     {
-                        $item->salida = $sal->egreso;
+                        $item->inicio = $sitem->saldo;
+                    }
+                }
+
+
+                $item->ingreso="0.0";
+                foreach($data as $ditem)
+                {
+                    if($item->direcion_id == $ditem->id)
+                    {
+                        $item->ingreso = $ditem->ingreso;
+                    }
+                }
+
+                $item->salida="0.0";
+                foreach($salida as $eitem)
+                {
+                    if($item->direcion_id == $eitem->id)
+                    {
+                        $item->salida = $eitem->salida;
                     }
                 }
             }
-            foreach($data as $item)
-            {
-                if(!$item->salida)
-                {
-                    $item->salida="0.0";
-                }
-            }
-            // dd($data);
-        }
 
-       
+
 
         if($request->print==1)
         {
-            return view('almacenes/report/inventarioAnual/direccionAdministrativa/print', compact('data', 'gestion'));
+            return view('almacenes/report/inventarioAnual/direccionAdministrativa/print', compact('direction', 'gestion', 'sucursal'));
         }
         if($request->print==2)
         {
@@ -141,14 +255,17 @@ class ReportAlmacenController extends Controller
         }
         if($request->print ==NULL)
         {            
-            return view('almacenes/report/inventarioAnual/direccionAdministrativa/list', compact('data'));
+            return view('almacenes/report/inventarioAnual/direccionAdministrativa/list', compact('direction'));
         }
     }
 
     // ################################################################################
     // para ver el inventario por partida anual
     public function inventarioPartida()
-    {
+    { 
+        // para obtener las gestiones disponible
+        $gestion = InventarioAlmacen::where('deleted_at', null)->where('status', 0)->get();
+
 
         $user = Auth::user();
         $query_filter = 'user_id ='.Auth::user()->id;
@@ -162,23 +279,96 @@ class ReportAlmacenController extends Controller
                         ->where('deleted_at', null)
                         ->whereRaw($query_filter)
                         ->GroupBy('sucursal_id')
-                        ->get();
+                        ->get();  
 
-        // $direction = $this->getDireccion();        
-
-        return view('almacenes/report/inventarioAnual/partidaGeneral/report', compact('sucursal'));
+        return view('almacenes/report/inventarioAnual/partidaGeneral/report', compact('sucursal', 'gestion'));
     }
 
     public function inventarioPartidaList(Request $request)
     {
         // dd($request);
         $gestion = $request->gestion;
-
+        // return $gestion;
         $date = Carbon::now();
         $sucursal = Sucursal::find($request->sucursal_id);
 
-        if($gestion == '2022')
-        {
+        // Para obtener el saldo de la anterior gestion
+        $saldo = DB::table('solicitud_compras as sc')
+                ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')       
+                ->join('detalle_facturas as df', 'df.factura_id', 'f.id')   
+
+                ->join('articles as a', 'a.id', 'df.article_id')
+                ->join('partidas as p', 'p.id', 'a.partida_id')
+
+                ->where('sc.deleted_at', null)
+                ->where('sc.sucursal_id', $request->sucursal_id)
+
+                ->where('f.deleted_at', null)
+
+                ->where('df.hist', 1)
+                ->where('df.gestion', $gestion)
+                ->where('df.deleted_at', null)                    
+
+                ->select('p.id', 'p.nombre', DB::raw("SUM(df.cantrestante * df.precio) as s_inicialbs"), DB::raw("SUM(df.cantrestante) as s_inicialc"))
+                ->groupBy('p.id')
+                ->get();
+        // return $saldo;
+        // dd($saldo);
+
+
+
+        $ingreso = DB::table('solicitud_compras as sc')
+                ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')       
+                ->join('detalle_facturas as df', 'df.factura_id', 'f.id')   
+
+                ->join('articles as a', 'a.id', 'df.article_id')
+                ->join('partidas as p', 'p.id', 'a.partida_id')
+
+                ->where('sc.deleted_at', null)
+                ->where('sc.sucursal_id', $request->sucursal_id)
+
+                ->where('f.deleted_at', null)
+
+                ->where('df.hist', 0)
+                ->where('df.gestion', $gestion)
+                ->where('df.deleted_at', null)                    
+
+                ->select('p.id', DB::raw("SUM(df.cantsolicitada * df.precio) as ingreso"), DB::raw("SUM(df.cantsolicitada) as s_inicialc"))
+                // ->groupBy('p.id')
+
+                ->get();
+        // return $ingreso;
+
+
+
+        $restante = DB::table('solicitud_compras as sc')
+                ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')       
+                ->join('detalle_facturas as df', 'df.factura_id', 'f.id')   
+
+                ->join('articles as a', 'a.id', 'df.article_id')
+                ->join('partidas as p', 'p.id', 'a.partida_id')
+
+                ->where('sc.deleted_at', null)
+                ->where('sc.sucursal_id', $request->sucursal_id)
+
+                ->where('f.deleted_at', null)
+
+                ->where('df.hist', 1)
+                ->where('df.gestion', $gestion+1)
+                ->where('df.deleted_at', null)                    
+
+                ->select('p.id', 'p.nombre', DB::raw("SUM(df.cantrestante * df.precio) as r_finalBs"), DB::raw("SUM(df.cantrestante) as r_finalC"))
+                // ->groupBy('p.id')
+                ->get();
+
+        // return $restante;
+
+   
+
+
+
+
+// esta fi esta funcionando
             $data = DB::table('solicitud_compras as sc')
                         ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')
                         ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
@@ -192,19 +382,16 @@ class ReportAlmacenController extends Controller
                         ->where('sc.sucursal_id', $request->sucursal_id)
                         
                         // ->where('de.deleted_at', null)
-                        ->select('p.id', 'p.codigo', 'p.nombre',DB::raw("SUM(df.cantsolicitada) as cantidadinicial"), DB::raw("SUM(df.totalbs) as totalinicial"),
+                        ->select('p.id', 'p.codigo', 'p.nombre',DB::raw("SUM(df.cantsolicitada) as cantidadinicial"), DB::raw("SUM(df.cantsolicitada * df.precio) as totalinicial"),
                                 DB::raw("SUM(df.cantrestante) as cantfinal"), DB::raw("SUM((df.cantrestante) * df.precio) as totalfinal")
                                 )
                         ->groupBy('p.id')
                         ->get();
-        }
-        else
-        {
-            return 'para mas gestiones';
-        }
+        
+        
         if($request->print==1)
         {
-            return view('almacenes/report/inventarioAnual/partidaGeneral/print', compact('data', 'gestion'));
+            return view('almacenes/report/inventarioAnual/partidaGeneral/print', compact('data', 'gestion', 'sucursal'));
         }
         if($request->print==2)
         {
@@ -221,24 +408,23 @@ class ReportAlmacenController extends Controller
     public function inventarioDetalle()
     {
 
+        $gestion = InventarioAlmacen::where('deleted_at', null)->where('status', 0)->get();
+
         $user = Auth::user();
         $query_filter = 'user_id ='.Auth::user()->id;
-        
+                        
         if(Auth::user()->hasRole('admin'))
         {
             $query_filter = 1;
         }
-
+                
         $sucursal = SucursalUser::where('condicion', 1)
-                        ->where('deleted_at', null)
-                        ->whereRaw($query_filter)
-                        ->GroupBy('sucursal_id')
-                        ->get();
-        // return $sucursal;
-        // $sucursal = SucursalUser::where('user_id', $user->id)->get();
-        // $direction = $this->getDireccion();        
+                ->where('deleted_at', null)
+                ->whereRaw($query_filter)
+                ->GroupBy('sucursal_id')
+                ->get();        
 
-        return view('almacenes/report/inventarioAnual/detalleGeneral/report', compact('sucursal'));
+        return view('almacenes/report/inventarioAnual/detalleGeneral/report', compact('sucursal', 'gestion'));
     }
 
     public function inventarioDetalleList(Request $request)
@@ -248,16 +434,18 @@ class ReportAlmacenController extends Controller
         $date = Carbon::now();
         $sucursal = Sucursal::find($request->sucursal_id);
 
-        if($gestion == '2022')
-        {
+        
                 $data = DB::table('solicitud_compras as sc')
                         ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')
                         ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
                         ->join('articles as a', 'a.id', 'df.article_id')
+
+                        ->where('sc.gestion', $gestion)
                         ->where('sc.deleted_at', null)
                         ->where('f.deleted_at', null)
                         ->where('df.deleted_at', null)
                         ->where('df.hist', 0)
+
                         ->where('sc.sucursal_id', $request->sucursal_id)
                         ->select('a.id', 'a.presentacion', 'a.nombre', 'df.precio',
                                 DB::raw("SUM(df.cantsolicitada) as cEntrada"), DB::raw("SUM(df.cantsolicitada - df.cantrestante) as cSalida"), DB::raw("SUM(df.cantrestante) as cFinal"),
@@ -269,7 +457,7 @@ class ReportAlmacenController extends Controller
                         ->groupBy('a.id')
                         ->groupBy('df.precio')
                         ->get();
-                        // $aux=0;
+
 
                 foreach($data as $item)
                 {
@@ -277,16 +465,10 @@ class ReportAlmacenController extends Controller
                     $item->vInicial=0.0;
                     // $aux = $aux + $item->vFinal;
                 }
-        }
-        else 
-        {
-            return 'para mas gestiones';
-        }
-        // dd($aux);
-
+       
 
         if($request->print==1){
-            return view('almacenes/report/inventarioAnual/detalleGeneral/print', compact('data', 'gestion'));
+            return view('almacenes/report/inventarioAnual/detalleGeneral/print', compact('data', 'gestion', 'sucursal'));
         }
         if($request->print==2)
         {
@@ -327,53 +509,40 @@ class ReportAlmacenController extends Controller
 
     public function articleStockList(Request $request)
     {
+        
         $date = Carbon::now();
         $sucursal = Sucursal::find($request->sucursal_id);
         // dd($request);
+        // dd($sucursal);
         // $start = $request->start;
         // $finish = $request->finish;
-        $data = DB::connection('mamore')->table('unidades as u')
-                    ->join('sysalmacen.solicitud_compras as sc', 'sc.unidadadministrativa', 'u.id')
-                    ->join('sysalmacen.facturas as f', 'f.solicitudcompra_id', 'sc.id')
-                    ->join('sysalmacen.detalle_facturas as df', 'df.factura_id', 'f.id')
-                    ->join('sysalmacen.articles as a', 'a.id', 'df.article_id')
-                    ->join('sysalmacen.modalities as m', 'm.id', 'sc.modality_id')
-                    ->join('sysalmacen.providers as p', 'p.id', 'f.provider_id')
-                    ->where('df.cantrestante', '>', 0)
-                    ->where('df.hist', 0)
-                    // ->where('df.fechaingreso', '>=', $request->start)
-                    // ->where('df.fechaingreso', '<=', $request->finish)
+        $data = DB::table('solicitud_compras as sc')
+                    ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')
+                    ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
+                    ->join('articles as a', 'a.id', 'df.article_id')
+                    ->join('modalities as m', 'm.id', 'sc.modality_id')
+                    ->join('providers as p', 'p.id', 'f.provider_id')
+
+                    ->where('sc.deleted_at', null)
                     ->where('sc.sucursal_id', $request->sucursal_id)
 
-                    ->where('df.deleted_at', null)
                     ->where('f.deleted_at', null)
-                    ->where('sc.deleted_at', null)
-                    ->select('df.fechaingreso', 'u.nombre as unidad', 'm.nombre as modalidad', 'u.sigla', 'sc.nrosolicitud', 'p.razonsocial as proveedor',
+
+
+                    ->where('df.cantrestante', '>', 0)
+                    ->where('df.hist', 0)
+                    ->where('df.deleted_at', null)
+
+                    ->select('df.fechaingreso', 'm.nombre as modalidad', 'sc.nrosolicitud', 'p.razonsocial as proveedor',
                             'f.tipofactura', 'f.nrofactura', 'a.id as article_id', 'a.nombre as articulo', 'a.presentacion', 'df.cantsolicitada', 'df.precio',
                             'df.cantrestante', 'df.totalbs', 'sc.id')
                     ->orderBy('df.fechaingreso', 'ASC')
                     ->orderBy('sc.id', 'ASC')
                     ->get();
 
-                    
-        // return view('almacenes/report/article/unidades/list', compact('data', 'type'));
-
-        // $data = DB::table('detalle_facturas as df')
-        //         ->join('facturas as f', 'f.id', 'df.factura_id')
-        //         ->join('solicitud_compras as sc', 'sc.id', 'f.solicitudcompra_id')
-        //         ->join('articles as a', 'a.id', 'df.article_id')
-        //         ->join('modalities as m', 'm.id', 'sc.modality_id')
-        //         ->where('df.cantrestante', '>', 0)
-        //         ->where('df.fechaingreso', '>=', $request->start)
-        //         ->where('df.fechaingreso', '<=', $request->finish)
-        //         ->where('df.deleted_at', null)
-        //         ->where('f.deleted_at', null)
-        //         ->where('sc.deleted_at', null)
-        //         ->select('*')
-        //         ->get();
-        // dd($data);
+      
         if($request->print==1){
-            return view('almacenes.report.article.stock.print', compact('data'));
+            return view('almacenes.report.article.stock.print', compact('data', 'sucursal'));
         }
         if($request->print==2)
         {
@@ -455,7 +624,7 @@ class ReportAlmacenController extends Controller
 
     public function incomeOfficeList(Request $request)
     {
-        // dd($request->start);
+        // dd($request);
         $finish = $request->finish;
         $start = $request->start;
         $date = Carbon::now();
@@ -465,49 +634,80 @@ class ReportAlmacenController extends Controller
         if($request->unidad_id == 'TODO')
         {
             $message = 'Dirección Administrativa - '.$this->getDireccion($request->direccion_id)->nombre;
-            $data = DB::connection('mamore')->table('unidades as u')
-                        ->join('sysalmacen.solicitud_compras as cp', 'cp.unidadadministrativa', 'u.id')
-                        ->join('sysalmacen.facturas as f', 'f.solicitudcompra_id', 'cp.id')
-                        ->join('sysalmacen.detalle_facturas as df', 'df.factura_id', 'f.id')
-                        ->join('sysalmacen.articles as a', 'df.article_id', 'a.id')
-                        ->join('sysalmacen.partidas as p', 'p.id', 'a.partida_id')
+            $data = DB::table('solicitud_compras as cp')
+                        ->join('facturas as f', 'f.solicitudcompra_id', 'cp.id')
+                        ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
+                        ->join('articles as a', 'df.article_id', 'a.id')
+                        ->join('partidas as p', 'p.id', 'a.partida_id')
                         ->where('df.deleted_at', null)
                         ->where('df.hist', 0)
                         ->where('f.deleted_at', null)
                         ->where('cp.deleted_at', null)
-                        ->where('u.direccion_id', $request->direccion_id)
+                        ->where('cp.direccionadministrativa', $request->direccion_id)
                         ->where('cp.fechaingreso', '>=', $request->start)
                         ->where('cp.fechaingreso', '<=', $request->finish)
 
                         ->where('cp.sucursal_id', $request->sucursal_id)
 
-                        ->select('u.nombre as unidad','cp.fechaingreso',  'a.nombre as articulo', 'p.nombre as partida', 'nrosolicitud', 'a.presentacion', 'df.precio', 'df.cantsolicitada', 'df.totalbs')
-                        ->orderBy('u.id')
+                        ->select('cp.unidadadministrativa as unidad','cp.fechaingreso',  'a.nombre as articulo', 'p.nombre as partida', 'nrosolicitud', 'a.presentacion', 'df.precio', 'df.cantsolicitada', 'df.totalbs')
+                        // ->orderBy('u.id')
                         ->orderBy('cp.fechaingreso')
                         ->get();
+            foreach($data as $item)
+            {
+                $item->unidad = Unit::find($item->unidad)->nombre;
+            }
+
+
+           
+
+            // $datas = DB::connection('mamore')->table('unidades as u')
+            //             ->join('sysalmacen.solicitud_compras as cp', 'cp.unidadadministrativa', 'u.id')
+            //             ->join('sysalmacen.facturas as f', 'f.solicitudcompra_id', 'cp.id')
+            //             ->join('sysalmacen.detalle_facturas as df', 'df.factura_id', 'f.id')
+            //             ->join('sysalmacen.articles as a', 'df.article_id', 'a.id')
+            //             ->join('sysalmacen.partidas as p', 'p.id', 'a.partida_id')
+            //             ->where('df.deleted_at', null)
+            //             ->where('df.hist', 0)
+            //             ->where('f.deleted_at', null)
+            //             ->where('cp.deleted_at', null)
+            //             ->where('u.direccion_id', $request->direccion_id)
+            //             ->where('cp.fechaingreso', '>=', $request->start)
+            //             ->where('cp.fechaingreso', '<=', $request->finish)
+
+            //             ->where('cp.sucursal_id', $request->sucursal_id)
+
+            //             ->select('u.nombre as unidad','cp.fechaingreso',  'a.nombre as articulo', 'p.nombre as partida', 'nrosolicitud', 'a.presentacion', 'df.precio', 'df.cantsolicitada', 'df.totalbs')
+            //             ->orderBy('u.id')
+            //             ->orderBy('cp.fechaingreso')
+            //             ->get();
         }
         else      
         {
             $message = 'Unidad - '.$this->getUnidad($request->unidad_id)->nombre;
-            $data = DB::connection('mamore')->table('unidades as u')
-                        ->join('sysalmacen.solicitud_compras as cp', 'cp.unidadadministrativa', 'u.id')
-                        ->join('sysalmacen.facturas as f', 'f.solicitudcompra_id', 'cp.id')
-                        ->join('sysalmacen.detalle_facturas as df', 'df.factura_id', 'f.id')
-                        ->join('sysalmacen.articles as a', 'df.article_id', 'a.id')
-                        ->join('sysalmacen.partidas as p', 'p.id', 'a.partida_id')
+            $data = DB::table('solicitud_compras as cp')
+                        ->join('facturas as f', 'f.solicitudcompra_id', 'cp.id')
+                        ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
+                        ->join('articles as a', 'df.article_id', 'a.id')
+                        ->join('partidas as p', 'p.id', 'a.partida_id')
                         ->where('df.deleted_at', null)
                         ->where('df.hist', 0)
                         ->where('f.deleted_at', null)
                         ->where('cp.deleted_at', null)
-                        ->where('u.id', $request->unidad_id)
+                        ->where('cp.unidadadministrativa', $request->unidad_id)
                         ->where('cp.fechaingreso', '>=', $request->start)
                         ->where('cp.fechaingreso', '<=', $request->finish)
                         ->where('cp.sucursal_id', $request->sucursal_id)
 
-                        ->select('u.nombre as unidad','cp.fechaingreso',  'a.nombre as articulo', 'p.nombre as partida', 'nrosolicitud', 'a.presentacion', 'df.precio', 'df.cantsolicitada', 'df.totalbs')
-                        ->orderBy('u.id')
+                        ->select('cp.unidadadministrativa as unidad','cp.fechaingreso',  'a.nombre as articulo', 'p.nombre as partida', 'nrosolicitud', 'a.presentacion', 'df.precio', 'df.cantsolicitada', 'df.totalbs')
+                        // ->orderBy('u.id')
                         ->orderBy('cp.fechaingreso')
                         ->get();
+
+            foreach($data as $item)
+            {
+                $item->unidad = Unit::find($item->unidad)->nombre;
+            }
         }
         if($request->print==1){
             return view('almacenes.report.article.incomeOffice.print', compact('data', 'sucursal',  'message', 'finish', 'start'));
@@ -563,50 +763,67 @@ class ReportAlmacenController extends Controller
         $sucursal = Sucursal::find($request->sucursal_id);
         $message = '';
 
+        // $ok = SolicitudEgreso::all();
+
+        // foreach($ok as $item)
+        // {
+        //     SolicitudEgreso::where('id',$item->id)->update(['direccionadministrativa'=>$this->getUnidad($item->unidadadministrativa)->direccion_id]);
+        // }
+        // return $ok;
+
         if($request->unidad_id == 'TODO')
         {
             $message = 'Dirección Administrativa - '.$this->getDireccion($request->direccion_id)->nombre;
-            $data = DB::connection('mamore')->table('unidades as u')
-                        ->join('sysalmacen.solicitud_egresos as se', 'se.unidadadministrativa', 'u.id')
-                        ->join('sysalmacen.detalle_egresos as de', 'de.solicitudegreso_id', 'se.id')
-                        ->join('sysalmacen.detalle_facturas as df', 'df.id', 'de.detallefactura_id')
-                        ->join('sysalmacen.articles as a', 'df.article_id', 'a.id')
-                        ->join('sysalmacen.partidas as p', 'p.id', 'a.partida_id')
+            $data = DB::table('solicitud_egresos as se')
+                        ->join('detalle_egresos as de', 'de.solicitudegreso_id', 'se.id')
+                        ->join('detalle_facturas as df', 'df.id', 'de.detallefactura_id')
+                        ->join('articles as a', 'df.article_id', 'a.id')
+                        ->join('partidas as p', 'p.id', 'a.partida_id')
+
                         ->where('se.deleted_at', null)
-                        ->where('de.deleted_at', null)
-                        ->where('u.direccion_id', $request->direccion_id)
+                        ->where('se.direccionadministrativa', $request->direccion_id)
                         ->where('se.fechaegreso', '>=', $request->start)
                         ->where('se.fechaegreso', '<=', $request->finish)
-
                         ->where('se.sucursal_id', $request->sucursal_id)
 
-                        ->select('u.nombre as unidad','se.fechaegreso', 'a.nombre as articulo', 'p.nombre as partida', 'se.nropedido', 'a.presentacion', 'de.precio', 'de.cantsolicitada', 'de.totalbs')
-                        ->orderBy('u.id')
+                        ->where('de.deleted_at', null)                        
+
+                        ->select('se.unidadadministrativa as unidad', 'se.fechaegreso', 'a.nombre as articulo', 'p.nombre as partida', 'se.nropedido', 'a.presentacion', 'de.precio', 'de.cantsolicitada', 'de.totalbs')
                         ->orderBy('se.fechaegreso')
                         ->get();
+
+            foreach($data as $item)
+            {
+                $item->unidad = Unit::find($item->unidad)->nombre;
+            }
         }
         else      
         {
             $message = 'Unidad - '.$this->getUnidad($request->unidad_id)->nombre;
-            $data = DB::connection('mamore')->table('unidades as u')
-                        ->join('sysalmacen.solicitud_egresos as se', 'se.unidadadministrativa', 'u.id')
-                        ->join('sysalmacen.detalle_egresos as de', 'de.solicitudegreso_id', 'se.id')
-                        ->join('sysalmacen.detalle_facturas as df', 'df.id', 'de.detallefactura_id')
-                        ->join('sysalmacen.articles as a', 'df.article_id', 'a.id')
-                        ->join('sysalmacen.partidas as p', 'p.id', 'a.partida_id')
+            $data = DB::table('solicitud_egresos as se')
+                        ->join('detalle_egresos as de', 'de.solicitudegreso_id', 'se.id')
+                        ->join('detalle_facturas as df', 'df.id', 'de.detallefactura_id')
+                        ->join('articles as a', 'df.article_id', 'a.id')
+                        ->join('partidas as p', 'p.id', 'a.partida_id')
+
+
                         ->where('se.deleted_at', null)
-                        ->where('de.deleted_at', null)
-                        ->where('u.id', $request->unidad_id)
+                        ->where('se.unidadadministrativa', $request->unidad_id)
+
                         ->where('se.fechaegreso', '>=', $request->start)
                         ->where('se.fechaegreso', '<=', $request->finish)
-
                         ->where('se.sucursal_id', $request->sucursal_id)
 
-                        ->select('u.nombre as unidad','se.fechaegreso', 'a.nombre as articulo', 'p.nombre as partida', 'se.nropedido', 'a.presentacion', 'de.precio', 'de.cantsolicitada', 'de.totalbs')
-                        ->orderBy('u.id')
+                        ->where('de.deleted_at', null) 
+
+                        ->select('se.unidadadministrativa as unidad', 'se.fechaegreso', 'a.nombre as articulo', 'p.nombre as partida', 'se.nropedido', 'a.presentacion', 'de.precio', 'de.cantsolicitada', 'de.totalbs')
                         ->orderBy('se.fechaegreso')
                         ->get();
-                        // dd($message);
+
+            foreach($data as $item)
+            {
+                $item->unidad = Unit::find($item->unidad)->nombre;
+            }
         }
         if($request->print==1){
             return view('almacenes.report.article.egressOffice.print', compact('data', 'sucursal', 'start', 'finish', 'message'));

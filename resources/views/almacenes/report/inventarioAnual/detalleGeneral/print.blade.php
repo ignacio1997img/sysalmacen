@@ -12,7 +12,8 @@
                     GOBIERNO AUTONOMO DEPARTAMENTAL DEL BENI<br>
                 </h3>
                 <h4 style="margin-bottom: 0px; margin-top: 5px">
-                        RESUMEN DE VALORES FISCALES
+                        RESUMEN DE VALORES FISCALES <br>
+                        {{$sucursal->nombre}}
                     {{-- Stock Disponible {{date('d/m/Y', strtotime($start))}} Hasta {{date('d/m/Y', strtotime($finish))}} --}}
                 </h4>
                 <small style="margin-bottom: 0px; margin-top: 5px">

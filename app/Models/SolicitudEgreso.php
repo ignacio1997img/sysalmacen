@@ -11,6 +11,7 @@ class SolicitudEgreso extends Model
     protected $fillable = [
         'sucursal_id',
         'inventarioAlmacen_id',
+        'direccionadministrativa',
         'unidadadministrativa',
         'registeruser_id',
         'nropedido',
