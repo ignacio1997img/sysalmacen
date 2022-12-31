@@ -97,6 +97,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('providers', [ProviderController::class, 'index'])->name('voyager.providers.index');
 
     Route::get('articles', [ArticleController::class, 'index'])->name('voyager.articles.index');
+    Route::get('articles/ajax/list/{search?}', [ArticleController::class, 'list']);
+
 
 
     // para crear personas externas en el sistemas

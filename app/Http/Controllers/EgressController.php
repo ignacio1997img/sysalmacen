@@ -279,7 +279,7 @@ class EgressController extends Controller
             Auth::logout();
             return redirect()->route('maintenance');
         }
-        // return $request;
+        return $request;
 
         $user = Auth::user();
         // $gestion = Carbon::parse($request->fechaingreso)->format('Y');

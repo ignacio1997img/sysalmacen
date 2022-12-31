@@ -14,15 +14,40 @@ class ArticleController extends Controller
     {
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->first();
       
-        $query_filter = 'sucursal_id = '.$sucursal->sucursal_id;
-        if (Auth::user()->hasRole('admin')) {
-            $query_filter = 1;
-        }
+        // $query_filter = 'sucursal_id = '.$sucursal->sucursal_id;
+        // if (Auth::user()->hasRole('admin')) {
+        //     $query_filter = 1;
+        // }
 
-        $article = Article::with(['partida'])
-            ->whereRaw($query_filter)->get();
+        // $article = Article::with(['partida'])
+        //     ->whereRaw($query_filter)->get();
         // return $article;
 
-        return view('almacenes.article.browse', compact('article'));
+        return view('almacenes.article.browse');
+    }
+
+    public function list($search = null){
+        $user = Auth::user();
+        $paginate = request('paginate') ?? 10;
+ 
+        $data = Article::with(['sucursal', 'partida'])
+                ->where(function($query) use ($search){
+                    if($search){
+                        $query->OrwhereHas('partida', function($query) use($search){
+                            $query->whereRaw("(nombre like '%$search%' or nombre like '%$search%')");
+                        })
+                        ->OrWhereRaw($search ? "nombre like '%$search%'" : 1);
+                    }
+                })
+                ->where('deleted_at', NULL)->orderBy('id', 'DESC')->paginate($paginate);
+
+        // dd($data);
+        // $data='';
+
+
+
+
+
+        return view('almacenes.article.list', compact('data'));
     }
 }

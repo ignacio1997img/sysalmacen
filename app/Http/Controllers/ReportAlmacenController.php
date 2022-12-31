@@ -931,6 +931,7 @@ class ReportAlmacenController extends Controller
                     ->where('sc.deleted_at', null)
                     ->where('f.deleted_at', null)
                     ->where('df.deleted_at', null)
+                    ->where('df.hist', 0)
 
                     // ->whereDate('sc.fechaingreso', '>=', date('Y-m-d', strtotime($request->start)))
                     // ->whereDate('sc.fechaingreso', '<=', date('Y-m-d', strtotime($request->finish)))
