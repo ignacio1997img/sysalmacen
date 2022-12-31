@@ -279,7 +279,7 @@ class EgressController extends Controller
             Auth::logout();
             return redirect()->route('maintenance');
         }
-        return $request;
+        // return $request;
 
         $user = Auth::user();
         // $gestion = Carbon::parse($request->fechaingreso)->format('Y');
@@ -289,6 +289,7 @@ class EgressController extends Controller
             $egreso=SolicitudEgreso::create([
                         'sucursal_id'               => $request->sucursal_id,
                         'unidadadministrativa'      => $request->unidadadministrativa,
+                        'direccionadministrativa'   => $request->direccionadministrativa,
                         'registeruser_id'           => $user->id,
                         'nropedido'                 => $request->nropedido,
                         'fechasolicitud'            => $request->fechasolicitud,
@@ -421,7 +422,7 @@ class EgressController extends Controller
             $egreso = SolicitudEgreso::find($request->id);
             
             // return $egreso;
-            $egreso->update(['sucursal_id'=>$request->branchoffice_id, 'unidadadministrativa'=>$request->unidadadministrativa,
+            $egreso->update(['sucursal_id'=>$request->branchoffice_id, 'unidadadministrativa'=>$request->unidadadministrativa, 'direccionadministrativa'=>$request->direccionadministrativa,
                 'nropedido'=>$request->nropedido, 'fechasolicitud'=>$request->fechasolicitud, 'fechaegreso'=>$request->fechaegreso
             ]);
             // return $egreso;
