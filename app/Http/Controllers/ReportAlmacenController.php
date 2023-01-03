@@ -106,12 +106,12 @@ class ReportAlmacenController extends Controller
 
 
 // para agregar las direciones 
-        // $ok = SolicitudEgreso::all();
+        $ok = SolicitudEgreso::all();
 
-        // foreach($ok as $item)
-        // {
-        //     SolicitudEgreso::where('id',$item->id)->update(['direccionadministrativa'=>$this->getUnidad($item->unidadadministrativa)->direccion_id]);
-        // }
+        foreach($ok as $item)
+        {
+            SolicitudEgreso::where('id',$item->id)->update(['direccionadministrativa'=>$this->getUnidad($item->unidadadministrativa)->direccion_id]);
+        }
 
 
         $gestion = InventarioAlmacen::where('deleted_at', null)->where('status', 0)->get();
