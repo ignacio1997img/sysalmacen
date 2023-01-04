@@ -136,11 +136,6 @@ class PermissionRoleTableSeeder extends Seeder
                                             `key` = "read_providers" or
                                             `key` = "edit_providers" or
                                             `key` = "add_providers" or
-
-                                            
-                                            `key` = "browse_printalmacen-inventarioAnual-da" or
-                                            `key` = "browse_printalmacen-inventarioAnual-partida" or
-                                            `key` = "browse_printalmacen-inventarioAnual-detalle" or
                                             
                                             `key` = "browse_printalmacen-article-list" or
                                             `key` = "browse_printalmacen-article-stock" or
