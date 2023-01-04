@@ -60,6 +60,34 @@
         </div>
     </div>
 
+    <div class="modal modal-danger fade" tabindex="-1" id="myModalEliminar" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                {!! Form::open(['route' => 'income_delete', 'method' => 'DELETE']) !!}
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><i class="voyager-trash"></i> Desea eliminar el siguiente ingreso?</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="id">
+
+                    <div class="text-center" style="text-transform:uppercase">
+                        <i class="voyager-trash" style="color: red; font-size: 5em;"></i>
+                        <br>
+                        
+                        <p><b>Desea eliminar el siguiente registro?</b></p>
+                    </div>
+                </div>                
+                <div class="modal-footer">
+                    
+                        <input type="submit" class="btn btn-danger pull-right delete-confirm" value="Sí, eliminar">
+                    
+                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
+                </div>
+                {!! Form::close()!!} 
+            </div>
+        </div>
+    </div>
   
 
 @stop
@@ -165,6 +193,15 @@
             }});
 
         }
+
+        $('#myModalEliminar').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) //captura valor del data-empresa=""
+
+            var id = button.data('id')
+
+            var modal = $(this)
+            modal.find('.modal-body #id').val(id)                    
+        });
         
        
     </script>
