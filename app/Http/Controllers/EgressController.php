@@ -859,6 +859,33 @@ class EgressController extends Controller
                 ->orderBy('com.id')
                 ->get();
         }
+
+
+        if($sucursal->sucursal_id == 6)
+        {
+            $solicitud = DB::table('solicitud_compras as com')
+                ->join('facturas as f', 'f.solicitudcompra_id', 'com.id')
+                ->join('detalle_facturas as fd', 'fd.factura_id', 'f.id')
+                ->join('modalities as m', 'm.id', 'com.modality_id')
+                ->select('com.id', 'm.nombre', 'com.nrosolicitud')
+                
+                ->where('com.sucursal_id', $sucursal->sucursal_id)
+                
+                ->whereRaw('com.unidadadministrativa ='.$id.' or com.unidadadministrativa = 304')
+
+
+                ->where('com.deleted_at', null)
+
+                ->where('f.deleted_at', null)
+
+                ->where('fd.deleted_at', null)
+                ->where('fd.hist',0)
+                ->where('fd.cantrestante', '>', 0)
+            
+                ->groupBy('com.id', 'm.nombre', 'com.nrosolicitud')
+                ->orderBy('com.id')
+                ->get();
+        }
         
         
 
