@@ -26,7 +26,10 @@
                             <p><small>{{$item->unidad->nombre}}</small></p>
                             <p><small>{{$item->direccion->nombre}}</small></p>
                         </td>
-                        <td style="width: 200pt; text-align: center">{{$item->factura[0]->proveedor->razonsocial}}<br><small>NIT: {{$item->factura[0]->proveedor->nit}}</small></td>
+                        <td style="text-align: center">
+                            <p><small>{{$item->factura[0]->proveedor->razonsocial}}</small></p>
+                            <p><small>NIT: {{$item->factura[0]->proveedor->nit}}</small></p>
+                        </td>
                         <td style="text-align: center">
                             <small>
                                 <p>N:{{$item->factura[0]->nrofactura}}</p>
