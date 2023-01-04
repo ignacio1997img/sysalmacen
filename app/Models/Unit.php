@@ -11,6 +11,6 @@ class Unit extends Model
 
     protected $connection = 'mamore';
     protected $table = 'unidades';
-    protected $fillable = ['nombre'];
+    protected $fillable = ['nombre', 'direccion_id'];
 
 }

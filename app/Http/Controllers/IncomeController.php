@@ -127,12 +127,6 @@ class IncomeController extends Controller
                             ->OrwhereHas('factura.proveedor', function($query) use($search){
                                 $query->whereRaw("(razonsocial like '%$search%' or nit like '%$search%')");
                             })
-                            ->OrwhereHas('unidad', function($query) use($search){
-                                $query->whereRaw("(nombre like '%$search%')");
-                            })
-                            ->OrwhereHas('direccion', function($query) use($search){
-                                $query->whereRaw("(nombre like '%$search%')");
-                            })
                             ->OrWhereRaw($search ? "gestion like '%$search%'" : 1)
                             ->OrWhereRaw($search ? "nrosolicitud like '%$search%'" : 1);
                         }
@@ -153,12 +147,6 @@ class IncomeController extends Controller
                             })
                             ->OrwhereHas('factura.proveedor', function($query) use($search){
                                 $query->whereRaw("(razonsocial like '%$search%' or nit like '%$search%')");
-                            })
-                            ->OrwhereHas('unidad', function($query) use($search){
-                                $query->whereRaw("(nombre like '%$search%')");
-                            })
-                            ->OrwhereHas('direccion', function($query) use($search){
-                                $query->whereRaw("(nombre like '%$search%')");
                             })
                             ->OrWhereRaw($search ? "gestion like '%$search%'" : 1)
                             ->OrWhereRaw($search ? "nrosolicitud like '%$search%'" : 1);
@@ -181,12 +169,6 @@ class IncomeController extends Controller
                             })
                             ->OrwhereHas('factura.proveedor', function($query) use($search){
                                 $query->whereRaw("(razonsocial like '%$search%' or nit like '%$search%')");
-                            })
-                            ->OrwhereHas('unidad', function($query) use($search){
-                                $query->whereRaw("(nombre like '%$search%')");
-                            })
-                            ->OrwhereHas('direccion', function($query) use($search){
-                                $query->whereRaw("(nombre like '%$search%')");
                             })
                             ->OrWhereRaw($search ? "gestion like '%$search%'" : 1)
                             ->OrWhereRaw($search ? "nrosolicitud like '%$search%'" : 1);
