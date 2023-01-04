@@ -78,6 +78,7 @@ Route::group(['prefix' => 'admin'], function () {
 
    //........................  EGRES
     Route::resource('egres', EgressController::class);
+    Route::get('egres/ajax/list/{search?}', [EgressController::class, 'list']);
     Route::post('egres/update', [EgressController::class, 'update'])->name('egres_update');
     Route::post('egres/delete', [EgressController::class, 'destroy'])->name('egres_delete');
     // Route::get('egres/view/{id?}', [EgressController::class, 'view_egreso'])->name('egreso_view_entregado');// en mantenimiento sin funcionamiento 

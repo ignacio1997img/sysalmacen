@@ -20,10 +20,31 @@ class SolicitudEgreso extends Model
         'gestion',
         'condicion',
         'deleteuser_id',
+        'deleted_at'
     ];
 
     public function sucursal()
     {
         return $this->belongsTo(Sucursal::class, 'sucursal_id');
+    }
+
+    public function unidad()
+    {
+        return $this->belongsTo(Unit::class, 'unidadadministrativa');
+    }
+
+    public function direccion()
+    {
+        return $this->belongsTo(Direction::class, 'direccionadministrativa');
+    }
+
+    public function gestion()
+    {
+        return $this->belongsTo(InventarioAlmacen::class, 'inventarioAlmacen_id');
+    }
+
+    public function detalle()
+    {
+        return $this->hasMany(DetalleEgreso::class, 'solicitudegreso_id');
     }
 }

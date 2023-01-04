@@ -126,9 +126,38 @@ class EgressController extends Controller
             ->whereRaw($query_filter)
             // ->orderBy('se.id', 'DESC')
             ->get();
-        // return $data;
+       
 
         return view('almacenes.egress.browse', compact('data', 'gestion'));
+    }
+
+
+    public function list($search = null){
+        $user = Auth::user();
+
+        $sucursal = SucursalUser::where('user_id', $user->id)->where('condicion', 1)->where('deleted_at', null)->first();
+        $gestion = InventarioAlmacen::where('status', 1)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
+
+        $query_filter = 'sucursal_id = '.$sucursal->sucursal_id;
+        
+        if(Auth::user()->hasRole('admin'))
+        {
+            $query_filter =1;
+        }
+
+        
+        $paginate = request('paginate') ?? 10;
+        
+        $data = SolicitudEgreso::with(['sucursal', 'unidad', 'direccion'])
+            ->where('deleted_at', NULL)
+            ->whereRaw($query_filter)
+            ->orderBy('id', 'DESC')->paginate($paginate);
+
+        // dd($data);
+        
+      
+
+        return view('almacenes.egress.list', compact('data', 'gestion'));
     }
 
     // public function view_pendiente($id)
