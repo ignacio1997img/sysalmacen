@@ -252,7 +252,7 @@ class ReportAlmacenController extends Controller
         }
         if($request->print==2)
         {
-            return Excel::download(new AnualDaExport($data), $sucursal->nombre.' - DA Anual '.$gestion.'.xlsx');
+            return Excel::download(new AnualDaExport($direction), $sucursal->nombre.' - DA Anual '.$gestion.'.xlsx');
         }
         if($request->print ==NULL)
         {            
