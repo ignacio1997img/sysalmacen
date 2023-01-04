@@ -121,7 +121,7 @@ class ReportAlmacenController extends Controller
         $user = Auth::user();
         $query_filter = 'user_id ='.Auth::user()->id;
         
-        if(Auth::user()->hasRole('admin'))
+        if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('almacen_admin'))
         {
             $query_filter = 1;
         }
@@ -273,7 +273,7 @@ class ReportAlmacenController extends Controller
         $user = Auth::user();
         $query_filter = 'user_id ='.Auth::user()->id;
         
-        if(Auth::user()->hasRole('admin'))
+        if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('almacen_admin'))
         {
             $query_filter = 1;
         }
@@ -418,7 +418,7 @@ class ReportAlmacenController extends Controller
         $user = Auth::user();
         $query_filter = 'user_id ='.Auth::user()->id;
                         
-        if(Auth::user()->hasRole('admin'))
+        if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('almacen_admin'))
         {
             $query_filter = 1;
         }
