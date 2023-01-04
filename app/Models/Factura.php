@@ -19,4 +19,9 @@ class Factura extends Model
     {
         return $this->belongsTo(SolicitudCompra::class, 'solicitudcompra_id');
     }
+
+    public function proveedor()
+    {
+        return $this->belongsTo(Provider::class, 'provider_id');
+    }
 }

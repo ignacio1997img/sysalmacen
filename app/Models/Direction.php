@@ -11,6 +11,7 @@ class Direction extends Model
 
     protected $connection = 'mamore';
     protected $table = 'direcciones';
+    protected $fillable = ['nombre'];
 
     public function solicitudCompra()
     {

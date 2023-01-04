@@ -17,6 +17,11 @@ class SolicitudCompra extends Model
     {
         return $this->belongsTo(Sucursal::class, 'sucursal_id');
     }
+
+    public function unidad()
+    {
+        return $this->belongsTo(Unit::class, 'unidadadministrativa');
+    }
                             
     public function direccion()
     {
@@ -24,7 +29,7 @@ class SolicitudCompra extends Model
     }
     public function factura()
     {
-        return $this->hasMany(Factura::class);
+        return $this->hasMany(Factura::class, 'solicitudcompra_id');
     }
     
     public function modality()
