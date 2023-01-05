@@ -29,7 +29,7 @@ class EgressController extends Controller
     
     public function index()
     {
-        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin') && Auth::user()->id != 18)
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin') && Auth::user()->id != 18 && Auth::user()->id != 33 && Auth::user()->id != 3)
         {
             Auth::logout();
             return redirect()->route('maintenance');
@@ -271,7 +271,7 @@ class EgressController extends Controller
 
     public function create()
     {
-        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin') && Auth::user()->id != 18)
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin') && Auth::user()->id != 18 && Auth::user()->id != 33 && Auth::user()->id != 3)
         {
             Auth::logout();
             return redirect()->route('maintenance');
@@ -303,7 +303,7 @@ class EgressController extends Controller
  
     public function store(Request $request)
     {
-        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin') && Auth::user()->id != 18)
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin') && Auth::user()->id != 18 && Auth::user()->id != 33 && Auth::user()->id != 3)
         {
             Auth::logout();
             return redirect()->route('maintenance');
@@ -392,7 +392,7 @@ class EgressController extends Controller
 
     public function edit($id)
     {
-        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin') && Auth::user()->id != 18)
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin') && Auth::user()->id != 18 && Auth::user()->id != 33 && Auth::user()->id != 3)
         {
             Auth::logout();
             return redirect()->route('maintenance');
@@ -439,7 +439,7 @@ class EgressController extends Controller
 
     public function update(Request $request)
     {
-        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin') && Auth::user()->id != 18)
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin') && Auth::user()->id != 18 && Auth::user()->id != 33 && Auth::user()->id != 3)
         {
             Auth::logout();
             return redirect()->route('maintenance');
@@ -643,7 +643,7 @@ class EgressController extends Controller
 
     public function destroy(Request $request)
     {       
-        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin') && Auth::user()->id != 18)
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin') && Auth::user()->id != 18 && Auth::user()->id != 33 && Auth::user()->id != 3)
         {
             Auth::logout();
             return redirect()->route('maintenance');
@@ -720,7 +720,7 @@ class EgressController extends Controller
 
     protected function show($id)
     {
-        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin') && Auth::user()->id != 18)
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin') && Auth::user()->id != 18 && Auth::user()->id != 33 && Auth::user()->id != 3)
         {
             Auth::logout();
             return redirect()->route('maintenance');
