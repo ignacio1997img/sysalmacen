@@ -90,9 +90,9 @@ class EgressController extends Controller
         //     $pendiente[$i]->unidad = $unidad[0]->Nombre;
         //     $i++;
         // }
-        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
+        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
         
-        if(count($sucursal) > 1 && count($sucursal) < 1)
+        if(!$sucursal)
         {
             return "Contactese con el administrador";
         }
