@@ -38,7 +38,8 @@ class IncomeController extends Controller
         }
 
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
-        // return $sucursal;
+        
+        return $sucursal;
         if(!$sucursal && !auth()->user()->hasRole('admin'))
         {
             return view('errors.error');
