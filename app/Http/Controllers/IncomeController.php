@@ -47,7 +47,7 @@ class IncomeController extends Controller
 
 
         $user =Auth::user();
-        $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
+        $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->id)->where('deleted_at', null)->get();//para ver si hay gestion activa o cerrada
 
         return $gestion;
         
