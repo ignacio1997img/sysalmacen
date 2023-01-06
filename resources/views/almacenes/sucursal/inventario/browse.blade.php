@@ -8,7 +8,7 @@
             <div class="row">
                 <div class="col-md-8">
                     <h1 id="subtitle" class="page-title">
-                        <i class="voyager-data"></i> Inventario
+                        <i class="voyager-data"></i> Inventario [{{$sucursal->nombre}}]
                     </h1>
                     @if(auth()->user()->hasPermission('start_inventory') && count($ok)==0)
                         <a href="#" data-toggle="modal" data-target="#modal_start" class="btn btn-success btn-add-new">
