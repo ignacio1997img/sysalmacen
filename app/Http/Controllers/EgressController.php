@@ -117,7 +117,7 @@ class EgressController extends Controller
 
         // $gestion = InventarioAlmacen::where('status', 1)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
         $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->sucursal_id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
-
+        return $gestion;
 
         $data = DB::table('sysalmacen.solicitud_egresos as se')
             ->join('sysadmin.unidades as u', 'u.id', 'se.unidadadministrativa')
