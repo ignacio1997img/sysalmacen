@@ -155,9 +155,9 @@ class IncomeController extends Controller
             return redirect()->route('maintenance');
         }
 
-        return 1;
+        // return 1;
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
-        return $sucursal;
+        // return $sucursal;
         // $sucursal = SucursalUser::where('user_id', $user->id)->where('condicion', 1)->where('deleted_at', null)->first();
 
 
