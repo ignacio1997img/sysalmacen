@@ -102,6 +102,11 @@ class PermissionRoleTableSeeder extends Seeder
                                             `key` = "edit_articles" or
                                             `key` = "add_articles" or
 
+                                            `key` = "browse_sucursals" or
+
+                                            `key` = "browse_inventory" or
+                                            
+
                                             `key` = "browse_modalities" or
                                             `key` = "read_modalities" or
                                             `key` = "edit_modalities" or

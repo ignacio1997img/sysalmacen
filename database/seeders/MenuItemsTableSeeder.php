@@ -773,22 +773,6 @@ class MenuItemsTableSeeder extends Seeder
             ),
             47 => 
             array (
-                'id' => 69,
-                'menu_id' => 1,
-                'title' => 'Inventario',
-                'url' => '',
-                'target' => '_self',
-                'icon_class' => 'voyager-data',
-                'color' => '#000000',
-                'parent_id' => NULL,
-                'order' => 7,
-                'created_at' => '2022-12-13 16:11:38',
-                'updated_at' => '2022-12-13 16:12:00',
-                'route' => 'inventory.index',
-                'parameters' => NULL,
-            ),
-            48 => 
-            array (
                 'id' => 70,
                 'menu_id' => 1,
                 'title' => 'Personas Externas',
