@@ -113,9 +113,7 @@ class ReportAlmacenController extends Controller
         //     SolicitudEgreso::where('id',$item->id)->update(['direccionadministrativa'=>$this->getUnidad($item->unidadadministrativa)->direccion_id]);
         // }
 
-
-        $gestion = InventarioAlmacen::where('deleted_at', null)->where('status', 0)->get();
-        // $gestion = InventarioAlmacen::where('deleted_at', null)->get();
+        // $sucursal = SucursalUser::where('user_id', $user->id)->where('condicion', 1)->where('deleted_at', null)->first();
 
 
         $user = Auth::user();
@@ -132,7 +130,7 @@ class ReportAlmacenController extends Controller
                         ->GroupBy('sucursal_id')
                         ->get();       
 
-        return view('almacenes/report/inventarioAnual/direccionAdministrativa/report', compact('sucursal','gestion'));
+        return view('almacenes/report/inventarioAnual/direccionAdministrativa/report', compact('sucursal'));
     }
     public function directionIncomeSalidaList(Request $request)
     {
@@ -264,12 +262,6 @@ class ReportAlmacenController extends Controller
     // para ver el inventario por partida anual
     public function inventarioPartida()
     { 
-        // para obtener las gestiones disponible
-        $gestion = InventarioAlmacen::where('deleted_at', null)->where('status', 0)->get();
-        // $gestion = InventarioAlmacen::where('deleted_at', null)->get();
-
-
-
         $user = Auth::user();
         $query_filter = 'user_id ='.Auth::user()->id;
         
@@ -284,7 +276,7 @@ class ReportAlmacenController extends Controller
                         ->GroupBy('sucursal_id')
                         ->get();  
 
-        return view('almacenes/report/inventarioAnual/partidaGeneral/report', compact('sucursal', 'gestion'));
+        return view('almacenes/report/inventarioAnual/partidaGeneral/report', compact('sucursal'));
     }
 
     public function inventarioPartidaList(Request $request)
@@ -410,11 +402,6 @@ class ReportAlmacenController extends Controller
     //para el inventario anual Detallado por ITEM
     public function inventarioDetalle()
     {
-
-        $gestion = InventarioAlmacen::where('deleted_at', null)->where('status', 0)->get();
-        // $gestion = InventarioAlmacen::where('deleted_at', null)->get();
-
-
         $user = Auth::user();
         $query_filter = 'user_id ='.Auth::user()->id;
                         
@@ -429,7 +416,7 @@ class ReportAlmacenController extends Controller
                 ->GroupBy('sucursal_id')
                 ->get();        
 
-        return view('almacenes/report/inventarioAnual/detalleGeneral/report', compact('sucursal', 'gestion'));
+        return view('almacenes/report/inventarioAnual/detalleGeneral/report', compact('sucursal'));
     }
 
     public function inventarioDetalleList(Request $request)

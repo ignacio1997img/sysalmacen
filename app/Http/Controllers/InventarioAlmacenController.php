@@ -33,7 +33,7 @@ class InventarioAlmacenController extends Controller
         // $detalle = DetalleFactura::where('deleted_at', null)->where('cantrestante','!=', 0)->where('hist',1)->select(DB::raw('SUM(cantrestante)'))->get();
         // $detalle = DetalleFactura::where('deleted_at', null)->where('cantrestante','!=', 0)->where('hist',0)->select(DB::raw('SUM(cantrestante)'))->get();
 
-        return $request;
+        // return $request;
         
         DB::beginTransaction();
         try {
@@ -41,8 +41,23 @@ class InventarioAlmacenController extends Controller
 
             $ok = InventarioAlmacen::where('id', $request->id)->first();
 
+            $sucursal_id = $request->sucursal_id;
             // $detalle = DetalleFactura::where('deleted_at', null)->where('cantrestante','!=', 0)->where('sucursal_id',1)->select(DB::raw('SUM(cantrestante)'))->get();
-            $detalle = DetalleFactura::where('deleted_at', null)->where('cantrestante','!=', 0)->get();
+            $detalle = DetalleFactura::with(['factura.solicitud', 'factura'])
+                ->where(function($query) use($sucursal_id){
+                        $query->whereHas('factura.solicitud', function($query)use($sucursal_id) {
+                            $query->where('sucursal_id', $sucursal_id)
+                            ->where('deleted_at', null);
+                        })
+                        ->whereHas('factura', function($query) {
+                            $query->where('deleted_at', null);
+                        });
+                })
+                ->where('deleted_at', null)->where('cantrestante','!=', 0)->where('hist', 0)
+                ->orderBy('fechaingreso', 'ASC')
+                ->get();
+            // return $detalle;
+            // return count($detalle);
             
             foreach($detalle as $item)
             {
@@ -68,10 +83,10 @@ class InventarioAlmacenController extends Controller
             
             $ok->update(['finish'=>$date, 'status'=>0, 'observation1'=>$request->observation1, 'finishUser_id' => Auth::user()->id]);
             DB::commit();
-            return redirect()->route('inventory.index')->with(['message' => 'Gestion Cerrada Exitosamente.', 'alert-type' => 'success']);
+            return redirect()->route('inventory.index', ['id'=>$request->sucursal_id])->with(['message' => 'Gestion Cerrada Exitosamente.', 'alert-type' => 'success']);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->route('inventory.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
+            return redirect()->route('inventory.index', ['id'=>$request->sucursal_id])->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
         }
 
     }
@@ -91,7 +106,7 @@ class InventarioAlmacenController extends Controller
                 'observation'=>$request->observation,
                 'startUser_id' => Auth::user()->id
             ]);
-            return $aux;
+            // return $aux;
             SolicitudCompra::where('sucursal_id', $request->sucursal_id)->update(['inventarioAlmacen_id'=>$aux->id]);
             DB::commit();
             return redirect()->route('inventory.index', ['id'=>$request->sucursal_id])->with(['message' => 'Gestion creada Exitosamente.', 'alert-type' => 'success']);

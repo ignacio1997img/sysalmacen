@@ -90,6 +90,8 @@
                         <h4 class="modal-title"><i class="fa-solid fa-lock"></i> Desea cerrar gestion?</h4>
                     </div>
                     <div class="modal-body">
+                        <input type="text" name="sucursal_id" value="{{$sucursal->id}}">
+
                         <input type="hidden" name="id" id="id">
                         <div class="alert alert-warning">
                             <strong>Advertencia:</strong>

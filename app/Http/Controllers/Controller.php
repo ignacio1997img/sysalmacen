@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\InventarioAlmacen;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -67,5 +68,14 @@ class Controller extends BaseController
             ->select('*')
             ->first();
     }
+
+
+    // para obtener las gestuiones de cada almacen que se encuentra registrado en inventario
+    public function getGestione($id)
+    {
+        return InventarioAlmacen::where('sucursal_id', $id)->where('deleted_at', null)->where('status', 0)->get();
+    }
+
+
 
 }

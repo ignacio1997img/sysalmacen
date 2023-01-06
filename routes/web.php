@@ -8,7 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SolicitudController;
 use App\Http\Controllers\IncomeSolicitudController;
 use App\Http\Controllers\BandejaController;
-
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\IncomeDonorController;
 use App\Http\Controllers\EgressDonorController;
 use App\Http\Controllers\NotificationController;
@@ -132,6 +132,7 @@ Route::group(['prefix' => 'admin'], function () {
 
 
     //  Reportes anuales: direcion Administrativa, partidas, detalle de articulos
+    Route::get('print/almacen/getGestion/sucursal/{id?}', [Controller::class, 'getGestione'])->name('ajax-sucursal.getGestion');
     Route::get('print/almacen-inventarioAnual-da', [ReportAlmacenController::class, 'directionIncomeSalida'])->name('almacen-inventarioAnual-da.report');
     Route::post('print/almacen-inventarioAnual-da/list', [ReportAlmacenController::class, 'directionIncomeSalidaList'])->name('almacen-direction-income-egress.list');
 

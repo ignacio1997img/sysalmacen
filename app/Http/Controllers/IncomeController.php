@@ -46,61 +46,21 @@ class IncomeController extends Controller
 
 
         $user =Auth::user();
-        $gestion = InventarioAlmacen::where('status', 1)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
+        $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
 
     
-        $activo = DB::table('users as u')
-                ->join('sucursal_users as su', 'su.user_id', 'u.id')
-                ->join('sucursals as s', 's.id', 'su.sucursal_id')
-                ->select('u.id as user', 'u.name', 's.id', 's.nombre')
-                ->where('u.id',$user->id )
-                ->where('su.condicion',1)
-                ->first();
-  
-        if(auth()->user()->isAdmin())
-        {
-            $income = DB::table('solicitud_compras as sol')
-            ->join('facturas as f', 'f.solicitudcompra_id', 'sol.id')
-            // ->join('invoice_details as fd', 'fd.invoice_id', 'f.id')
-            ->join('modalities as m', 'm.id', 'sol.modality_id')
-            ->join('providers as pro', 'pro.id', 'f.provider_id')
-            ->join('sucursals as s', 's.id', 'sol.sucursal_id')
-            ->select('sol.inventarioAlmacen_id as inventario_id', 'sol.gestion', 'sol.id', 'sol.stock', 's.nombre as sucursal', 'm.nombre as modalidad', 'sol.nrosolicitud' , 'pro.razonsocial', 'pro.nit', 'f.nrofactura', 'f.fechafactura', 'f.montofactura', 'sol.created_at', 'sol.condicion')
-            ->where('sol.deleted_at', null)
-            ->orderBy('sol.id', 'DESC')
-            ->get();
-        }
-        else
-        {
-            $income = DB::table('solicitud_compras as sol')
-                ->join('facturas as f', 'f.solicitudcompra_id', 'sol.id')
-                // ->join('invoice_details as fd', 'fd.invoice_id', 'f.id')
-                ->join('modalities as m', 'm.id', 'sol.modality_id')
-                ->join('providers as pro', 'pro.id', 'f.provider_id')
-                ->select('sol.inventarioAlmacen_id as inventario_id', 'sol.gestion', 'sol.id', 'sol.stock', 'm.nombre as modalidad', 'sol.nrosolicitud' , 'pro.razonsocial', 'pro.nit', 'f.nrofactura', 'f.fechafactura', 'f.montofactura', 'sol.created_at', 'sol.condicion')
-                ->where('sol.deleted_at', null)
-                ->where('sol.sucursal_id', $sucursal->sucursal_id)
-                ->orderBy('sol.id', 'DESC')
-                ->get();
-        }
-
-
-
-        // $data = SolicitudCompra::with(['factura.proveedor', 'modality', 'unidad', 'direccion'])
-        //             ->where('deleted_at', NULL)
-        //             ->whereRaw('sucursal_id', 6)
-        //             ->orderBy('id', 'DESC')->get();
-        // return $data;
         
 
-        return view('almacenes.income.browse', compact('income', 'gestion'));
+        return view('almacenes.income.browse', compact('gestion'));
     }
 
     public function list($type, $search = null){
         $user = Auth::user();
 
         $sucursal = SucursalUser::where('user_id', $user->id)->where('condicion', 1)->where('deleted_at', null)->first();
-        $gestion = InventarioAlmacen::where('status', 1)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
+        // $gestion = InventarioAlmacen::where('status', 1)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
+        $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
+
 
         $query_filter = 'sucursal_id = '.$sucursal->sucursal_id;
         // dd($gestion);
@@ -194,12 +154,16 @@ class IncomeController extends Controller
             return redirect()->route('maintenance');
         }
 
-        $gestion = InventarioAlmacen::where('status', 1)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
+
+        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
+        // return $sucursal;
+        // $sucursal = SucursalUser::where('user_id', $user->id)->where('condicion', 1)->where('deleted_at', null)->first();
 
 
-        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
+        $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
 
-        if(count($sucursal) > 1 && count($sucursal) < 1)
+
+        if(!$sucursal)
         {
             return "Contactese con el administrador";
         }

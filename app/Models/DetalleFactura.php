@@ -14,4 +14,9 @@ class DetalleFactura extends Model
         'parent_id',
         'histcantrestante', 'histfechaingreso', 'histgestion', 'hist', 'condicion', 'deleteuser_id', 'sucursal_id'
       ];
+
+    public function factura()
+    {
+      return $this->belongsTo(Factura::class,'factura_id');
+    }
 }

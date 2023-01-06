@@ -25,7 +25,7 @@
                                 <input type="hidden" name="print">
                                 <div class="form-group">
                                     <div class="form-line">
-                                        <select name="sucursal_id" class="form-control select2" required>
+                                        <select name="sucursal_id" id="sucursal_id" class="form-control select2" required>
                                             <option value=""disabled selected>Seleccione una opcion..</option>
                                             @foreach ($sucursal as $item)
                                                 <option value="{{$item->sucursal->id}}">{{$item->sucursal->nombre}}</option>
@@ -34,21 +34,13 @@
                                         <small>Sucursal</small>
                                     </div>
                                 </div>
-                                {{-- <div class="form-group">
-                                    <div class="form-line">
-                                        <select name="gestion" class="form-control select2" required>
-                                            <option value="2022" selected>2022</option>
-                                        </select>
-                                        <small>Gestion</small>
-                                    </div>
-                                </div> --}}
                                 <div class="form-group">
                                     <div class="form-line">
-                                        <select name="gestion" class="form-control select2" required>
-                                            <option value="" disabled selected>-- Seleccione una gestión</option>
+                                        <select name="gestion" id="gestion" class="form-control select2" required>
+                                            {{-- <option value="" disabled selected>-- Seleccione una gestión</option>
                                             @foreach ($gestion as $item)
                                                 <option value="{{$item->gestion}}">{{$item->gestion}}</option>
-                                            @endforeach                                             
+                                            @endforeach                                              --}}
                                         </select>
                                         <small>Gestion</small>
                                     </div>
@@ -169,6 +161,8 @@
     <script>
         $(document).ready(function() {
 
+            $('#sucursal_id').on('change',getGestion);
+
             $('#form-search').on('submit', function(e){
                 
                 e.preventDefault();
@@ -209,6 +203,26 @@
             window.form_search.submit();
              $('#form-search').removeAttr('target');
             $('#form-search input[name="print"]').val('');
+        }
+
+        function getGestion()
+        {
+            id= $(this).val();
+            if(id>=1)
+            {
+                // alert(id)
+                $.get('{{route('ajax-sucursal.getGestion')}}/'+id, function(data){
+                    var html_gestion=    '<option disabled selected value="">-- Seleccione una gestión --</option>'
+                    for(var i=0; i<data.length; ++i)
+                        html_gestion += '<option value="'+data[i].gestion+'">'+data[i].gestion+'</option>'
+
+                    $('#gestion').html(html_gestion);
+                });
+            }
+            else
+            {
+                $('#gestion').html('');
+            }
         }
     </script>
 @stop
