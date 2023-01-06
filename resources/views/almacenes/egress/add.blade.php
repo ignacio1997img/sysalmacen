@@ -108,9 +108,9 @@
                                                     <div class="form-line">
                                                         <select name="sucursal_id" class="form-control select2" required>
                                                             {{-- <option value="">Seleccione una sucursal</option> --}}
-                                                            @foreach ($sucursal as $item)
+                                                            {{-- @foreach ($sucursal as $item) --}}
                                                                 <option value="{{$item->sucursal->id}}">{{$item->sucursal->nombre}}</option>
-                                                            @endforeach
+                                                            {{-- @endforeach --}}
                                                         </select>
                                                     </div>
                                                     <small>Sucursal (Usuario del Sistema).</small>

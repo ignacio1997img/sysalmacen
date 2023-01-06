@@ -115,7 +115,9 @@ class EgressController extends Controller
             $query_filter = 'se.sucursal_id ='.$activo->id;
         }
 
-        $gestion = InventarioAlmacen::where('status', 1)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
+        // $gestion = InventarioAlmacen::where('status', 1)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
+        $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->sucursal_id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
+
 
         $data = DB::table('sysalmacen.solicitud_egresos as se')
             ->join('sysadmin.unidades as u', 'u.id', 'se.unidadadministrativa')
@@ -277,10 +279,12 @@ class EgressController extends Controller
             return redirect()->route('maintenance');
         }
 
-        $gestion = InventarioAlmacen::where('status', 1)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
 
         // return 1;
-        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->get();
+        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
+
+        $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->sucursal_id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
+
 
         if(count($sucursal) > 1 && count($sucursal) < 1)
         {
