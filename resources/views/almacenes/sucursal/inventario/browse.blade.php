@@ -10,6 +10,7 @@
                     <h1 id="subtitle" class="page-title">
                         <i class="voyager-data"></i> Inventario [{{$sucursal->nombre}}]
                     </h1>
+                    <br>
                     @if(auth()->user()->hasPermission('start_inventory') && count($ok)==0)
                         <a href="#" data-toggle="modal" data-target="#modal_start" class="btn btn-success btn-add-new">
                             <i class="voyager-plus"></i> <span>Nueva Gestion</span>
