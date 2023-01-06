@@ -12,7 +12,7 @@
                     </h1>
                 </div>
                 <div class="col-md-4" style="text-align: right">
-                    <a href="{{route('sucursal.index')}}" data-toggle="modal" class="btn btn-warning btn-add-new">
+                    <a href="{{route('sucursals.index')}}" data-toggle="modal" class="btn btn-warning btn-add-new">
                         <i class="voyager-plus"></i> <span>Volver</span>
                     </a>
                     @if(auth()->user()->hasPermission('start_inventory') && count($ok)==0)
