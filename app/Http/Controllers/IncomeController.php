@@ -175,6 +175,7 @@ class IncomeController extends Controller
         // $partida = Partida::where('codigo','like','3%')->get();
         $partida = Partida::all();
         $modalidad = Modality::all();
+        $sucursal = Sucursal::where('id', $sucursal->sucursal_id)->first();
         // return $partida;
 
         return view('almacenes.income.add', compact('sucursal', 'da', 'proveedor', 'partida', 'modalidad', 'gestion'));
