@@ -173,7 +173,7 @@ class IncomeController extends Controller
 
         $da = $this->direccionSucursal($sucursal->sucursal_id);
 
-        $proveedor = Provider::where('condicion',1)->where('sucursal_id',$sucursal->first()->sucursal_id)->get();
+        $proveedor = Provider::where('condicion',1)->where('sucursal_id',$sucursal->sucursal_id)->get();
         // $partida = Partida::where('codigo','like','3%')->get();
         $partida = Partida::all();
         $modalidad = Modality::all();
