@@ -162,7 +162,7 @@ class IncomeController extends Controller
 
 
         $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->sucursal_id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
-        return $gestion;
+        // return $gestion;
 
         if(!$sucursal)
         {
