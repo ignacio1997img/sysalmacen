@@ -299,10 +299,10 @@ class EgressController extends Controller
         //             ->get();
 
         // $da = $this->getdireccion(); 
-        $da = $this->direccionSucursal($sucursal->first()->sucursal_id);
-
+        $da = $this->direccionSucursal($sucursal->sucursal_id);
+        return $da;
         $sucursal = Sucursal::where('id', $sucursal->sucursal_id)->first();
-        return $sucursal;
+        // return $sucursal;
 
 
         return view('almacenes.egress.add', compact('sucursal', 'da', 'gestion'));
