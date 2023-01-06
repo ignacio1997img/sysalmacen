@@ -944,6 +944,7 @@ class EgressController extends Controller
                     ->select('fd.id', 'a.nombre')
                     ->where('fd.hist', 0)
                     ->where('fd.condicion', 1)
+                    
                     ->where('fd.deleted_at', null)
                     ->where('com.id', $id)
                     ->get();
