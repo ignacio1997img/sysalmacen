@@ -118,7 +118,8 @@ Route::group(['prefix' => 'admin'], function () {
 
 
     // Inventario Para cada Almacen
-    Route::resource('inventory', InventarioAlmacenController::class);
+    // Route::resource('inventory', InventarioAlmacenController::class);
+    Route::get('inventory/{id?}', [InventarioAlmacenController::class, 'index'])->name('inventory.index');
     Route::post('inventory/start', [InventarioAlmacenController::class, 'start'])->name('inventory.start');
     Route::post('inventory/finish', [InventarioAlmacenController::class, 'finish'])->name('inventory.finish');
 

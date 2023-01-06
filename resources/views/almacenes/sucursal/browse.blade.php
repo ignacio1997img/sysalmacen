@@ -55,6 +55,11 @@
                                                     </td>
                                                     <td style="text-align: right">
                                                         <div class="no-sort no-click bread-actions text-right">
+                                                            @if(auth()->user()->hasPermission('browse_inventory'))
+                                                                <a href="{{route('inventory.index', ['id'=>$item->id])}}" title="Ver" class="btn btn-sm btn-dark view">
+                                                                    <i class="voyager-data"></i> <span class="hidden-xs hidden-sm">Inventario</span>
+                                                                </a>                                                          
+                                                            @endif
                                                             @if(auth()->user()->hasPermission('read_sucursals'))
                                                                 <a href="{{route('voyager.sucursals.show',$item->id)}}" title="Ver" class="btn btn-sm btn-success view">
                                                                     <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>

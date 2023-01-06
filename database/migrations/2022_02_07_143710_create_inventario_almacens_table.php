@@ -15,6 +15,8 @@ class CreateInventarioAlmacensTable extends Migration
     {
         Schema::create('inventario_almacens', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('sucursal_id')->nullable()->constrained('sucursals');
+            
             $table->string('gestion', 10);
 
             $table->date('start')->nullable();

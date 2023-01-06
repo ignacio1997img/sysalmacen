@@ -5,21 +5,27 @@ namespace App\Http\Controllers;
 use App\Models\DetalleFactura;
 use Illuminate\Http\Request;
 use App\Models\InventarioAlmacen;
+use App\Models\SolicitudCompra;
+use App\Models\Sucursal;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class InventarioAlmacenController extends Controller
 {
-    public function index()
+    public function index($id)
     {
-        $data = InventarioAlmacen::where('deleted_at', null)->get();
-        $ok = InventarioAlmacen::where('deleted_at', null)->where('status', 1)->get();
+        // return $id;
+        $sucursal = Sucursal::where('id', $id)->first();
+        $data = InventarioAlmacen::where('sucursal_id', $id)->where('deleted_at', null)->get();
+        $ok = InventarioAlmacen::where('sucursal_id', $id)->where('deleted_at', null)->where('status', 1)->get();//si existe no se puede abrir nueva gestion
 
-        $max = InventarioAlmacen::where('deleted_at', null)->where('status', 0)->max('gestion');
+        $max = InventarioAlmacen::where('sucursal_id', $id)->where('deleted_at', null)->where('status', 0)->max('gestion');
+        $max=2021;
+
         // return $max;
         // return 1;
-        return view('almacenes.inventario.browse', compact('data', 'ok', 'max'));
+        return view('almacenes.sucursal.inventario.browse', compact('data', 'ok', 'max', 'sucursal'));
     }
 
     public function finish(Request $request)
@@ -27,7 +33,7 @@ class InventarioAlmacenController extends Controller
         // $detalle = DetalleFactura::where('deleted_at', null)->where('cantrestante','!=', 0)->where('hist',1)->select(DB::raw('SUM(cantrestante)'))->get();
         // $detalle = DetalleFactura::where('deleted_at', null)->where('cantrestante','!=', 0)->where('hist',0)->select(DB::raw('SUM(cantrestante)'))->get();
 
-        // return $detalle;
+        return $request;
         
         DB::beginTransaction();
         try {
@@ -72,23 +78,27 @@ class InventarioAlmacenController extends Controller
 
     public function start(Request $request)
     {
+        // return $request;
         DB::beginTransaction();
         try {
 
             $date = date('Y-m-d');
 
-            InventarioAlmacen::create([
+            $aux = InventarioAlmacen::create([
+                'sucursal_id' => $request->sucursal_id,
                 'gestion' => $request->gestion,
                 'start'   => $date,
                 'observation'=>$request->observation,
                 'startUser_id' => Auth::user()->id
             ]);
+            return $aux;
+            SolicitudCompra::where('sucursal_id', $request->sucursal_id)->update(['inventarioAlmacen_id'=>$aux->id]);
             DB::commit();
-            return redirect()->route('inventory.index')->with(['message' => 'Gestion creada Exitosamente.', 'alert-type' => 'success']);
+            return redirect()->route('inventory.index', ['id'=>$request->sucursal_id])->with(['message' => 'Gestion creada Exitosamente.', 'alert-type' => 'success']);
 
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->route('inventory.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
+            return redirect()->route('inventory.index', ['id'=>$request->sucursal_id])->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
         }
     }
 }

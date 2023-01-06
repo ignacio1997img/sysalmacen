@@ -115,7 +115,7 @@ class ReportAlmacenController extends Controller
 
 
         $gestion = InventarioAlmacen::where('deleted_at', null)->where('status', 0)->get();
-        $gestion = InventarioAlmacen::where('deleted_at', null)->get();
+        // $gestion = InventarioAlmacen::where('deleted_at', null)->get();
 
 
         $user = Auth::user();
@@ -266,7 +266,7 @@ class ReportAlmacenController extends Controller
     { 
         // para obtener las gestiones disponible
         $gestion = InventarioAlmacen::where('deleted_at', null)->where('status', 0)->get();
-        $gestion = InventarioAlmacen::where('deleted_at', null)->get();
+        // $gestion = InventarioAlmacen::where('deleted_at', null)->get();
 
 
 
@@ -412,7 +412,7 @@ class ReportAlmacenController extends Controller
     {
 
         $gestion = InventarioAlmacen::where('deleted_at', null)->where('status', 0)->get();
-        $gestion = InventarioAlmacen::where('deleted_at', null)->get();
+        // $gestion = InventarioAlmacen::where('deleted_at', null)->get();
 
 
         $user = Auth::user();
