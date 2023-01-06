@@ -282,12 +282,11 @@ class EgressController extends Controller
 
         // return 1;
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
-        return $sucursal;
 
         $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->sucursal_id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
 
 
-        if(count($sucursal) > 1 && count($sucursal) < 1)
+        if(!$sucursal)
         {
             return "Contactese con el administrador";
         }
@@ -300,9 +299,9 @@ class EgressController extends Controller
         //             ->get();
 
         // $da = $this->getdireccion(); 
-        return $sucursal;
+        // return $sucursal;
         $da = $this->direccionSucursal($sucursal->sucursal_id);
-        return $da;
+        // return $da;
         $sucursal = Sucursal::where('id', $sucursal->sucursal_id)->first();
         // return $sucursal;
 
