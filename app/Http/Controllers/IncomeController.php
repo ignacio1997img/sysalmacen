@@ -39,7 +39,7 @@ class IncomeController extends Controller
 
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
         
-        return $sucursal;
+        // return $sucursal;
         if(!$sucursal && !auth()->user()->hasRole('admin'))
         {
             return view('errors.error');
@@ -49,7 +49,7 @@ class IncomeController extends Controller
         $user =Auth::user();
         $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
 
-    
+        return $gestion;
         
 
         return view('almacenes.income.browse', compact('gestion'));
