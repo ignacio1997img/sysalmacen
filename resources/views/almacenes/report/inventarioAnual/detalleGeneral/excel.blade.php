@@ -39,15 +39,15 @@
                     <td>{{ $item->id }} - {{ $item->nombre }}</td>
                     <td>{{ $item->presentacion}}</td>
                     <td style="text-align: right">{{ $item->precio}}</td>
-                    <td style="text-align: right">{{ number_format($item->cInicial,2)}}</td>
-                    <td style="text-align: right">{{ number_format($item->cEntrada,2)}}</td>
-                    <td style="text-align: right">{{ number_format($item->cSalida,2)}}</td>
-                    <td style="text-align: right">{{ number_format($item->cFinal,2)}}</td>
+                    <td style="text-align: right">{{ number_format($item->cInicial,2,',', '.')}}</td>
+                    <td style="text-align: right">{{ number_format($item->cEntrada,2,',', '.')}}</td>
+                    <td style="text-align: right">{{ number_format($item->cSalida,2,',', '.')}}</td>
+                    <td style="text-align: right">{{ number_format($item->cFinal,2,',', '.')}}</td>
 
-                    <td style="text-align: right">{{ number_format($item->vInicial,2)}}</td>
-                    <td style="text-align: right">{{ number_format($item->vEntrada,2)}}</td>
-                    <td style="text-align: right">{{ number_format($item->vSalida,2)}}</td>
-                    <td style="text-align: right">{{ number_format($item->vFinal,2)}}</td>
+                    <td style="text-align: right">{{ number_format($item->vInicial,2,',', '.')}}</td>
+                    <td style="text-align: right">{{ number_format($item->vEntrada,2,',', '.')}}</td>
+                    <td style="text-align: right">{{ number_format($item->vSalida,2,',', '.')}}</td>
+                    <td style="text-align: right">{{ number_format($item->vFinal,2,',', '.')}}</td>
                                                                             
                 </tr>
                 @php
@@ -73,15 +73,15 @@
             @endforelse
             <tr>
                 <th colspan="4" style="text-align: right">Total</th>
-                <th style="text-align: right">{{number_format($cIni,2)}}</th>
-                <th style="text-align: right">{{number_format($cEnt,2)}}</th>
-                <th style="text-align: right">{{number_format($cSal,2)}}</th>
-                <th style="text-align: right">{{number_format($cFin,2)}}</th>
+                <th style="text-align: right">{{number_format($cIni,2,',', '.')}}</th>
+                <th style="text-align: right">{{number_format($cEnt,2,',', '.')}}</th>
+                <th style="text-align: right">{{number_format($cSal,2,',', '.')}}</th>
+                <th style="text-align: right">{{number_format($cFin,2,',', '.')}}</th>
 
-                <th style="text-align: right">{{number_format($vIni,2)}}</th>
-                <th style="text-align: right">{{number_format($vEnt,2)}}</th>
-                <th style="text-align: right">{{number_format($vSal,2)}}</th>
-                <th style="text-align: right">{{number_format($vFin,2)}}</th>
+                <th style="text-align: right">{{number_format($vIni,2,',', '.')}}</th>
+                <th style="text-align: right">{{number_format($vEnt,2,',', '.')}}</th>
+                <th style="text-align: right">{{number_format($vSal,2,',', '.')}}</th>
+                <th style="text-align: right">{{number_format($vFin,2,',', '.')}}</th>
             </tr>
         </tbody>
     

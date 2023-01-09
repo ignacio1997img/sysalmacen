@@ -59,9 +59,9 @@
                         <tr>
                             <td>{{ $count }}</td>
                             <td style="text-align: left">{{ $item->nombre }}</td>
-                            <td style="text-align: right">{{ number_format($item->inicio,2)}}</td>
-                            <td style="text-align: right">{{ number_format($item->ingreso,2)}}</td>
-                            <td style="text-align: right">{{ number_format($item->salida,2)}}</td>
+                            <td style="text-align: right">{{ number_format($item->inicio,2,',', '.')}}</td>
+                            <td style="text-align: right">{{ number_format($item->ingreso,2,',', '.')}}</td>
+                            <td style="text-align: right">{{ number_format($item->salida,2,',', '.')}}</td>
                             @php
                                 $aux =0;
                                 if (($item->inicio + $item->ingreso) >= $item->salida)
@@ -92,9 +92,9 @@
                     @endforelse
             <tr>
                 <th colspan="2" style="text-align: right">Total</th>
-                <th style="text-align: right">{{number_format($si,2)}}</th>
-                <th style="text-align: right">{{number_format($i,2)}}</th>
-                <th style="text-align: right">{{number_format($s,2)}}</th>
+                <th style="text-align: right">{{number_format($si,2,',', '.')}}</th>
+                <th style="text-align: right">{{number_format($i,2,',', '.')}}</th>
+                <th style="text-align: right">{{number_format($s,2,',', '.')}}</th>
                 {{-- <th style="text-align: right">{{number_format($sf,2)}}</th> --}}
             </tr>
         </tbody>
