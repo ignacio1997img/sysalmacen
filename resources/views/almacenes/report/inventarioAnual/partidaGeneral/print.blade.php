@@ -55,10 +55,10 @@
                         <tr>
                             <td>{{ $count }}</td>
                             <td style="text-align: left">{{ $item->codigo }} - {{ $item->nombre }}</td>
-                            <td style="text-align: right">{{ number_format($item->cantidadinicial,2)}}</td>
-                            <td style="text-align: right">{{ number_format($item->totalinicial,2)}}</td>
-                            <td style="text-align: right">{{ number_format($item->cantfinal,2)}}</td>
-                            <td style="text-align: right">{{ number_format($item->totalfinal, 2)}}</td>
+                            <td style="text-align: right">{{ number_format($item->cantidadinicial,2, ',', '.')}}</td>
+                            <td style="text-align: right">{{ number_format($item->totalinicial,2, ',', '.')}}</td>
+                            <td style="text-align: right">{{ number_format($item->cantfinal,2, ',', '.')}}</td>
+                            <td style="text-align: right">{{ number_format($item->totalfinal, 2, ',', '.')}}</td>
 
 
                                                                                     
@@ -78,10 +78,10 @@
                     @endforelse
             <tr>
                 <th colspan="2" style="text-align: right">Total</th>
-                <th style="text-align: right">{{number_format($cant1,2)}}</th>
-                <th style="text-align: right">{{number_format($total1,2)}}</th>
-                <th style="text-align: right">{{number_format($cant2,2)}}</th>
-                <th style="text-align: right">{{number_format($total2,2)}}</th>
+                <th style="text-align: right">{{number_format($cant1,2, ',', '.')}}</th>
+                <th style="text-align: right">{{number_format($total1,2, ',', '.')}}</th>
+                <th style="text-align: right">{{number_format($cant2,2, ',', '.')}}</th>
+                <th style="text-align: right">{{number_format($total2,2, ',', '.')}}</th>
             </tr>
         </tbody>
        
