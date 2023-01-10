@@ -21,7 +21,12 @@ class InventarioAlmacenController extends Controller
         $ok = InventarioAlmacen::where('sucursal_id', $id)->where('deleted_at', null)->where('status', 1)->get();//si existe no se puede abrir nueva gestion
 
         $max = InventarioAlmacen::where('sucursal_id', $id)->where('deleted_at', null)->where('status', 0)->max('gestion');
-        $max=2021;
+        // return $date = date('Y');
+
+        if(!$max)
+        {
+            $max = date('Y')-1;
+        }
 
         // return $max;
         // return 1;
