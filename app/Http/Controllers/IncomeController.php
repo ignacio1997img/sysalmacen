@@ -31,7 +31,7 @@ class IncomeController extends Controller
     public function index()
     {      
         // return Auth::user()->id;
-        if(setting('configuracion.maintenance') && !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin') && Auth::user()->id != 18 && Auth::user()->id != 33 && Auth::user()->id != 3)
+        if(setting('configuracion.maintenance') && !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
         {
             Auth::logout();
             return redirect()->route('maintenance');
@@ -149,7 +149,7 @@ class IncomeController extends Controller
 
     public function create()
     {
-        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin') && Auth::user()->id != 18 && Auth::user()->id != 33 && Auth::user()->id != 3)
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
         {
             Auth::logout();
             return redirect()->route('maintenance');
@@ -187,7 +187,7 @@ class IncomeController extends Controller
     // para imprimir el ingreso de cada almacen
     protected function view_ingreso($id)
     {
-        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin') && Auth::user()->id != 18 && Auth::user()->id != 33 && Auth::user()->id != 3)
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
         {
             Auth::logout();
             return redirect()->route('maintenance');
@@ -230,7 +230,7 @@ class IncomeController extends Controller
     // Para ver el Stock de cada almacen
     protected function view_ingreso_stock($id)
     {
-        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin') && Auth::user()->id != 18 && Auth::user()->id != 33 && Auth::user()->id != 3)
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
         {
             Auth::logout();
             return redirect()->route('maintenance');
@@ -272,11 +272,13 @@ class IncomeController extends Controller
     // funcion para guardar los registro de un ingreso en general
     public function store(Request $request)
     {      
-        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin') && Auth::user()->id != 18 && Auth::user()->id != 33 && Auth::user()->id != 3)
+        // return $request;
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
         {
             Auth::logout();
             return redirect()->route('maintenance');
         }
+
         // return $request;
         $user = Auth::user();
         DB::beginTransaction();
@@ -290,10 +292,10 @@ class IncomeController extends Controller
                 $x++;
             }
             // return $total;
-
-            if($request->total == $request->montofactura)
+            
+            if($request->total == $total)
             {
-                // return 1;
+                // return 2;
                 $unidad = DB::connection('mamore')->table('unidades')
                         ->select('sigla')
                         ->where('id',$request->unidadadministrativa)
@@ -328,6 +330,7 @@ class IncomeController extends Controller
                         'inventarioAlmacen_id'  => $request->inventarioAlmacen_id
                 ]);
                 
+                // return $solicitud;
             
                 $factura = Factura::create([
                         'solicitudcompra_id'   => $solicitud->id,
@@ -335,7 +338,7 @@ class IncomeController extends Controller
                         'registeruser_id'       => $user->id,
                         'tipofactura'           => $request->tipofactura,
                         'fechafactura'          => $request->fechafactura,
-                        'montofactura'          => $total,
+                        'montofactura'          => $request->total,
                         'nrofactura'            => $request->nrofactura,
                         'nroautorizacion'       => $request->nroautorizacion,
                         'nrocontrol'            => $request->nrocontrol,
@@ -343,6 +346,7 @@ class IncomeController extends Controller
                         'gestion'               => $request->gestion,
                         'sucursal_id'       => $request->branchoffice_id
                 ]);
+                // return 2;
                 
                 $cont = 0;
         
@@ -362,6 +366,7 @@ class IncomeController extends Controller
                     ]);
                     $cont++;
                 }
+                // return 1;
                 DB::commit();
                 return redirect()->route('income.index')->with(['message' => 'Registrado exitosamente.', 'alert-type' => 'success']);
             }
@@ -372,7 +377,6 @@ class IncomeController extends Controller
             }
         } catch (\Throwable $th) {
             DB::rollback();
-            // return 10;
             return redirect()->route('income.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);            
         }
     }
@@ -380,7 +384,7 @@ class IncomeController extends Controller
  
     public function edit($id)
     {
-        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin') && Auth::user()->id != 18 && Auth::user()->id != 33 && Auth::user()->id != 3)
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
         {
             Auth::logout();
             return redirect()->route('maintenance');
@@ -443,7 +447,7 @@ class IncomeController extends Controller
 
     public function update(Request $request)
     {  
-        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin') && Auth::user()->id != 18 && Auth::user()->id != 33 && Auth::user()->id != 3)
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
         {
             Auth::logout();
             return redirect()->route('maintenance');
@@ -552,7 +556,7 @@ class IncomeController extends Controller
 
     public function salida($id)
     {
-        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin') && Auth::user()->id != 18 && Auth::user()->id != 33 && Auth::user()->id != 3)
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
         {
             Auth::logout();
             return redirect()->route('maintenance');
@@ -603,7 +607,7 @@ class IncomeController extends Controller
 
     public function destroy(Request $request)
     {    
-        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin') && Auth::user()->id != 18 && Auth::user()->id != 33 && Auth::user()->id != 3)
+        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
         {
             Auth::logout();
             return redirect()->route('maintenance');

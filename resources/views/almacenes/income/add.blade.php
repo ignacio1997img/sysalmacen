@@ -1,9 +1,9 @@
 {{-- <link href="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/css/alertify.min.css" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/alertify.min.js"></script> --}}
 
-<link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.css" rel="stylesheet" />
+{{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.css" rel="stylesheet" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.js"></script> --}}
 @extends('voyager::master')
 
 @section('page_title', 'Viendo Ingresos')
@@ -37,28 +37,7 @@
     }
 
 
-    #detalles {
-    font-family: Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
-    }
-
-    #detalles td, #detalles th {
-    border: 1px solid #ddd;
-    padding: 8px;
-    }
-
-    #detalles tr:nth-child(even){background-color: #f2f2f2;}
-
-    #detalles tr:hover {background-color: #ddd;}
-
-    #detalles th {
-        padding-top: 12px;
-        padding-bottom: 12px;
-        text-align: left;
-        background-color: #04AA6D;
-        color: white;
-    }
+   
 
     .form-control .select2{
         border-radius: 5px 5px 5px 5px;
@@ -260,7 +239,8 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number" step="0.01" class="form-control form-control-sm text" id="montofactura" name="montofactura" placeholder="Introducir monto" autocomplete="off" required>
+                                                            <input type="number" step="0.01"  style="text-align: right" class="form-control form-control-sm text" id="montofactura" name="montofactura" placeholder="Introducir monto" value="0.00" disabled required>
+                                                            <input type="hidden" step="0.01" name="total" value="0" id="totals" required>
                                                         </div>
                                                         <small>Monto *(Bs).</small>
                                                     </div>
@@ -292,7 +272,7 @@
                                                     <div class="form-group">
                                                         <div class="form-line">
                                                             <select id="partida"class="form-control select2">
-                                                                <option value="">Seleccione una Partida..</option>
+                                                                <option value="" selected disabled>--Seleccione una Partida--</option>
                                                                 @foreach($partida as $data)
                                                                     <option value="{{$data->id}}">{{$data->codigo}} - {{$data->nombre}}</option>                                                                
                                                                 @endforeach
@@ -322,17 +302,17 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number" id="cantidad" placeholder="Cantidad Articulo" class="form-control text" title="Cantidad">
+                                                            <input type="number" min="1" style="text-align: right" onkeypress="return filterFloat(event,this);" id="cantidad" placeholder="Cantidad Articulo" class="form-control text" title="Cantidad">
                                                         </div>
-                                                        <small>Cantidad Artículo.</small>
+                                                        <small>Cantidad</small>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="number" id="precio" placeholder="Precio Unitario" class="form-control text" title="Precio Unitario Bs">
+                                                            <input type="number" style="text-align: right" onkeypress="return filterFloat(event,this);" id="precio" placeholder="Precio Unitario" class="form-control text" title="Precio Unitario Bs">
                                                         </div>
-                                                        <small>Precio Artículo *(Bs).</small>
+                                                        <small>Precio Unit. (Bs).</small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -343,23 +323,22 @@
                                                 </div>
                                             </div>
                                         
-                                            <table id="detalles" class="table table-bordered table-striped table-sm">
+                                            <table id="dataTableStyle" class="table table-bordered table-striped table-sm">
                                                 <thead>
                                                     <tr>
-                                                        <th>Opciones</th>
-                                                        <th>Partida</th>
-                                                        <th>Articulo</th>
-                                                        <th>Presentación</th>
-                                                        <th>Cantidad</th>
-                                                        <th>Precio Art.</th>
-                                                        <th>SubTotal</th>
+                                                        <th style="text-align: center">Opción</th>
+                                                        <th style="text-align: center">Partida</th>
+                                                        <th style="text-align: center">Articulo</th>
+                                                        <th style="text-align: center">Presentación</th>
+                                                        <th style="text-align: center">Cantidad</th>
+                                                        <th style="text-align: center">Precio Unit.</th>
+                                                        <th style="text-align: center">SubTotal</th>
                     
                                                     </tr>
                                                 </thead>
                                                 <tfoot>
-                                                    <th colspan="6" style="text-align:right"><h5>TOTAL</h5></th>
-                                                    <th><h4 id="total">Bs. 0.00</h4></th>
-                                                    <input type="hidden" step="0.01" name="total" id="totals">
+                                                    <th colspan="6" style="text-align: left"><h5>TOTAL</h5></th>
+                                                    <th style="text-align: right"><h4 id="total">Bs. 0.00</h4></th>                                                    
                                                 </tfoot>
                                                 
                                             </table>
@@ -378,7 +357,9 @@
                     </div>
                 </div>
             </div>
-        </div>          
+        </div>  
+        {{-- <input type="text" onkeypress="return NumCheck(event, this)"/>      --}}
+        {{-- <input type="text" name="moneda nac" id="moneda_nac" value="10" onkeypress="return filterFloat(event,this);"/>    --}}
     @stop
 
 
@@ -387,8 +368,11 @@
     @stop
 
     @section('javascript')
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
         <script>
+
+
             $(function()
             {    
                 $(".select2").select2({theme: "classic"});
@@ -439,11 +423,15 @@
             function agregar()
             {
                 partida=$("#partida option:selected").text();
-                montofactura=$("#montofactura").val();
+                // montofactura=$("#montofactura").val();
                 article_id=$("#article_id").val();
                 presentacion=$("#presentacion").val();
-                cantidad=$("#cantidad").val();
-                precio=$("#precio").val();
+
+                cantidad=parseFloat($("#cantidad").val()?$("#cantidad").val():0).toFixed(2);
+                precio=parseFloat($("#precio").val()? $("#precio").val():0).toFixed(2);
+
+                subT = cantidad * precio;
+
                 nombre_articulo=$("#article_id option:selected").text();
 
                 var arrayarticle = [];
@@ -451,8 +439,9 @@
                 var j=0;
                 ok=false;
 
+                // alert(cantidad)
 
-                if (partida != 'Seleccione una Partida..' && nombre_articulo != 'Seleccione un Articulo..' && cantidad != "" && precio != "") {
+                if (partida != 'Seleccione una Partida..' && nombre_articulo != 'Seleccione un Articulo..' && cantidad > 0 && precio > 0) {
                     
                   
 
@@ -461,17 +450,13 @@
                             fila+='<td>'+partida+'</td>'
                             fila+='<td><input type="hidden" class="input_article" name="article_id[]"value="'+article_id+'">'+nombre_articulo+'</td>'
                             fila+='<td>'+presentacion+'</td>'
-                            fila+='<td><input type="hidden" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td>'
-                            fila+='<td><input type="hidden" name="precio[]" value="'+precio+'">'+precio+'</td>'
-                            fila+='<td><input type="hidden" class="input_subtotal" name="subtotal[]" value="'+(cantidad * precio).toFixed(2)+'">'+(cantidad * precio).toFixed(2)+'</td>'
+                            fila+='<td style="text-align: right"><input type="hidden" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td>'
+                            fila+='<td style="text-align: right"><input type="hidden" name="precio[]" value="'+precio+'">'+precio+'</td>'
+                            fila+='<td style="text-align: right"><input type="hidden" class="input_subtotal" name="subtotal[]" value="'+(subT).toFixed(2)+'">'+(subT).toFixed(2)+'</td>'
                         fila+='</tr>';
                     
-                    let detalle_subtotal = parseFloat(calcular_total()+cantidad * precio ).toFixed(2);
-
-                    let monto_factura = parseFloat($('#montofactura').val());
-                    if (detalle_subtotal <= monto_factura)
-                    {   
                         $(".input_article").each(function(){
+                            // alert(parseFloat($(this).val()))
                             arrayarticle[i]= parseFloat($(this).val());
                             i++;
                         }); 
@@ -482,62 +467,43 @@
                             
                             if(arrayarticle[j] == article_id)
                             {
-                                // cont--;
                                 limpiar();
                                 ok = false;
-                                // eliminar(arrayarticle.length-1)
-                                swal({
-                                    title: "Error",
-                                    text: "El Articulo ya Existe en la Lista",
-                                    type: "error",
-                                    showCancelButton: false,
-                                    });
-                                div = document.getElementById('flotante');
-                                div.style.display = '';
-                                return;                                
+
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'El artículo ya existe en la lista..',
+                                })                             
                             }
                         }
                         if(ok==true)
                         {
-                            // cont++;
-                        
                             limpiar();
-                            $('#detalles').append(fila);
+                            $('#dataTableStyle').append(fila);
                             $("#total").html("Bs. "+calcular_total().toFixed(2));
                             $("#totals").val(calcular_total().toFixed(2));
-                            if (calcular_total().toFixed(2)==monto_factura.toFixed(2)) {
-                                $('#btn_guardar').removeAttr('disabled');
-                            }
-                            else
-                            {
-                                $('#btn_guardar').attr('disabled', true);
-                            }
+                            $("#montofactura").val(calcular_total().toFixed(2));
+
+                            $('#btn_guardar').removeAttr('disabled');
+
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'Artículo Agregado',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
                         }
-                    }
-                    else
-                    {
-                        swal({
-                            title: "Error",
-                            text: "El monto total supera al monto de la factura",
-                            type: "error",
-                            showCancelButton: false,
-                            });
-                        div = document.getElementById('flotante');
-                        div.style.display = '';
-                        return;
-                    }
                 }
                 else
                 {
-                    swal({
-                            title: "Error",
-                            text: "Rellene los Campos de las Seccion de Articulo",
-                            type: "error",
-                            showCancelButton: false,
-                            });
-                        div = document.getElementById('flotante');
-                        div.style.display = '';
-                        return;
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Rellene los Campos Correctamente.',
+                        // footer: '<a href="">Why do I have this issue?</a>'
+                    })
                 }
 
             }        
@@ -555,9 +521,12 @@
                 $("#fila" + index).remove();
                 $("#total").html("Bs. "+calcular_total().toFixed(2));
                 $("#totals").val(calcular_total().toFixed(2));
-                // evaluar();
-                // $('#btn_guardar').attr('disabled', true);
-                $('#btn_guardar').attr('disabled', true);
+                $("#montofactura").val(calcular_total().toFixed(2));
+
+                if(calcular_total().toFixed(2) == 0)
+                {
+                    $('#btn_guardar').attr('disabled', true);
+                }
             }
 
             //calcular total de factura
@@ -617,7 +586,7 @@
                         html_nroautorizacion+=       '<div class="form-line">'
                         html_nroautorizacion+=            '<input type="text" name="nroautorizacion" placeholder="Introducir Nro Autorizacion" class="form-control text" title="Introducir Nro de Autorización">'
                         html_nroautorizacion+=       '</div>'
-                        html_nroautorizacion+=       '<small>Nro Control.</small>'
+                        html_nroautorizacion+=       '<small>Nro Autorizacion Fact.</small>'
                         html_nroautorizacion+=  '</div>'
                     $('#nroautorizacion').html(html_nroautorizacion);
 
@@ -645,7 +614,7 @@
                         html_nroautorizacion+=       '<div class="form-line">'
                         html_nroautorizacion+=            '<input type="text" name="nroautorizacion" class="form-control text" placeholder="Introducir Nro Autorizacion" title="Introducir Nro de Autorización">'
                         html_nroautorizacion+=       '</div>'
-                        html_nroautorizacion+=       '<small>Nro Control.</small>'
+                        html_nroautorizacion+=       '<small>Nro Autorizacion Fact.</small>'
                         html_nroautorizacion+=  '</div>'
                         $('#nroautorizacion').html(html_nroautorizacion);
 
@@ -662,7 +631,7 @@
                 if(id >=1)
                 {
                     $.get('{{route('ajax_article')}}/'+id, function(data){
-                        var html_article=    '<option value="">Seleccione un Articulo..</option>'
+                        var html_article=    '<option value="" selected disabled>--Seleccione un Artículo--</option>'
                             for(var i=0; i<data.length; ++i)
                             html_article += '<option value="'+data[i].id+'">'+data[i].nombre+'</option>'
 
@@ -699,6 +668,42 @@
             }
 
         </script> 
+    <script type="text/javascript">
+        function filterFloat(evt,input){
+            // Backspace = 8, Enter = 13, ‘0′ = 48, ‘9′ = 57, ‘.’ = 46, ‘-’ = 43
+            var key = window.Event ? evt.which : evt.keyCode;    
+            var chark = String.fromCharCode(key);
+            var tempValue = input.value+chark;
+            if(key >= 48 && key <= 57){
+                if(filter(tempValue)=== false){
+                    return false;
+                }else{       
+                    return true;
+                }
+            }else{
+                if(key == 8 || key == 13 || key == 0) {     
+                    return true;              
+                }else if(key == 46){
+                        if(filter(tempValue)=== false){
+                            return false;
+                        }else{       
+                            return true;
+                        }
+                }else{
+                    return false;
+                }
+            }
+        }
+        function filter(__val__){
+            var preg = /^([0-9]+\.?[0-9]{0,2})$/; 
+            if(preg.test(__val__) === true){
+                return true;
+            }else{
+            return false;
+            }
+            
+        }
+    </script>
     @stop
 
     @else
