@@ -122,6 +122,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('inventory/{id?}', [InventarioAlmacenController::class, 'index'])->name('inventory.index');
     Route::post('inventory/start', [InventarioAlmacenController::class, 'start'])->name('inventory.start');
     Route::post('inventory/finish', [InventarioAlmacenController::class, 'finish'])->name('inventory.finish');
+    Route::post('inventory/reabrir', [InventarioAlmacenController::class, 'reabrir'])->name('inventory.reabrir');
 
 
 

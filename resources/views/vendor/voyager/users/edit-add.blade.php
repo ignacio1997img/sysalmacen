@@ -42,29 +42,30 @@
                         @endif
 
                         <div class="panel-body">
-                            <div class="form-group">
-                                <label class="control-label">INTERNO</label>
-                                <span class="voyager-question text-info pull-left" data-toggle="tooltip" data-placement="left" title=" Seleccione no si el funcionario es externo."></span>
-                                <input 
-                                    type="checkbox" 
-                                    name="tipo"
-                                    id="toggleswitch" 
-                                    data-toggle="toggle" 
-                                    data-on="Sí" 
-                                    data-off="No"
-                                    checked 
-                                    >
-                            </div>
+                            @if(auth()->user()->hasRole('admin'))
+                                <div class="form-group">
+                                    <label class="control-label">INTERNO</label>
+                                    <span class="voyager-question text-info pull-left" data-toggle="tooltip" data-placement="left" title=" Seleccione no si el funcionario es externo."></span>
+                                    <input 
+                                        type="checkbox" 
+                                        name="tipo"
+                                        id="toggleswitch" 
+                                        data-toggle="toggle" 
+                                        data-on="Sí" 
+                                        data-off="No"
+                                        checked 
+                                        >
+                                </div>
 
-                            <div class="form-group">
-                                <label for="funcionario_id">Funcionario</label>
-                                <select 
-                                    name="funcionario_id" 
-                                    id="getfuncionario"
-                                    class="form-control">
-                                </select>
-                            </div>
-                            <input type="hidden" id="people" name="name">
+                                <div class="form-group">
+                                    <label for="funcionario_id">Funcionario</label>
+                                    <select 
+                                        name="funcionario_id" 
+                                        id="getfuncionario"
+                                        class="form-control">
+                                    </select>
+                                </div>
+                                <input type="hidden" id="people" name="name">
 
                             
 
@@ -81,6 +82,7 @@
                                 <input type="email" class="form-control" id="email" name="email" placeholder="{{ __('voyager::generic.email') }}"
                                        value="{{ old('email', $dataTypeContent->email ?? '') }}">
                             </div>
+                            @endif
 
                             <div class="form-group">
                                 <label for="password">{{ __('voyager::generic.password') }}</label>
@@ -156,11 +158,11 @@
                     </div>
                 </div>
             </div>
-            @if (auth()->user()->isAdmin())
+            {{-- @if (auth()->user()->isAdmin()) --}}
             <button type="submit" class="btn btn-primary pull-right save">
                 {{ __('voyager::generic.save') }}
             </button>
-            @endif
+            {{-- @endif --}}
         </form>
 
 

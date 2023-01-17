@@ -69,6 +69,12 @@
                                                                 <i class="fa-solid fa-lock"></i> <span class="hidden-xs hidden-sm">Cerrar Gestion</span>
                                                             </a>
                                                         @endif
+
+                                                        @if ($item->status == 0)
+                                                            <a data-toggle="modal" data-id="{{$item->id}}" data-target="#modal_lock_open" title="re abrir gestion" class="btn btn-sm btn-warning view">
+                                                                <i class="fa-solid fa-lock-open"></i> <span class="hidden-xs hidden-sm">Reabrir Gestion</span>
+                                                            </a>
+                                                        @endif
                                                     </div>
                                                 </td>
                                                             
@@ -131,6 +137,51 @@
             </div>
         </div>
 
+        <div class="modal modal-warning fade" tabindex="-1" id="modal_lock_open" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    {!! Form::open(['route' => 'inventory.reabrir', 'method' => 'post']) !!}
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title"><i class="fa-solid fa-lock"></i> Desea reabrir gestion?</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="sucursal_id" value="{{$sucursal->id}}">
+
+                        <input type="hidden" name="id" id="id">
+                        <div class="alert alert-danger">
+                            <strong>Advertencia:</strong>
+                            <p>Una ves reabierta la gestion, se eliminara el saldo final de la gestion actual.</p>
+                        </div>
+
+                        <div class="text-center" style="text-transform:uppercase">
+                            <i class="fa-solid fa-lock-open" style="color: #fabe28; font-size: 5em;"></i>
+                            <br>
+                            
+                            <p><b>Desea reabrir la gestion?</b></p>
+                        </div>
+                        {{-- <div class="row"> --}}
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        {{-- <input type="date" name="fechaingreso" class="form-control text" required> --}}
+                                        <textarea name="observation1" id="" cols="30" rows="2" class="form-control text" required></textarea>
+                                    </div>
+                                    <small>Observación.</small>
+                                </div>
+                            </div>
+                        
+                        {{-- </div> --}}
+                    </div>                
+                    <div class="modal-footer">                        
+                        <input type="submit" class="btn btn-warning pull-right delete-confirm" value="Sí, reabrir">                        
+                        <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
+                    </div>
+                    {!! Form::close()!!} 
+                </div>
+            </div>
+        </div>
+
         <div class="modal modal-success fade" tabindex="-1" id="modal_start" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -184,10 +235,10 @@
     @section('css')
     <style>
         #subtitle{
-        font-size: 18px;
-        color: rgb(12, 12, 12);
-        font-weight: bold;
-    }
+            font-size: 18px;
+            color: rgb(12, 12, 12);
+            font-weight: bold;
+        }
         #dataTable {
         font-family: Arial, Helvetica, sans-serif;
         border-collapse: collapse;
@@ -259,6 +310,15 @@
                 });
 
                 $('#modal_lock').on('show.bs.modal', function (event) {
+                    var button = $(event.relatedTarget) //captura valor del data-empresa=""
+
+                    var id = button.data('id')
+
+                    var modal = $(this)
+                    modal.find('.modal-body #id').val(id)
+                    
+                });
+                $('#modal_lock_open').on('show.bs.modal', function (event) {
                     var button = $(event.relatedTarget) //captura valor del data-empresa=""
 
                     var id = button.data('id')

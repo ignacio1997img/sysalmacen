@@ -61,8 +61,6 @@ class InventarioAlmacenController extends Controller
                 ->where('deleted_at', null)->where('cantrestante','!=', 0)->where('hist', 0)
                 ->orderBy('fechaingreso', 'ASC')
                 ->get();
-            // return $detalle;
-            // return count($detalle);
             
             foreach($detalle as $item)
             {
@@ -120,5 +118,10 @@ class InventarioAlmacenController extends Controller
             DB::rollBack();
             return redirect()->route('inventory.index', ['id'=>$request->sucursal_id])->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
         }
+    }
+
+    public function reabrir(Request $request)
+    {
+        return $request;
     }
 }

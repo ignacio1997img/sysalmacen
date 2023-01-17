@@ -44,6 +44,7 @@ class CreateDetalleFacturasTable extends Migration
             $table->timestamps();
             $table->foreignId('deleteuser_id')->nullable()->constrained('users');
             $table->softDeletes();
+            $table->text('deleteObservation')->nullable();
         });
     }
 
