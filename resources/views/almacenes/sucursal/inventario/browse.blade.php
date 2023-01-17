@@ -47,6 +47,8 @@
                                     <tbody>
                                         <?php
                                             $i=1;
+                                            $count =1;
+                                            // dd(count($data));
                                         ?>
                                         @foreach($data as $item)
                                             <tr>
@@ -70,7 +72,7 @@
                                                             </a>
                                                         @endif
 
-                                                        @if ($item->status == 0)
+                                                        @if ($item->status == 0 && $count == count($data))
                                                             <a data-toggle="modal" data-id="{{$item->id}}" data-target="#modal_lock_open" title="re abrir gestion" class="btn btn-sm btn-warning view">
                                                                 <i class="fa-solid fa-lock-open"></i> <span class="hidden-xs hidden-sm">Reabrir Gestion</span>
                                                             </a>
@@ -81,6 +83,7 @@
                                             </tr>
                                             <?php
                                                 $i++;
+                                                $count++;
                                             ?>
                                         @endforeach
                                                     
