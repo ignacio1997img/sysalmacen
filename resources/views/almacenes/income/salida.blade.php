@@ -67,7 +67,7 @@
     
 
 </style>
-@if(auth()->user()->hasPermission('edit_income'))
+{{-- @if(auth()->user()->hasPermission('edit_income')) --}}
     @section('page_header')
         
         <div class="container-fluid">
@@ -492,4 +492,4 @@
     @section('content')
         <h1>No tienes permiso</h1>
     @stop
-@endif
+{{-- @endif --}}
