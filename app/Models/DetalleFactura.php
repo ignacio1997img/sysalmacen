@@ -13,7 +13,7 @@ class DetalleFactura extends Model
         'cantrestante', 'fechaingreso', 'gestion','histcantsolicitada', 'histprecio', 'histtotalbs',
         'parent_id',
         'histcantrestante', 'histfechaingreso', 'histgestion', 'hist', 'condicion', 'deleteuser_id', 'sucursal_id',
-        'deleteObservation'
+        'deleteObservation', 'HistInvDelete_id'
       ];
 
     public function factura()

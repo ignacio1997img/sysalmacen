@@ -45,6 +45,7 @@ class CreateDetalleFacturasTable extends Migration
             $table->foreignId('deleteuser_id')->nullable()->constrained('users');
             $table->softDeletes();
             $table->text('deleteObservation')->nullable();
+            $table->foreignId('HistInvDelete_id')->nullable()->constrained('hist_inv_deletes');
         });
     }
 

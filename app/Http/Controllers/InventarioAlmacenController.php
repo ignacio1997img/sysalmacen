@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DetalleFactura;
+use App\Models\HistInvDelete;
 use Illuminate\Http\Request;
 use App\Models\InventarioAlmacen;
 use App\Models\SolicitudCompra;
@@ -131,6 +132,20 @@ class InventarioAlmacenController extends Controller
             $inv->update(['status'=> 1]);
 
             // return $inv;
+
+            $aux = HistInvDelete::create([
+                'inventario_id'=>$inv->id,
+                'gestion'=>$inv->gestion,
+                'start'=>$inv->start,
+                'startUser_id'=>$inv->startUser_id,
+                'finish'=>$inv->finish,
+                'finishUser_id'=>$inv->finishUser_id,
+                'observation'=>$inv->observation,
+                'observation1'=>$inv->observation1,
+                'deleteObservation'=>$request->observation1,
+            ]);
+
+            // return $aux;
             $gestion = $inv->gestion;
 
             $data = SolicitudCompra::with(['factura'=>function($q)
@@ -144,6 +159,7 @@ class InventarioAlmacenController extends Controller
                     }])
                     ->where('deleted_at', null)
                     ->where('sucursal_id', $request->sucursal_id)->get();
+            
 
             // return $data;    
             foreach($data as $sol)
@@ -154,7 +170,7 @@ class InventarioAlmacenController extends Controller
                     {
                         // return $item;
                         DetalleFactura::where('id', $item->id)
-                        ->update(['deleted_at'=> Carbon::now(), 'deleteuser_id'=>Auth::user()->id, 'deleteObservation'=>$request->observation1]);
+                        ->update(['deleted_at'=> Carbon::now(), 'deleteuser_id'=>Auth::user()->id, 'deleteObservation'=>$request->observation1, 'HistInvDelete_id'=>$aux->id]);
                     }
                 }
             }
