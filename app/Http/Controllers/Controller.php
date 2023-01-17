@@ -73,7 +73,7 @@ class Controller extends BaseController
     // para obtener las gestuiones de cada almacen que se encuentra registrado en inventario
     public function getGestione($id)
     {
-        return InventarioAlmacen::where('sucursal_id', $id)->where('deleted_at', null)->get();
+        return InventarioAlmacen::where('sucursal_id', $id)->where('deleted_at', null)->where('status', 0)->get();
     }
 
 

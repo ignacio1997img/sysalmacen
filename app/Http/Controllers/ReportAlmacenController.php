@@ -169,6 +169,7 @@ class ReportAlmacenController extends Controller
                 ->groupBy('sc.direccionadministrativa')
                 ->orderBy('sc.direccionadministrativa', 'ASC')
                 ->get();
+        // dd($saldos);
 
 
 

@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
+use function PHPUnit\Framework\returnSelf;
+
 class InventarioAlmacenController extends Controller
 {
     public function index($id)
@@ -122,6 +124,47 @@ class InventarioAlmacenController extends Controller
 
     public function reabrir(Request $request)
     {
-        return $request;
+        // return $request;    
+        DB::beginTransaction();
+        try {
+            $inv = InventarioAlmacen::where('id', $request->id)->first();
+            $inv->update(['status'=> 1]);
+
+            // return $inv;
+            $gestion = $inv->gestion;
+
+            $data = SolicitudCompra::with(['factura'=>function($q)
+                    {
+                        $q->where('deleted_at', null);
+                    },
+                    'factura.detalle' => function($q) use($gestion){
+                        $q->where('deleted_at', null)
+                        ->where('hist', 1)
+                        ->where('gestion', $gestion+1);
+                    }])
+                    ->where('deleted_at', null)
+                    ->where('sucursal_id', $request->sucursal_id)->get();
+
+            // return $data;    
+            foreach($data as $sol)
+            {
+                foreach($sol->factura as $fa)
+                {
+                    foreach($fa->detalle as $item)
+                    {
+                        // return $item;
+                        DetalleFactura::where('id', $item->id)
+                        ->update(['deleted_at'=> Carbon::now(), 'deleteuser_id'=>Auth::user()->id, 'deleteObservation'=>$request->observation1]);
+                    }
+                }
+            }
+
+            DB::commit();
+            return redirect()->route('inventory.index', ['id'=>$request->sucursal_id])->with(['message' => 'Gestion Reabierta Exitosamente.', 'alert-type' => 'success']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return 110011;
+            return redirect()->route('inventory.index', ['id'=>$request->sucursal_id])->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
+        }
     }
 }

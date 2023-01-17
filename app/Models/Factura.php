@@ -24,4 +24,8 @@ class Factura extends Model
     {
         return $this->belongsTo(Provider::class, 'provider_id');
     }
+    public function detalle()
+    {
+        return $this->hasMany(DetalleFactura::class, 'factura_id');
+    }
 }
