@@ -36,6 +36,10 @@ class CreateHistInvDeletesTable extends Migration
 
             $table->softDeletes();
             $table->foreignId('deleteUser_id')->nullable()->constrained('users');
+
+            $table->foreignId('registeruser_id')->nullable()->constrained('users');
+            $table->text('nameFile')->nullable();
+            $table->text('routeFile')->nullable();
         });
     }
 

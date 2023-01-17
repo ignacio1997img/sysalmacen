@@ -13,7 +13,7 @@
                 </div>
                 <div class="col-md-4" style="text-align: right">
                     <a href="{{route('voyager.sucursals.index')}}" data-toggle="modal" class="btn btn-warning btn-add-new">
-                        <i class="voyager-plus"></i> <span>Volver</span>
+                        <i class="fa-solid fa-circle-left"></i> <span>Volver</span>
                     </a>
                     @if(auth()->user()->hasPermission('start_inventory') && count($ok)==0)
                         <a href="#" data-toggle="modal" data-target="#modal_start" class="btn btn-success btn-add-new">
@@ -66,6 +66,9 @@
 
                                                 <td style="text-align: center">
                                                     <div class="no-sort no-click bread-actions text-right">
+                                                        <a href="{{route('inventory-histinvdelete.index', ['sucursal'=>$sucursal->id, 'gestion' => $item->id])}}" data-toggle="modal" title="Historial de reabrir gestión" class="btn btn-sm btn-dark view">
+                                                            <i class="fa-solid fa-clock-rotate-left"></i> <span class="hidden-xs hidden-sm">Historial</span>
+                                                        </a>
                                                         @if ($item->status == 1)
                                                             <a data-toggle="modal" data-id="{{$item->id}}" data-target="#modal_lock" title="Eliminar" class="btn btn-sm btn-danger view">
                                                                 <i class="fa-solid fa-lock"></i> <span class="hidden-xs hidden-sm">Cerrar Gestion</span>
@@ -143,7 +146,7 @@
         <div class="modal modal-warning fade" tabindex="-1" id="modal_lock_open" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    {!! Form::open(['route' => 'inventory.reabrir', 'method' => 'post']) !!}
+                    {!! Form::open(['route' => 'inventory.reabrir', 'method' => 'post', 'enctype' => 'multipart/form-data']) !!}
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title"><i class="fa-solid fa-lock"></i> Desea reabrir gestion?</h4>
@@ -162,6 +165,16 @@
                             <br>
                             
                             <p><b>Desea reabrir la gestion?</b></p>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{-- <input type="date" name="fechaingreso" class="form-control text" required> --}}
+                                    {{-- <textarea name="observation1" id="" cols="30" rows="2" class="form-control text" required></textarea> --}}
+                                    <input type="file" name="archivo" class="form-control text" required>
+                                </div>
+                                <small>Archivo.</small>
+                            </div>
                         </div>
                         {{-- <div class="row"> --}}
                             <div class="col-sm-12">

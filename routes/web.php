@@ -123,6 +123,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('inventory/start', [InventarioAlmacenController::class, 'start'])->name('inventory.start');
     Route::post('inventory/finish', [InventarioAlmacenController::class, 'finish'])->name('inventory.finish');
     Route::post('inventory/reabrir', [InventarioAlmacenController::class, 'reabrir'])->name('inventory.reabrir');
+    Route::get('inventory/{sucursal}/histinvdelete{gestion?}', [InventarioAlmacenController::class, 'indexHistInvDelete'])->name('inventory-histinvdelete.index');
+
 
 
 

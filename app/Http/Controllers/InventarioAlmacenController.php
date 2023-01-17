@@ -11,6 +11,8 @@ use App\Models\Sucursal;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 use function PHPUnit\Framework\returnSelf;
 
@@ -143,7 +145,26 @@ class InventarioAlmacenController extends Controller
                 'observation'=>$inv->observation,
                 'observation1'=>$inv->observation1,
                 'deleteObservation'=>$request->observation1,
+                'registeruser_id' => Auth::user()->id
             ]);
+            $file = $request->file('archivo');
+
+            if ($file) {
+                    
+                    $nombre_origen = $file->getClientOriginalName();
+                    
+                    $newFileName = Str::random(20).time().'.'.$file->getClientOriginalExtension();
+                    
+                    $dir = "InventarioAlmacen/HistInvDelete/".date('F').date('Y');
+                    
+                    Storage::makeDirectory($dir);
+                    Storage::disk('public')->put($dir.'/'.$newFileName, file_get_contents($file));
+
+                    $aux->update([
+                        'nameFile'         => $nombre_origen,
+                        'routeFile'                  => $dir.'/'.$newFileName,
+                    ]);
+            }
 
             // return $aux;
             $gestion = $inv->gestion;
@@ -179,8 +200,24 @@ class InventarioAlmacenController extends Controller
             return redirect()->route('inventory.index', ['id'=>$request->sucursal_id])->with(['message' => 'Gestion Reabierta Exitosamente.', 'alert-type' => 'success']);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return 110011;
+            // return 110011;
             return redirect()->route('inventory.index', ['id'=>$request->sucursal_id])->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
         }
+    }
+
+
+
+    // para ver el historial de cada rearpetura de cada gestion
+    public function indexHistInvDelete($sucursal, $gestion)
+    {
+        // return $gestion;
+        $sucursal_id = $sucursal;
+        $hist = HistInvDelete::with(['histDetalleFactura', 'user'])
+            ->where('inventario_id', $gestion)->get();
+
+        // return $hist;
+        // return $hist->histDetalleFactura->sum('cantrestante');
+
+        return view('almacenes.sucursal.inventario.histInvDelete.browse', compact('hist', 'sucursal_id'));
     }
 }

@@ -20,7 +20,21 @@ class HistInvDelete extends Model
         'observation1',
         'deleteObservation',
         'deleted_at',
-        'deleteUser_id'
+        'deleteUser_id',
+
+        'registeruser_id',
+        'nameFile',
+        'routeFile'
     ];
+
+    public function histDetalleFactura()
+    {
+        return $this->hasMany(DetalleFactura::class, 'HistInvDelete_id');
+    }
+    
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'registeruser_id');
+    }
 
 }
