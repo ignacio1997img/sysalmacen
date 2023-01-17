@@ -65,6 +65,7 @@
                                 @endif
                                 
                                 @if($gestion)
+                                
                                     @if($item->condicion == 1 && $item->inventarioAlmacen_id == $gestion->id)
                                         @if(auth()->user()->hasPermission('edit_incomes'))
                                             <a href="{{route('income.edit',$item->id)}}" title="Editar" class="btn btn-sm btn-warning">
