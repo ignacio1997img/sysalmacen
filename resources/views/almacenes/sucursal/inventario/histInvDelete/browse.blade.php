@@ -12,7 +12,7 @@
                     </h1>
                 </div>
                 <div class="col-md-4" style="text-align: right">
-                    <a href="{{route('voyager.sucursals.index')}}" data-toggle="modal" class="btn btn-warning btn-add-new">
+                    <a href="{{route('inventory.index', ['id'=>$sucursal_id])}}" data-toggle="modal" class="btn btn-warning btn-add-new">
                         <i class="fa-solid fa-circle-left"></i> <span>Volver</span>
                     </a>
                 </div>
