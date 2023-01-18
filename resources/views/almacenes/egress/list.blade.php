@@ -50,7 +50,7 @@
                                 @endif
                                 
                                 @if($gestion)
-                                    @if($item->inventarioAlmacen_id == $gestion->id)
+                                    @if($item->gestion == $gestion->gestion)
                                         @if(auth()->user()->hasPermission('edit_egres') )
                                             <a href="{{route('egres.edit',$item->id)}}" title="Editar" class="btn btn-sm btn-info view">
                                                 <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Editar</span>
