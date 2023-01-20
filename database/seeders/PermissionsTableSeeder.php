@@ -106,7 +106,16 @@ class PermissionsTableSeeder extends Seeder
             'browse_printalmacen-inventarioAnual-da',
             'browse_printalmacen-inventarioAnual-partida',
             'browse_printalmacen-inventarioAnual-detalle',
+        ];
 
+        foreach ($keys as $key) {
+            Permission::firstOrCreate([
+                'key'        => $key,
+                'table_name' => 'reports_anual',
+            ]);
+        }
+
+        $keys = [
             // articulos
             'browse_printalmacen-article-list',
             'browse_printalmacen-article-stock',
@@ -123,9 +132,10 @@ class PermissionsTableSeeder extends Seeder
         foreach ($keys as $key) {
             Permission::firstOrCreate([
                 'key'        => $key,
-                'table_name' => 'reports_anual',
+                'table_name' => 'reports_almacen',
             ]);
         }
+
 
         $keys = [
             'browse_inventory',

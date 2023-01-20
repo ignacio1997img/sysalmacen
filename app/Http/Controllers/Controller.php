@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class Controller extends BaseController
@@ -73,7 +74,14 @@ class Controller extends BaseController
     // para obtener las gestuiones de cada almacen que se encuentra registrado en inventario
     public function getGestione($id)
     {
-        return InventarioAlmacen::where('sucursal_id', $id)->where('deleted_at', null)->where('status', 0)->get();
+        if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('almacen_admin'))
+        {
+            return InventarioAlmacen::where('sucursal_id', $id)->where('deleted_at', null)->where('status', 0)->get();
+        }
+        else
+        {
+            return InventarioAlmacen::where('sucursal_id', $id)->where('deleted_at', null)->get();
+        }
     }
 
 

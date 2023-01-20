@@ -395,7 +395,7 @@ class ReportAlmacenController extends Controller
         }
         if($request->print ==NULL)
         {            
-            return view('almacenes/report/inventarioAnual/partidaGeneral/list', compact('data'));
+            return view('almacenes/report/inventarioAnual/partidaGeneral/list', compact('data', 'gestion', 'sucursal'));
         }
     }
     // ################################################################################
