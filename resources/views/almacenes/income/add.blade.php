@@ -1,9 +1,3 @@
-{{-- <link href="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/css/alertify.min.css" rel="stylesheet"/>
-<script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/alertify.min.js"></script> --}}
-
-{{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.css" rel="stylesheet" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.js"></script> --}}
 @extends('voyager::master')
 
 @section('page_title', 'Viendo Ingresos')
@@ -84,7 +78,7 @@
                                         @endif
 
                                         
-                                        {!! Form::open(['route' => 'income.store', 'class' => 'was-validated'])!!}
+                                        {!! Form::open(['route' => 'income.store', 'class' => 'was-validated', 'id'=>'form-agregar'])!!}
                                         <div class="card-body">
                                             <input type="hidden" name="inventarioAlmacen_id" @if($gestion) value="{{$gestion->id}}" @endif>
                                             <input type="hidden" name="gestion" @if($gestion) value="{{$gestion->gestion}}" @endif>
@@ -371,7 +365,12 @@
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
         <script>
+            $(document).ready(function(){
+                $('#form-agregar').submit(function(e){
+                    $('#btn_guardar').css('display', 'none');
 
+                });
+            })
 
             $(function()
             {    
