@@ -154,12 +154,16 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::get('print/almacen-article-incomeoffice', [ReportAlmacenController::class, 'incomeOffice'])->name('almacen-article-incomeOffice.report');
     Route::post('print/almacen/article/incomeoffice/list', [ReportAlmacenController::class, 'incomeOfficeList'])->name('almacen-article-incomeOffice.list');
+
     Route::get('ajaxPrint/almacen-article-incomeoffice/direccion/{id?}', [ReportAlmacenController::class, 'ajax_incomeOffice_direccion'])->name('ajax-incomeOffice.direccion');
     Route::get('ajaxPrint/almacen-article-incomeoffice/unidad/{id?}', [ReportAlmacenController::class, 'ajax_incomeOffice_unidad'])->name('ajax-incomeOffice.unidad');
 
     Route::get('print/almacen-article-egressoffice', [ReportAlmacenController::class, 'egressOffice'])->name('almacen-article-egressOffice.report');
     Route::post('print/almacen/article/egressoffice/list', [ReportAlmacenController::class, 'egressOfficeList'])->name('almacen-article-egressOffice.list');
 
+    //REPORTE PARA LAS PARTIDA PARA VER LAS ENTRADA Y SALIDA DE ARTICULOS POR PARTIDA
+    Route::get('print/almacen-partida-incomearticle', [ReportAlmacenController::class, 'incomePartidaArticle'])->name('almacen-partida-incomearticle.report');
+    Route::post('print/almacen/partida/incomearticle/list', [ReportAlmacenController::class, 'incomePartidaArticleList'])->name('almacen-partida-incomearticle.list');
 
 
     // Proveedores

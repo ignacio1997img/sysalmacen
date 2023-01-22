@@ -27,6 +27,7 @@ use App\Exports\ArticleListExport;
 use App\Exports\ArticleIncomeOfficeExport;
 use App\Exports\ArticleEgressOfficeExport;
 use App\Models\DetalleEgreso;
+use App\Models\Partida;
 use App\Models\SolicitudEgreso;
 use App\Models\Unit;
 
@@ -831,6 +832,79 @@ class ReportAlmacenController extends Controller
         }
     }
 
+    // #####################################################################################################################################################################################################################
+    // ################################                 PARTIDA                 ###########################################################################################################
+    // #####################################################################################################################################################################################################################
+    //para ver todos los articulos que se ingresaron en la gestion por partida detallando que factura es
+    public function incomePartidaArticle()
+    {
+        $user = Auth::user();
+        $query_filter = 'user_id ='.Auth::user()->id;
+        
+        if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('almacen_admin'))
+        {
+            $query_filter = 1;
+        }
+
+        $sucursal = SucursalUser::where('condicion', 1)
+                        ->where('deleted_at', null)
+                        ->whereRaw($query_filter)
+                        ->GroupBy('sucursal_id')
+                        ->get();
+        $partida = Partida::where('deleted_at', null)->get();
+
+        return view('almacenes.report.partida.incomearticle.report', compact('sucursal', 'partida'));
+    }
+
+    public function incomePartidaArticleList(Request $request)
+    {
+        // dd($request);
+        $date = Carbon::now();
+        $sucursal = Sucursal::find($request->sucursal_id);
+        // dd($request);
+        // dd($sucursal);
+        // $start = $request->start;
+        // $finish = $request->finish;
+        $partida = Partida::where('id', $request->partida_id)->first();
+        $data = DB::table('solicitud_compras as sc')
+                    ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')
+                    ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
+                    ->join('articles as a', 'a.id', 'df.article_id')
+                    ->join('partidas as p', 'p.id', 'a.partida_id')
+
+                    ->where('sc.deleted_at', null)
+                    ->where('sc.sucursal_id', $request->sucursal_id)
+                    ->where('sc.fechaingreso', '>=', $request->start)
+                    ->where('sc.fechaingreso', '<=', $request->finish)
+
+                    ->where('f.deleted_at', null)
+
+                    ->where('df.hist', 0)
+                    ->where('df.deleted_at', null)
+
+                    ->where('p.id', $request->partida_id)
+
+
+                    ->select('df.fechaingreso', 'p.codigo', 'p.nombre', 'sc.nrosolicitud', 
+                            'f.tipofactura', 'f.nrofactura', 'a.id as article_id', 'a.nombre as articulo', 'a.presentacion', 'df.cantsolicitada', 'df.precio',
+                            'df.cantrestante', 'df.totalbs')
+                    ->orderBy('df.fechaingreso', 'ASC')
+                    ->get();
+
+        // dd($data->sum('totalbs'));
+      
+        if($request->print==1){
+            return view('almacenes.report.article.stock.print', compact('data', 'sucursal'));
+        }
+        if($request->print==2)
+        {
+            return Excel::download(new ArticleStockExport($data), $sucursal->nombre.'_'.$date.'.xlsx');
+        }
+        if($request->print==NULL)
+        {            
+            return view('almacenes.report.partida.incomearticle.list', compact('data', 'partida'));
+        }
+    }
 
 
 

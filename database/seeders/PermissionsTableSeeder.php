@@ -121,6 +121,10 @@ class PermissionsTableSeeder extends Seeder
             'browse_printalmacen-article-stock',
             'browse_printalmacen-article-incomeoffice',
             'browse_printalmacen-article-egressoffice',
+
+            // para las partidas
+            'browse_printalmacen-partida-incomearticle',
+
             
             
             'browse_printalmacen-provider-list',
