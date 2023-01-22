@@ -367,7 +367,8 @@
         <script>
             $(document).ready(function(){
                 $('#form-agregar').submit(function(e){
-                    $('#btn_guardar').css('display', 'none');
+                    // $('#btn_guardar').css('display', 'none');
+                    $('#btn_guardar').attr('disabled', true);
 
                 });
             })
