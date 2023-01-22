@@ -39,9 +39,9 @@
                                 <td>{{ $item->nrofactura }}</td>
                                 <td>{{ $item->articulo }}</td>
                                 <td>{{ $item->presentacion }}</td>
-                                <td>{{ number_format($item->cantsolicitada,2,',', '.')  }}</td>
-                                <td>{{ number_format($item->precio,2,',', '.')  }}</td>
-                                <td><small>{{ number_format($item->totalbs,2,',', '.') }}</small></td>                            
+                                <td style="text-align: right">{{ number_format($item->cantsolicitada,2,',', '.')  }}</td>
+                                <td style="text-align: right">{{ number_format($item->precio,2,',', '.')  }}</td>
+                                <td style="text-align: right"><small>{{ number_format($item->totalbs,2,',', '.') }}</small></td>                            
                             </tr>
                             @php
                                 $count++;
