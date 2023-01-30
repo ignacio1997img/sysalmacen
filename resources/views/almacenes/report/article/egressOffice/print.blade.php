@@ -57,9 +57,9 @@
                     <td style="text-align: left">{{ $item->partida}}</td>
                     <td style="text-align: left">{{ $item->articulo }}</td>
                     <td style="text-align: left">{{ $item->presentacion }}</td>
-                    <td style="text-align: right">{{ number_format($item->precio,2) }}</td>
-                    <td style="text-align: right">{{ number_format($item->cantsolicitada,2) }}</td>
-                    <td style="text-align: right">{{ number_format($item->totalbs,2) }}</td>         
+                    <td style="text-align: right">{{ number_format($item->precio,2,',', '.') }}</td>
+                    <td style="text-align: right">{{ number_format($item->cantsolicitada,2,',', '.') }}</td>
+                    <td style="text-align: right">{{ number_format($item->totalbs,2,',', '.') }}</td>         
                 </tr>
                 @php
                     $count++;
@@ -68,13 +68,13 @@
                 @endphp
             @empty
                 <tr style="text-align: center">
-                    <td colspan="6">No se encontraron registros.</td>
+                    <td colspan="10">No se encontraron registros.</td>
                 </tr>
             @endforelse
             <tr>
                 <td colspan="8" class="text-right"><strong>TOTAL</strong></td>
-                <td><strong>{{number_format($cant,2)}}</strong></td>
-                <td><strong>{{number_format($total,2)}}</strong></td>
+                <td><strong>{{number_format($cant,2,',', '.')}}</strong></td>
+                <td><strong>{{number_format($total,2,',', '.')}}</strong></td>
             </tr>
         </tbody>
     </table>
