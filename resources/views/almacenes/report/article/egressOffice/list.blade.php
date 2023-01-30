@@ -9,7 +9,7 @@
 <div class="panel panel-bordered">
     <div class="panel-body">
         <div class="table-responsive">
-            <table style="width:100%"  class="table table-bordered table-striped table-sm">
+            <table id="dataTableStyle" style="width:100%"  class="table table-bordered table-striped table-sm">
                 <thead>                      
                     <tr>
                         <th style="width:5%">N&deg;</th>

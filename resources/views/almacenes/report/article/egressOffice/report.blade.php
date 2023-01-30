@@ -33,6 +33,18 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="form-line">
+                                        <select name="partida_id" id="partida_id" class="form-control select2" required>
+                                            <option value=""disabled selected>Seleccione una partida..</option>
+                                            <option value="TODOp">Todas las partidas</option>
+                                            @foreach ($partida as $item)
+                                                <option value="{{$item->id}}">{{$item->codigo}} {{$item->nombre}}</option>
+                                            @endforeach                                             
+                                        </select>
+                                        <small>Partida</small>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-line">
                                         <select name="direccion_id" id="direccion_id"class="form-control select2" required>
                                             {{-- <option value=""disabled selected>Seleccione una opcion..</option>
                                             @foreach ($sucursal as $item)

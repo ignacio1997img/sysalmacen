@@ -731,6 +731,7 @@ class ReportAlmacenController extends Controller
     public function egressOffice()
     {
         $user = Auth::user();
+        $partida = Partida::where('deleted_at', null)->get();
         $query_filter = 'user_id ='.Auth::user()->id;
         
         if(Auth::user()->hasRole('admin'))
@@ -745,37 +746,57 @@ class ReportAlmacenController extends Controller
                         ->get();    
         // return $sucursal;
 
-        return view('almacenes.report.article.egressOffice.report', compact('sucursal'));
+        return view('almacenes.report.article.egressOffice.report', compact('sucursal', 'partida'));
     }
 
     public function egressOfficeList(Request $request)
     {
-        // dd($request->start);
+            // dd($request);
         $finish = $request->finish;
         $start = $request->start;
         $date = Carbon::now();
         $sucursal = Sucursal::find($request->sucursal_id);
         $message = '';
+        $messagePartida ='';
 
-        // $ok = SolicitudEgreso::all();
-
-        // foreach($ok as $item)
-        // {
-        //     SolicitudEgreso::where('id',$item->id)->update(['direccionadministrativa'=>$this->getUnidad($item->unidadadministrativa)->direccion_id]);
-        // }
-        // return $ok;
+        $query_direccion ='';
+        $query_partida ='';
 
         if($request->unidad_id == 'TODO')
         {
             $message = 'Dirección Administrativa - '.$this->getDireccion($request->direccion_id)->nombre;
-            $data = DB::table('solicitud_egresos as se')
+            $query_direccion = 'se.direccionadministrativa = '. $request->direccion_id;
+        }
+        else      
+        {
+            $message = 'Unidad - '.$this->getUnidad($request->unidad_id)->nombre;
+            $query_direccion = 'se.direccionadministrativa = '. $request->direccion_id.' and se.unidadadministrativa = '. $request->unidad_id;
+        }
+
+        if($request->partida_id == 'TODOp')
+        {
+            $messagePartida = 'Partidas - Todas las Partidas';
+            $query_partida = 1;
+        }
+        else      
+        {
+            $messagePartida = 'Partidas - '.Partida::where('id', $request->partida_id)->first()->codigo.' '.Partida::where('id', $request->partida_id)->first()->nombre;
+            $query_partida = 'a.partida_id = '. $request->partida_id;
+        }
+
+
+
+        $data = DB::table('solicitud_egresos as se')
                         ->join('detalle_egresos as de', 'de.solicitudegreso_id', 'se.id')
                         ->join('detalle_facturas as df', 'df.id', 'de.detallefactura_id')
                         ->join('articles as a', 'df.article_id', 'a.id')
                         ->join('partidas as p', 'p.id', 'a.partida_id')
 
+                        ->whereRaw($query_direccion)
+                        ->whereRaw($query_partida)
+
                         ->where('se.deleted_at', null)
-                        ->where('se.direccionadministrativa', $request->direccion_id)
+                        // ->where('se.direccionadministrativa', $request->direccion_id)
                         ->where('se.fechaegreso', '>=', $request->start)
                         ->where('se.fechaegreso', '<=', $request->finish)
                         ->where('se.sucursal_id', $request->sucursal_id)
@@ -786,41 +807,13 @@ class ReportAlmacenController extends Controller
                         ->orderBy('se.fechaegreso')
                         ->get();
 
-            foreach($data as $item)
-            {
-                $item->unidad = Unit::find($item->unidad)->nombre;
-            }
-        }
-        else      
+        foreach($data as $item)
         {
-            $message = 'Unidad - '.$this->getUnidad($request->unidad_id)->nombre;
-            $data = DB::table('solicitud_egresos as se')
-                        ->join('detalle_egresos as de', 'de.solicitudegreso_id', 'se.id')
-                        ->join('detalle_facturas as df', 'df.id', 'de.detallefactura_id')
-                        ->join('articles as a', 'df.article_id', 'a.id')
-                        ->join('partidas as p', 'p.id', 'a.partida_id')
-
-
-                        ->where('se.deleted_at', null)
-                        ->where('se.unidadadministrativa', $request->unidad_id)
-
-                        ->where('se.fechaegreso', '>=', $request->start)
-                        ->where('se.fechaegreso', '<=', $request->finish)
-                        ->where('se.sucursal_id', $request->sucursal_id)
-
-                        ->where('de.deleted_at', null) 
-
-                        ->select('se.unidadadministrativa as unidad', 'se.fechaegreso', 'a.nombre as articulo', 'p.nombre as partida', 'se.nropedido', 'a.presentacion', 'de.precio', 'de.cantsolicitada', 'de.totalbs')
-                        ->orderBy('se.fechaegreso')
-                        ->get();
-
-            foreach($data as $item)
-            {
-                $item->unidad = Unit::find($item->unidad)->nombre;
-            }
+            $item->unidad = Unit::find($item->unidad)->nombre;
         }
+
         if($request->print==1){
-            return view('almacenes.report.article.egressOffice.print', compact('data', 'sucursal', 'start', 'finish', 'message'));
+            return view('almacenes.report.article.egressOffice.print', compact('data', 'sucursal', 'start', 'finish', 'message', 'messagePartida'));
         }
         if($request->print==2)
         {

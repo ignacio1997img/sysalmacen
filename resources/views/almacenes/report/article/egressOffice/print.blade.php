@@ -14,7 +14,8 @@
                 <h3 style="margin-bottom: 0px; margin-top: 5px">
                     UNIDAD DE ALMACENES MATERIALES Y SUMINISTROS<br>
                     [{{$sucursal->nombre}} - Egreso desde {{date('d/m/Y', strtotime($start))}} Hasta {{date('d/m/Y', strtotime($finish))}}] <br>
-                    {{$message}}
+                    {{$message}} <br>
+                    {{$messagePartida}}
                 </h3>
             </td>
             <td style="text-align: right; width:30%">
