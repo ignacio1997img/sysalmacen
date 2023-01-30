@@ -712,7 +712,6 @@ class ReportAlmacenController extends Controller
                         ->where('df.hist', 0)
                         ->where('f.deleted_at', null)
                         ->where('cp.deleted_at', null)
-                        ->where('cp.unidadadministrativa', $request->unidad_id)
                         ->whereRaw($query_direccion)
                         ->whereRaw($query_partida)
                         ->where('cp.fechaingreso', '>=', $request->start)
