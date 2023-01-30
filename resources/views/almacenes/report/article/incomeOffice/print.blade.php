@@ -14,7 +14,8 @@
                 <h3 style="margin-bottom: 0px; margin-top: 5px">
                     UNIDAD DE ALMACENES MATERIALES Y SUMINISTROS<br>
                     [{{$sucursal->nombre}} - Ingreso desde {{date('d/m/Y', strtotime($start))}} Hasta {{date('d/m/Y', strtotime($finish))}}] <br>
-                    {{$message}}
+                    {{$message}} <br>
+                    {{$messagePartida}}
                     {{-- [{{date('d/m/Y', strtotime($start))}} Hasta {{date('d/m/Y', strtotime($finish))}}] --}}
                 </h3>
             </td>
@@ -68,7 +69,7 @@
                 @endphp
             @empty
                 <tr style="text-align: center">
-                    <td colspan="6">No se encontraron registros.</td>
+                    <td colspan="10">No se encontraron registros.</td>
                 </tr>
             @endforelse
             <tr>

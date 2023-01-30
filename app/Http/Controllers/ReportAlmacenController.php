@@ -623,63 +623,87 @@ class ReportAlmacenController extends Controller
         $start = $request->start;
         $date = Carbon::now();
         $sucursal = Sucursal::find($request->sucursal_id);
+
         $message = '';
+        $messagePartida ='';
+
+        $query_direccion ='';
+        $query_partida ='';
+
+        // if($request->unidad_id == 'TODO')
+        // {
+        //     $message = 'Dirección Administrativa - '.$this->getDireccion($request->direccion_id)->nombre;
+        //     $data = DB::table('solicitud_compras as cp')
+        //                 ->join('facturas as f', 'f.solicitudcompra_id', 'cp.id')
+        //                 ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
+        //                 ->join('articles as a', 'df.article_id', 'a.id')
+        //                 ->join('partidas as p', 'p.id', 'a.partida_id')
+        //                 ->where('df.deleted_at', null)
+        //                 ->where('df.hist', 0)
+        //                 ->where('f.deleted_at', null)
+        //                 ->where('cp.deleted_at', null)
+        //                 ->where('cp.direccionadministrativa', $request->direccion_id)
+        //                 ->where('cp.fechaingreso', '>=', $request->start)
+        //                 ->where('cp.fechaingreso', '<=', $request->finish)
+
+        //                 ->where('cp.sucursal_id', $request->sucursal_id)
+
+        //                 ->select('cp.unidadadministrativa as unidad','cp.fechaingreso',  'a.nombre as articulo', 'p.nombre as partida', 'nrosolicitud', 'a.presentacion', 'df.precio', 'df.cantsolicitada', 'df.totalbs')
+        //                 // ->orderBy('u.id')
+        //                 ->orderBy('cp.fechaingreso')
+        //                 ->get();
+        //     foreach($data as $item)
+        //     {
+        //         $item->unidad = Unit::find($item->unidad)->nombre;
+        //     }
+        // }
+        // else      
+        // {
+        //     $message = 'Unidad - '.$this->getUnidad($request->unidad_id)->nombre;
+        //     $data = DB::table('solicitud_compras as cp')
+        //                 ->join('facturas as f', 'f.solicitudcompra_id', 'cp.id')
+        //                 ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
+        //                 ->join('articles as a', 'df.article_id', 'a.id')
+        //                 ->join('partidas as p', 'p.id', 'a.partida_id')
+        //                 ->where('df.deleted_at', null)
+        //                 ->where('df.hist', 0)
+        //                 ->where('f.deleted_at', null)
+        //                 ->where('cp.deleted_at', null)
+        //                 ->where('cp.unidadadministrativa', $request->unidad_id)
+        //                 ->where('cp.fechaingreso', '>=', $request->start)
+        //                 ->where('cp.fechaingreso', '<=', $request->finish)
+        //                 ->where('cp.sucursal_id', $request->sucursal_id)
+
+        //                 ->select('cp.unidadadministrativa as unidad','cp.fechaingreso',  'a.nombre as articulo', 'p.nombre as partida', 'nrosolicitud', 'a.presentacion', 'df.precio', 'df.cantsolicitada', 'df.totalbs')
+        //                 // ->orderBy('u.id')
+        //                 ->orderBy('cp.fechaingreso')
+        //                 ->get();
+        // }
 
         if($request->unidad_id == 'TODO')
         {
             $message = 'Dirección Administrativa - '.$this->getDireccion($request->direccion_id)->nombre;
-            $data = DB::table('solicitud_compras as cp')
-                        ->join('facturas as f', 'f.solicitudcompra_id', 'cp.id')
-                        ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
-                        ->join('articles as a', 'df.article_id', 'a.id')
-                        ->join('partidas as p', 'p.id', 'a.partida_id')
-                        ->where('df.deleted_at', null)
-                        ->where('df.hist', 0)
-                        ->where('f.deleted_at', null)
-                        ->where('cp.deleted_at', null)
-                        ->where('cp.direccionadministrativa', $request->direccion_id)
-                        ->where('cp.fechaingreso', '>=', $request->start)
-                        ->where('cp.fechaingreso', '<=', $request->finish)
-
-                        ->where('cp.sucursal_id', $request->sucursal_id)
-
-                        ->select('cp.unidadadministrativa as unidad','cp.fechaingreso',  'a.nombre as articulo', 'p.nombre as partida', 'nrosolicitud', 'a.presentacion', 'df.precio', 'df.cantsolicitada', 'df.totalbs')
-                        // ->orderBy('u.id')
-                        ->orderBy('cp.fechaingreso')
-                        ->get();
-            foreach($data as $item)
-            {
-                $item->unidad = Unit::find($item->unidad)->nombre;
-            }
-
-
-           
-
-            // $datas = DB::connection('mamore')->table('unidades as u')
-            //             ->join('sysalmacen.solicitud_compras as cp', 'cp.unidadadministrativa', 'u.id')
-            //             ->join('sysalmacen.facturas as f', 'f.solicitudcompra_id', 'cp.id')
-            //             ->join('sysalmacen.detalle_facturas as df', 'df.factura_id', 'f.id')
-            //             ->join('sysalmacen.articles as a', 'df.article_id', 'a.id')
-            //             ->join('sysalmacen.partidas as p', 'p.id', 'a.partida_id')
-            //             ->where('df.deleted_at', null)
-            //             ->where('df.hist', 0)
-            //             ->where('f.deleted_at', null)
-            //             ->where('cp.deleted_at', null)
-            //             ->where('u.direccion_id', $request->direccion_id)
-            //             ->where('cp.fechaingreso', '>=', $request->start)
-            //             ->where('cp.fechaingreso', '<=', $request->finish)
-
-            //             ->where('cp.sucursal_id', $request->sucursal_id)
-
-            //             ->select('u.nombre as unidad','cp.fechaingreso',  'a.nombre as articulo', 'p.nombre as partida', 'nrosolicitud', 'a.presentacion', 'df.precio', 'df.cantsolicitada', 'df.totalbs')
-            //             ->orderBy('u.id')
-            //             ->orderBy('cp.fechaingreso')
-            //             ->get();
+            $query_direccion = 'cp.direccionadministrativa = '. $request->direccion_id;
         }
         else      
         {
             $message = 'Unidad - '.$this->getUnidad($request->unidad_id)->nombre;
-            $data = DB::table('solicitud_compras as cp')
+            $query_direccion = 'cp.direccionadministrativa = '. $request->direccion_id.' and cp.unidadadministrativa = '. $request->unidad_id;
+        }
+
+        if($request->partida_id == 'TODOp')
+        {
+            $messagePartida = 'Partidas - Todas las Partidas';
+            $query_partida = 1;
+        }
+        else      
+        {
+            $messagePartida = 'Partidas - '.Partida::where('id', $request->partida_id)->first()->codigo.' '.Partida::where('id', $request->partida_id)->first()->nombre;
+            $query_partida = 'a.partida_id = '. $request->partida_id;
+        }
+
+
+        $data = DB::table('solicitud_compras as cp')
                         ->join('facturas as f', 'f.solicitudcompra_id', 'cp.id')
                         ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
                         ->join('articles as a', 'df.article_id', 'a.id')
@@ -689,6 +713,8 @@ class ReportAlmacenController extends Controller
                         ->where('f.deleted_at', null)
                         ->where('cp.deleted_at', null)
                         ->where('cp.unidadadministrativa', $request->unidad_id)
+                        ->whereRaw($query_direccion)
+                        ->whereRaw($query_partida)
                         ->where('cp.fechaingreso', '>=', $request->start)
                         ->where('cp.fechaingreso', '<=', $request->finish)
                         ->where('cp.sucursal_id', $request->sucursal_id)
@@ -698,13 +724,13 @@ class ReportAlmacenController extends Controller
                         ->orderBy('cp.fechaingreso')
                         ->get();
 
-            foreach($data as $item)
-            {
-                $item->unidad = Unit::find($item->unidad)->nombre;
-            }
+        foreach($data as $item)
+        {
+            $item->unidad = Unit::find($item->unidad)->nombre;
         }
+
         if($request->print==1){
-            return view('almacenes.report.article.incomeOffice.print', compact('data', 'sucursal',  'message', 'finish', 'start'));
+            return view('almacenes.report.article.incomeOffice.print', compact('data', 'sucursal',  'message', 'messagePartida', 'finish', 'start'));
         }
         if($request->print==2)
         {
