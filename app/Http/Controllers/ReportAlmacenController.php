@@ -601,7 +601,7 @@ class ReportAlmacenController extends Controller
     {
         $user = Auth::user();
         $query_filter = 'user_id ='.Auth::user()->id;
-        
+        $partida = Partida::where('deleted_at', null)->get();        
         if(Auth::user()->hasRole('admin'))
         {
             $query_filter = 1;
@@ -613,7 +613,7 @@ class ReportAlmacenController extends Controller
                         ->GroupBy('sucursal_id')
                         ->get();    
 
-        return view('almacenes.report.article.incomeOffice.report', compact('sucursal'));
+        return view('almacenes.report.article.incomeOffice.report', compact('sucursal', 'partida'));
     }
 
     public function incomeOfficeList(Request $request)
