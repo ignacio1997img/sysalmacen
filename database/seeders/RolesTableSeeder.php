@@ -53,6 +53,22 @@ class RolesTableSeeder extends Seeder
             ])->save();
         }
 
+        // Rol para aprobra las solicitudes de pedido 
+        $role = Role::firstOrNew(['name' => 'almacen_aprobar_solicitudes']);
+        if (!$role->exists) {
+            $role->fill([
+                'display_name' => __('Almacen - Responsable de Aprobar Solicitudes'),
+            ])->save();
+        }
+
+        // Rol para las unidades y direcciones solicitnates de pedidos
+        $role = Role::firstOrNew(['name' => 'almacen_aprobar_solicitudes']);
+        if (!$role->exists) {
+            $role->fill([
+                'display_name' => __('Almacen - Responsable de Aprobar Solicitudes'),
+            ])->save();
+        }
+
         $role = Role::firstOrNew(['name' => 'almacen_subadmin']);
         if (!$role->exists) {
             $role->fill([

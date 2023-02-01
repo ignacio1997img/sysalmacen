@@ -194,6 +194,8 @@ Route::group(['prefix' => 'admin'], function () {
 
 
 
+        //bandeja
+    Route::resource('inbox', BandejaController::class);
 
 
     // Route::get('egresos/browse/pendiente/view/{id?}', [EgressController::class, 'view_pendiente'])->name('egres_view_pendiente');
