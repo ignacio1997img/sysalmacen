@@ -449,6 +449,7 @@ class EgressController extends Controller
 
     public function update(Request $request)
     {
+        // return $request;
         if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
         {
             Auth::logout();
@@ -459,22 +460,19 @@ class EgressController extends Controller
         DB::beginTransaction();
         try {
             $egreso = SolicitudEgreso::find($request->id);
-            
-            // return $egreso;
+
             $egreso->update(['sucursal_id'=>$request->branchoffice_id, 'unidadadministrativa'=>$request->unidadadministrativa, 'direccionadministrativa'=>$request->direccionadministrativa,
                 'nropedido'=>$request->nropedido, 'fechasolicitud'=>$request->fechasolicitud, 'fechaegreso'=>$request->fechaegreso
             ]);
-            // return $egreso;
 
-            // DetalleEgreso::where('solicitudegreso_id',$egreso->id)->update(['deleted_at'=>Carbon::now()]);
             $detalle = DetalleEgreso::where('solicitudegreso_id', $egreso->id)->where('deleted_at', null)->get();
+            // return $detalle;
      
             $i=0;
             while($i < count($detalle))
             {
                 DetalleFactura::where('id', $detalle[$i]->detallefactura_id)->where('hist', 0)->increment('cantrestante', $detalle[$i]->cantsolicitada);
 
-                // $aux = DetalleFactura::find($detalle[$i]->detallefactura_id);
                 $aux = DetalleFactura::where('id', $detalle[$i]->detallefactura_id)->where('hist', 0)->first();
 
                 $df = DetalleFactura::where('factura_id',$aux->factura_id)->where('hist', 0)->where('deleted_at', null)->get();

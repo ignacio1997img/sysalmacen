@@ -67,7 +67,7 @@
     
 
 </style>
-@if(auth()->user()->hasPermission('edit_income'))
+@if(auth()->user()->hasPermission('edit_egres'))
     @section('page_header')
         
         <div class="container-fluid">
