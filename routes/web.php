@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Http\Request;
 
 use App\Http\Controllers\ArticleController;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,7 @@ use App\Http\Controllers\PeopleExtController;
 use App\Http\Controllers\ReportAlmacenController;
 use App\Models\Article;
 use App\Models\Provider;
+use App\Models\SolicitudOutbox;
 use App\Models\Sucursal;
 
 /*
@@ -51,12 +53,15 @@ Route::get('/maintenance', [MaintenanceController::class , 'maintenance'])->name
 
 
 
-Route::group(['prefix' => 'admin'], function () {
+Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Voyager::routes();
 
     Route::resource('usuario', UserController::class);
     Route::post('usuarios/desactivar', [UserController::class, 'desactivar'])->name('almacen_desactivar');
     Route::post('usuarios/activar', [UserController::class, 'activar'])->name('almacen_activar');
+
+    // :::::::::::::::::::::::::::::     PARA LAS SOLICITUDES  DE LOS PRODECTOS O ARTICULOS       ::::::::::::::::::::::::::::::::::::::::::
+    Route::resource('outbox',SolicitudOutbox::class);
 
     
     //........................  INCOME

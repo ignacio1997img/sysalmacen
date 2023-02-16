@@ -19,7 +19,10 @@ class CreateSolicitudEgresosTable extends Migration
             $table->foreignId('inventarioAlmacen_id')->nullable()->constrained('inventario_almacens');
 
             $table->integer('unidadadministrativa')->nullable();
+            $table->integer('direccionadministrativa')->nullable();
             $table->foreignId('registeruser_id')->nullable()->constrained('users');
+
+
 
 
             $table->string('nropedido')->nullable();
