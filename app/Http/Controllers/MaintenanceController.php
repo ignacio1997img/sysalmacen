@@ -10,4 +10,9 @@ class MaintenanceController extends Controller
     {
         return view('errors.maintenance');
     }
+
+    public function error()
+    {
+        return view('errors.error');
+    }
 }

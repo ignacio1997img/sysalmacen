@@ -18,9 +18,9 @@
 
                         {{-- <a href="{{ url('/') }}"></a> --}}
 
-                        <a href="https://wa.me/59167285914?text=Hola Ingeniero, tengo problema con mi usuario" target="_blank" title="contactar" >
+                        {{-- <a href="https://wa.me/59167285914?text=Hola Ingeniero, tengo problema con mi usuario" target="_blank" title="contactar" >
                                 <i class="fa-brands fa-whatsapp"></i> <span>Contactar al administrador</span>
-                        </a>
+                        </a> --}}
                 </div>
                 </div>
         </body>
@@ -34,9 +34,9 @@
                         font-weight: bold;
                 }
 
-                span{
+                /* span{
                         font-weight: bold;
-                }
+                } */
                 .lead{font-size: 32px;
                         color: rgb(12, 12, 12);
                         

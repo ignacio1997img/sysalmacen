@@ -50,6 +50,7 @@ Route::get('/', function () {
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('logins');
 
 Route::get('/maintenance', [MaintenanceController::class , 'maintenance'])->name('maintenance');
+Route::get('/error', [MaintenanceController::class , 'error'])->name('error');
 
 
 

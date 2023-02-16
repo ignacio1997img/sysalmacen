@@ -7,6 +7,8 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Sucursal;
+use App\Models\SucursalUser;
 
 class Loggin
 {
@@ -20,11 +22,25 @@ class Loggin
     
     public function handle(Request $request, Closure $next)
     {
-        // try {
-        //     if(env('APP_DEV') && Auth::user()->role_id != 1){
-        //         return redirect('/admin/notice');
-        //     }
-        // } catch (\Throwable $th) {}
+        try {
+            if(setting('configuracion.maintenance') && !auth()->user()->hasRole('admin')){
+                // Auth::logout();
+                return redirect()->route('maintenance');
+            }
+
+            $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
+        
+            if(!$sucursal && !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
+            {
+                return redirect()->route('error');
+            }
+
+
+
+        } catch (\Throwable $th) {}
+
+
+
 
         // Evitar que registre cuando el usuario ingrese a la lista de logs
         if (!str_contains(request()->url(), 'admin/compass')) {
