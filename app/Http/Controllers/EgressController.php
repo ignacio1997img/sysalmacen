@@ -19,6 +19,7 @@ use Illuminate\Support\Carbon;
 use App\Models\DonacionArticulo;
 use App\Models\SucursalUser;
 use App\Models\InventarioAlmacen;
+use App\Models\SolicitudPedido;
 
 class EgressController extends Controller
 {
@@ -134,13 +135,14 @@ class EgressController extends Controller
     }
 
 
-    public function list($search = null){
+    public function list($type,$search = null){
+        // return $type;
+        $paginate = request('paginate') ?? 10;
         $user = Auth::user();
 
         $sucursal = SucursalUser::where('user_id', $user->id)->where('condicion', 1)->where('deleted_at', null)->first();
-        // $gestion = InventarioAlmacen::where('status', 1)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
+        
         $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->sucursal_id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
-        // dd($gestion);
 
         $query_filter = 'sucursal_id = '.$sucursal->sucursal_id;
         
@@ -150,125 +152,39 @@ class EgressController extends Controller
         }
 
         
-        $paginate = request('paginate') ?? 10;
         
-        $data = SolicitudEgreso::with(['sucursal', 'unidad', 'direccion'])
+        if($type == 'egreso')
+        {
+            $data = SolicitudEgreso::with(['sucursal', 'unidad', 'direccion'])
             ->where('deleted_at', NULL)
             ->whereRaw($query_filter)
             ->orderBy('id', 'DESC')->paginate($paginate);
+            return view('almacenes.egress.listEgreso', compact('data', 'gestion'));
 
-        // dd($data);
+        }
+        else
+        {
+            $data =  SolicitudPedido::with(['solicitudDetalle'])
+                ->where(function($query) use ($search){
+                    if($search){
+                        $query->OrWhereRaw($search ? "gestion like '%$search%'" : 1)
+                        ->OrWhereRaw($search ? "nropedido like '%$search%'" : 1)
+                        ->OrWhereRaw($search ? "id like '%$search%'" : 1)
+                        ->OrWhereRaw($search ? "unidad_name like '%$search%'" : 1)
+                        ->OrWhereRaw($search ? "direccion_name like '%$search%'" : 1);
+                    }
+                })
+                ->where('deleted_at', NULL)
+                ->whereRaw('(status = "Aprobado" or status = "Entregado")')
+                ->whereRaw($query_filter)
+                ->orderBy('id', 'DESC')->paginate($paginate);
+
+            return view('almacenes.egress.listSolicitud', compact('data', 'gestion'));
+        }
         
       
 
-        return view('almacenes.egress.list', compact('data', 'gestion'));
     }
-
-    // public function view_pendiente($id)
-    // {
-    //     $solicitud =  Solicitud::find($id);
-
-    //     $unidad = DB::connection('mysqlgobe')->table('unidadadminstrativa')
-    //             ->select('Nombre')
-    //             ->where('id', $solicitud->unidadadministrativa)
-    //             ->get();
-    //     // return $unidad;
-
-    //     $detalle = DB::table('solicitud_detalles as sd')
-    //             ->join('detalle_facturas as df', 'df.id', 'sd.detallefactura_id')
-    //             ->join('articles as a', 'a.id', 'df.article_id')
-    //             ->join('partidas as p', 'p.id', 'a.partida_id')
-    //             ->select('p.codigo', 'a.nombre', 'a.presentacion', 'sd.cantidad','sd.cantidadentregar')
-    //             ->where('sd.solicitud_id', $solicitud->id)
-    //             ->get();
-
-    //     $derivacion = SolicitudDerivada::where('solicitud_id', $solicitud->id)->get();
-    //     // return $derivacion;
-
-
-    //     return view('egress.viewegresopendiente', compact('solicitud', 'unidad', 'detalle', 'derivacion'));
-    //     // return view('egress.viewegresopendiente');
-    // }
-
-    // public function store_egreso_pendiente(Request $request)
-    // {
-    //     // return $request;
-
-    //     DB::beginTransaction();
-    //     try {
-
-    //         $ok = SolicitudDetalle::where('solicitud_id', $request->solicitud_id)->get();
-            
-    //         $aux = true;
-    //         foreach($ok as $data)
-    //         {
-    //             $def = DetalleFactura::find($data->detallefactura_id);
-                
-    //             if($data->cantidadentregar > $def->cantrestante)
-    //             {
-    //                 // return DetalleFactura::find($data->detallefactura_id);
-    //                 $aux=false;
-    //                 $df = DetalleFactura::find($data->detallefactura_id);
-    //                 $articulo = Article::find($df->article_id);
-    //                 // return $articulo;
-    //                 return redirect()->route('egres.index')->with(['message' => 'La cantidad que intenta sacar es mayor a la cantidad de Stock de '. $articulo->nombre.' que tiene disponible el almacen.', 'alert-type' => 'error']);
-    //             }
-    //         }
-
-    //         if($aux == true)
-    //         {
-    //             $user = Auth::user();
-    //             $funcionarios = DB::connection('mysqlgobe')->table('contribuyente as co')                            
-    //                 ->join('contratos as c', 'c.idContribuyente', 'co.N_Carnet')     
-    //                 ->join('unidadadminstrativa as u', 'u.ID', 'c.idDependencia') 
-    //                 ->join('cargo as ca', 'ca.ID', 'c.idCargo')
-    //                 ->select('c.ID','c.idContribuyente', 'c.nombre AS nombrecontribuyente', 'ca.Descripcion as cargo', 'u.Nombre as unidad', 'c.Estado')
-    //                 ->where('c.Estado', 1)
-    //                 ->where('c.ID',$user->funcionario_id)
-    //                 ->get();
-
-    //             SolicitudDerivada::where('solicitud_id', $request->solicitud_id)->update(['atendido' => 1]);
-    //             Solicitud::where('id', $request->solicitud_id)->update(['estado' => 'Entregado', 'atendidopor'=> $funcionarios[0]->nombrecontribuyente.' - '.$funcionarios[0]->cargo]);
-
-    //             $detalle = SolicitudDetalle::where('solicitud_id', $request->solicitud_id)->get();
-                
-            
-    //             foreach($detalle as $data)
-    //             {
-    //                 DetalleFactura::where('id',$data->detallefactura_id)->decrement('cantrestante', $data->cantidadentregar);
-
-    //                 $d = DetalleFactura::find($data->detallefactura_id);
-    //                 if($d->cantrestante == 0)
-    //                 {
-    //                     DetalleFactura::where('id',$data->detallefactura_id)->update(['condicion'=>0]);
-    //                 }
-
-    //                 $detalle = DetalleFactura::find($data->detallefactura_id);
-    //                 $factura = Factura::find($detalle->factura_id);
-    //                 SolicitudCompra::where('id',$factura->solicitudcompra_id)->update(['condicion' => 0]);
-
-    //             }              
-
-
-    //             DB::commit();
-    //             return redirect()->route('egres.index')->with(['message' => 'Registrado exitosamente.', 'alert-type' => 'success']);
-    //         }
-    //         else
-    //         {
-    //             return redirect()->route('egres.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
-    //         }
-
-    //     } catch (\Throwable $th) {
-    //         DB::rollBack();
-    //         return redirect()->route('egres.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
-    //     }
-    // }
-
-
-
-
-
-
 
 
     // en mantenimineto los metodos
@@ -292,19 +208,8 @@ class EgressController extends Controller
             return "Contactese con el administrador";
         }
 
-        // $user = Auth::user();
-        // $sucursales = Sucursal::join('sucursal_users as u','u.sucursal_id', 'sucursals.id')
-        //             ->select('sucursals.id','sucursals.nombre','u.condicion')
-        //             ->where('u.condicion',1)
-        //             ->where('u.user_id', $user->id)
-        //             ->get();
-
-        // $da = $this->getdireccion(); 
-        // return $sucursal;
         $da = $this->direccionSucursal($sucursal->sucursal_id);
-        // return $da;
         $sucursal = Sucursal::where('id', $sucursal->sucursal_id)->first();
-        // return $sucursal;
 
 
         return view('almacenes.egress.add', compact('sucursal', 'da', 'gestion'));
@@ -763,6 +668,125 @@ class EgressController extends Controller
         
         return view('almacenes.egress.report', compact('sol', 'unidad', 'detalle'));
     }
+
+
+    
+    // ###################################################################################################################################################
+    // ###################################################################################################################################################
+    // ###################################################################################################################################################
+    // ################################################################    SOLICITUD    ##################################################################
+    // ###################################################################################################################################################
+    // ###################################################################################################################################################
+    // ###################################################################################################################################################
+
+    public function showSolicitud($id)
+    {
+        // $data = DB::table('solicitud_compras as s')
+        //     ->join('facturas as f', 'f.solicitudcompra_id', 's.id')
+        //     ->join('detalle_facturas as d', 'd.factura_id', 'f.id')
+        //     ->join('articles as a', 'a.id', 'd.article_id')
+        //     ->where('s.stock', 1)
+        //     ->where('s.deleted_at', null)
+        //     // ->where('s.unidadadministrativa', 12)
+
+        //     ->where('f.deleted_at', null)
+
+        //     ->where('d.deleted_at', null)
+        //     ->where('d.cantrestante', '>', 0)
+        //     ->where('d.condicion', 1)
+        //     ->where('d.hist', 0)
+
+        //     ->where('a.id', 98)
+
+        //     ->select('s.id as solicitud_id', 's.nrosolicitud', 'f.id as factura_id', 'a.id as article_id', 'a.nombre as article', 'd.precio', 'd.cantrestante as cantidad')
+        //     // ->groupBy('article_id')
+        //     // ->orderBy('article')
+        //     ->get();
+        //     return $data;
+        $data = SolicitudPedido::with('solicitudDetalle', 'sucursal')
+            ->where('deleted_at', null)
+            ->where('id', $id)
+            ->first();
+        // return $data;
+        // SolicitudPedido::where('id', $id)->update(['visto'=>Carbon::now()]);
+        return view('almacenes.egress.readSolicitud', compact('data'));
+    }
+
+    // Para obtener todos los articulos comprado o ingresado por la unidad
+    public function ajax_unidad($unidad, $article)
+    {
+        // return $article;
+        $data = DB::table('solicitud_compras as s')
+            ->join('facturas as f', 'f.solicitudcompra_id', 's.id')
+            ->join('detalle_facturas as d', 'd.factura_id', 'f.id')
+            ->join('articles as a', 'a.id', 'd.article_id')
+            ->where('s.stock', 1)
+            ->where('s.deleted_at', null)
+            ->where('s.unidadadministrativa', $unidad)
+
+            ->where('f.deleted_at', null)
+
+            ->where('d.deleted_at', null)
+            ->where('d.cantrestante', '>', 0)
+            ->where('d.condicion', 1)
+            ->where('d.hist', 0)
+
+            ->where('a.id', $article)
+
+            ->select('s.id as solicitud_id', 's.nrosolicitud', 'f.id as factura_id', 'a.id as article_id', 'a.nombre as article', 'd.precio', 'd.cantrestante as cantidad')
+            // ->groupBy('article_id')
+            ->orderBy('s.id')
+            ->get();
+
+        return $data;
+    }
+
+    public function entregarSolicitud(Request $request)
+    {
+        return $request;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

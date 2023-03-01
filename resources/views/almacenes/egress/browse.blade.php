@@ -39,6 +39,14 @@
                             <div class="col-sm-2">
                                 <input type="text" id="input-search" class="form-control">
                             </div>
+                            <div class="col-sm-12 text-right">
+                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="solicitud">Solicitudes 
+
+                                </label>
+                             
+                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="egreso" checked>Egreso Almacen</label>
+                                                                
+                            </div>
                         </div>
                         <div class="row" id="div-results" style="min-height: 120px"></div>
                     </div>
@@ -141,7 +149,10 @@
         var countPage = 10, order = 'id', typeOrder = 'desc';
         $(document).ready(() => {
             list();
-            
+            $('.radio-type').click(function(){
+                list();
+            });
+
             $('#input-search').on('keyup', function(e){
                 if(e.keyCode == 13) {
                     list();
@@ -160,13 +171,13 @@
             var loader = '<div class="col-md-12 bg"><div class="loader" id="loader-3"></div></div>'
             $('#div-results').html(loader);
 
-            // let type = $(".radio-type:checked").val();
+            let type = $(".radio-type:checked").val();
 
             let url = '{{ url("admin/egres/ajax/list") }}';
             let search = $('#input-search').val() ? $('#input-search').val() : '';
 
             $.ajax({
-                url: `${url}/${search}?paginate=${countPage}&page=${page}`,
+                url: `${url}/${type}/${search}?paginate=${countPage}&page=${page}`,
 
                 type: 'get',
                 

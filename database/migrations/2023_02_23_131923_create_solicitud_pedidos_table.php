@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSolicitudOutboxesTable extends Migration
+class CreateSolicitudPedidosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateSolicitudOutboxesTable extends Migration
      */
     public function up()
     {
-        Schema::create('solicitud_outboxes', function (Blueprint $table) {
+        Schema::create('solicitud_pedidos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('sucursal_id')->nullable()->constrained('sucursals');
             $table->date('fechasolicitud');
@@ -22,20 +22,33 @@ class CreateSolicitudOutboxesTable extends Migration
 
             $table->integer('people_id')->nullable();
             $table->string('first_name')->nullable();
-            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
             $table->string('job')->nullable();
             $table->string('direccion_name')->nullable();
             $table->integer('direccion_id')->nullable();
-            $table->string('direccion_name')->nullable();
+            $table->string('unidad_name')->nullable();
             $table->integer('unidad_id')->nullable();
+            $table->dateTime('visto')->nullable();
 
             
-            $table->smallInteger('status')->default('Pendiente');
+            $table->string('status')->default('Pendiente');
             $table->foreignId('registerUser_Id')->nullable()->constrained('users');
             $table->timestamps();
+
+            //aprobado
+            $table->foreignId('aprobadoUser_id')->nullable()->constrained('users');
+            $table->dateTime('aprobadoDate')->nullable();
+
+            //Entregado por
+            $table->foreignId('entregadoUser_id')->nullable()->constrained('users');
+            $table->dateTime('entregadoDate')->nullable();
+
+            //rechazado por
+            $table->foreignId('rechazadoUser_id')->nullable()->constrained('users');
+            $table->dateTime('rechazadoDate')->nullable();
+            
             $table->softDeletes();
             $table->foreignId('deletedUser_Id')->nullable()->constrained('users');
-
         });
     }
 
@@ -46,6 +59,6 @@ class CreateSolicitudOutboxesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('solicitud_outboxes');
+        Schema::dropIfExists('solicitud_pedidos');
     }
 }

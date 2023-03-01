@@ -123,6 +123,12 @@ class SucursalController extends Controller
     {
         // return $request;
         DB::beginTransaction();
+
+        $ok = SucursalUnidadPrincipal::where('deleted_at', null)->where('sucursal_id', $request->sucursal_id)->first();
+        if($ok)
+        {
+            return redirect()->route('sucursal-da.index',['sucursal'=>$request->sucursal_id])->with(['message' => 'Ya cuenta con un almacen principal.', 'alert-type' => 'error']);
+        }
         try {
             SucursalUnidadPrincipal::create([
                 'sucursal_id' => $request->sucursal_id,

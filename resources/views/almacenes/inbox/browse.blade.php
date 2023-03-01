@@ -1,6 +1,6 @@
 @extends('voyager::master')
 
-@section('page_title', 'Viendo Solicitudes de Pedidos')
+@section('page_title', 'Viendo Solicitudes de los pedido por aprobar')
 
 {{-- @if(auth()->user()->hasRole('browse_egres')) --}}
     @section('page_header')
@@ -8,7 +8,7 @@
             <div class="row">
                 <!-- <div class="c"> -->
                     <h1 id="subtitle" class="page-title">
-                        <i class="fa-solid fa-file"></i> Solicitudes
+                        <i class="fa-solid fa-bag-shopping"></i> Pedidos
                     </h1>
                 {{-- @if(auth()->user()->hasPermission('add_egres')) --}}
                     <a href="{{ route('outbox.create') }}" class="btn btn-success btn-add-new">
@@ -39,6 +39,16 @@
                             <div class="col-sm-2">
                                 <input type="text" id="input-search" class="form-control">
                             </div>
+                            <div class="col-sm-12 text-right">
+                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="todo">Todos</label>
+                             
+                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="constock" checked>Pendiente</label>
+
+                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="sinstock">Aprobado</label>
+                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="sinstock">Entregado</label>
+                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="sinstock">Rechazado</label>
+                                                                
+                            </div>
                         </div>
                         <div class="row" id="div-results" style="min-height: 120px"></div>
                     </div>
@@ -47,62 +57,8 @@
         </div>
     </div>
 
-    <div class="modal modal-success fade" tabindex="-1" id="myModalEnviar" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                {!! Form::open(['route' => 'outbox.enviar', 'method' => 'post']) !!}
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title"><i class="fa-solid fa-file"></i> Solicitud Pedido</h4>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" name="id" id="id">
 
-                    <div class="text-center" style="text-transform:uppercase">
-                        <i class="fa-solid fa-file" style="color: rgb(134, 127, 127); font-size: 5em;"></i>
-                        <br>
-                        
-                        <p><b>Desea enviar la solicitud de pedidos?</b></p>
-                    </div>
-                </div>                
-                <div class="modal-footer">
-                    
-                        <input type="submit" class="btn btn-success pull-right delete-confirm" value="Sí, enviar">
-                    
-                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
-                </div>
-                {!! Form::close()!!} 
-            </div>
-        </div>
-    </div>
-    <div class="modal modal-danger fade" tabindex="-1" id="myModalEliminar" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                {!! Form::open(['route' => 'egres_delete', 'method' => 'DELETE']) !!}
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title"><i class="voyager-trash"></i> Desea eliminar el siguiente ingreso?</h4>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" name="id" id="id">
 
-                    <div class="text-center" style="text-transform:uppercase">
-                        <i class="voyager-trash" style="color: red; font-size: 5em;"></i>
-                        <br>
-                        
-                        <p><b>Desea eliminar el siguiente registro?</b></p>
-                    </div>
-                </div>                
-                <div class="modal-footer">
-                    
-                        <input type="submit" class="btn btn-danger pull-right delete-confirm" value="Sí, eliminar">
-                    
-                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
-                </div>
-                {!! Form::close()!!} 
-            </div>
-        </div>
-    </div>
   
 
 @stop
@@ -191,7 +147,7 @@
 
             // let type = $(".radio-type:checked").val();
 
-            let url = '{{ url("admin/outbox/ajax/list") }}';
+            let url = '{{ url("admin/inbox/ajax/list") }}';
             let search = $('#input-search').val() ? $('#input-search').val() : '';
 
             $.ajax({
@@ -205,25 +161,7 @@
 
         }
 
-        $('#myModalEnviar').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget)
-
-            var id = button.data('id')
-
-            var modal = $(this)
-            modal.find('.modal-body #id').val(id)
-                
-        });
-
-        $('#myModalEliminar').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget)
-
-            var id = button.data('id')
-
-            var modal = $(this)
-            modal.find('.modal-body #id').val(id)
-                
-        });
+        
         
        
     </script>

@@ -86,4 +86,42 @@ class Controller extends BaseController
 
 
 
+    // PARA OBTENER LA INFORMACION DE CADA PERSONA CON SU CARGO
+    //obtencioin de los funcionarios en la BD mamore
+    public function getPeople($id)
+    {        
+        $funcionario = 'null';
+        $funcionario = DB::connection('mamore')->table('people as p')
+            ->leftJoin('contracts as c', 'p.id', 'c.person_id')
+            // ->leftJoin('contracts as c', 'p.id', 'c.person_id')
+            ->leftJoin('direcciones as d', 'd.id', 'c.direccion_administrativa_id')
+            ->leftJoin('unidades as u', 'u.id', 'c.unidad_administrativa_id')
+            ->leftJoin('jobs as j', 'j.id', 'c.job_id')
+            ->where('c.status', 'firmado')
+            ->where('c.deleted_at', null)
+            ->where('p.id', $id)
+            ->where('p.deleted_at', null)
+            ->select('p.id as id_funcionario', 'p.ci as N_Carnet', 'c.cargo_id', 'c.job_id', 'j.name as cargo',
+                DB::raw("CONCAT(p.first_name, ' ', p.last_name) as nombre"), 'p.first_name', 'p.last_name', 'c.direccion_administrativa_id as id_direccion', 'd.nombre as direccion',
+                    'c.unidad_administrativa_id as id_unidad', 'u.nombre as unidad')
+            ->first();
+
+        if($funcionario && $funcionario->cargo_id != NULL)
+        {
+            $cargo = DB::connection('mysqlgobe')->table('cargo')
+                ->where('id',$funcionario->cargo_id)
+                ->select('*')
+                ->first();
+    
+            // $funcionario->cargo=$cargo->Descripcion;
+        }
+        if(!$funcionario)
+        {
+            return "Error";
+        }
+        return $funcionario;
+    }
+
+
+
 }

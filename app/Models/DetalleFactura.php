@@ -20,4 +20,9 @@ class DetalleFactura extends Model
     {
       return $this->belongsTo(Factura::class,'factura_id');
     }
+
+    public function article()
+    {
+      return $this->hasMany(Article::class, 'article_id');
+    }
 }

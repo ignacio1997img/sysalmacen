@@ -8,7 +8,6 @@ use App\Http\Controllers\EgressController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SolicitudController;
 use App\Http\Controllers\IncomeSolicitudController;
-use App\Http\Controllers\BandejaController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\IncomeDonorController;
 use App\Http\Controllers\EgressDonorController;
@@ -23,10 +22,8 @@ use App\Http\Controllers\DonationStockController;
 use App\Http\Controllers\InventarioAlmacenController;
 use App\Http\Controllers\PeopleExtController;
 use App\Http\Controllers\ReportAlmacenController;
-use App\Models\Article;
-use App\Models\Provider;
-use App\Models\SolicitudOutbox;
-use App\Models\Sucursal;
+use App\Http\Controllers\SolicitudBandejaController;
+use App\Http\Controllers\SolicitudPedidoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,7 +59,17 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::post('usuarios/activar', [UserController::class, 'activar'])->name('almacen_activar');
 
     // :::::::::::::::::::::::::::::     PARA LAS SOLICITUDES  DE LOS PRODECTOS O ARTICULOS       ::::::::::::::::::::::::::::::::::::::::::
-    Route::resource('outbox',SolicitudOutbox::class);
+    Route::resource('outbox',SolicitudPedidoController::class);
+    Route::get('outbox/ajax/list/{search?}', [SolicitudPedidoController::class, 'list']);
+    Route::post('outbox/enviar', [SolicitudPedidoController::class, 'solicitudEnviada'])->name('outbox.enviar');
+
+    Route::resource('inbox', SolicitudBandejaController::class);
+    Route::get('inbox/ajax/list/{search?}', [SolicitudBandejaController::class, 'list']);
+    Route::post('inbox/rechazar', [SolicitudBandejaController::class, 'rechazarSolicitud'])->name('inbox.rechazar');
+    Route::post('inbox/aprobar', [SolicitudBandejaController::class, 'aprobarSolicitud'])->name('inbox.aprobar');
+
+
+
 
     
     //........................  INCOME
@@ -84,9 +91,22 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
 
    //........................  EGRES
     Route::resource('egres', EgressController::class);
-    Route::get('egres/ajax/list/{search?}', [EgressController::class, 'list']);
+    Route::get('egres/ajax/list/{type}/{search?}', [EgressController::class, 'list']);
     Route::post('egres/update', [EgressController::class, 'update'])->name('egres_update');
     Route::post('egres/delete', [EgressController::class, 'destroy'])->name('egres_delete');
+
+    Route::get('egres/solicitud/{solicitud?}/show', [EgressController::class, 'showSolicitud'])->name('egres-solicitud.show');
+    Route::post('egres/solicitud/entregar', [EgressController::class, 'entregarSolicitud'])->name('egres-solicitud.entregar');
+
+    // para obtener los articulos de la unidad y articulo en especifico
+    Route::get('egres/ajax/articleunidad/{unidad?}/{article?}', [EgressController::class, 'ajax_unidad'])->name('egres-ajax.articleunidad');
+    Route::get('egres/ajax/articlealmacen/{article?}', [EgressController::class, 'ajax_almacen'])->name('egres-ajax.articlealmacen');
+
+    
+
+
+
+
     // Route::get('egres/view/{id?}', [EgressController::class, 'view_egreso'])->name('egreso_view_entregado');// en mantenimiento sin funcionamiento 
 
 
@@ -201,7 +221,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
 
 
         //bandeja
-    Route::resource('inbox', BandejaController::class);
+    // Route::resource('inbox', BandejaController::class);
 
 
     // Route::get('egresos/browse/pendiente/view/{id?}', [EgressController::class, 'view_pendiente'])->name('egres_view_pendiente');
