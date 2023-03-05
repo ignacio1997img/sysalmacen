@@ -32,12 +32,15 @@ class SolicitudPedido extends Model
         'entregadoUser_id',
         'entregadoDate',
         'rechazadoUser_id',
-        'rechazadoDate'
-
+        'rechazadoDate',
+        
+        'entregadoVisto',
+        'observation',
+        'aprobadoObservation',
+        'entregadoObservation',
+        'rechazadoObservation',
+        'deletedObservation'
     ];
-
-
-   
 
     public function sucursal()
     {

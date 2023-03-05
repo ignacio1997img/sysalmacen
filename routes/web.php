@@ -47,6 +47,7 @@ Route::get('/', function () {
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('logins');
 
 Route::get('/maintenance', [MaintenanceController::class , 'maintenance'])->name('maintenance');
+Route::get('/notpeople', [MaintenanceController::class , 'notpeople'])->name('notpeople');
 Route::get('/error', [MaintenanceController::class , 'error'])->name('error');
 
 
@@ -101,6 +102,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     // para obtener los articulos de la unidad y articulo en especifico
     Route::get('egres/ajax/articleunidad/{unidad?}/{article?}', [EgressController::class, 'ajax_unidad'])->name('egres-ajax.articleunidad');
     Route::get('egres/ajax/articlealmacen/{article?}', [EgressController::class, 'ajax_almacen'])->name('egres-ajax.articlealmacen');
+    Route::post('egres/detalle/store', [EgressController::class, 'detailsDetalle'])->name('egres-ajax.detalle.store');
+    Route::post('egres/entregarsolicitud/store', [EgressController::class, 'egresEntregarSolicitud'])->name('egres-entregarsolicitud.store');
 
     
 

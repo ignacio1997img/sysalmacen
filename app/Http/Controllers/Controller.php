@@ -113,7 +113,7 @@ class Controller extends BaseController
                 ->select('*')
                 ->first();
     
-            // $funcionario->cargo=$cargo->Descripcion;
+            $funcionario->cargo=$cargo->Descripcion;
         }
         if(!$funcionario)
         {

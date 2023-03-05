@@ -80,9 +80,9 @@
        
     </table>
 
-    <div class="text">
+    {{-- <div class="text">
         <p style="font-size: 13px;"><b>NOTA:</b> La información expuesta en el presente cuadro cuenta con la documentación de soporte correspondiente, en el marco de las Normas Básicas del Sistema de Contabilidad Integrada.</p>
-    </div>
+    </div> --}}
     <br>
     <br><br>
     <br>

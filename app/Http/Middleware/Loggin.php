@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Sucursal;
 use App\Models\SucursalUser;
+use App\Http\Controllers\Controller;
 
 class Loggin
 {
@@ -23,8 +24,8 @@ class Loggin
     public function handle(Request $request, Closure $next)
     {
         try {
+            $obj = new Controller();
             if(setting('configuracion.maintenance') && !auth()->user()->hasRole('admin')){
-                // Auth::logout();
                 return redirect()->route('maintenance');
             }
 
@@ -35,14 +36,15 @@ class Loggin
                 return redirect()->route('error');
             }
 
+            if($obj->getPeople(Auth::user()->funcionario_id) == "Error" && !auth()->user()->hasRole('admin'))
+            {
+                return redirect()->route('notpeople');
+            }
+
 
 
         } catch (\Throwable $th) {}
 
-
-
-
-        // Evitar que registre cuando el usuario ingrese a la lista de logs
         if (!str_contains(request()->url(), 'admin/compass')) {
             try {
                 $data = [
@@ -50,7 +52,7 @@ class Loggin
                     'name' => Auth::user()->name,
                     'email' => Auth::user()->email,
                     'ip' => request()->ip(),
-                    // 'user_agent' => request()->userAgent(),
+                    'user_agent' => request()->userAgent(),
                     'url' => request()->url(),
                     'method' => request()->method(),
                     'input' => request()->except(['password', '_token', '_method']),
@@ -59,7 +61,7 @@ class Loggin
             } catch (\Throwable $th) {
                 $data = [
                     'ip' => request()->ip(),
-                    // 'user_agent' => request()->userAgent(),
+                    'user_agent' => request()->userAgent(),
                     'url' => request()->url(),
                     'method' => request()->method(),
                     'input' => request()->except(['password', '_token', '_method']),

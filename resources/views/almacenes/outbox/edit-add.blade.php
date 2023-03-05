@@ -57,7 +57,7 @@
                                         <h3 class="panel-title">Fecha de Solicitud</h3>
                                     </div>
                                     <div class="panel-body" style="padding-top:0;">
-                                        <p><small>{{date('d/m/Y H:i:s')}}</small></p>
+                                        <p><small>{{date('d/m/Y')}}</small></p>
                                     </div>
                                     <hr style="margin:0;">
                                 </div>
@@ -349,12 +349,12 @@
 
 
         function onselect_presentacion()
-        {
+        {            
             var id =  $(this).val();    
             if(id >=1)
             {
                 $.get('{{route('ajax_egres_select_article_detalle')}}/'+id, function(data){
-                    $("#presentacion").val(data[0].presentacion);                                
+                    $("#presentacion").val(data.presentacion);                                
                 });
             }
             else

@@ -32,23 +32,30 @@ class CreateSolicitudPedidosTable extends Migration
 
             
             $table->string('status')->default('Pendiente');
+            $table->text('observation')->nullable();
             $table->foreignId('registerUser_Id')->nullable()->constrained('users');
             $table->timestamps();
 
             //aprobado
             $table->foreignId('aprobadoUser_id')->nullable()->constrained('users');
             $table->dateTime('aprobadoDate')->nullable();
+            $table->text('aprobadoObservation')->nullable();
 
             //Entregado por
+            $table->dateTime('entregadoVisto')->nullable();//para poder ver si lo ha visto la persona que ba a entregar la solicitud
             $table->foreignId('entregadoUser_id')->nullable()->constrained('users');
             $table->dateTime('entregadoDate')->nullable();
+            $table->text('entregadoObservation')->nullable();
 
             //rechazado por
             $table->foreignId('rechazadoUser_id')->nullable()->constrained('users');
             $table->dateTime('rechazadoDate')->nullable();
+            $table->text('rechazadoObservation')->nullable();
             
             $table->softDeletes();
             $table->foreignId('deletedUser_Id')->nullable()->constrained('users');
+            $table->text('deletedObservation')->nullable();
+
         });
     }
 

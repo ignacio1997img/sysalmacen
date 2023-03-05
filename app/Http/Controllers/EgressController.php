@@ -20,6 +20,8 @@ use App\Models\DonacionArticulo;
 use App\Models\SucursalUser;
 use App\Models\InventarioAlmacen;
 use App\Models\SolicitudPedido;
+use App\Models\SolicitudPedidoDetalle;
+use App\Models\SucursalUnidadPrincipal;
 
 class EgressController extends Controller
 {
@@ -288,12 +290,8 @@ class EgressController extends Controller
                     {
                         SolicitudCompra::where('id',$f->solicitudcompra_id)->update(['condicion' => 0, 'stock' => 0]);
                     }
-
-
-
                     $cont++;
             }
-            // return 1;
             
             DB::commit();
             return redirect()->route('egres.index')->with(['message' => 'Registrado exitosamente.', 'alert-type' => 'success']);
@@ -521,14 +519,7 @@ class EgressController extends Controller
                         SolicitudCompra::where('id',$f->solicitudcompra_id)->update(['condicion' => 0, 'stock' => 0]);
                     }
                 }
-
-
                 $k++;
-
-
-
-
-
 
             }
             // return 1010110;
@@ -544,13 +535,6 @@ class EgressController extends Controller
             return redirect()->route('egres.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
         }
     }
-
-
-
-
-
-
-
 
 
 
@@ -681,6 +665,8 @@ class EgressController extends Controller
 
     public function showSolicitud($id)
     {
+
+      
         // $data = DB::table('solicitud_compras as s')
         //     ->join('facturas as f', 'f.solicitudcompra_id', 's.id')
         //     ->join('detalle_facturas as d', 'd.factura_id', 'f.id')
@@ -707,15 +693,18 @@ class EgressController extends Controller
             ->where('deleted_at', null)
             ->where('id', $id)
             ->first();
-        // return $data;
+
+        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
+        // return $sucursal;
+        $unidad = SucursalUnidadPrincipal::where('deleted_at', null)->where('sucursal_id', $sucursal->sucursal_id)->first()->unidadAdministrativa_id??'';
+        // return $unidad;
         // SolicitudPedido::where('id', $id)->update(['visto'=>Carbon::now()]);
-        return view('almacenes.egress.readSolicitud', compact('data'));
+        return view('almacenes.egress.readSolicitud', compact('data', 'unidad'));
     }
 
     // Para obtener todos los articulos comprado o ingresado por la unidad
     public function ajax_unidad($unidad, $article)
     {
-        // return $article;
         $data = DB::table('solicitud_compras as s')
             ->join('facturas as f', 'f.solicitudcompra_id', 's.id')
             ->join('detalle_facturas as d', 'd.factura_id', 'f.id')
@@ -733,7 +722,37 @@ class EgressController extends Controller
 
             ->where('a.id', $article)
 
-            ->select('s.id as solicitud_id', 's.nrosolicitud', 'f.id as factura_id', 'a.id as article_id', 'a.nombre as article', 'd.precio', 'd.cantrestante as cantidad')
+            ->select('s.id as solicitud_id', 's.nrosolicitud', 'f.id as factura_id', 'a.id as article_id', 'a.nombre as article','d.id as detalle_id', 'd.precio', 'd.cantrestante as cantidad')
+            // ->groupBy('article_id')
+            ->orderBy('s.id')
+            ->get();
+
+        return $data;
+    }
+    //para obtener los articulos del almacen central de cada almacen u sucursal
+    public function ajax_almacen($article)
+    {
+        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
+        $unidad = SucursalUnidadPrincipal::where('deleted_at', null)->where('sucursal_id', $sucursal->sucursal_id)->first()->unidadAdministrativa_id;
+        // return $unidad;
+        $data = DB::table('solicitud_compras as s')
+            ->join('facturas as f', 'f.solicitudcompra_id', 's.id')
+            ->join('detalle_facturas as d', 'd.factura_id', 'f.id')
+            ->join('articles as a', 'a.id', 'd.article_id')
+            ->where('s.stock', 1)
+            ->where('s.deleted_at', null)
+            ->where('s.unidadadministrativa', $unidad)
+
+            ->where('f.deleted_at', null)
+
+            ->where('d.deleted_at', null)
+            ->where('d.cantrestante', '>', 0)
+            ->where('d.condicion', 1)
+            ->where('d.hist', 0)
+
+            ->where('a.id', $article)
+
+            ->select('s.id as solicitud_id', 's.nrosolicitud', 'f.id as factura_id', 'a.id as article_id', 'a.nombre as article', 'd.id as detalle_id', 'd.precio', 'd.cantrestante as cantidad')
             // ->groupBy('article_id')
             ->orderBy('s.id')
             ->get();
@@ -741,9 +760,194 @@ class EgressController extends Controller
         return $data;
     }
 
+    // para poder guardar el detalle de cada 
+    public function detailsDetalle(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $detalle = SolicitudPedidoDetalle::where('solicitudPedido_id', $request->id)->where('id', $request->detalle_id)->first();
+            if(!$request->cantidad)
+            {
+                $detalle->update(['cantentregada'=>0, 'jsonDetails_id'=>null]);
+                DB::commit();
+                return response()->json(['detalle' => $detalle->id]);
+            }
+            $sum = 0;
+            for ($i=0; $i < count($request->cantidad) ; $i++) { 
+                $sum+=$request->cantidad[$i];
+            }
+            $detalle->update(['cantentregada'=>$sum, 'jsonDetails_id'=>json_encode(['almacen'=>$request->almacen, 'detalle_id'=>$request->detalle, 'cantidad'=>$request->cantidad]) ]);
+            DB::commit();
+            return response()->json(['detalle' => $detalle]);
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return response()->json(['error' => $th->getMessage()]);
+        }
+    }
     public function entregarSolicitud(Request $request)
     {
-        return $request;
+        DB::beginTransaction();
+        try {
+            $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
+            $unidad = SucursalUnidadPrincipal::where('deleted_at', null)->where('sucursal_id', $sucursal->sucursal_id)->first()->unidadAdministrativa_id??'';
+            $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->sucursal_id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada         
+
+            $solicitud = SolicitudPedido::where('id', $request->id)->where('deleted_at',null)->first();
+            $detalle = SolicitudPedidoDetalle::where('solicitudPedido_id', $solicitud->id)->where('deleted_at',null)->get();
+
+            if(!$gestion)
+            {
+                return redirect()->route('egres-solicitud.show',['solicitud'=>$solicitud->id])->with(['message' => 'Ocurrio un error. No tiene una gestion activa en su almacen', 'alert-type' => 'error']);                                    
+            }
+            if($solicitud->status == 'Entregado')
+            {
+                return redirect()->route('egres.index')->with(['message' => 'La solicitud ya fue entregada', 'alert-type' => 'info']);                                    
+            }
+            // return $gestion;
+
+
+            $detalle_id = [];
+            $cant = [];
+            $user = Auth::user();
+            foreach($detalle as $item)
+            {
+                // dd(json_decode($item->jsonDetails_id));
+                if($item->jsonDetails_id)
+                {
+                    // return $item->jsonDetails_id;
+                    $i=0;
+                    foreach(json_decode($item->jsonDetails_id) as $item1)
+                    {
+                        // return $item->jsonDetails_id;
+                        if($i==0)
+                        {
+                            foreach($item1 as $data)
+                            {
+                                if($data == 'si')
+                                {
+                                    if($solicitud->unidad_id==$unidad)
+                                    {
+                                        return redirect()->route('egres-solicitud.show',['solicitud'=>$solicitud->id])->with(['message' => 'Ocurrio un error. Agrege nuevamente los detalle de la solicitud', 'alert-type' => 'error']);                                    
+                                    }
+                                }
+                            }
+                        }
+                        $i++;                        
+                    }
+                }
+            }
+            foreach($detalle as $item)
+            {
+                if($item->jsonDetails_id)
+                {
+                    $i=0;
+                    foreach(json_decode($item->jsonDetails_id) as $item1)
+                    {
+                        if($i==1)
+                        {
+                            $detalle_id = $item1;                            
+                        }
+                        if($i==2)
+                        {
+                            $cant = $item1;                            
+                        }
+                        $i++;                        
+                    }
+                    for ($x=0; $x < count($detalle_id); $x++) { 
+                        $verf = DetalleFactura::where('id', $detalle_id[$x])->where('deleted_at', null)->where('hist', 0)->first();
+                        // return $verf;
+                        if($verf->cantrestante<0)
+                        {
+                            return redirect()->route('egres-solicitud.show',['solicitud'=>$solicitud->id])->with(['message' => 'Ocurrio un error. Contactese con el administrador de sistema', 'alert-type' => 'error']);                                    
+                        }
+                        if($cant[$x] > $verf->cantrestante)
+                        {
+                            return redirect()->route('egres-solicitud.show',['solicitud'=>$solicitud->id])->with(['message' => 'Ocurrio un error. Algun articulo supera la cantidad de stock existente', 'alert-type' => 'error']);                                    
+                        }
+                    }
+                }
+            }
+            // return $solicitud;
+            $egreso=SolicitudEgreso::create([
+                'sucursal_id'               => $solicitud->sucursal_id,
+                'unidadadministrativa'      => $solicitud->unidad_id,
+                'direccionadministrativa'   => $solicitud->direccion_id,
+                'registeruser_id'           => $user->id,
+                'nropedido'                 => $solicitud->nropedido,
+                'fechasolicitud'            => $solicitud->fechasolicitud,
+                'fechaegreso'               => Carbon::now(),
+                'gestion'                   => $gestion->gestion,
+                'inventarioAlmacen_id'      => $gestion->id,
+            ]);
+            // return 1;
+            foreach($detalle as $item)
+            {
+                if($item->jsonDetails_id)
+                {
+                    $i=0;
+                    foreach(json_decode($item->jsonDetails_id) as $item1)
+                    {
+                        if($i==1)
+                        {
+                            $detalle_id = $item1;                            
+                        }
+                        if($i==2)
+                        {
+                            $cant = $item1;                            
+                        }
+                        $i++;                        
+                    }
+                    // return 1;
+
+                    for ($x=0; $x < count($detalle_id); $x++) { 
+                        $verf = DetalleFactura::where('id', $detalle_id[$x])->where('deleted_at', null)->where('hist', 0)->first();
+
+                        DetalleEgreso::create([
+                            'solicitudegreso_id'    => $egreso->id,
+                            'registeruser_id'       => $user->id,
+                            'detallefactura_id'     => $detalle_id[$x],
+                            'cantsolicitada'        => $cant[$x],
+                            'precio'                => $verf->precio,
+                            'totalbs'               => $cant[$x]*$verf->precio,
+                            'gestion'               => $gestion->gestion,
+                            'sucursal_id'           => $solicitud->sucursal_id
+                        ]);
+                        $verf->decrement('cantrestante', $cant[$x]);
+
+                        $f = Factura::find($verf->factura_id);
+                        $s = SolicitudCompra::find($f->solicitudcompra_id);
+                        $s->update(['condicion' => 0]);
+
+                        if($verf->cantrestante == 0)
+                        {
+                            $verf->update(['condicion'=>0]);
+                        }
+
+                        $df = DetalleFactura::where('factura_id',$verf->factura_id)->where('hist', 0)->where('deleted_at', null)->get();
+                        $ok= true;
+                        $j = 0;
+                        while($j < count($df))
+                        {
+                            if($df[$j]->cantrestante != 0)
+                            {
+                                $ok = false;
+                            }
+                            $j++;
+                        }
+                        if($ok)
+                        {
+                            SolicitudCompra::where('id',$f->solicitudcompra_id)->update(['condicion' => 0, 'stock' => 0]);
+                        }
+                    }
+                }
+            }
+            $solicitud->update(['status'=>'Entregado']);
+            DB::commit();
+            return redirect()->route('egres.index')->with(['message' => 'Solicitud entregada exitosamente.', 'alert-type' => 'success']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('egres.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
+        }
     }
 
 
@@ -979,13 +1183,8 @@ class EgressController extends Controller
 
     protected function ajax_egres_select_article_detalle($id)
     {
-        $detalle = DB::table('detalle_facturas as fd')
-                    ->join('articles as a', 'a.id', 'fd.article_id')
-                    ->select('fd.id', 'a.presentacion', 'fd.precio', 'fd.cantrestante')
-                    ->where('fd.id', $id)
-                    ->where('fd.hist', 0)
-                    ->get();
-        return $detalle;
+        
+        return Article::where('id', $id)->first();
     }
 
 }

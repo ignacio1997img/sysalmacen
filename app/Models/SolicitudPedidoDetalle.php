@@ -16,11 +16,17 @@ class SolicitudPedidoDetalle extends Model
         'article_id',
         'cantsolicitada',
         'cantentregada',
+        'details',
         'status',
         'registerUser_Id',
         'deleted_at',
-        'deletedUser_Id'
+        'deletedUser_Id',
+
+        'jsonDetails_id',
+        'jsonCant'
     ];
+    
+
     public function solicitud()
     {
         return $this->belongsTo(SolicitudPedido::class, 'solicitudPedido_id');

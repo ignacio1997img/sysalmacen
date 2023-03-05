@@ -91,10 +91,10 @@ class SolicitudPedidoController extends Controller
             ->where('d.condicion', 1)
             ->where('d.hist', 0)
             ->select('s.id as solicitud_id', 'f.id as factura_id', 'a.id as article_id', 'a.nombre as article')
-            // ->groupBy('article_id')
+            ->groupBy('article_id')
             ->orderBy('article')
             ->get();
-        return $data;
+        // return $data;
 
 
 

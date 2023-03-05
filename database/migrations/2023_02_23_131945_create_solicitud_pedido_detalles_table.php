@@ -20,8 +20,10 @@ class CreateSolicitudPedidoDetallesTable extends Migration
             
             $table->double('cantsolicitada',11,2)->nullable();//para que el que solicita ponga la cantidad que pide
 
-            $table->double('cantentregada',11,2)->nullable();//para que el responsable del almacen establesca cuanto le dara
-
+            $table->double('cantentregada',11,2)->default(0);//para que el responsable del almacen establesca cuanto le dara
+            // $table->text('details')->nullable();
+            $table->text('jsonDetails_id')->nullable();
+            $table->text('jsonCant')->nullable();
 
 
             $table->smallInteger('status')->default(1);

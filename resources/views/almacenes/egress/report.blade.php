@@ -36,10 +36,12 @@
     <table class="text-center" width="100%" style="font-size: 8pt">
         <tr>
             <th style="text-align: center">CUENTA</th>
+            <th style="text-align: center">NRO SOLICITUD</th>
             <th style="text-align: center">SOLICITANTE</th>
         </tr>
         <tr>
             <td style="text-align: center">MATERIALES Y SUMINISTROS</td>
+            <td style="text-align: center">{{$detalle[0]->numero}}</td>                        
             <td style="text-align: center">{{$unidad[0]->nombre}}</td>                        
         </tr>
     </table>
@@ -48,7 +50,7 @@
         <thead>
             <tr>
                 <th style="width:5px">N&deg;</th>
-                <th style="text-align: center">Nro Solicitud</th>
+                {{-- <th style="text-align: center">Nro Solicitud</th> --}}
                 <th style="text-align: center">Artículo</th>
                 <th style="text-align: center">Codigo Articulo</th>
                 <th style="text-align: center">Presentacion</th>
@@ -64,7 +66,7 @@
             @forelse ($detalle as $data)
                 <tr>
                     <td style="text-align: right">{{$numeroitems}}</td>
-                    <td style="text-align: right">{{$data->numero}}</td>
+                    {{-- <td style="text-align: right">{{$data->numero}}</td> --}}
                     <td style="text-align: left">{{$data->articulo}}</td>
                     <td style="text-align: right">{{$data->codigo}}</td>
                     <td style="text-align: center">{{$data->presentacion}}</td>                                                    
@@ -78,11 +80,11 @@
                 ?>
             @empty
                 <tr style="text-align: center">
-                    <td colspan="8">No se encontraron registros.</td>
+                    <td colspan="7">No se encontraron registros.</td>
                 </tr>
             @endforelse
             <tr>
-                <td colspan="7" style="text-align: left"><strong>TOTAL</strong></td>
+                <td colspan="6" style="text-align: left"><strong>TOTAL</strong></td>
                 <td style="text-align: right"><strong>{{number_format($total,2)}}</strong></td>
             </tr>
         </tbody>

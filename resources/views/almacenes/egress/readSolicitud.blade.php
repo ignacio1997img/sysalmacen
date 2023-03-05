@@ -12,11 +12,7 @@
             <a href="{{ route('egres.index') }}" class="btn btn-warning btn-add-new">
                 <i class="fa-solid fa-file"></i> <span>Volver</span>
             </a>
-            @if ($data->status == 'Aprobado')
-                <a data-toggle="modal" data-target="#myModalEntregar" title="Aprobar Solicitud" class="btn btn-sm btn-success view">
-                    <i class="fa-solid fa-bag-shopping"></i> Entregar Pedido
-                </a>  
-            @endif
+            
         </div>
     </div>
 @stop
@@ -104,16 +100,21 @@
                                                 <td style="text-align: right">
                                                     <div class="no-sort no-click bread-actions text-right">
                                                         {{-- <input type="number" style="width: 80px; text-align: right" name="cantidad[]" value="{{number_format($item->cantsolicitada)}}"> --}}
-                                                        <input type="number" name="cantidad[]" id="amount" min="0" step=".1" onkeypress="return filterFloat(event,this);" onchange="subTotal()" onkeyup="subTotal()" style="text-align: right; width: 100px; height: 36px" class="text" required>                                    
-                                                        <a href="#" data-toggle="modal" data-target="#show-modal" 
-                                                            data-article_id="{{$item->article_id}}"
-                                                            data-article="{{strtoupper($item->article->nombre)}}"
-                                                            data-partida="{{strtoupper($item->article->partida->codigo.'-'.$item->article->partida->nombre)}}"
-                                                            data-cantidad="{{$item->cantsolicitada}}"
-                                                            data-unidad_id="{{$data->unidad_id}}"
-                                                             data-item='@json($item)' title="Ver" class="btn btn-sm btn-warning view">
-                                                            <i class="fa-solid fa-eye"></i>
-                                                        </a>
+                                                        {{-- <input type="number" name="cantidad[]" id="amount" min="0" step=".1" onkeypress="return filterFloat(event,this);" onchange="subTotal()" onkeyup="subTotal()" style="text-align: right; width: 100px; height: 36px" class="text" required>                                     --}}
+                                              
+                                                        <label class="label label-success" id="cantentregar-{{$item->id}}" style="font-size: 12px;">{{$item->cantentregada}}</label>
+                                                        @if ($data->status != 'Entregado')                                                      
+                                                            <a href="#" data-toggle="modal" data-target="#show-modal" 
+                                                                data-detalle_id="{{$item->id}}"
+                                                                data-article_id="{{$item->article_id}}"
+                                                                data-article="{{strtoupper($item->article->nombre)}}"
+                                                                data-partida="{{strtoupper($item->article->partida->codigo.'-'.$item->article->partida->nombre)}}"
+                                                                data-cantidad="{{$item->cantsolicitada}}"
+                                                                data-unidad_id="{{$data->unidad_id}}"
+                                                                data-item='@json($item)' title="Ver" class="btn btn-sm btn-warning view">
+                                                                <i class="fa-solid fa-eye"></i>
+                                                            </a>
+                                                        @endif
                                                     </div>
                                                 </td>
                                             </tr>
@@ -123,103 +124,110 @@
                                         @endforeach
                                     </tbody>                                        
                                 </table>
-                            </div>                            
+                            </div>    
+                            @if ($data->status != 'Entregado')
+                                <a data-toggle="modal" data-target="#myModalEntregar" title="Aprobar Solicitud" class="btn btn-sm btn-success view">
+                                    <i class="fa-solid fa-bag-shopping"></i> Entregar Pedido
+                                </a>  
+                            @endif                        
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>       
+    
 
     {{-- Modal para ver los detalle del stock del producto de que unidad tiene --}}
-    <div class="modal fade" tabindex="-1" id="show-modal" role="dialog">
-        <div class="modal-dialog modal-warning modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title"><i class="voyager-basket"></i> Detalles de la Venta</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6" style="margin-bottom:0;">
-                            <div class="panel-heading" style="border-bottom:0;">
-                                <h3 class="panel-title">Partida</h3>
+    <form action="{{ route('egres-ajax.detalle.store') }}" id="form-create-customer" method="POST">
+        {{ csrf_field() }}
+        <div class="modal fade" tabindex="-1" id="show-modal" role="dialog">
+            <div class="modal-dialog modal-warning modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title"><i class="voyager-basket"></i> Detalles</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="id" value="{{$data->id}}">
+                        <input type="hidden" name="detalle_id" id="detalles_id">
+                        <div class="row">
+                            <div class="col-md-6" style="margin-bottom:0;">
+                                <div class="panel-heading" style="border-bottom:0;">
+                                    <h3 class="panel-title">Partida</h3>
+                                </div>
+                                <div class="panel-body" style="padding-top:0;">
+                                    <p id="label-partida">Value</p>
+                                </div>
+                                <hr style="margin:0;">
                             </div>
-                            <div class="panel-body" style="padding-top:0;">
-                                <p id="label-partida">Value</p>
+                            <div class="col-md-6" style="margin-bottom:0;">
+                                <div class="panel-heading" style="border-bottom:0;">
+                                    <h3 class="panel-title">Articulo</h3>
+                                </div>
+                                <div class="panel-body" style="padding-top:0;">
+                                    <p id="label-article">Value</p>
+                                </div>
+                                <hr style="margin:0;">
                             </div>
-                            <hr style="margin:0;">
-                        </div>
-                        <div class="col-md-6" style="margin-bottom:0;">
-                            <div class="panel-heading" style="border-bottom:0;">
-                                <h3 class="panel-title">Articulo</h3>
+                            <div class="col-md-6" style="margin-bottom:0;">
+                                <div class="panel-heading" style="border-bottom:0;">
+                                    <h3 class="panel-title">Cantidad Solicitada</h3>
+                                </div>
+                                <div class="panel-body" style="padding-top:0;">
+                                    <p id="label-cantidad">Value</p>
+                                </div>
+                                <hr style="margin:0;">
                             </div>
-                            <div class="panel-body" style="padding-top:0;">
-                                <p id="label-article">Value</p>
+                            
+                            <div class="col-md-12">
+                                <table id="detalle" class="table table-bordered table-hover detalle">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="5" class="text-center">Solicitud Compra de la Unidad</th>
+                                        </tr>
+                                        <tr>
+                                            <th>N&deg;</th>
+                                            <th>ENTIDAD + NRO COMPRA</th>
+                                            <th>PRECIO</th>
+                                            <th>STOCK</th>
+                                            <th width="5px">CANTIDAD</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
                             </div>
-                            <hr style="margin:0;">
-                        </div>
-                        <div class="col-md-6" style="margin-bottom:0;">
-                            <div class="panel-heading" style="border-bottom:0;">
-                                <h3 class="panel-title">Cantidad Solicitada</h3>
-                            </div>
-                            <div class="panel-body" style="padding-top:0;">
-                                <p id="label-cantidad">Value</p>
-                            </div>
-                            <hr style="margin:0;">
-                        </div>
-                        
-                        <div class="col-md-12">
-                            <table id="detalle" class="table table-bordered table-hover">
-                                <thead>
-                                    <tr>
-                                        <th colspan="6" class="text-center">Solicitud Compra de la Unidad</th>
-                                    </tr>
-                                    <tr>
-                                        <th>N&deg;</th>
-                                        <th>ENTIDAD + NRO COMPRA</th>
-                                        <th>PRECIO</th>
-                                        <th>CANTIDAD</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                        <div class="col-md-12">
-                            <table id="detallepago" class="table table-bordered table-hover">
-                                <thead>
-                                    <tr>
-                                        <th colspan="4" class="text-center">Solicitud Compra del Almacen</th>
-                                    </tr>
-                                    <tr>
-                                        <th>N&deg;</th>
-                                        {{-- <th>Registrado por</th> --}}
-                                        <th>Fecha</th>
-                                        <th>Observaciones</th>
-                                        <th class="text-right">Monto</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colspan="3" class="text-right"><b>PAGO TOTAL</b></td>
-                                        <td class="text-right"><b style="font-size: 18px" id="label-total-payment">0,00 Bs.</b></td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="3" class="text-right"><b>DEUDA TOTAL</b></td>
-                                        <td class="text-right"><b style="font-size: 18px" id="label-debt">0,00 Bs.</b></td>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                            @if ($unidad)                                
+                                @if ($data->unidad_id != $unidad)                                
+                                    <div class="col-md-12">
+                                        <table id="detalle" class="table table-bordered table-hover detallepago">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="5" class="text-center">Solicitud Compra del Almacen</th>
+                                                </tr>
+                                                <tr>
+                                                    <th>N&deg;</th>
+                                                    <th>ENTIDAD + NRO COMPRA</th>
+                                                    <th>PRECIO</th>
+                                                    <th>STOCK</th>
+                                                    <th width="5px">CANTIDAD</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                @endif
+                            @endif
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">cerrar</button>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-success pull-right delete-confirm btn-save-customer" value="Sí, agregar">
+                        <button type="button" class="btn btn-default pull-right" data-dismiss="modal">cerrar</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
     
     
     
@@ -227,13 +235,17 @@
         <div class="modal modal-success fade" tabindex="-1" id="myModalEntregar" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    {!! Form::open(['route' => 'inbox.aprobar', 'method' => 'post']) !!}
+                    {!! Form::open(['route' => 'egres-solicitud.entregar', 'method' => 'post']) !!}
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title"><i class="fa-solid fa-bag-shopping"></i> Entregar Solicitud</h4>
                     </div>
                     <div class="modal-body">
-                        <input type="text" name="id" id="id" value="{{$data->id}}">
+                        <div class="alert alert-warning">
+                            <strong>Aviso: </strong>
+                            <p> Revise bien la cantidad de articulo a entregar a la solicitud.</p>
+                        </div> 
+                        <input type="hidden" name="id" id="id" value="{{$data->id}}">
     
                         <div class="text-center" style="text-transform:uppercase">
                             <i class="fa-solid fa-bag-shopping" style="color: rgb(134, 127, 127); font-size: 5em;"></i>
@@ -241,6 +253,7 @@
                             
                             <p><b>Desea entregar la solicitud?</b></p>
                         </div>
+                        <label class="checkbox-inline"><input type="checkbox" value="1" required>Confirmar entrega..!</label>
                     </div>                
                     <div class="modal-footer">
                         
@@ -284,22 +297,22 @@
         }
 
 
-        #detalles {
+        #detalle {
         font-family: Arial, Helvetica, sans-serif;
         border-collapse: collapse;
         width: 100%;
         }
 
-        #detalles td, #detalles th {
+        #detalle td, #detalle th {
         border: 1px solid #ddd;
         padding: 8px;
         }
 
-        #detalles tr:nth-child(even){background-color: #f2f2f2;}
+        #detalle tr:nth-child(even){background-color: #f2f2f2;}
 
-        #detalles tr:hover {background-color: #ddd;}
+        #detalle tr:hover {background-color: #ddd;}
 
-        #detalles th {
+        #detalle th {
             padding-top: 12px;
             padding-bottom: 12px;
             text-align: left;
@@ -321,9 +334,15 @@
 <script>
     $('#show-modal').on('show.bs.modal', function (event)
     {
+        // alert({{$unidad}})
+        var unidad_id = {{$data->unidad_id}};
+        // alert(unidad_id)
+        var unidad = {{$unidad?$unidad:0}};
+        // alert(unidad)
         var button = $(event.relatedTarget);
         var item = button.data('item');
 
+        var detalle_id = button.data('detalle_id');
         var partida = button.data('partida');
         var article = button.data('article');
         var cantsolicitada = button.data('cantidad');
@@ -335,61 +354,107 @@
 
         // alert(user);
 
+        modal.find('.modal-body #detalles_id').val(detalle_id);
         modal.find('.modal-body #label-partida').text(partida);
         modal.find('.modal-body #label-article').text(article);
         modal.find('.modal-body #label-cantidad').text('Cant. '+cantsolicitada);
 
+        $('.detalle tbody').empty();
+        $('.detallepago tbody').empty();
 
         $.get('{{route('egres-ajax.articleunidad')}}/'+unidad_id+'/'+article_id, function(data){
-            // alert(data);
-                    // var pago= 0;                    
                     for (var i=0; i<data.length; i++) {
-                        // pago = pago+ data[i].cant;
-                        // pago = pago + parseInt(data[i].cant?data[i].cant:0);
-                        $('#detalle tbody').append(`
+
+                        $('.detalle tbody').append(`
                             <tr>
-                                <td style="width: 50px">${i+1}</td>
-                                <td style="width: 50px">${data[i].nrosolicitud}</td>
-                                <td style="width: 50px">${data[i].precio}</td>
-                                <td style="width: 50px" class="text-right">${data[i].cantidad}</td>                              
+                                <td><small>${i+1}</small></td>
+                                <td><small>${data[i].nrosolicitud}</small></td>
+                                <td class="text-right"><small>Bs. ${data[i].precio}</small></td>                              
+                                <td class="text-right"><small>${data[i].cantidad}</small></td>                              
+                                <td class="text-right">
+                                    <input type="hidden" name="almacen[]" value="no">   
+                                    <input type="hidden" name="detalle[]" value="${data[i].detalle_id}">   
+                                    <input type="number" name="cantidad[]" min="0" max="${data[i].cantidad}" value="0" step=".1" onkeypress="return filterFloat(event,this);" style="text-align: right; width: 100px; height: 36px" class="text" required>                                 
+                                </td> 
+
                                 
                             </tr>
                         `);
                     }
-                    
-                    $('#label-total-payment').text('Bs. '+Number(pago).toString());
-                    $('#label-debt').text('Bs. '+(item.amount - pago));
-        });
-
-        $.get('{{route('egres-ajax.articlealmacen')}}/'+article_id, function(data){
-            // alert(data);
-                    // var pago= 0;                    
-                    for (var i=0; i<data.length; i++) {
-                        // pago = pago+ data[i].cant;
-                        // pago = pago + parseInt(data[i].cant?data[i].cant:0);
-                        $('#detallepago tbody').append(`
-                            <tr>
-                                <td style="width: 50px">${i+1}</td>
-                                <td style="width: 50px">${data[i].nrosolicitud}</td>
-                                <td style="width: 50px">${data[i].precio}</td>
-                                <td style="width: 50px" class="text-right">${data[i].cantidad}</td>                              
-                                
+                    if(data == '')
+                    {
+                        $('.detalle tbody').append(`
+                            <tr style="text-align: center">
+                                <td colspan="5">No se encontraron articulos.</td>
                             </tr>
                         `);
                     }
-                    
-                    $('#label-total-payment').text('Bs. '+Number(pago).toString());
-                    $('#label-debt').text('Bs. '+(item.amount - pago));
         });
 
-
-
-            
-
-
-
-
+        if(unidad != 0 && unidad != unidad_id)
+        {
+            $.get('{{route('egres-ajax.articlealmacen')}}/'+article_id, function(data){
+                            //  alert(data)
+                        for (var i=0; i<data.length; i++) {
+                            $('.detallepago tbody').append(`
+                                <tr>
+                                    <td><small>${i+1}</small></td>
+                                    <td><small>${data[i].nrosolicitud}</small></td>
+                                    <td class="text-right"><small>Bs. ${data[i].precio}</small></td>                              
+                                    <td class="text-right"><small>${data[i].cantidad}</small></td>                              
+                                    <td class="text-right">
+                                        <input type="hidden" name="almacen[]" value="si">   
+                                        <input type="hidden" name="detalle[]" value="${data[i].detalle_id}">   
+                                        <input type="number" name="cantidad[]" min="0" max="${data[i].cantidad}" value="0" step=".1" onkeypress="return filterFloat(event,this);" style="text-align: right; width: 100px; height: 36px" class="text" required>                                    
+                                    </td>   
+                                </tr>
+                            `);
+                        }
+                        
+                        // $('#label-total-payment').text('Bs. '+Number(pago).toString());
+                        // $('#label-debt').text('Bs. '+(item.amount - pago));
+                        if(data == '')
+                        {
+                            $('.detallepago tbody').append(`
+                                <tr style="text-align: center">
+                                    <td colspan="5">No se encontraron articuloss.</td>
+                                </tr>
+                            `);
+                        }
+            });
+        }            
     })
+
+    $(function()
+    {
+            $('#form-create-customer').submit(function(e){
+                e.preventDefault();
+                $('.btn-save-customer').attr('disabled', true);
+                $('.btn-save-customer').val('Guardando...');
+                $.post($(this).attr('action'), $(this).serialize(), function(data){
+                    // alert(data)
+                    if(data.detalle.id){
+                        // alert(11)
+                        toastr.success('Agregado', 'Éxito');
+                        $(this).trigger('reset');
+                        $('#cantentregar-'+data.detalle.id).text(data.detalle.cantentregada)
+                    }else{
+                        // alert(00)
+                        toastr.error('', 'Error');
+                        $('#cantentregar-'+data.detalle).text('0')
+                    }
+                })
+                .always(function(){
+                    // alert(00)
+
+                    $('.btn-save-customer').attr('disabled', false);
+                    $('.btn-save-customer').val('Guardar');
+                    $('#show-modal').modal('hide');
+                });
+            });
+    })
+
+
 </script>
 <script>
        function filterFloat(evt,input){
@@ -404,13 +469,6 @@
                         return true;
                     }
                 }
-                // else{
-                //     if(key == 8 || key == 13 || key == 46 || key == 0) {            
-                //         return true;              
-                //     }else{
-                //         return false;
-                //     }
-                // }
         }
        function filter(__val__){
                 var preg = /^([0-9]+\.?[0-9]{0,1})$/; 
