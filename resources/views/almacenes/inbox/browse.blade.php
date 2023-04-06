@@ -8,7 +8,7 @@
             <div class="row">
                 <!-- <div class="c"> -->
                     <h1 id="subtitle" class="page-title">
-                        <i class="fa-solid fa-bag-shopping"></i> Pedidos
+                        <i class="icon fa-regular fa-clipboard"></i> Pedidos
                     </h1>
                 {{-- @if(auth()->user()->hasPermission('add_egres')) --}}
                     <a href="{{ route('outbox.create') }}" class="btn btn-success btn-add-new">

@@ -14,12 +14,12 @@ class UpdateDetalleTable extends Migration
     public function up()
     {
         Schema::table('solicitud_pedidos', function (Blueprint $table) {
-            $table->dateTime('entregadoVisto')->nullable();//para poder ver si lo ha visto la persona que ba a entregar la solicitud
-            $table->text('observation')->nullable();
-            $table->text('aprobadoObservation')->nullable();
-            $table->text('entregadoObservation')->nullable();
-            $table->text('rechazadoObservation')->nullable();
-            $table->text('deletedObservation')->nullable();
+            // $table->dateTime('entregadoVisto')->nullable();//para poder ver si lo ha visto la persona que ba a entregar la solicitud
+            // $table->text('observation')->nullable();
+            // $table->text('aprobadoObservation')->nullable();
+            // $table->text('entregadoObservation')->nullable();
+            // $table->text('rechazadoObservation')->nullable();
+            // $table->text('deletedObservation')->nullable();
 
 
         });

@@ -57,25 +57,18 @@ class SolicitudPedidoController extends Controller
 
     public function create()
     {
+        // return 1;
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
         $sucursal = Sucursal::where('id', $sucursal->sucursal_id)->first();
         $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
 
+        // return 1;
         $funcionario = $this->getPeople(Auth::user()->funcionario_id);
 
+        // return 1;
 
-        // $data = SolicitudCompra::with(['factura.detalle' => function($q)
-        //     {
-        //         $q->where('deleted_at', null)
-        //         ->where('cantrestante', '>', 0)
-        //         ->where('condicion', 1)
-        //         ->where('hist', 0);
-        //     }
-        //     ])
-        //     ->whereRaw('(unidadadministrativa = '.$funcionario->id_unidad.' or unidadadministrativa = 192)')
-        //     ->where('stock', 1)
-        //     ->where('deleted_at', null)->get();
-
+        
+        // dd($funcionario);
         $data = DB::table('solicitud_compras as s')
             ->join('facturas as f', 'f.solicitudcompra_id', 's.id')
             ->join('detalle_facturas as d', 'd.factura_id', 'f.id')

@@ -311,7 +311,7 @@
     <script>
 
 
-var tipouser = 1;
+    var tipouser = 1;
 
     $('document').ready(function () {
         $('.toggleswitch').bootstrapToggle();
