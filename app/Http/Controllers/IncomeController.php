@@ -30,6 +30,16 @@ class IncomeController extends Controller
 
     public function index()
     {      
+
+        $data = SucursalUser::where('deleted_at', null)->where('condicion', 1)->get();
+        
+        for($i =0; $i<count($data); $i++)
+        {
+            User::where('id', $data[$i]->id)->update(['sucursal_id' => $data[$i]->sucursal_id]);
+        }
+
+
+
         // return Auth::user()->id;
         if(setting('configuracion.maintenance') && !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
         {
