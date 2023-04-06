@@ -182,7 +182,9 @@ class UserController extends Controller
 
 
     public function create_user(Request $request){
-        
+        // return $request;
+
+
         $ok = User::where('funcionario_id', $request->funcionario_id)->first();
         if($ok)
         {
@@ -207,16 +209,26 @@ class UserController extends Controller
                 'password' => bcrypt($request->password),
             ]);
             
-            
+            // return 1;
             
             if ($request->user_belongstomany_role_relationship <> '') {
                 $user->roles()->attach($request->user_belongstomany_role_relationship);
             }
 
+            // return $request;
+            if($request->sucursal_id)
+            {
+                SucursalUser::create(['sucursal_id' => $request->sucursal_id, 'user_id' => $user->id]);
+            }
+
+
+
             DB::commit();
             return redirect()->route('voyager.users.index')->with(['message' => "El usuario, se registro con exito.", 'alert-type' => 'success']);
         } catch (\Exception $e) {
             DB::rollback();
+
+            // return 0;
             return redirect()->route('voyager.users.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
 
         }     

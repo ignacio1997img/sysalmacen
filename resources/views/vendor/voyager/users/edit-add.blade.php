@@ -104,7 +104,7 @@
                                     @endphp
                                     @include('voyager::formfields.relationship')
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" style="display:none">
                                     <label for="additional_roles">{{ __('voyager::profile.roles_additional') }}</label>
                                     @php
                                         $row     = $dataTypeRows->where('field', 'user_belongstomany_role_relationship')->first();
@@ -113,16 +113,25 @@
                                     @include('voyager::formfields.relationship')
                                 </div>                                
                             @endcan
+                            @php
+                                $sucursal = null;
+                            @endphp
+                            @if ($dataTypeContent->id)
+                                @php
+                                    $sucursal = \App\Models\SucursalUser::where('deleted_at', null)->where('user_id', $dataTypeContent->id)->where('condicion', 1)->first();
+                                @endphp                                
+                            @endif
 
-                            {{-- <div class="form-group">
-                                <label for="direccionAdministrativa_id">Dirección Administrativa</label>
-                                <select name="direccionAdministrativa_id" class="form-control select2">
-                                    <option value="">No definida</option>
-                                    @foreach(\App\Models\Direction::all() as $direccion)
-                                        <option @if($dataTypeContent->direccionAdministrativa_id == $direccion->id) selected @endif value="{{ $direccion->id }}">{{ $direccion->nombre }}</option>
+                            <div class="form-group">
+                                <label for="sucursal_id">Almacen</label>
+                                <select name="sucursal_id" class="form-control select2">
+                                    <option value="" >--Seleccione una opción--</option>
+                                    @foreach(\App\Models\Sucursal::all() as $item)
+                                        <option value="{{ $item->id }}" @if($sucursal) {{$sucursal->sucursal_id==$item->id?'selected':''}} @endif>{{ $item->nombre }}</option>
                                     @endforeach
                                 </select>
-                            </div> --}}
+                            </div>
+                         
                             @php
                             if (isset($dataTypeContent->locale)) {
                                 $selected_locale = $dataTypeContent->locale;
@@ -131,7 +140,7 @@
                             }
 
                             @endphp
-                            <div class="form-group">
+                            <div class="form-group" style="display:none">
                                 <label for="locale">{{ __('voyager::generic.locale') }}</label>
                                 <select class="form-control select2" id="locale" name="locale">
                                     @foreach (Voyager::getLocales() as $locale)
@@ -170,7 +179,7 @@
          
 
             <div class="row">
-                <div class="col-md-8">
+                {{-- <div class="col-md-8">
                             {!! Form::open(['route' => 'usuario.store', 'class' => 'was-validated'])!!}
                                 
                                 <label for="default_role">{{ __('Almacen') }}</label>
@@ -230,7 +239,7 @@
                                     
                                 </tbody>
                             </table>
-                </div>
+                </div> --}}
                 <div class="col-md-4">
 
                 </div>
@@ -245,7 +254,7 @@
         </form>
     </div>
 
-    <div class="modal modal-success fade" tabindex="-1" id="activar_modal" role="dialog">
+    {{-- <div class="modal modal-success fade" tabindex="-1" id="activar_modal" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 {!! Form::open(['route' => 'almacen_activar',  'class' => 'was-validated']) !!}
@@ -273,8 +282,8 @@
                 {!! Form::close()!!} 
             </div>
         </div>
-    </div>
-    <div class="modal modal-danger fade" tabindex="-1" id="delete_modal" role="dialog">
+    </div> --}}
+    {{-- <div class="modal modal-danger fade" tabindex="-1" id="delete_modal" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 {!! Form::open(['route' => 'almacen_desactivar',  'class' => 'was-validated']) !!}
@@ -302,7 +311,7 @@
                 {!! Form::close()!!} 
             </div>
         </div>
-    </div>
+    </div> --}}
 @stop
 
 @section('javascript')
