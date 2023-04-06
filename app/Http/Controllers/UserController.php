@@ -38,7 +38,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request;
+        return $request;
         // $ok = SucursalUser::where('sucursal_id', $request->branchoffice_id)->where('user_id', $request->user_id)->where('condicion',1)->first();
         // $ok = SucursalUser::where('sucursal_id', $request->branchoffice_id)->where('condicion',1)->first();
         // if($ok)
@@ -60,13 +60,13 @@ class UserController extends Controller
 
     public function desactivar(Request $request)
     {
-        // return $request;
+        return $request;
         SucursalUser::where('id',$request->id)->update(['condicion' =>0]);
         return redirect('admin/users/'.$request->user_id.'/edit');
     }
     protected function activar(Request $request)
     {
-        // return $request;
+        return $request;
         SucursalUser::where('id',$request->id)->update(['condicion' =>1]);
         return redirect('admin/users/'.$request->user_id.'/edit');
     }
@@ -205,6 +205,7 @@ class UserController extends Controller
                 'funcionario_id' => $request->funcionario_id,
                 'role_id' => $request->role_id,
                 'email' => $request->email,
+                'sucursal_id' => $request->sucursal_id,
                 'avatar' => 'users/default.png',
                 'password' => bcrypt($request->password),
             ]);
@@ -238,8 +239,10 @@ class UserController extends Controller
 
     public function update_user(Request $request, User $user){
         // return $request;
+        // return $user;
 
         $ok = User::where('funcionario_id', $request->funcionario_id)->where('id', '!=', $user->id)->first();
+        // return $ok;
         if($ok)
         {
             return redirect()->route('voyager.users.index')->with(['message' => 'El Funcionario ya cuenta con usuario.', 'alert-type' => 'error']);
@@ -256,6 +259,7 @@ class UserController extends Controller
             $user->update([
                 'role_id' => $request->role_id,
                 'email' => $request->email,
+                'sucursal_id'=>$request->sucursal_id
             ]);
             
             if ($request->password != '') {
@@ -269,6 +273,14 @@ class UserController extends Controller
                     'name' => $request->name,
                 ]);
             }
+
+            SucursalUser::where('deleted_at', null)->where('user_id', $user->id)->where('condicion',1)->update(['condicion'=>0]);
+
+            if($request->sucursal_id)
+            {
+                SucursalUser::create(['sucursal_id' => $request->sucursal_id, 'user_id' => $user->id]);
+            }
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
