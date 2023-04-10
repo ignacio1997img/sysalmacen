@@ -99,6 +99,23 @@ class PermissionsTableSeeder extends Seeder
         Permission::generateFor('egres');
 
 
+
+        //Para las Solicitudes o para crear solictudes
+        $keys = [
+            'browse_outbox',
+            // 'browse_printalmacen-inventarioAnual-partida',
+            // 'browse_printalmacen-inventarioAnual-detalle',
+        ];
+
+        foreach ($keys as $key) {
+            Permission::firstOrCreate([
+                'key'        => $key,
+                'table_name' => 'outbox',
+            ]);
+        }
+
+
+
         // Reports anual
         // print/almacen-inventarioAnual-da
         $keys = [

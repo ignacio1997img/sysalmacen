@@ -228,7 +228,7 @@ class UserController extends Controller
                 SucursalUser::create(['sucursal_id' => $request->sucursal_id, 'user_id' => $user->id]);
             }
 
-
+            // return 1;
 
             DB::commit();
             return redirect()->route('voyager.users.index')->with(['message' => "El usuario, se registro con exito.", 'alert-type' => 'success']);
