@@ -123,5 +123,46 @@ class Controller extends BaseController
     }
 
 
+    public function getWorker($id)
+    {        
+        $funcionario = 'null';
+        $funcionario = DB::connection('mamore')->table('people as p')
+            ->leftJoin('contracts as c', 'p.id', 'c.person_id')
+            // ->leftJoin('contracts as c', 'p.id', 'c.person_id')
+            ->leftJoin('direcciones as d', 'd.id', 'c.direccion_administrativa_id')
+            ->leftJoin('unidades as u', 'u.id', 'c.unidad_administrativa_id')
+            ->leftJoin('jobs as j', 'j.id', 'c.job_id')
+            ->where('c.status', 'firmado')
+            ->where('c.deleted_at', null)
+            ->where('p.id', $id)
+            ->where('p.deleted_at', null)
+            ->select('p.id as people_id', 'p.ci as ci', 'c.cargo_id', 'c.job_id', 'j.name as cargo',
+                DB::raw("CONCAT(p.first_name, ' ', p.last_name) as nombre"), 'p.first_name', 'p.last_name', 'c.direccion_administrativa_id as id_direccion', 'd.nombre as direccion',
+                    'c.unidad_administrativa_id as id_unidad', 'u.nombre as unidad')
+            ->first();
+        if(!$funcionario)
+        {
+            return "null";
+        }
+
+        if(!$funcionario->id_unidad || !$funcionario->id_direccion)
+        {
+            return "null";
+        }
+
+        if($funcionario->cargo_id != NULL)
+        {
+            $cargo = DB::connection('mysqlgobe')->table('cargo')
+                ->where('id',$funcionario->cargo_id)
+                ->select('*')
+                ->first();
+    
+            $funcionario->cargo=$cargo->Descripcion;
+        }
+        
+        return $funcionario;
+    }
+
+
 
 }
