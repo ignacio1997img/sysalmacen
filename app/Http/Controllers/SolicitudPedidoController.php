@@ -14,6 +14,8 @@ use App\Models\SucursalUnidadPrincipal;
 use App\Models\SucursalUser;
 use Carbon\Carbon;
 
+use function PHPUnit\Framework\returnSelf;
+
 class SolicitudPedidoController extends Controller
 {
     
@@ -24,9 +26,11 @@ class SolicitudPedidoController extends Controller
     }
     public function list($type, $search = null){
         $user = Auth::user();
+        // dump($user);
 
-        $sucursal = SucursalUser::where('user_id', $user->id)->where('condicion', 1)->where('deleted_at', null)->first();
-        $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->sucursal_id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
+        // $sucursal = SucursalUser::where('user_id', $user->id)->where('condicion', 1)->where('deleted_at', null)->first();
+        
+        $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $user->sucursal_id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
         
         // dump($gestion);
 
@@ -60,15 +64,14 @@ class SolicitudPedidoController extends Controller
     {
         // return 1;
         $user = Auth::user();
-        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
-        $sucursal = Sucursal::where('id', $sucursal->sucursal_id)->first();
-        $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
+
+
+        // $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
+        $sucursal = Sucursal::where('id', $user->sucursal_id)->first();
+        $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $user->sucursal_id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
 
         // return 1;
         $funcionario = $this->getWorker($user->funcionario_id);
-        // dd($funcionario);
-
-        // return 1;
 
         $mainUnit = SucursalUnidadPrincipal::where('sucursal_id', $user->sucursal_id)->where('status', 1)->where('deleted_at', null)->first();
         // return $mainUnit;
@@ -77,35 +80,43 @@ class SolicitudPedidoController extends Controller
         {
             $query = ' or s.unidadadministrativa = '.$mainUnit->unidadAdministrativa_id;
         }
+        $unidad = 'null';
+        if($funcionario->id_unidad)
+        {
+            $unidad = $funcionario->id_unidad;
+        }
 
-        // return $query;
-        
-        // dd($funcionario);
-        $data = DB::table('solicitud_compras as s')
-            ->join('facturas as f', 'f.solicitudcompra_id', 's.id')
-            ->join('detalle_facturas as d', 'd.factura_id', 'f.id')
-            ->join('articles as a', 'a.id', 'd.article_id')
 
-            ->where('s.sucursal_id', $user->sucursal_id)
-            ->where('s.stock', 1)
-            ->where('s.deleted_at', null)
-            
+            $data = DB::table('solicitud_compras as s')
+                ->join('facturas as f', 'f.solicitudcompra_id', 's.id')
+                ->join('detalle_facturas as d', 'd.factura_id', 'f.id')
+                ->join('articles as a', 'a.id', 'd.article_id')
 
-            // ->whereRaw('(s.unidadadministrativa = '.$funcionario->id_unidad.' or s.unidadadministrativa = 0)')
+                ->where('s.sucursal_id', $user->sucursal_id)
+                ->where('s.stock', 1)
+                ->where('s.deleted_at', null)
+                
 
-            ->whereRaw('(s.unidadadministrativa = '.$funcionario->id_unidad.''.$query.')')
-            // ->whereRaw('(s.unidadadministrativa = '.$funcionario->id_unidad.')')
+                // ->whereRaw('(s.unidadadministrativa = '.$funcionario->id_unidad.' or s.unidadadministrativa = 0)')
 
-            ->where('f.deleted_at', null)
+                ->whereRaw('(s.unidadadministrativa = '.$unidad.''.$query.')')
+                // ->whereRaw('(s.unidadadministrativa = '.$funcionario->id_unidad.')')
 
-            ->where('d.deleted_at', null)
-            ->where('d.cantrestante', '>', 0)
-            ->where('d.condicion', 1)
-            ->where('d.hist', 0)
-            ->select('s.id as solicitud_id', 'f.id as factura_id', 'a.id as article_id', 'a.nombre as article')
-            ->groupBy('article_id')
-            ->orderBy('article')
-            ->get();
+                ->where('f.deleted_at', null)
+
+                ->where('d.deleted_at', null)
+                ->where('d.cantrestante', '>', 0)
+                ->where('d.condicion', 1)
+                ->where('d.hist', 0)
+                ->select('s.id as solicitud_id', 'f.id as factura_id', 'a.id as article_id', 'a.nombre as article')
+                ->groupBy('article_id')
+                ->orderBy('article')
+                ->get();
+        // }
+        // else
+        // {
+        //     $data = null;
+        // }
         // return $data;
 
         // return count($data);

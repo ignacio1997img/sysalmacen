@@ -145,7 +145,7 @@ class Controller extends BaseController
             return "null";
         }
 
-        if(!$funcionario->id_unidad || !$funcionario->id_direccion)
+        if((!$funcionario->id_unidad || !$funcionario->id_direccion) && !auth()->user()->hasRole('admin') )
         {
             return "null";
         }

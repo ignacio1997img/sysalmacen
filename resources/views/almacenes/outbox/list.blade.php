@@ -1,6 +1,6 @@
 <div class="col-md-12">
     <div class="table-responsive">
-        <table id="dataTableStyle" class="dataTable table-hover">
+        <table id="dataTableStyle" class="table table-bordered table-hover">
             <thead>
                 <tr>
                     <th style="text-align: center">Nro&deg;</th>
@@ -13,9 +13,9 @@
                         <th style="text-align: center">Sucursal</th>
                     @endif
                     <th class="text-align: center">Estado</th>
-                    @if(auth()->user()->hasPermission('read_egres')||auth()->user()->hasPermission('edit_egres')||auth()->user()->hasPermission('delete_egres'))
-                        <th>Accion</th>
-                    @endif
+                    {{-- @if(auth()->user()->hasPermission('read_egres')||auth()->user()->hasPermission('edit_egres')||auth()->user()->hasPermission('delete_egres')) --}}
+                    <th style="width: 150px">Accion</th>
+                    {{-- @endif --}}
                 </tr>
             </thead>
             <tbody>
@@ -49,27 +49,28 @@
                         </td>
                         <td style="text-align: right">
                             <div class="no-sort no-click bread-actions text-right">
-                                @if ($item->status == 'Pendiente')
+                                @if ( $gestion && $item->status == 'Pendiente')
                                     <a data-toggle="modal" data-id="{{$item->id}}" data-target="#myModalEnviar" title="Imprimir solicitud" class="btn btn-sm btn-success view">
                                         <i class="fa-solid fa-right-to-bracket"></i> Enviar
                                     </a>   
                                 @endif
 
 
-                                @if($item->status != 'Pendiente' && $item->status != 'Rechazado' && auth()->user()->hasPermission('read_egres'))
-                                    <a href="{{route('outbox.show',$item->id)}}" title="Imprimir solicitud" target="_blank" class="btn btn-sm btn-success view">
+                                {{-- @if($item->status != 'Pendiente' && $item->status != 'Rechazado' && auth()->user()->hasPermission('read_egres')) --}}
+                                @if( $item->status != 'Rechazado' && auth()->user()->hasPermission('print_outbox'))
+                                    <a href="{{route('outbox.show',$item->id)}}" title="Imprimir solicitud" target="_blank" class="btn btn-sm btn-dark view">
                                         <i class="glyphicon glyphicon-print"></i>
                                     </a>   
                                 @endif
                                 
                                 @if($gestion && $item->status == 'Pendiente')
                                     @if($item->gestion == $gestion->gestion)
-                                        @if(auth()->user()->hasPermission('edit_egres') )
+                                        @if(auth()->user()->hasPermission('edit_outbox') && 1==2)
                                             <a href="{{route('egres.edit',$item->id)}}" title="Editar" class="btn btn-sm btn-info view">
                                                 <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Editar</span>
                                             </a>
                                         @endif
-                                        @if(auth()->user()->hasPermission('delete_egres'))
+                                        @if(auth()->user()->hasPermission('delete_outbox'))
                                             <a data-toggle="modal" data-id="{{$item->id}}" data-target="#myModalEliminar" title="Eliminar" class="btn btn-sm btn-danger view">
                                                 <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Eliminar</span>
                                             </a>

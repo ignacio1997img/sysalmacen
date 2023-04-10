@@ -35,7 +35,9 @@
                                     <div class="form-group">
                                         <div class="form-line">
                                             <select name="sucursal_id" class="form-control select2" required>
-                                                <option value="{{$sucursal->id}}">{{$sucursal->nombre}}</option>
+                                                @if ($sucursal)
+                                                    <option value="{{$sucursal->id}}">{{$sucursal->nombre}}</option>                                                    
+                                                @endif
                                             </select>
                                         </div>
                                         <small>Almacen Correspondiente.</small>
@@ -75,7 +77,7 @@
                                         <h3 class="panel-title">Unidad</h3>
                                     </div>
                                     <div class="panel-body" style="padding-top:0;">
-                                        <p><small>{{$funcionario->unidad}}</small></p>
+                                        <p><small>{{$funcionario->unidad??'Sin Unidad'}}</small></p>
                                     </div>
                                     <hr style="margin:0;">
                                 </div>
@@ -133,7 +135,9 @@
                                                 </tr>
                                             </thead>                                            
                                         </table>
-                                        @if ($gestion)
+
+                                        {{-- Tiene que tener una gestion activa y tenes una unidad agregada como funcionario --}}
+                                        @if ($gestion && $funcionario->unidad)
                                             <div class="card-footer">
                                                 <button id="btn_guardar" type="submit"  class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
                                             </div> 

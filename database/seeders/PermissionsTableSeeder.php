@@ -103,6 +103,9 @@ class PermissionsTableSeeder extends Seeder
         //Para las Solicitudes o para crear solictudes
         $keys = [
             'browse_outbox',
+            'edit_outbox',
+            'delete_outbox',
+            'print_outbox',
             // 'browse_printalmacen-inventarioAnual-partida',
             // 'browse_printalmacen-inventarioAnual-detalle',
         ];
