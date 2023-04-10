@@ -10,7 +10,7 @@
                     <h1 id="subtitle" class="page-title">
                         <i class="voyager-basket"></i> Artículos
                     </h1>
-                    @if(auth()->user()->hasPermission('add_articles') && !auth()->user()->hasRole('admin'))
+                    @if(auth()->user()->hasPermission('add_articles') )
                         <a href="{{ route('voyager.articles.create') }}" class="btn btn-success btn-add-new">
                             <i class="voyager-plus"></i> <span>Crear</span>
                         </a>

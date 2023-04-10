@@ -72,12 +72,13 @@ class SolicitudPedidoController extends Controller
 
         $mainUnit = SucursalUnidadPrincipal::where('sucursal_id', $user->sucursal_id)->where('status', 1)->where('deleted_at', null)->first();
         // return $mainUnit;
-        $query = 1;
+        $query = '';
         if($mainUnit)
         {
-            $query = 's.unidadadministrativa = '.$mainUnit->unidadAdministrativa_id;
+            $query = ' or s.unidadadministrativa = '.$mainUnit->unidadAdministrativa_id;
         }
 
+        // return $query;
         
         // dd($funcionario);
         $data = DB::table('solicitud_compras as s')
@@ -88,7 +89,11 @@ class SolicitudPedidoController extends Controller
             ->where('s.sucursal_id', $user->sucursal_id)
             ->where('s.stock', 1)
             ->where('s.deleted_at', null)
-            ->whereRaw('(s.unidadadministrativa = '.$funcionario->id_unidad.' or '.$query.')')
+            
+
+            // ->whereRaw('(s.unidadadministrativa = '.$funcionario->id_unidad.' or s.unidadadministrativa = 0)')
+
+            ->whereRaw('(s.unidadadministrativa = '.$funcionario->id_unidad.''.$query.')')
             // ->whereRaw('(s.unidadadministrativa = '.$funcionario->id_unidad.')')
 
             ->where('f.deleted_at', null)

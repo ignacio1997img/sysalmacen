@@ -5,7 +5,7 @@
                 <tr>
                     <th style="text-align: center">Nro&deg;</th>
                     <th style="text-align: center">Nombre</th>
-                    <th style="text-align: center">Presentación</th>
+                    {{-- <th style="text-align: center">Presentación</th> --}}
                     <th style="text-align: center">Partida</th>
                     @if (auth()->user()->hasRole('admin'))
                         <th style="text-align: center">Sucursal</th>
@@ -18,8 +18,25 @@
                 @foreach ($data as $item)
                     <tr>
                         <td>{{$item->id}}</td>
-                        <td style="text-align: center">{{$item->nombre}}</td>
-                        <td style="text-align: center">{{$item->presentacion}}</td>
+                        <td>
+                            <table>
+                                @php
+                                    $image = asset('images/default.jpg');
+                                    if($item->image){
+                                        $image = asset('storage/'.str_replace('.', '-cropped.', $item->image));
+                                    }
+                                @endphp
+                                <tr>
+                                    <td><img src="{{ $image }}" alt="{{ $item->nombre }} " style="width: 60px; height: 60px; border-radius: 30px; margin-right: 10px"></td>
+                                    <td>
+                                        {{ $item->nombre }} <br>
+                                        <small>Presentación: </small>{{$item->presentacion}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        {{-- <td style="text-align: center">{{$item->nombre}}</td>
+                        <td style="text-align: center"></td> --}}
                         <td style="text-align: center">{{$item->partida->nombre}}</td>
                         {{-- <td style="text-align: center">{{$item->direccion}}</td> --}}
                         @if (auth()->user()->hasRole('admin'))
