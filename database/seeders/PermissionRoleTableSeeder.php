@@ -178,6 +178,15 @@ class PermissionRoleTableSeeder extends Seeder
                                             `key` = "browse_clear-cache"')->get();
         $role->permissions()->sync($permissions->pluck('id')->all());
 
+
+        //Para aprobar las solicitudes de pedidos   
+        $role = Role::where('name', 'almacen_solicitud_aprobar')->firstOrFail();
+        $permissions = Permission::whereRaw('table_name = "admin" or
+                                             table_name = "inbox" or
+                                            
+                                            `key` = "browse_clear-cache"')->get();
+        $role->permissions()->sync($permissions->pluck('id')->all());
+
         //  // Roles de Donacion Sedeges 
         //  $role = Role::where('name', 'sedeges_donacion_almacen')->firstOrFail();
         //  $permissions = Permission::whereRaw('table_name = "admin" or

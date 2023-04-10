@@ -106,14 +106,27 @@ class PermissionsTableSeeder extends Seeder
             'edit_outbox',
             'delete_outbox',
             'print_outbox',
-            // 'browse_printalmacen-inventarioAnual-partida',
-            // 'browse_printalmacen-inventarioAnual-detalle',
         ];
 
         foreach ($keys as $key) {
             Permission::firstOrCreate([
                 'key'        => $key,
                 'table_name' => 'outbox',
+            ]);
+        }
+
+        //Para la aprobacion de la solicitudes de los almacenes de los egresos.
+        $keys = [
+            'browse_inbox',
+            'read_inbox',
+            // 'delete_inbox',
+            // 'print_inbox',
+        ];
+
+        foreach ($keys as $key) {
+            Permission::firstOrCreate([
+                'key'        => $key,
+                'table_name' => 'inbox',
             ]);
         }
 

@@ -1,6 +1,6 @@
 <div class="col-md-12">
     <div class="table-responsive">
-        <table id="dataTableStyle" class="dataTable table-hover">
+        <table id="dataTableStyle" class="table table-bordered table-hover">
             <thead>
                 <tr>
                     <th style="text-align: center">Nro&deg;</th>
@@ -14,9 +14,9 @@
                         <th style="text-align: center">Sucursal</th>
                     @endif
                     <th class="text-align: center">Estado</th>
-                    @if(auth()->user()->hasPermission('read_egres')||auth()->user()->hasPermission('edit_egres')||auth()->user()->hasPermission('delete_egres'))
-                        <th>Accion</th>
-                    @endif
+                    {{-- @if(auth()->user()->hasPermission('read_egres')||auth()->user()->hasPermission('edit_egres')||auth()->user()->hasPermission('delete_egres')) --}}
+                        <th style="width: 120px">Accion</th>
+                    {{-- @endif --}}
                 </tr>
             </thead>
             <tbody>
@@ -64,10 +64,12 @@
                                     </a>   
                                 @endif --}}
 
-
-                                <a href="{{route('inbox.show',$item->id)}}" title="Ver Solicitud" class="btn btn-sm btn-warning view">
-                                    <i class="fa-solid fa-eye"></i> Ver
-                                </a>  
+                                @if (auth()->user()->hasPermission('read_inbox'))
+                                    <a href="{{route('inbox.show',$item->id)}}" title="Ver Solicitud" class="btn btn-sm btn-warning view">
+                                        <i class="fa-solid fa-eye"></i> Ver
+                                    </a>  
+                                @endif
+                                
                                 {{-- @if($item->status == 'Enviado')
                                     <a data-toggle="modal" data-target="#modal-rechazar" title="Rechazar Solicitud" data-id="{{$item->id}}" class="btn btn-sm btn-dark view">
                                         <i class="fa-solid fa-thumbs-down"></i> <span class="hidden-xs hidden-sm">Rechazar</span>
