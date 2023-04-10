@@ -12,6 +12,7 @@ class Article extends Model
     protected $fillable = [
         'partida_id',
         'nombre',
+        'image',
         'presentacion',
         'condicion',
         'sucursal_id',

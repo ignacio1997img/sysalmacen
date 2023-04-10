@@ -833,7 +833,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 0,
                 'delete' => 0,
                 'details' => '{}',
-                'order' => 5,
+                'order' => 6,
             ),
             51 => 
             array (
@@ -849,7 +849,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 0,
                 'delete' => 0,
                 'details' => '{}',
-                'order' => 6,
+                'order' => 7,
             ),
             52 => 
             array (
@@ -865,7 +865,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 0,
                 'delete' => 0,
                 'details' => '{}',
-                'order' => 7,
+                'order' => 8,
             ),
             53 => 
             array (
@@ -881,7 +881,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 0,
                 'delete' => 0,
                 'details' => '{}',
-                'order' => 8,
+                'order' => 9,
             ),
             54 => 
             array (
@@ -897,7 +897,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 1,
                 'delete' => 1,
                 'details' => '{"model":"App\\\\Models\\\\Partida","table":"partidas","type":"belongsTo","column":"partida_id","key":"id","label":"nombre","pivot_table":"archivos","pivot":"0","taggable":"0"}',
-                'order' => 9,
+                'order' => 10,
             ),
             55 => 
             array (
@@ -2129,7 +2129,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 1,
                 'delete' => 0,
                 'details' => '{}',
-                'order' => 10,
+                'order' => 11,
             ),
             132 => 
             array (
@@ -2146,6 +2146,22 @@ class DataRowsTableSeeder extends Seeder
                 'delete' => 0,
                 'details' => '{}',
                 'order' => 13,
+            ),
+            133 => 
+            array (
+                'id' => 226,
+                'data_type_id' => 16,
+                'field' => 'image',
+                'type' => 'image',
+                'display_name' => 'Imagen',
+                'required' => 0,
+                'browse' => 1,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 0,
+                'details' => '{"display":{"width":12},"resize":{"width":"1000","height":null},"quality":"70%","upsize":true,"thumbnails":[{"name":"medium","scale":"50%"},{"name":"small","scale":"25%"},{"name":"cropped","crop":{"width":"300","height":"250"}}]}',
+                'order' => 5,
             ),
         ));
         

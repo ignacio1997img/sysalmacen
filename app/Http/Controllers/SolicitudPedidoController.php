@@ -10,6 +10,7 @@ use App\Models\SucursalDireccion;
 use App\Models\InventarioAlmacen;
 use App\Models\SolicitudPedido;
 use App\Models\SolicitudPedidoDetalle;
+use App\Models\SucursalUnidadPrincipal;
 use App\Models\SucursalUser;
 use Carbon\Carbon;
 
@@ -58,14 +59,24 @@ class SolicitudPedidoController extends Controller
     public function create()
     {
         // return 1;
+        $user = Auth::user();
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
         $sucursal = Sucursal::where('id', $sucursal->sucursal_id)->first();
         $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
 
         // return 1;
-        $funcionario = $this->getPeople(Auth::user()->funcionario_id);
+        $funcionario = $this->getWorker($user->funcionario_id);
+        // dd($funcionario);
 
         // return 1;
+
+        $mainUnit = SucursalUnidadPrincipal::where('sucursal_id', $user->sucursal_id)->where('status', 1)->where('deleted_at', null)->first();
+        // return $mainUnit;
+        $query = 1;
+        if($mainUnit)
+        {
+            $query = 's.unidadadministrativa = '.$mainUnit->unidadAdministrativa_id;
+        }
 
         
         // dd($funcionario);
@@ -73,9 +84,12 @@ class SolicitudPedidoController extends Controller
             ->join('facturas as f', 'f.solicitudcompra_id', 's.id')
             ->join('detalle_facturas as d', 'd.factura_id', 'f.id')
             ->join('articles as a', 'a.id', 'd.article_id')
+
+            ->where('s.sucursal_id', $user->sucursal_id)
             ->where('s.stock', 1)
             ->where('s.deleted_at', null)
-            ->whereRaw('(s.unidadadministrativa = '.$funcionario->id_unidad.' or s.unidadadministrativa = 192)')
+            ->whereRaw('(s.unidadadministrativa = '.$funcionario->id_unidad.' or '.$query.')')
+            // ->whereRaw('(s.unidadadministrativa = '.$funcionario->id_unidad.')')
 
             ->where('f.deleted_at', null)
 
@@ -88,6 +102,8 @@ class SolicitudPedidoController extends Controller
             ->orderBy('article')
             ->get();
         // return $data;
+
+        // return count($data);
 
 
 

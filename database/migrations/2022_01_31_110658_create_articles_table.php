@@ -17,6 +17,8 @@ class CreateArticlesTable extends Migration
             $table->id();
             $table->foreignId('partida_id')->nullable()->constrained('partidas');
             $table->string('nombre', 512);
+            $table->text('image')->nullable();
+
             // $table->string('marca', 512);
             $table->string('presentacion', 512);
             $table->boolean('condicion')->default(1);
