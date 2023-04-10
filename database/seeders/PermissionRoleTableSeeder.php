@@ -173,6 +173,7 @@ class PermissionRoleTableSeeder extends Seeder
         //para las solicitudes de pedidos
         $role = Role::where('name', 'almacen_solicitud_pedido')->firstOrFail();
         $permissions = Permission::whereRaw('table_name = "admin" or
+                                             table_name = "outbox" or
                                             
                                             `key` = "browse_clear-cache"')->get();
         $role->permissions()->sync($permissions->pluck('id')->all());
