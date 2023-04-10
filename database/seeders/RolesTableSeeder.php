@@ -49,27 +49,16 @@ class RolesTableSeeder extends Seeder
         $role = Role::firstOrNew(['name' => 'almacen_admin']);
         if (!$role->exists) {
             $role->fill([
-                'display_name' => __('Almacen - Administrador del Almacen'),
+                'display_name' => __('Almacen - Administrador de todos los Almacenes'),
             ])->save();
         }
-
         
-
-        // Rol para las unidades y direcciones solicitnates de pedidos
-        // $role = Role::firstOrNew(['name' => 'almacen_aprobar_solicitudes']);
-        // if (!$role->exists) {
-        //     $role->fill([
-        //         'display_name' => __('Almacen - Responsable de Aprobar Solicitudes'),
-        //     ])->save();
-        // }
-
         $role = Role::firstOrNew(['name' => 'almacen_subadmin']);
         if (!$role->exists) {
             $role->fill([
-                'display_name' => __('Almacen - Sub Administrador del Almacen'),
+                'display_name' => __('Almacen - Responsable de almacen "Report"'),
             ])->save();
         }
-
 
         $role = Role::firstOrNew(['name' => 'almacen_responsable']);
         if (!$role->exists) {
@@ -78,11 +67,25 @@ class RolesTableSeeder extends Seeder
             ])->save();
         }
 
-        //Rol para aprobra las solicitudes de pedido 
+        $role = Role::firstOrNew(['name' => 'almacen_subadmin_responsable']);
+        if (!$role->exists) {
+            $role->fill([
+                'display_name' => __('Almacen - Responsable de almacen "Ingreso & Egreso & Report"'),
+            ])->save();
+        }
+
+        //Rol para las solicitudes de pedido 
         $role = Role::firstOrNew(['name' => 'almacen_solicitud_pedido']);
         if (!$role->exists) {
             $role->fill([
-                'display_name' => __('Almacen - Responsable de Solicitar Los Pedidos'),
+                'display_name' => __('Almacen - Solicitud de Pedidos'),
+            ])->save();
+        }
+
+        $role = Role::firstOrNew(['name' => 'almacen_solicitud_aprobar']);
+        if (!$role->exists) {
+            $role->fill([
+                'display_name' => __('Almacen - Responsable de Aprobar Las Solicitudes'),
             ])->save();
         }
 
