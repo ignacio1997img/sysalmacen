@@ -62,6 +62,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     // :::::::::::::::::::::::::::::     PARA LAS SOLICITUDES  DE LOS PRODECTOS O ARTICULOS       ::::::::::::::::::::::::::::::::::::::::::
     Route::resource('outbox',SolicitudPedidoController::class);
     Route::get('outbox/ajax/list/{search?}', [SolicitudPedidoController::class, 'list']);
+    Route::get('outbox/article/stock/ajax', [SolicitudPedidoController::class, 'ajaxProductExists']);//para poder obtener los particulos o productos disponible para hacer la solicitud
+
     Route::post('outbox/enviar', [SolicitudPedidoController::class, 'solicitudEnviada'])->name('outbox.enviar');
 
     Route::resource('inbox', SolicitudBandejaController::class);

@@ -127,17 +127,87 @@ class SolicitudPedidoController extends Controller
         return view('almacenes.outbox.edit-add', compact('gestion', 'sucursal', 'funcionario', 'data'));
     }
 
+
+
+    //Funcion ajax para obtener los articulos disponible en el almacen
+    public function ajaxProductExists()
+    {
+        $q = request('q');
+        $user = Auth::user();
+
+
+        $funcionario = $this->getWorker($user->funcionario_id);
+
+        $mainUnit = SucursalUnidadPrincipal::where('sucursal_id', $user->sucursal_id)->where('status', 1)->where('deleted_at', null)->first();
+        // return $mainUnit;
+        $query = '';
+        if($mainUnit)
+        {
+            $query = ' or s.unidadadministrativa = '.$mainUnit->unidadAdministrativa_id;
+        }
+        $unidad = 'null';
+        if($funcionario->id_unidad)
+        {
+            $unidad = $funcionario->id_unidad;
+        }
+
+
+        $data = DB::table('solicitud_compras as s')
+                ->join('facturas as f', 'f.solicitudcompra_id', 's.id')
+                ->join('detalle_facturas as d', 'd.factura_id', 'f.id')
+                ->join('articles as a', 'a.id', 'd.article_id')
+
+                ->where('s.sucursal_id', $user->sucursal_id)
+                ->where('s.stock', 1)
+                ->where('s.deleted_at', null)
+                
+
+                // ->whereRaw('(s.unidadadministrativa = '.$funcionario->id_unidad.' or s.unidadadministrativa = 0)')
+
+                ->whereRaw('(s.unidadadministrativa = '.$unidad.''.$query.')')
+                // ->whereRaw('(s.unidadadministrativa = '.$funcionario->id_unidad.')')
+
+                ->where('f.deleted_at', null)
+
+                ->where('d.deleted_at', null)
+                ->where('d.cantrestante', '>', 0)
+                ->where('d.condicion', 1)
+                ->where('d.hist', 0)
+                ->select('s.id', 'f.id as factura_id', 'a.id as article_id', 'a.nombre as nombre', 'a.image', 'a.presentacion')
+                ->whereRaw("(nombre like '%$q%')")
+                ->groupBy('article_id')
+                ->orderBy('nombre')
+                ->get();
+
+        
+        // $data = IncomesDetail::with(['article','article.category'])
+        //     ->where(function($query) use ($q){
+        //         if($q){
+        //             $query->OrwhereHas('article', function($query) use($q){
+        //                 $query->whereRaw("(name like '%$q%')");
+        //             });
+        //         }
+        //     })
+        //     ->select('article_id', 'id', 'price', 'expiration',  DB::raw("SUM(cantRestante) as cantRestante"))
+        //     ->where('cantRestante','>', 0)->where('deleted_at', null)->where('expirationStatus', 1)->groupBy('article_id', 'price', 'expiration')->get();
+
+        return response()->json($data);
+    }
+
     public function store(Request $request)
     {
         // return $request;
         DB::beginTransaction();
         try {
+            $user = Auth::user();
+
             if(!$request->article_id)
             {
                 return redirect()->route('outbox.index')->with(['message' => 'Ingrese el detalle del pedido para hacer la solicitud.', 'alert-type' => 'error']);
             }
-            $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
-            $sucursal = Sucursal::where('id', $sucursal->sucursal_id)->first();
+
+            // $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
+            $sucursal = Sucursal::where('id', $user->sucursal_id)->first();
             if(!$sucursal)
             {
                 return redirect()->route('outbox.index')->with(['message' => 'Error.', 'alert-type' => 'error']);
@@ -147,7 +217,7 @@ class SolicitudPedidoController extends Controller
             {
                 return redirect()->route('outbox.index')->with(['message' => 'Error en la gestion.', 'alert-type' => 'error']);
             }
-            $funcionario = $this->getPeople(Auth::user()->funcionario_id);
+            $funcionario = $this->getWorker(Auth::user()->funcionario_id);
             // return $gestion;
             // dd($funcionario);
             // return 2;
@@ -156,7 +226,7 @@ class SolicitudPedidoController extends Controller
                 'fechasolicitud'=> Carbon::now(),
                 'gestion' => $gestion->gestion,
                 'nropedido' => 1,
-                'people_id'=> $funcionario->id_funcionario,
+                'people_id'=> $funcionario->people_id,
                 'first_name'=>$funcionario->first_name,
                 'last_name'=>$funcionario->last_name,
                 'job'=>$funcionario->cargo,
@@ -164,9 +234,10 @@ class SolicitudPedidoController extends Controller
                 'direccion_id'=>$funcionario->id_direccion,
                 'unidad_name'=>$funcionario->unidad,
                 'unidad_id'=> $funcionario->id_unidad,
-                'registerUser_Id'=> Auth::user()->id
+                'registerUser_Id'=> $user->id
             ]);            
-            $cont = 0;        
+            $cont = 0;    
+            // return $request;    
             while($cont < count($request->article_id))
             {
                 SolicitudPedidoDetalle::create([
@@ -186,7 +257,7 @@ class SolicitudPedidoController extends Controller
 
         } catch (\Throwable $th) {
             DB::rollBack();
-            // return 0;
+            return 0;
             return redirect()->route('outbox.index')->with(['message' => 'Error...', 'alert-type' => 'error']);
         }
     }

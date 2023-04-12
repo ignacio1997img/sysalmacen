@@ -18,15 +18,137 @@
 
 @section('content')    
     <div id="app">
-        <div class="page-content browse container-fluid" >            
+        <div class="page-content browse container-fluid" >     
+            
             <div class="row">
+                {!! Form::open(['route' => 'outbox.store', 'class' => 'was-validated'])!!}  
+
+                <input type="hidden" name="inventarioAlmacen_id" @if($gestion) value="{{$gestion->id}}" @endif>
+                <input type="hidden" name="gestion" @if($gestion) value="{{$gestion->gestion}}" @endif>
+
+                <div class="col-md-12">
+                    <div class="panel panel-bordered">
+                        <div class="panel-body" style="padding-bottom: 0px">
+                            <div class="form-group col-md-12">
+                                <label for="customer_id">Almacen:</label>                              
+
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <select name="sucursal_id" class="form-control select2" required>
+                                            @if ($sucursal)
+                                                <option value="{{$sucursal->id}}">{{$sucursal->nombre}}</option>                                                    
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <div class="panel-heading" style="border-bottom:0;">
+                                    <label class="panel-title">Solicitante</label>
+                                </div>
+                                <div class="panel-body" style="padding-top:0;">
+                                    <p><small>{{$funcionario->nombre}} - {{$funcionario->cargo}}</small></p>
+                                </div>
+                                <hr style="margin:0;">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <div class="panel-heading" style="border-bottom:0;">
+                                    <label class="panel-title">Fecha de Solicitud</label>
+                                </div>
+                                <div class="panel-body" style="padding-top:0;">
+                                    <p><small>{{date('d/m/Y')}}</small></p>
+                                </div>
+                                <hr style="margin:0;">
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <div class="panel-heading" style="border-bottom:0;">
+                                    <label class="panel-title">Dirección</label>
+                                </div>
+                                <div class="panel-body" style="padding-top:0;">
+                                    <p><small>{{$funcionario->direccion}}</small></p>
+                                </div>
+                                <hr style="margin:0;">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <div class="panel-heading" style="border-bottom:0;">
+                                    <label class="panel-title">Unidad</label>
+                                </div>
+                                <div class="panel-body" style="padding-top:0;">
+                                    <p><small>{{$funcionario->unidad??'Sin Unidad'}}</small></p>
+                                </div>
+                                <hr style="margin:0;">
+                            </div>
+                           
+                            {{-- <div class="form-group col-md-4">
+                                <div class="checkbox">
+                                    <label><input type="checkbox" id="checkbox-proforma" name="proforma" value="1" required>Aceptar</label>
+                                </div>
+                            </div> --}}
+                            {{-- <div class="form-group col-md-8">
+                                <h2 class="text-right"><small>Total: Bs.</small> <b id="label-total">0.00</b></h2>
+                                <input type="hidden" name="amount" id="input-total" value="0">
+                            </div> --}}
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="panel panel-bordered">
+                        <div class="panel-body">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="product_id">Buscar producto</label>
+                                    <select class="form-control" id="select_producto"></select>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table id="dataTable" class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 30px">N&deg;</th>
+                                                <th style="text-align: center">Detalle</th>  
+                                                <th style="text-align: center; width: 80px">Cantidad</th>  
+                                                <th style="text-align: center; width: 80px">Cantidad</th>  
+                                            </tr>
+                                        </thead>
+                                        <tbody id="table-body">
+                                            <tr id="tr-empty">
+                                                <td colspan="6" style="height: 290px">
+                                                    <h4 class="text-center text-muted" style="margin-top: 50px">
+                                                        <i class="voyager-basket" style="font-size: 50px"></i> <br><br>
+                                                        Lista de pedido vacía
+                                                    </h4>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>       
+                            <div class="form-group col-md-12 text-center">
+                                {{-- Tiene que tener una gestion activa y tenes una unidad agregada como funcionario --}}
+                                @if ($gestion && $funcionario->unidad)
+                                    <button type="submit" id="btn-submit" class="btn btn-success btn-block">Registrar Pedido<i class="voyager-basket"></i></button>
+                                @endif
+                                <a href="{{ route('outbox.index') }}" >Volver a la lista</a>
+                            </div>                        
+                            
+                        </div>
+                    </div>
+                </div>
+                {!! Form::close() !!}      
+
+            </div>   
+            
+
+
+            {{-- <div class="row"> 
                 <div class="col-md-12">
                     <div class="panel panel-bordered">
                         <div class="panel-body">    
-                            {!! Form::open(['route' => 'outbox.store', 'class' => 'was-validated'])!!}  
-
-                            <input type="hidden" name="inventarioAlmacen_id" @if($gestion) value="{{$gestion->id}}" @endif>
-                            <input type="hidden" name="gestion" @if($gestion) value="{{$gestion->gestion}}" @endif>
+                            
 
                                     
                             <h5 id="subtitle">Solicitud de Compras</h5>
@@ -45,7 +167,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
+                                {{-- <div class="col-md-6">
                                     <div class="panel-heading" style="border-bottom:0;">
                                         <h3 class="panel-title">Solicitante</h3>
                                     </div>
@@ -62,8 +184,8 @@
                                         <p><small>{{date('d/m/Y')}}</small></p>
                                     </div>
                                     <hr style="margin:0;">
-                                </div>
-                                <div class="col-md-6">
+                                </div> --}}
+                                {{-- <div class="col-md-6">
                                     <div class="panel-heading" style="border-bottom:0;">
                                         <h3 class="panel-title">Dirección</h3>
                                     </div>
@@ -109,7 +231,7 @@
                                                         <div class="form-line">
                                                             <input type="number" id="cantidad" min="0" step=".1" onkeypress="return filterFloat(event,this);" onchange="subTotal()" onkeyup="subTotal()" style="text-align: right" class="form-control text">                                    
 
-                                                            {{-- <input type="number" id="cantidad" step="0.01" class="form-control form-control-sm text" placeholder="Introducir monto" autocomplete="off"> --}}
+                                                            {{-- <input type="number" id="cantidad" step="0.01" class="form-control form-control-sm text" placeholder="Introducir monto" autocomplete="off"> 
                                                         </div>
                                                         <small>Cantidad a solicitar.</small>
                                                     </div>
@@ -124,7 +246,7 @@
                                             </div>
                                         </div>
                                     
-                                        <table id="dataTableStyle" class="table table-bordered table-striped table-sm">
+                                        <table id="dataTableStyle" class="table-bordered table-striped table-sm">
                                             <thead>
                                                 <tr>
                                                     <th style="width: 5px; text-align: center">Opciones</th>
@@ -136,18 +258,17 @@
                                             </thead>                                            
                                         </table>
 
-                                        {{-- Tiene que tener una gestion activa y tenes una unidad agregada como funcionario --}}
+                                        {{-- Tiene que tener una gestion activa y tenes una unidad agregada como funcionario 
                                         @if ($gestion && $funcionario->unidad)
                                             <div class="card-footer">
                                                 <button id="btn_guardar" type="submit"  class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
                                             </div> 
                                         @endif 
                                     
-                                    {!! Form::close() !!}      
                            
                         </div>
                     </div>
-                </div>
+                </div>--}}
             </div>
         </div>
     </div>          
@@ -217,9 +338,161 @@
 @stop
 
 @section('javascript')
-{{-- <script src="{{ asset('js/app.js') }}" defer></script> --}}
 
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<script>
+    $(document).ready(function(){
+        var productSelected;
+
+        $('#select_producto').select2({
+        // tags: true,
+            placeholder: '<i class="fa fa-search"></i> Buscar...',
+            escapeMarkup : function(markup) {
+                return markup;
+            },
+            language: {
+                inputTooShort: function (data) {
+                    return `Por favor ingrese ${data.minimum - data.input.length} o más caracteres`;
+                },
+                noResults: function () {
+                    return `<i class="far fa-frown"></i> No hay resultados encontrados`;
+                }
+            },
+            quietMillis: 250,
+            minimumInputLength: 2,
+            ajax: {
+                url: "{{ url('admin/outbox/article/stock/ajax') }}",        
+                processResults: function (data) {
+                    let results = [];
+                    data.map(data =>{
+                        results.push({
+                            ...data,
+                            disabled: false
+                        });
+                    });
+                    return {
+                        results
+                    };
+                },
+                cache: true
+            },
+            templateResult: formatResultCustomers,
+            templateSelection: (opt) => {
+                productSelected = opt;
+
+                
+                return opt.id?opt.nombre:'<i class="fa fa-search"></i> Buscar... ';
+            }
+        }).change(function(){
+            // alert(2)
+            if($('#select_producto option:selected').val()){
+                let product = productSelected;
+                if($('.tables').find(`#tr-item-${product.article_id}`).val() === undefined){
+                // alert(product.name);
+
+                    $('#table-body').append(`
+                        <tr class="tr-item" id="tr-item-${product.article_id}">
+                            <td class="td-item"></td>
+                            <td>
+                                <b class="label-description" id="description-${product.article_id}"><small>${product.nombre}</small><br>
+                                <b class="label-description"><small>${product.presentacion}</small>
+                                <input type="hidden" name="article_id[]" value="${product.article_id}" />
+                            </td>
+                            <td>
+                                <input type="number" name="cantidad[]" min="1" step="1" id="select-cant-${product.article_id}" style="text-align: right" class="form-control text" required>
+                            </td>
+                            <td class="text-right"><button type="button" onclick="removeTr(${product.article_id})" class="btn btn-link"><i class="voyager-trash text-danger"></i></button></td>
+                        </tr>
+                    `);
+                }else{
+                    toastr.info('EL detalle ya está agregado', 'Información')
+                }
+                setNumber();
+                // getSubtotal(product.article_id);
+            }
+        });
+        
+
+    })
+
+    function formatResultCustomers(option){
+    // Si está cargando mostrar texto de carga
+    // alert(option.article.name)
+        if (option.loading) {
+            return '<span class="text-center"><i class="fas fa-spinner fa-spin"></i> Buscando...</span>';
+        }
+        let image = "{{ asset('images/default.jpg') }}";
+        if(option.image){
+            image = "{{ asset('storage') }}/"+option.image.replace('.', '-cropped.');
+            // alert(image)
+        }
+        
+        // Mostrar las opciones encontradas
+        return $(`  <div style="display: flex">
+                        <div style="margin: 0px 10px">
+                            <img src="${image}" width="50px" />
+                        </div>
+                        <div>
+                            <b style="font-size: 16px">${option.nombre} </b> <br>
+                            <small style="font-size: 16px">${option.presentacion} </small>
+                         
+                        </div>
+                    </div>`);
+    }
+
+
+
+    function setNumber(){
+        var length = 0;
+        $(".td-item").each(function(index) {
+            $(this).text(index +1);
+            length++;
+        });
+
+        if(length > 0){
+            $('#tr-empty').css('display', 'none');
+        }else{
+            $('#tr-empty').fadeIn('fast');
+        }
+    }
+
+    function removeTr(id){
+        // alert(1)
+        $(`#tr-item-${id}`).remove();
+        $('#select_producto').val("").trigger("change");
+        setNumber();
+        // getTotal();
+    }
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <script>
     function filterFloat(evt,input){
                 // Backspace = 8, Enter = 13, ‘0′ = 48, ‘9′ = 57, ‘.’ = 46, ‘-’ = 43
@@ -247,7 +520,7 @@
 <script>
         $(function()
         {             
-            $(".select2").select2({theme: "classic"});
+            // $(".select2").select2({theme: "classic"});u
 
             $('#article_id').on('change', onselect_presentacion);
 
