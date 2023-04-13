@@ -51,12 +51,12 @@
                                 
                                 @if($gestion)
                                     @if($item->gestion == $gestion->gestion)
-                                        @if(auth()->user()->hasPermission('edit_egres') )
+                                        @if(auth()->user()->hasPermission('edit_egres1') )
                                             <a href="{{route('egres.edit',$item->id)}}" title="Editar" class="btn btn-sm btn-info view">
                                                 <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Editar</span>
                                             </a>
                                         @endif
-                                        @if(auth()->user()->hasPermission('delete_egres'))
+                                        @if(auth()->user()->hasPermission('delete_egres1'))
                                             <a data-toggle="modal" data-id="{{$item->id}}" data-target="#myModalEliminar" title="Eliminar" class="btn btn-sm btn-danger view">
                                                 <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Eliminar</span>
                                             </a>
