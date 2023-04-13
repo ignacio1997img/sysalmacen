@@ -78,6 +78,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     //........................  INCOME
     Route::resource('income', IncomeController::class);
     Route::get('income/ajax/list/{type}/{search?}', [IncomeController::class, 'list']);
+    Route::get('income/provider/list/ajax', [ProviderController::class, 'list']);
     Route::get('incomes/browse/view/{id?}', [IncomeController::class, 'view_ingreso'])->name('income_view');
     Route::get('incomes/browse/view/stock/{id?}', [IncomeController::class, 'view_ingreso_stock'])->name('income_view_stock');
     Route::delete('incomes/browse/delete', [IncomeController::class, 'destroy'])->name('income_delete');

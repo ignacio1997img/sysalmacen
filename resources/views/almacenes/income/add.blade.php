@@ -1,46 +1,7 @@
 @extends('voyager::master')
 
-@section('page_title', 'Viendo Ingresos')
+@section('page_title', 'Viendo Ingresos del almacen')
 
-<style>
-    input:focus {
-  background: rgb(197, 252, 215);
-}
-</style>
-<style>
-    input:focus{        
-        background: rgb(255, 245, 229);
-        border-color: rgb(255, 161, 10);
-        /* border-radius: 50px; */
-    }
-    input.text, select.text, textarea.text{ 
-        border-radius: 5px 5px 5px 5px;
-        color: #000000;
-        border-color: rgb(63, 63, 63);
-    }
-
-   
-    small{font-size: 32px;
-        color: rgb(12, 12, 12);
-        font-weight: bold;
-    }
-    #subtitle{
-        font-size: 18px;
-        color: rgb(12, 12, 12);
-        font-weight: bold;
-    }
-
-
-   
-
-    .form-control .select2{
-        border-radius: 5px 5px 5px 5px;
-        color: #000000;
-        border-color: rgb(63, 63, 63);
-    }
-    
-
-</style>
 
 @if(auth()->user()->hasPermission('add_income'))
 
@@ -83,7 +44,7 @@
                                             <input type="hidden" name="inventarioAlmacen_id" @if($gestion) value="{{$gestion->id}}" @endif>
                                             <input type="hidden" name="gestion" @if($gestion) value="{{$gestion->gestion}}" @endif>
 
-                                            <h5 id="subtitle">Solicitud de Compras</h5>
+                                            <h5>Solicitud de Compras</h5>
                                             <div class="row">
                                                 <!-- === -->
                                                 <div class="col-sm-3">
@@ -174,7 +135,20 @@
                                                 </div> --}}
     
                                             <div class="row">
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <div class="input-group">
+                                                            <select class="form-control" id="select_proveedor" required></select>
+                                                            <span class="input-group-btn">
+                                                                <button class="btn btn-primary" title="Nuevo proveedor" data-target="#modal-create-customer" data-toggle="modal" style="margin: 0px" type="button">
+                                                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                                                </button>
+                                                            </span>
+                                                        </div>
+                                                        <small for="product_id">Proveedor</small>
+                                                    </div>
+                                                </div>
+                                                {{-- <div class="col-sm-6">
                                                     <div class="form-group">
                                                         <div class="form-line">
                                                             <select id="provider" name="provider_id" class="form-control select2" required>
@@ -205,7 +179,7 @@
                                                         </div>
                                                         <small>Responsable.</small>
                                                     </div>
-                                                </div>
+                                                </div> --}}
                                             </div>
                                             <div class="row">
                                                 <div class="col-sm-2">
@@ -354,6 +328,50 @@
         </div>  
         {{-- <input type="text" onkeypress="return NumCheck(event, this)"/>      --}}
         {{-- <input type="text" name="moneda nac" id="moneda_nac" value="10" onkeypress="return filterFloat(event,this);"/>    --}}
+
+        {{-- Modal crear cliente --}}
+        <form action="{{ url('admin/customers/store') }}" id="form-create-customer" method="POST">
+            <div class="modal fade" tabindex="-1" id="modal-create-customer" role="dialog">
+                <div class="modal-dialog modal-primary">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title"><i class="voyager-trash"></i> Desea eliminar el siguiente registro?</h4>
+                        </div>
+                        <div class="modal-body">
+                            @csrf
+                            <input type="hidden" name="type" value="normal">
+                            <input type="hidden" name="status" value="activo">
+                            <div class="form-group">
+                                <label for="full_name">Nombre completo</label>
+                                <input type="text" name="full_name" class="form-control" placeholder="Juan Perez" required>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="full_name">NIT/CI</label>
+                                    <input type="text" name="dni" class="form-control" placeholder="123456789">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="full_name">Celular</label>
+                                    <input type="text" name="phone" class="form-control" placeholder="75199157">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Dirección</label>
+                                <textarea name="address" class="form-control" rows="3" placeholder="C/ 18 de nov. Nro 123 zona central"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                            <input type="submit" class="btn btn-primary btn-save-customer" value="Guardar">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+
     @stop
 
 
@@ -365,6 +383,95 @@
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
         <script>
+            var productSelected, customerSelected;
+            $(document).ready(function(){
+    
+                $('#select_proveedor').select2({
+                    // tags: true,
+                    placeholder: '<i class="fa fa-search"></i> Buscar...',
+                    escapeMarkup : function(markup) {
+                        return markup;
+                    },
+                    language: {
+                        inputTooShort: function (data) {
+                            return `Por favor ingrese ${data.minimum - data.input.length} o más caracteres`;
+                        },
+                        noResults: function () {
+                            return `<i class="far fa-frown"></i> No hay resultados encontrados`;
+                        }
+                    },
+                    quietMillis: 250,
+                    minimumInputLength: 2,
+                    ajax: {
+                        url: "{{ url('admin/income/provider/list/ajax') }}",        
+                        processResults: function (data) {
+                            let results = [];
+                            data.map(data =>{
+                                results.push({
+                                    ...data,
+                                    disabled: false
+                                });
+                            });
+                            return {
+                                results
+                            };
+                        },
+                        cache: true
+                    },
+                    templateResult: formatResultCustomers,
+                    templateSelection: (opt) => {
+                        customerSelected = opt;
+                        return opt.razonsocial;
+                    }
+                }).change(function(){
+                    // if(customerSelected){
+                    //     $('#input-dni').val(customerSelected.razonsocial ? customerSelected.razonsocial : '');
+                    // }
+                });
+    
+                // $('#form-create-customer').submit(function(e){
+                //     e.preventDefault();
+                //     $('.btn-save-customer').attr('disabled', true);
+                //     $('.btn-save-customer').val('Guardando...');
+                //     $.post($(this).attr('action'), $(this).serialize(), function(data){
+                //         if(data.customer.id){
+                //             toastr.success('Usuario creado', 'Éxito');
+                //             $(this).trigger('reset');
+                //         }else{
+                //             toastr.error(data.error, 'Error');
+                //         }
+                //     })
+                //     .always(function(){
+                //         $('.btn-save-customer').attr('disabled', false);
+                //         $('.btn-save-customer').text('Guardar');
+                //         $('#modal-create-customer').modal('hide');
+                //     });
+                // });
+    
+    
+    
+                // $('#form-sale').submit(function(e){
+                //     $('#btn-submit').attr('disabled', 'disabled');
+                // });
+            });
+    
+
+    
+
+     
+            function formatResultCustomers(option){
+                // Si está cargando mostrar texto de carga
+                if (option.loading) {
+                    return '<span class="text-center"><i class="fas fa-spinner fa-spin"></i> Buscando...</span>';
+                }
+                // Mostrar las opciones encontradas
+                return $(`  <div>
+                                <b style="font-size: 16px">${option.razonsocial}</b><br>
+                                <small>NIT: ${option.nit ? option.nit : 'No definido'} - Cel: ${option.telefono ? option.telefono : 'No definido'}</small>
+                            </div>`);
+            }
+        </script>
+        <script>
             $(document).ready(function(){
                 $('#form-agregar').submit(function(e){
                     // $('#btn_guardar').css('display', 'none');
@@ -375,7 +482,7 @@
 
             $(function()
             {    
-                $(".select2").select2({theme: "classic"});
+                // $(".select2").select2({theme: "classic"});
 
                 $('#das').on('change', unidad_administrativa);
 
@@ -706,7 +813,7 @@
     </script>
     @stop
 
-    @else
+@else
     @section('content')
         <h1>No tienes permiso</h1>
     @stop

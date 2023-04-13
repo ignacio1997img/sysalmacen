@@ -22,4 +22,12 @@ class ProviderController extends Controller
         $provider = Provider::whereRaw($query_filter)->get();
         return view('almacenes.provider.browse', compact('provider'));
     }
+
+
+    public function list(){
+        $q = request('q');
+        $data = Provider::whereRaw($q ? '(nit like "%'.$q.'%" or razonsocial like "%'.$q.'%" or responsable like "%'.$q.'%")' : 1)
+                    ->where('deleted_at', NULL)->where('condicion',1)->get();
+        return response()->json($data);
+    }
 }
