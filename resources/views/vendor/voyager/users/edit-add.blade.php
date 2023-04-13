@@ -118,7 +118,7 @@
                             @endphp
                             @if ($dataTypeContent->id)
                                 @php
-                                    $sucursal = \App\Models\SucursalUser::where('deleted_at', null)->where('user_id', $dataTypeContent->id)->where('condicion', 1)->first();
+                                    $sucursal = \App\Models\User::where('id', $dataTypeContent->id)->first();
                                 @endphp                                
                             @endif
 
