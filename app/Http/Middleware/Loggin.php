@@ -37,6 +37,11 @@ class Loggin
                 return redirect()->route('error');
             }
 
+            if($obj->getWorker(Auth::user()->funcionario_id) == "error" && !auth()->user()->hasRole('admin'))
+            {
+                return redirect()->route('contact');
+            }
+
             if($obj->getWorker(Auth::user()->funcionario_id) == "null" && !auth()->user()->hasRole('admin'))
             {
                 return redirect()->route('notpeople');

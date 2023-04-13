@@ -20,4 +20,9 @@ class MaintenanceController extends Controller
     {
         return view('errors.error');
     }
+
+    public function contact()
+    {
+        return view('errors.contact');
+    }
 }

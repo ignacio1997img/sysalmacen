@@ -147,7 +147,7 @@ class Controller extends BaseController
 
         if((!$funcionario->id_unidad || !$funcionario->id_direccion) && !auth()->user()->hasRole('admin') )
         {
-            return "null";
+            return "error";
         }
 
         if($funcionario->cargo_id != NULL)

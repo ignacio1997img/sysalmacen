@@ -49,6 +49,7 @@ Route::get('login', 'Auth\LoginController@showLoginForm')->name('logins');
 Route::get('/maintenance', [MaintenanceController::class , 'maintenance'])->name('maintenance');
 Route::get('/notpeople', [MaintenanceController::class , 'notpeople'])->name('notpeople');
 Route::get('/error', [MaintenanceController::class , 'error'])->name('error');
+Route::get('/contact', [MaintenanceController::class , 'contact'])->name('contact');
 
 
 
