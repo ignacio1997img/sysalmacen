@@ -81,7 +81,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 1,
                 'delete' => 0,
                 'details' => '{}',
-                'order' => 5,
+                'order' => 6,
             ),
             4 => 
             array (
@@ -97,7 +97,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 0,
                 'delete' => 0,
                 'details' => '{}',
-                'order' => 7,
+                'order' => 8,
             ),
             5 => 
             array (
@@ -113,7 +113,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 0,
                 'delete' => 0,
                 'details' => '{}',
-                'order' => 8,
+                'order' => 9,
             ),
             6 => 
             array (
@@ -129,7 +129,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 0,
                 'delete' => 0,
                 'details' => '{}',
-                'order' => 9,
+                'order' => 10,
             ),
             7 => 
             array (
@@ -145,7 +145,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 1,
                 'delete' => 1,
                 'details' => '{}',
-                'order' => 11,
+                'order' => 12,
             ),
             8 => 
             array (
@@ -161,7 +161,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 1,
                 'delete' => 0,
                 'details' => '{"model":"TCG\\\\Voyager\\\\Models\\\\Role","table":"roles","type":"belongsTo","column":"role_id","key":"id","label":"display_name","pivot_table":"roles","pivot":"0","taggable":"0"}',
-                'order' => 13,
+                'order' => 15,
             ),
             9 => 
             array (
@@ -171,13 +171,13 @@ class DataRowsTableSeeder extends Seeder
                 'type' => 'relationship',
                 'display_name' => 'Roles',
                 'required' => 0,
-                'browse' => 1,
-                'read' => 1,
-                'edit' => 1,
-                'add' => 1,
+                'browse' => 0,
+                'read' => 0,
+                'edit' => 0,
+                'add' => 0,
                 'delete' => 0,
                 'details' => '{"model":"TCG\\\\Voyager\\\\Models\\\\Role","table":"roles","type":"belongsToMany","column":"id","key":"id","label":"display_name","pivot_table":"user_roles","pivot":"1","taggable":"0"}',
-                'order' => 14,
+                'order' => 16,
             ),
             10 => 
             array (
@@ -193,7 +193,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 0,
                 'delete' => 0,
                 'details' => '{}',
-                'order' => 15,
+                'order' => 17,
             ),
             11 => 
             array (
@@ -353,7 +353,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 1,
                 'delete' => 1,
                 'details' => '{}',
-                'order' => 12,
+                'order' => 13,
             ),
             21 => 
             array (
@@ -1121,7 +1121,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 1,
                 'delete' => 1,
                 'details' => '{}',
-                'order' => 6,
+                'order' => 7,
             ),
             69 => 
             array (
@@ -1137,7 +1137,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 1,
                 'delete' => 1,
                 'details' => '{}',
-                'order' => 10,
+                'order' => 11,
             ),
             70 => 
             array (
@@ -2097,7 +2097,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 0,
                 'delete' => 0,
                 'details' => '{}',
-                'order' => 4,
+                'order' => 5,
             ),
             130 => 
             array (
@@ -2162,6 +2162,38 @@ class DataRowsTableSeeder extends Seeder
                 'delete' => 0,
                 'details' => '{"display":{"width":12},"resize":{"width":"1000","height":null},"quality":"70%","upsize":true,"thumbnails":[{"name":"medium","scale":"50%"},{"name":"small","scale":"25%"},{"name":"cropped","crop":{"width":"300","height":"250"}}]}',
                 'order' => 5,
+            ),
+            134 => 
+            array (
+                'id' => 227,
+                'data_type_id' => 1,
+                'field' => 'sucursal_id',
+                'type' => 'text',
+                'display_name' => 'Sucursal Id',
+                'required' => 0,
+                'browse' => 1,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 0,
+                'details' => '{}',
+                'order' => 4,
+            ),
+            135 => 
+            array (
+                'id' => 228,
+                'data_type_id' => 1,
+                'field' => 'user_belongsto_sucursal_relationship',
+                'type' => 'relationship',
+                'display_name' => 'Almacenes',
+                'required' => 0,
+                'browse' => 1,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => '{"model":"App\\\\Models\\\\Sucursal","table":"sucursals","type":"belongsTo","column":"sucursal_id","key":"id","label":"nombre","pivot_table":"archivos","pivot":"0","taggable":"0"}',
+                'order' => 14,
             ),
         ));
         

@@ -31,23 +31,28 @@ class IncomeController extends Controller
     public function index()
     {      
 
-        $data = SucursalUser::where('deleted_at', null)->where('condicion', 1)->get();
+        // $data = SucursalUser::where('deleted_at', null)->where('condicion', 1)->get();
         
-        for($i =0; $i<count($data); $i++)
-        {
-            User::where('id', $data[$i]->id)->update(['sucursal_id' => $data[$i]->sucursal_id]);
-        }
+        // for($i =0; $i<count($data); $i++)
+        // {
+        //     User::where('id', $data[$i]->id)->update(['sucursal_id' => $data[$i]->sucursal_id]);
+        // }
 
 
 
         // return Auth::user()->id;
-        if(setting('configuracion.maintenance') && !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
-        {
-            Auth::logout();
-            return redirect()->route('maintenance');
-        }
+        // if(setting('configuracion.maintenance') && !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
+        // {
+        //     Auth::logout();
+        //     return redirect()->route('maintenance');
+        // }
 
-        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
+
+        // $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
+
+        $user =Auth::user();
+
+        $sucursal = $user->sucursal_id;
         
         // return $sucursal;
         if(!$sucursal && !auth()->user()->hasRole('admin'))
@@ -56,8 +61,7 @@ class IncomeController extends Controller
         }
 
 
-        $user =Auth::user();
-        $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->sucursal_id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
+        $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
 
         // return $gestion;
         
@@ -67,14 +71,15 @@ class IncomeController extends Controller
 
     public function list($type, $search = null){
         $user = Auth::user();
+        $sucursal = $user->sucursal_id;
 
-        $sucursal = SucursalUser::where('user_id', $user->id)->where('condicion', 1)->where('deleted_at', null)->first();
-        // $gestion = InventarioAlmacen::where('status', 1)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
-        $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->sucursal_id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
+        // $sucursal = SucursalUser::where('user_id', $user->id)->where('condicion', 1)->where('deleted_at', null)->first();
+
+        $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
         
         // dd($gestion);
 
-        $query_filter = 'sucursal_id = '.$sucursal->sucursal_id;
+        $query_filter = 'sucursal_id = '.$sucursal;
         // dd($gestion);
         
         if(Auth::user()->hasRole('admin'))
@@ -160,19 +165,21 @@ class IncomeController extends Controller
 
     public function create()
     {
-        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
-        {
-            Auth::logout();
-            return redirect()->route('maintenance');
-        }
+        // if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
+        // {
+        //     Auth::logout();
+        //     return redirect()->route('maintenance');
+        // }
 
         // return 1;
-        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
+
+        // $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
+        $user= Auth::user();
+        $sucursal =$user->sucursal_id;
         // return $sucursal;
         // $sucursal = SucursalUser::where('user_id', $user->id)->where('condicion', 1)->where('deleted_at', null)->first();
 
 
-        $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->sucursal_id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
         // return $gestion;
 
         if(!$sucursal)
@@ -180,15 +187,18 @@ class IncomeController extends Controller
             return "Contactese con el administrador";
         }
 
+        $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
+
+
         // $da = $this->direccionSucursal($sucursal->first()->sucursal_id);
 
-        $da = $this->direccionSucursal($sucursal->sucursal_id);
+        $da = $this->direccionSucursal($sucursal);
 
-        $proveedor = Provider::where('condicion',1)->where('sucursal_id',$sucursal->sucursal_id)->get();
+        $proveedor = Provider::where('condicion',1)->where('sucursal_id',$sucursal)->get();
         // $partida = Partida::where('codigo','like','3%')->get();
         $partida = Partida::all();
         $modalidad = Modality::all();
-        $sucursal = Sucursal::where('id', $sucursal->sucursal_id)->first();
+        $sucursal = Sucursal::where('id', $sucursal)->first();
         // return $partida;
 
         return view('almacenes.income.add', compact('sucursal', 'da', 'proveedor', 'partida', 'modalidad', 'gestion'));
@@ -198,11 +208,11 @@ class IncomeController extends Controller
     // para imprimir el ingreso de cada almacen
     protected function view_ingreso($id)
     {
-        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
-        {
-            Auth::logout();
-            return redirect()->route('maintenance');
-        }
+        // if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
+        // {
+        //     Auth::logout();
+        //     return redirect()->route('maintenance');
+        // }
 
 
         // $sol = SolicitudCompra::find($id);

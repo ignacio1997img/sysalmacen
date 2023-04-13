@@ -18,6 +18,10 @@ use function PHPUnit\Framework\returnSelf;
 
 class SolicitudPedidoController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     
     public function index()
     {

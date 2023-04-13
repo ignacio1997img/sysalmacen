@@ -263,7 +263,7 @@ class UserController extends Controller
         DB::beginTransaction();
         try {
             $user->update([
-                'role_id' => $request->role_id,
+                // 'role_id' => $request->role_id,
                 'email' => $request->email,
                 'sucursal_id'=>$request->sucursal_id
             ]);
@@ -272,6 +272,12 @@ class UserController extends Controller
                 $user->password = bcrypt($request->password);
                 $user->save();
             }
+            if ($request->role_id) {
+                // return 1;
+                $user->role_id = $request->role_id;
+                $user->save();
+            }
+            // return 2;
             
             if ($request->funcionario_id != '') {
                 $user->update([

@@ -1,6 +1,6 @@
 <div class="col-md-12">
     <div class="table-responsive">
-        <table id="dataTableStyle" class="dataTable table-hover">
+        <table id="dataTable" class="table table-bordered table-hover">
             <thead>
                 <tr>
                     <th style="text-align: center">Nro&deg;</th>

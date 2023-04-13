@@ -29,7 +29,8 @@ class Loggin
                 return redirect()->route('maintenance');
             }
 
-            $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
+            // $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
+            $sucursal = Auth::user()->sucursal_id;
         
             if(!$sucursal && !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
             {
