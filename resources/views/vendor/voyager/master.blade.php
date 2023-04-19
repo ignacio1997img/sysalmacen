@@ -32,6 +32,7 @@
     <link rel="stylesheet" href="{{ asset('css/small.css') }}">
     <link rel="stylesheet" href="{{ asset('css/h.css') }}">
     <link rel="stylesheet" href="{{ asset('css/loader.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/icon-flotante.css') }}">
 
     <style>
         .form-control, .select2-selection, .mce-tinymce {
