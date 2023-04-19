@@ -167,10 +167,18 @@ class PermissionRoleTableSeeder extends Seeder
         $role->permissions()->sync($permissions->pluck('id')->all());
 
 
+        //responsable del almacen: ingresa producto al almacen y dispensa los egresos o articulos
         $role = Role::where('name', 'almacen_responsable')->firstOrFail();
         $permissions = Permission::whereRaw('table_name = "admin" or
                                             table_name = "income" or
                                             table_name = "egres" or
+
+                                            table_name = "reports_anual" or
+                                            
+                                            `key` = "browse_printalmacen-article-list" or
+                                            `key` = "browse_printalmacen-article-stock" or
+                                            `key` = "browse_printalmacen-article-incomeoffice" or     
+                                            `key` = "browse_printalmacen-article-egressoffice" or  
                                             
                                             `key` = "browse_clear-cache"')->get();
         $role->permissions()->sync($permissions->pluck('id')->all());
