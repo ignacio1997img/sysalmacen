@@ -33,6 +33,7 @@
     <link rel="stylesheet" href="{{ asset('css/h.css') }}">
     <link rel="stylesheet" href="{{ asset('css/loader.css') }}">
     <link rel="stylesheet" href="{{ asset('css/icon-flotante.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/social.css') }}">
 
     <style>
         .form-control, .select2-selection, .mce-tinymce {
@@ -148,13 +149,23 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
                 @yield('page_header')
                 <div id="voyager-notifications"></div>
                 @yield('content')
+                
                 <a href="https://api.whatsapp.com/send/?phone=59167285914" class="btn-wsp" target="_blank">
                     <i class="fa-brands fa-whatsapp"></i>
                 </a>
             </div>
         </div>
     </div>
+    <div class="social">
+        <ul>
+            <li><a href="https://www.facebook.com/GobernacionDelBeni" target="_blank" class="facebook"><i class="fa-brands fa-facebook"></i></a></li>
+            <li><a href="https://www.youtube.com/@gobernaciondelbeni145/featured" target="_blank" class="youtube"><i class="fa-brands fa-youtube"></i></a></li>
+            <li><a href="https://www.tiktok.com/@gobiernoautonomodelbeni" target="_blank" class="tiktok"><i class="fa-brands fa-tiktok"></i></a></li>
+            <li><a href="https://www.instagram.com/gobernacionbeni/?igshid=YmMyMTA2M2Y%3D" target="_blank" class="instagram"><i class="fa-brands fa-instagram"></i></a></li>
+        </ul>
+    </div>
 </div>
+
 @include('voyager::partials.app-footer')
 
 <!-- Javascript Libs -->
