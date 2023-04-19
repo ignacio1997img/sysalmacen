@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\SucursalUser;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\Contract;
 
 class UserController extends Controller
 {
@@ -285,6 +286,17 @@ class UserController extends Controller
                     'name' => $request->name,
                 ]);
             }
+            $contract = Contract::with(['unidad'])->where('person_id', $user->funcionario_id)->where('deleted_at', null)->where('status', 'firmado')->first();
+            // return $contract;
+            // return $request;
+            if($contract)
+            {
+                if(!$contract->unidad_administrativa_id)
+                {
+                    $contract->update(['unidad_administrativa_id' => $request->unidad_administrativa_id]);
+                }
+            }
+
 
             SucursalUser::where('deleted_at', null)->where('user_id', $user->id)->where('condicion',1)->update(['condicion'=>0]);
 

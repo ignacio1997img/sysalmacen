@@ -116,6 +116,7 @@
                             @php
                                 $sucursal = null;
                             @endphp
+
                             @if ($dataTypeContent->id)
                                 @php
                                     $sucursal = \App\Models\User::where('id', $dataTypeContent->id)->first();
@@ -131,6 +132,46 @@
                                     @endforeach
                                 </select>
                             </div>
+                            @if ($dataTypeContent->id)
+                                @php
+                                    $contract = \App\Models\Contract::with(['unidad'])->where('person_id', $dataTypeContent->funcionario_id)->where('deleted_at', null)->where('status', 'firmado')->first();
+                                    $unidad = [];
+                                    if($contract)
+                                    {
+                                        $unidad = \App\Models\Unit::where('deleted_at', null)->where('direccion_id' , $contract->direccion_administrativa_id)->where('estado', 1)->get();
+                                    }
+                                @endphp    
+                                <div class="form-group">
+                                    <label for="unidad_administrativa_id">Unidad Administrativa</label>
+                                    <select name="unidad_administrativa_id" class="form-control select2">
+                                        @if ($dataTypeContent->id)
+                                            @if ($contract->unidad_administrativa_id)
+                                                <option value="{{ $contract->unidad_administrativa_id }}">{{ $contract->unidad->nombre }}</option>
+                                            @else
+                                                <option value="" >--Seleccione una opción--</option>
+                                                @foreach($unidad as $item)
+                                                    <option value="{{ $item->id }}">{{ $item->nombre }}</option>
+                                                @endforeach
+                                            @endif                                        
+                                        @else
+                                            <option value="" >--Seleccione una opción--</option>
+                                            @foreach($unidad as $item)
+                                                <option value="{{ $item->id }}">{{ $item->nombre }}</option>
+                                            @endforeach
+                                        @endif
+                                        
+                                    </select>
+                                </div>                            
+                            @else
+                                @php
+                                    $unidad = \App\Models\Unit::where('deleted_at', null)->where('estado', 1)->get()
+                                @endphp
+                            @endif
+
+                            
+
+
+
                          
                             @php
                             if (isset($dataTypeContent->locale)) {
