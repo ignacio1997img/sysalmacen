@@ -90,8 +90,14 @@ class PermissionRoleTableSeeder extends Seeder
 
          // ALAMACENES CENTRALES 
 
+
+        //Para el administrador de todos los almacenes
         $role = Role::where('name', 'almacen_admin')->firstOrFail();
         $permissions = Permission::whereRaw('table_name = "admin" or
+                                            table_name = "outbox" or
+                                            table_name = "inbox" or
+                                            
+
                                             `key` = "browse_partidas" or
                                             `key` = "read_partidas" or
                                             `key` = "edit_partidas" or
@@ -136,6 +142,7 @@ class PermissionRoleTableSeeder extends Seeder
         $role->permissions()->sync($permissions->pluck('id')->all());
 
 
+        //para los reportes
         $role = Role::where('name', 'almacen_subadmin')->firstOrFail();
         $permissions = Permission::whereRaw('table_name = "admin" or
                                             `key` = "browse_providers" or
