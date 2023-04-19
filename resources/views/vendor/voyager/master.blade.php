@@ -148,6 +148,9 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
                 @yield('page_header')
                 <div id="voyager-notifications"></div>
                 @yield('content')
+                <a href="https://api.whatsapp.com/send/?phone=59167285914" class="btn-wsp" target="_blank">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </a>
             </div>
         </div>
     </div>
