@@ -202,14 +202,14 @@ class MenuItemsTableSeeder extends Seeder
                 'title' => 'Limpiar cache',
                 'url' => '',
                 'target' => '_self',
-                'icon_class' => 'voyager-refresh',
+                'icon_class' => 'fa-solid fa-broom',
                 'color' => '#000000',
                 'parent_id' => NULL,
                 'order' => 16,
                 'created_at' => '2021-06-25 18:03:59',
-                'updated_at' => '2023-04-12 23:31:38',
+                'updated_at' => '2023-04-20 13:40:22',
                 'route' => 'clear.cache',
-                'parameters' => NULL,
+                'parameters' => 'null',
             ),
             12 => 
             array (
