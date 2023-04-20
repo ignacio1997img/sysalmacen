@@ -188,6 +188,31 @@ class PermissionRoleTableSeeder extends Seeder
         $role->permissions()->sync($permissions->pluck('id')->all());
 
 
+        //Para ingreso y egreso y reporte y aprobacion de solicitudes
+        $role = Role::where('name', 'almacen_subadmin_responsable_aprobar')->firstOrFail();
+        $permissions = Permission::whereRaw('table_name = "admin" or
+                                            table_name = "income" or
+                                            table_name = "egres" or
+
+                                            table_name = "inbox" or
+
+                                            table_name = "reports_anual" or
+                                            
+                                            `key` = "browse_printalmacen-article-list" or
+                                            `key` = "browse_printalmacen-article-stock" or
+                                            `key` = "browse_printalmacen-article-incomeoffice" or     
+                                            `key` = "browse_printalmacen-article-egressoffice" or  
+
+                                            `key` = "browse_printalmacen-partida-incomearticle" or  
+                                            
+                                            `key` = "browse_printalmacen-provider-list" or
+                                            
+                                            `key` = "browse_clear-cache"')->get();
+        $role->permissions()->sync($permissions->pluck('id')->all());
+
+    
+
+
 
         //para las solicitudes de pedidos
         $role = Role::where('name', 'almacen_solicitud_pedido')->firstOrFail();

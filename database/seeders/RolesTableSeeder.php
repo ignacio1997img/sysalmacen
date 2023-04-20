@@ -60,6 +60,7 @@ class RolesTableSeeder extends Seeder
             ])->save();
         }
 
+        //Para el encargado de egreso y egreso del almacen "adicion Report"
         $role = Role::firstOrNew(['name' => 'almacen_responsable']);
         if (!$role->exists) {
             $role->fill([
@@ -67,10 +68,21 @@ class RolesTableSeeder extends Seeder
             ])->save();
         }
 
-        $role = Role::firstOrNew(['name' => 'almacen_subadmin_responsable']);
+
+
+        //Para ingreso y egreso y reporte y aprobacion de solicitudes
+        $role = Role::firstOrNew(['name' => 'almacen_subadmin_responsable_aprobar']);
         if (!$role->exists) {
             $role->fill([
-                'display_name' => __('Almacen - Responsable de almacen "Ingreso & Egreso & Report"'),
+                'display_name' => __('Almacen - Responsable de almacen "Ingreso & Egreso & Report & Aprobar"'),
+            ])->save();
+        }
+
+        //Para ingreso y egreso y reporte y aprobacion de solicitudes y crear solicitud
+        $role = Role::firstOrNew(['name' => 'almacen_subadmin_responsable_aprobar_solicitar']);
+        if (!$role->exists) {
+            $role->fill([
+                'display_name' => __('Almacen - Responsable de almacen "Ingreso & Egreso & Report & Aprobar & Solicitar Pedido"'),
             ])->save();
         }
 

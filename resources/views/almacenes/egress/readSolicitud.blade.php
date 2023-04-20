@@ -243,7 +243,7 @@
                     <div class="modal-body">
                         <div class="alert alert-warning">
                             <strong>Aviso: </strong>
-                            <p> Revise bien la cantidad de articulo a entregar a la solicitud.</p>
+                            <p>Revise bien la cantidad de articulo a entregar..</p>
                         </div> 
                         <input type="hidden" name="id" id="id" value="{{$data->id}}">
     
