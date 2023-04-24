@@ -78,13 +78,13 @@
         <div class="modal modal-danger fade" tabindex="-1" id="myModalEliminar" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    {!! Form::open(['route' => 'egres_delete', 'method' => 'DELETE']) !!}
+                    {!! Form::open(['route' => 'outbox.deletepedido', 'method' => 'post']) !!}
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title"><i class="voyager-trash"></i> Desea eliminar el siguiente ingreso?</h4>
                     </div>
                     <div class="modal-body">
-                        <input type="hidden" name="id" id="id">
+                        <input type="text" name="id" id="id">
 
                         <div class="text-center" style="text-transform:uppercase">
                             <i class="voyager-trash" style="color: red; font-size: 5em;"></i>

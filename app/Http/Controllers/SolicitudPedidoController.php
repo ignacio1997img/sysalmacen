@@ -278,7 +278,6 @@ class SolicitudPedidoController extends Controller
 
         } catch (\Throwable $th) {
             DB::rollBack();
-            return 0;
             return redirect()->route('outbox.index')->with(['message' => 'Error...', 'alert-type' => 'error']);
         }
     }
@@ -291,6 +290,28 @@ class SolicitudPedidoController extends Controller
             ->first();
         
         return view('almacenes.outbox.report', compact('sol'));
+    }
+
+    public function deletePedido(Request $request)
+    {
+        // return $request;
+        DB::beginTransaction();
+        try {
+            $user = Auth::user();
+           
+            $sol = SolicitudPedido::where('id', $request->id)->first();
+                        
+       
+            SolicitudPedidoDetalle::where('solicitudPedido_id', $sol->id)->update(['deleted_at'=> Carbon::now(), 'deletedUser_Id'=> $user->id]);
+            $sol->update(['deleted_at'=> Carbon::now(), 'deletedUser_Id'=> $user->id]);
+               
+            DB::commit();
+            return redirect()->route('outbox.index')->with(['message' => 'Pedido Eliminado exitosamente.', 'alert-type' => 'success']);
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('outbox.index')->with(['message' => 'Error...', 'alert-type' => 'error']);
+        }
     }
 
     public function solicitudEnviada(Request $request)
