@@ -12,6 +12,7 @@ use App\Models\SolicitudPedido;
 use App\Models\SolicitudPedidoDetalle;
 use App\Models\SucursalUnidadPrincipal;
 use App\Models\SucursalUser;
+use App\Models\Unit;
 use Carbon\Carbon;
 
 use function PHPUnit\Framework\returnSelf;
@@ -204,6 +205,25 @@ class SolicitudPedidoController extends Controller
         DB::beginTransaction();
         try {
             $user = Auth::user();
+            
+            $funcionario = $this->getWorker($user->funcionario_id);
+            // dd($funcionario->id_unidad);
+
+            $unidad = Unit::where('id', $funcionario->id_unidad)->first();
+
+            $aux = SolicitudPedido::where('unidad_id',$unidad->id)
+                    ->where('deleted_at', null)
+                    ->get();
+
+            $length = 4;
+            $char = 0;
+            $type = 'd';
+            $format = "%{$char}{$length}{$type}"; // or "$010d";
+            $request->merge(['nropedido' => strtoupper($unidad->sigla).'-'.sprintf($format, count($aux)+1)]);
+            // return $unidad;
+
+
+
 
             if(!$request->article_id)
             {
@@ -221,15 +241,12 @@ class SolicitudPedidoController extends Controller
             {
                 return redirect()->route('outbox.index')->with(['message' => 'Error en la gestion.', 'alert-type' => 'error']);
             }
-            $funcionario = $this->getWorker(Auth::user()->funcionario_id);
-            // return $gestion;
-            // dd($funcionario);
-            // return 2;
+            
             $sol = SolicitudPedido::create([
                 'sucursal_id'=>$sucursal->id,
                 'fechasolicitud'=> Carbon::now(),
                 'gestion' => $gestion->gestion,
-                'nropedido' => 1,
+                'nropedido' => $request->nropedido,
                 'people_id'=> $funcionario->people_id,
                 'first_name'=>$funcionario->first_name,
                 'last_name'=>$funcionario->last_name,
