@@ -223,6 +223,11 @@ class PermissionRoleTableSeeder extends Seeder
                                             table_name = "income" or
                                             table_name = "egres" or
 
+                                            `key` = "browse_providers" or
+                                            `key` = "read_providers" or
+                                            `key` = "edit_providers" or
+                                            `key` = "add_providers" or
+
                                             table_name = "inbox" or
                                             table_name = "outbox" or
 
