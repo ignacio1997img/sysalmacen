@@ -20,7 +20,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($data as $item)
+                @forelse ($data as $item)
                     <tr style="text-align: center">
                         <td>{{$item->id}}</td>
                         <td style="text-align: center">{{strtoupper($item->first_name.' '.$item->last_name.' - '.$item->job)}}</td>                        
@@ -78,7 +78,25 @@
                             </div>
                         </td>                        
                     </tr>
-                @endforeach                                               
+                @empty
+                    <tr>
+                        @if(auth()->user()->hasRole(['admin']))
+                            <td colspan="9">
+                                <h5 class="text-center" style="margin-top: 50px">
+                                    <img src="{{ asset('images/empty.png') }}" width="120px" alt="" style="opacity: 0.5"> <br>
+                                    No hay resultados
+                                </h5>
+                            </td>
+                        @else
+                            <td colspan="8">
+                                <h5 class="text-center" style="margin-top: 50px">
+                                    <img src="{{ asset('images/empty.png') }}" width="120px" alt="" style="opacity: 0.5"> <br>
+                                    No hay resultados
+                                </h5>
+                            </td>
+                        @endif
+                    </tr>
+                @endforelse                                               
             </tbody>
         </table>
     </div>

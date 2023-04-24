@@ -37,11 +37,11 @@
                                 <div class="col-sm-12 text-right">
                                     <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="todo">Todos</label>
                                 
-                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="constock" checked>Pendiente</label>
+                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="pendiente" checked>Pendientes</label>
 
-                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="sinstock">Aprobado</label>
-                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="sinstock">Entregado</label>
-                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="sinstock">Rechazado</label>
+                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="sinstock">Aprobados</label>
+                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="sinstock">Entregados</label>
+                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="sinstock">Rechazados</label>
                                                                     
                                 </div>
                             </div>
@@ -119,7 +119,10 @@
             var countPage = 10, order = 'id', typeOrder = 'desc';
             $(document).ready(() => {
                 list();
-                
+                $('.radio-type').click(function(){
+                    list();
+                });
+                    
                 $('#input-search').on('keyup', function(e){
                     if(e.keyCode == 13) {
                         list();
@@ -138,13 +141,14 @@
                 var loader = '<div class="col-md-12 bg"><div class="loader" id="loader-3"></div></div>'
                 $('#div-results').html(loader);
 
-                // let type = $(".radio-type:checked").val();
+                let type = $(".radio-type:checked").val();
+                // alert(type);
 
                 let url = '{{ url("admin/inbox/ajax/list") }}';
                 let search = $('#input-search').val() ? $('#input-search').val() : '';
 
                 $.ajax({
-                    url: `${url}/${search}?paginate=${countPage}&page=${page}`,
+                    url: `${url}/${type}/${search}?paginate=${countPage}&page=${page}`,
 
                     type: 'get',
                     

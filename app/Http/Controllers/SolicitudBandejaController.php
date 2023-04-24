@@ -30,6 +30,8 @@ class SolicitudBandejaController extends Controller
     public function list($type, $search = null){
         $user = Auth::user();
 
+        // return $type;
+
         // $sucursal = SucursalUser::where('user_id', $user->id)->where('condicion', 1)->where('deleted_at', null)->first();
         $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $user->sucursal_id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
         

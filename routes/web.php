@@ -68,7 +68,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::post('outbox/enviar', [SolicitudPedidoController::class, 'solicitudEnviada'])->name('outbox.enviar');
 
     Route::resource('inbox', SolicitudBandejaController::class);
-    Route::get('inbox/ajax/list/{search?}', [SolicitudBandejaController::class, 'list']);
+    Route::get('inbox/ajax/list/{type}/{search?}', [SolicitudBandejaController::class, 'list']);
     Route::post('inbox/rechazar', [SolicitudBandejaController::class, 'rechazarSolicitud'])->name('inbox.rechazar');
     Route::post('inbox/aprobar', [SolicitudBandejaController::class, 'aprobarSolicitud'])->name('inbox.aprobar');
 

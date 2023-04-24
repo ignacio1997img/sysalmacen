@@ -84,7 +84,7 @@
                         <h4 class="modal-title"><i class="voyager-trash"></i> Desea eliminar el siguiente ingreso?</h4>
                     </div>
                     <div class="modal-body">
-                        <input type="text" name="id" id="id">
+                        <input type="hidden" name="id" id="id">
 
                         <div class="text-center" style="text-transform:uppercase">
                             <i class="voyager-trash" style="color: red; font-size: 5em;"></i>

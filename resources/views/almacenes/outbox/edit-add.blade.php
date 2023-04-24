@@ -1,6 +1,6 @@
 @extends('voyager::master')
 
-@section('page_title', 'añadir Egresos')
+@section('page_title', 'añadir solicitud')
 
 @section('page_header')
     
@@ -21,7 +21,7 @@
         <div class="page-content browse container-fluid" >     
             
             <div class="row">
-                {!! Form::open(['route' => 'outbox.store', 'class' => 'was-validated'])!!}  
+                {!! Form::open(['route' => 'outbox.store', 'id'=>'form-registrar-pedido', 'class' => 'was-validated'])!!}  
 
                 <input type="hidden" name="inventarioAlmacen_id" @if($gestion) value="{{$gestion->id}}" @endif>
                 <input type="hidden" name="gestion" @if($gestion) value="{{$gestion->gestion}}" @endif>
@@ -105,7 +105,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="table-responsive">
-                                    <table id="dataTable" class="table table-bordered table-hover">
+                                    <table id="dataTable" class="tables table-bordered table-hover">
                                         <thead>
                                             <tr>
                                                 <th style="width: 30px">N&deg;</th>
@@ -130,7 +130,7 @@
                             <div class="form-group col-md-12 text-center">
                                 {{-- Tiene que tener una gestion activa y tenes una unidad agregada como funcionario --}}
                                 @if ($gestion && $funcionario->unidad)
-                                    <button type="submit" id="btn-submit" class="btn btn-success btn-block">Registrar Pedido<i class="voyager-basket"></i></button>
+                                    <button type="submit" id="btn-register" class="btn btn-success btn-block">Registrar Pedido <i class="voyager-basket"></i></button>
                                 @endif
                                 <a href="{{ route('outbox.index') }}" >Volver a la lista</a>
                             </div>                        
@@ -341,8 +341,13 @@
 
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
 <script>
+    $(document).ready(function(){
+        $('#form-registrar-pedido').submit(function(e){
+            $('#btn-register').text('Registrando...');
+            $('#btn-register').prop('disabled', true);
+        });
+    })
     $(document).ready(function(){
         var productSelected;
 
@@ -389,6 +394,9 @@
             // alert(2)
             if($('#select_producto option:selected').val()){
                 let product = productSelected;
+                // toastr.info('EL detalle ya está agregado', 'Información');
+
+                // alert(product.article_id);
                 if($('.tables').find(`#tr-item-${product.article_id}`).val() === undefined){
                 // alert(product.name);
 
@@ -407,7 +415,8 @@
                         </tr>
                     `);
                 }else{
-                    toastr.info('EL detalle ya está agregado', 'Información')
+                    // alert(1)
+                    toastr.info('EL detalle ya está agregado', 'Información');
                 }
                 setNumber();
                 // getSubtotal(product.article_id);
