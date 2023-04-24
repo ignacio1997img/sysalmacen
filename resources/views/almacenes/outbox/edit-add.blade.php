@@ -42,7 +42,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-8">
                                 <div class="panel-heading" style="border-bottom:0;">
                                     <label class="panel-title">Solicitante</label>
                                 </div>
@@ -51,7 +51,7 @@
                                 </div>
                                 <hr style="margin:0;">
                             </div>
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
                                 <div class="panel-heading" style="border-bottom:0;">
                                     <label class="panel-title">Fecha de Solicitud</label>
                                 </div>
