@@ -154,28 +154,28 @@
                         <div class="row">
                             <div class="col-md-6" style="margin-bottom:0;">
                                 <div class="panel-heading" style="border-bottom:0;">
-                                    <h3 class="panel-title">Partida</h3>
+                                    <label class="panel-title">Partida</label>
                                 </div>
                                 <div class="panel-body" style="padding-top:0;">
-                                    <p id="label-partida">Value</p>
+                                    <small id="label-partida">Value</small>
                                 </div>
                                 <hr style="margin:0;">
                             </div>
                             <div class="col-md-6" style="margin-bottom:0;">
                                 <div class="panel-heading" style="border-bottom:0;">
-                                    <h3 class="panel-title">Articulo</h3>
+                                    <label class="panel-title">Articulo</label>
                                 </div>
                                 <div class="panel-body" style="padding-top:0;">
-                                    <p id="label-article">Value</p>
+                                    <small id="label-article">Value</small>
                                 </div>
                                 <hr style="margin:0;">
                             </div>
                             <div class="col-md-6" style="margin-bottom:0;">
                                 <div class="panel-heading" style="border-bottom:0;">
-                                    <h3 class="panel-title">Cantidad Solicitada</h3>
+                                    <label class="panel-title">Cantidad Solicitada</label>
                                 </div>
                                 <div class="panel-body" style="padding-top:0;">
-                                    <p id="label-cantidad">Value</p>
+                                    <small style="font-size: 15px" id="label-cantidad">Value</small>
                                 </div>
                                 <hr style="margin:0;">
                             </div>

@@ -665,30 +665,6 @@ class EgressController extends Controller
 
     public function showSolicitud($id)
     {
-
-      
-        // $data = DB::table('solicitud_compras as s')
-        //     ->join('facturas as f', 'f.solicitudcompra_id', 's.id')
-        //     ->join('detalle_facturas as d', 'd.factura_id', 'f.id')
-        //     ->join('articles as a', 'a.id', 'd.article_id')
-        //     ->where('s.stock', 1)
-        //     ->where('s.deleted_at', null)
-        //     // ->where('s.unidadadministrativa', 12)
-
-        //     ->where('f.deleted_at', null)
-
-        //     ->where('d.deleted_at', null)
-        //     ->where('d.cantrestante', '>', 0)
-        //     ->where('d.condicion', 1)
-        //     ->where('d.hist', 0)
-
-        //     ->where('a.id', 98)
-
-        //     ->select('s.id as solicitud_id', 's.nrosolicitud', 'f.id as factura_id', 'a.id as article_id', 'a.nombre as article', 'd.precio', 'd.cantrestante as cantidad')
-        //     // ->groupBy('article_id')
-        //     // ->orderBy('article')
-        //     ->get();
-        //     return $data;
         $data = SolicitudPedido::with('solicitudDetalle', 'sucursal')
             ->where('deleted_at', null)
             ->where('id', $id)
@@ -784,8 +760,11 @@ class EgressController extends Controller
             return response()->json(['error' => $th->getMessage()]);
         }
     }
+
+    //Para dispensar el producto de cada almacen siempre que este aprobado el pedido
     public function entregarSolicitud(Request $request)
     {
+        // return 1;
         DB::beginTransaction();
         try {
             $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
