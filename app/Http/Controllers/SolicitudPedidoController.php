@@ -301,6 +301,10 @@ class SolicitudPedidoController extends Controller
             $user = Auth::user();
            
             $sol = SolicitudPedido::where('id', $request->id)->first();
+            if($sol->status != 'Pendiente' &&  $sol->status != 'Enviado')
+            {
+                return redirect()->route('outbox.index')->with(['message' => 'El pedido no se encuentra disponible para eliminarlo', 'alert-type' => 'error']);
+            }
                         
        
             SolicitudPedidoDetalle::where('solicitudPedido_id', $sol->id)->update(['deleted_at'=> Carbon::now(), 'deletedUser_Id'=> $user->id]);

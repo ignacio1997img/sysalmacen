@@ -66,13 +66,13 @@
 
 
                                 {{-- @if($item->status != 'Pendiente' && $item->status != 'Rechazado' && auth()->user()->hasPermission('read_egres')) --}}
-                                @if( $item->status != 'Rechazado' && auth()->user()->hasPermission('print_outbox'))
+                                @if( $item->status != 'Pendiente' && auth()->user()->hasPermission('print_outbox'))
                                     <a href="{{route('outbox.show',$item->id)}}" title="Imprimir solicitud" target="_blank" class="btn btn-sm btn-dark view">
                                         <i class="glyphicon glyphicon-print"></i>
                                     </a>   
                                 @endif
                                 
-                                @if($gestion && $item->status == 'Pendiente')
+                                @if($gestion && $item->status == 'Pendiente' || $gestion && $item->status == 'Enviado')
                                     @if($item->gestion == $gestion->gestion)
                                         @if(auth()->user()->hasPermission('edit_outbox') && 1==2)
                                             <a href="{{route('egres.edit',$item->id)}}" title="Editar" class="btn btn-sm btn-info view">

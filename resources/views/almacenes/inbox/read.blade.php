@@ -89,7 +89,10 @@
                                                         <th style="text-align: center">PARTIDA</th>
                                                         <th style="text-align: center">DETALLE</th>
                                                         <th style="text-align: center">UNIDAD</th>                
-                                                        <th style="text-align: center">CANTIDAD</th>                
+                                                        <th width="150px" style="text-align: center">CANTIDAD SOLICITADA</th>
+                                                        @if ($data->status == 'Entregado')
+                                                            <th width="150px" style="text-align: center">CANTIDAD ENTREGADA</th>  
+                                                        @endif               
                                                     </tr>
                                                 </thead>    
                                                 <tbody>
@@ -99,10 +102,13 @@
                                                     @foreach ($data->solicitudDetalle as $item)
                                                         <tr>
                                                             <td style="text-align: right">{{$numeroitems}}</td>
-                                                            <td style="text-align: center">{{$item->article->partida->codigo}}</td>
+                                                            <td style="text-align: left">{{$item->article->partida->codigo}} - {{$item->article->partida->nombre}}</td>
                                                             <td style="text-align: left">{{strtoupper($item->article->nombre)}}</td>
                                                             <td style="text-align: center">{{strtoupper($item->article->presentacion)}}</td>
                                                             <td style="text-align: right">{{number_format($item->cantsolicitada)}}</td>
+                                                            @if ($data->status == 'Entregado')
+                                                                <td style="text-align: right">{{number_format($item->cantentregada)}}</td>
+                                                            @endif  
                                                         </tr>
                                                         <?php
                                                             $numeroitems++;

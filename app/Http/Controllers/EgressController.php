@@ -761,6 +761,13 @@ class EgressController extends Controller
         }
     }
 
+    // para rechazar las solicituded de pedido ante de dispensar el producto
+    public function rechazarSolicitud(Request $request)
+    {
+        SolicitudPedido::where('id', $request->id)->update(['status'=>'Rechazado', 'rechazadoUser_id'=>Auth::user()->id, 'rechazadoDate'=>Carbon::now()]);
+        return redirect()->route('egres.index')->with(['message' => 'Solicitud rechazada exitosamente.', 'alert-type' => 'success']);
+    }
+
     //Para dispensar el producto de cada almacen siempre que este aprobado el pedido
     public function entregarSolicitud(Request $request)
     {
@@ -773,6 +780,12 @@ class EgressController extends Controller
 
             $solicitud = SolicitudPedido::where('id', $request->id)->where('deleted_at',null)->first();
             $detalle = SolicitudPedidoDetalle::where('solicitudPedido_id', $solicitud->id)->where('deleted_at',null)->get();
+
+           
+            if($solicitud->status != 'Aprobado')
+            {
+                return redirect()->route('egres.index')->with(['message' => 'El Pedido no se encuentra disponible', 'alert-type' => 'error']);
+            }
 
             if(!$gestion)
             {

@@ -101,6 +101,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::post('egres/delete', [EgressController::class, 'destroy'])->name('egres_delete');
 
     Route::get('egres/solicitud/{solicitud?}/show', [EgressController::class, 'showSolicitud'])->name('egres-solicitud.show');
+    Route::post('egres/rechazar', [EgressController::class, 'rechazarSolicitud'])->name('egres.rechazar');
     Route::post('egres/solicitud/entregar', [EgressController::class, 'entregarSolicitud'])->name('egres-solicitud.entregar');
 
     // para obtener los articulos de la unidad y articulo en especifico

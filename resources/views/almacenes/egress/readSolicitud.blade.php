@@ -12,6 +12,11 @@
             <a href="{{ route('egres.index') }}" class="btn btn-warning btn-add-new">
                 <i class="fa-solid fa-file"></i> <span>Volver</span>
             </a>
+            @if ($data->status == 'Aprobado')
+                <a data-toggle="modal" data-target="#modal-rechazar" title="Rechazar Solicitud" class="btn btn-sm btn-dark view">
+                    <i class="fa-solid fa-thumbs-down"></i> <span class="hidden-xs hidden-sm">Rechazar</span>
+                </a> 
+            @endif
             
         </div>
     </div>
@@ -137,6 +142,35 @@
         </div>
     </div>       
     
+
+    {{-- Para rechazar la solicitud al momento de entregar el pedido --}}ç{{-- Modal para rechazar solicitud --}}
+            <div class="modal fade" tabindex="-1" id="modal-rechazar" role="dialog">
+                <div class="modal-dialog modal-dark">
+                    <div class="modal-content">
+                        {!! Form::open(['route' => 'egres.rechazar', 'method' => 'POST']) !!}
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title"><i class="fa-solid fa-thumbs-down"></i> Rechazar Solicitud</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="id" id="id" value="{{$data->id}}">
+                            <div class="text-center" style="text-transform:uppercase">
+                                <i class="fa-solid fa-thumbs-down" style="color: #4d4c4b; font-size: 5em;"></i>
+                                <br>
+                                
+                                <p><b>Desea rechazar la solicitud?</b></p>
+                            </div>
+                        </div>                
+                        <div class="modal-footer">
+                            
+                                <input type="submit" class="btn btn-dark pull-right delete-confirm" value="Sí, rechazar">
+                            
+                            <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
+                        </div>
+                        {!! Form::close()!!} 
+                    </div>
+                </div>
+            </div>
 
     {{-- Modal para ver los detalle del stock del producto de que unidad tiene --}}
     <form action="{{ route('egres-ajax.detalle.store') }}" id="form-create-customer" method="POST">
