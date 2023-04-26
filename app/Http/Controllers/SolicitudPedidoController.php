@@ -47,6 +47,7 @@ class SolicitudPedidoController extends Controller
         }
         
         $paginate = request('paginate') ?? 10;
+        
 
         $data =  SolicitudPedido::with(['solicitudDetalle'])
             ->where(function($query) use ($search){

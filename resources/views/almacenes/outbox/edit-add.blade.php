@@ -132,7 +132,7 @@
                                 @if ($gestion && $funcionario->unidad)
                                     <button type="submit" id="btn-register" class="btn btn-success btn-block">Registrar Pedido <i class="voyager-basket"></i></button>
                                 @endif
-                                <a href="{{ route('outbox.index') }}" >Volver a la lista</a>
+                                <a id="btn-volver" href="{{ route('outbox.index') }}" >Volver a la lista</a>
                             </div>                        
                             
                         </div>
@@ -346,6 +346,7 @@
         $('#form-registrar-pedido').submit(function(e){
             $('#btn-register').text('Registrando...');
             $('#btn-register').prop('disabled', true);
+            $('#btn-volver').prop('disabled', true);
         });
     })
     $(document).ready(function(){

@@ -39,9 +39,9 @@
                                 
                                     <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="pendiente" checked>Pendientes</label>
 
-                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="sinstock">Aprobados</label>
-                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="sinstock">Entregados</label>
-                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="sinstock">Rechazados</label>
+                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="aprobado">Aprobados</label>
+                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="entregado">Entregados</label>
+                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="rechazado">Rechazados</label>
                                                                     
                                 </div>
                             </div>

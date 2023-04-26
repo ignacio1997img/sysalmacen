@@ -46,21 +46,89 @@ class SolicitudBandejaController extends Controller
         }
         
         $paginate = request('paginate') ?? 10;
-
-        $data =  SolicitudPedido::with(['solicitudDetalle'])
-            ->where(function($query) use ($search){
-                if($search){
-                    $query->OrWhereRaw($search ? "gestion like '%$search%'" : 1)
-                    ->OrWhereRaw($search ? "nropedido like '%$search%'" : 1)
-                    ->OrWhereRaw($search ? "id like '%$search%'" : 1)
-                    ->OrWhereRaw($search ? "unidad_name like '%$search%'" : 1)
-                    ->OrWhereRaw($search ? "direccion_name like '%$search%'" : 1);
-                }
-            })
-            ->where('deleted_at', NULL)
-            ->where('status', '!=', 'Pendiente')
-            ->whereRaw($query_filter)
-            ->orderBy('id', 'DESC')->paginate($paginate);
+        switch($type)
+        {
+            case 'pendiente':
+                $data =  SolicitudPedido::with(['solicitudDetalle'])
+                    ->where(function($query) use ($search){
+                        if($search){
+                            $query->OrWhereRaw($search ? "gestion like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "nropedido like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "id like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "unidad_name like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "direccion_name like '%$search%'" : 1);
+                        }
+                    })
+                    ->where('deleted_at', NULL)
+                    ->where('status', 'Enviado')
+                    ->whereRaw($query_filter)
+                    ->orderBy('id', 'DESC')->paginate($paginate);
+            break;
+            case 'rechazado':
+                $data =  SolicitudPedido::with(['solicitudDetalle'])
+                    ->where(function($query) use ($search){
+                        if($search){
+                            $query->OrWhereRaw($search ? "gestion like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "nropedido like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "id like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "unidad_name like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "direccion_name like '%$search%'" : 1);
+                        }
+                    })
+                    ->where('deleted_at', NULL)
+                    ->where('status', 'Rechazado')
+                    ->whereRaw($query_filter)
+                    ->orderBy('id', 'DESC')->paginate($paginate);
+            break;
+            case 'aprobado':
+                $data =  SolicitudPedido::with(['solicitudDetalle'])
+                    ->where(function($query) use ($search){
+                        if($search){
+                            $query->OrWhereRaw($search ? "gestion like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "nropedido like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "id like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "unidad_name like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "direccion_name like '%$search%'" : 1);
+                        }
+                    })
+                    ->where('deleted_at', NULL)
+                    ->where('status', 'Aprobado')
+                    ->whereRaw($query_filter)
+                    ->orderBy('id', 'DESC')->paginate($paginate);
+            break;
+            case 'entregado':
+                $data =  SolicitudPedido::with(['solicitudDetalle'])
+                    ->where(function($query) use ($search){
+                        if($search){
+                            $query->OrWhereRaw($search ? "gestion like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "nropedido like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "id like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "unidad_name like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "direccion_name like '%$search%'" : 1);
+                        }
+                    })
+                    ->where('deleted_at', NULL)
+                    ->where('status', 'Entregado')
+                    ->whereRaw($query_filter)
+                    ->orderBy('id', 'DESC')->paginate($paginate);
+            break;
+            case 'todo':
+                $data =  SolicitudPedido::with(['solicitudDetalle'])
+                    ->where(function($query) use ($search){
+                        if($search){
+                            $query->OrWhereRaw($search ? "gestion like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "nropedido like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "id like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "unidad_name like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "direccion_name like '%$search%'" : 1);
+                        }
+                    })
+                    ->where('deleted_at', NULL)
+                    ->where('status', '!=', 'Pendiente')
+                    ->whereRaw($query_filter)
+                    ->orderBy('id', 'DESC')->paginate($paginate);
+            break;
+        }
 
         return view('almacenes.inbox.list', compact('data', 'gestion'));
     }

@@ -46,6 +46,15 @@
                             @if ($item->status == 'Enviado')
                                 <label class="label label-info">Enviado</label>
                             @endif
+                            @if ($item->status == 'Aprobado')
+                                <label class="label label-primary">Aprobado</label>
+                            @endif
+                            @if ($item->status == 'Rechazado')
+                                <label class="label label-danger">Rechazado</label>
+                            @endif
+                            @if ($item->status == 'Entregado')
+                                <label class="label label-success">Entregado</label>
+                            @endif
                         </td>
                         <td style="text-align: right">
                             <div class="no-sort no-click bread-actions text-right">
