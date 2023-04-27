@@ -105,9 +105,9 @@
                                                             <td style="text-align: left">{{$item->article->partida->codigo}} - {{$item->article->partida->nombre}}</td>
                                                             <td style="text-align: left">{{strtoupper($item->article->nombre)}}</td>
                                                             <td style="text-align: center">{{strtoupper($item->article->presentacion)}}</td>
-                                                            <td style="text-align: right">{{number_format($item->cantsolicitada)}}</td>
+                                                            <td style="text-align: right">{{number_format($item->cantsolicitada, 2, ',', ' ')}}</td>
                                                             @if ($data->status == 'Entregado')
-                                                                <td style="text-align: right">{{number_format($item->cantentregada)}}</td>
+                                                                <td style="text-align: right">{{number_format($item->cantentregada, 2, ',', ' ')}}</td>
                                                             @endif  
                                                         </tr>
                                                         <?php

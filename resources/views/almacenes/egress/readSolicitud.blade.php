@@ -101,7 +101,7 @@
                                                 <td style="text-align: center">{{$item->article->partida->codigo}}</td>
                                                 <td style="text-align: left">{{strtoupper($item->article->nombre)}}</td>
                                                 <td style="text-align: center">{{strtoupper($item->article->presentacion)}}</td>
-                                                <td style="text-align: right">{{number_format($item->cantsolicitada)}}</td>
+                                                <td style="text-align: right">{{number_format($item->cantsolicitada, 2, ',', ' ')}}</td>
                                                 <td style="text-align: right">
                                                     <div class="no-sort no-click bread-actions text-right">
                                                         {{-- <input type="number" style="width: 80px; text-align: right" name="cantidad[]" value="{{number_format($item->cantsolicitada)}}"> --}}

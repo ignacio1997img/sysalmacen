@@ -65,7 +65,7 @@
                     <td style="text-align: center">{{$data->article->partida->codigo}}</td>
                     <td style="text-align: left">{{strtoupper($data->article->nombre)}}</td>
                     <td style="text-align: center">{{strtoupper($data->article->presentacion)}}</td>
-                    <td style="text-align: right">{{number_format($data->cantsolicitada)}}</td>
+                    <td style="text-align: right">{{number_format($data->cantsolicitada, 2, ',', ' ')}}</td>
                 </tr>
                 <?php
                     $numeroitems++;
