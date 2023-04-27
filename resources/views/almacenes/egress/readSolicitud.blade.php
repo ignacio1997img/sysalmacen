@@ -143,7 +143,7 @@
     </div>       
     
 
-    {{-- Para rechazar la solicitud al momento de entregar el pedido --}}ç{{-- Modal para rechazar solicitud --}}
+    {{-- Para rechazar la solicitud al momento de entregar el pedido --}}{{-- Modal para rechazar solicitud --}}
             <div class="modal fade" tabindex="-1" id="modal-rechazar" role="dialog">
                 <div class="modal-dialog modal-dark">
                     <div class="modal-content">
@@ -266,10 +266,11 @@
     
     
         {{-- Para aprobar las solicitudes de pedidos --}}
+        {!! Form::open(['route' => 'egres-solicitud.entregar', 'id'=>'entregarP', 'method' => 'post']) !!}
+
         <div class="modal modal-success fade" tabindex="-1" id="myModalEntregar" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    {!! Form::open(['route' => 'egres-solicitud.entregar', 'method' => 'post']) !!}
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title"><i class="fa-solid fa-bag-shopping"></i> Entregar Solicitud</h4>
@@ -281,24 +282,30 @@
                         </div> 
                         <input type="hidden" name="id" id="id" value="{{$data->id}}">
     
-                        <div class="text-center" style="text-transform:uppercase">
+                        <div style="display: block;" id="icons" class="text-center icons" style="text-transform:uppercase">
                             <i class="fa-solid fa-bag-shopping" style="color: rgb(134, 127, 127); font-size: 5em;"></i>
                             <br>
                             
                             <p><b>Desea entregar la solicitud?</b></p>
                         </div>
+                        <div style="display: none;" id="proce" class="text-center proce">
+                            <img src="{{ asset('images/proce.gif') }}" alt="Voyager Loader">
+                        </div>
                         <label class="checkbox-inline"><input type="checkbox" value="1" required>Confirmar entrega..!</label>
                     </div>                
                     <div class="modal-footer">
                         
-                            <input type="submit" class="btn btn-success pull-right delete-confirm" value="Sí, entregar">
+                        <input type="submit" class="btn btn-success pull-right btn_submit" value="Sí, entregar">
+                        {{-- <button type="submit" id="btn_submit" class="btn btn-success pull-right delete-confirm">Entregar Solicitud</button> --}}
+
                         
                         <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
                     </div>
-                    {!! Form::close()!!} 
                 </div>
             </div>
         </div>
+        {!! Form::close()!!} 
+
 @stop
 
 
@@ -366,6 +373,22 @@
 
 @section('javascript')
 <script>
+
+    $(document).ready(function(){
+        $('#entregarP').submit(function(e){
+            $('.btn_submit').val('Guardando...');
+            $('.btn_submit').attr('disabled', true);
+            $('.proce').css('display', 'block');
+            $('.icons').css('display', 'none');
+            $('.checkbox-inline').css('display', 'none');
+
+            
+
+
+        });
+    })
+
+
     $('#show-modal').on('show.bs.modal', function (event)
     {
         // alert({{$unidad}})
