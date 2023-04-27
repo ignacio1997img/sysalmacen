@@ -431,7 +431,7 @@
                                 <td class="text-right">
                                     <input type="hidden" name="almacen[]" value="no">   
                                     <input type="hidden" name="detalle[]" value="${data[i].detalle_id}">   
-                                    <input type="number" name="cantidad[]" min="0" max="${data[i].cantidad}" value="0" step=".1" onkeypress="return filterFloat(event,this);" style="text-align: right; width: 100px; height: 36px" class="text" required>                                 
+                                    <input type="number" name="cantidad[]" min="0" max="${data[i].cantidad}" value="0" step="0.01" onkeypress="return filterFloat(event,this);" style="text-align: right; width: 100px; height: 36px" class="text" required>                                 
                                 </td> 
 
                                 
@@ -462,7 +462,7 @@
                                     <td class="text-right">
                                         <input type="hidden" name="almacen[]" value="si">   
                                         <input type="hidden" name="detalle[]" value="${data[i].detalle_id}">   
-                                        <input type="number" name="cantidad[]" min="0" max="${data[i].cantidad}" value="0" step=".1" onkeypress="return filterFloat(event,this);" style="text-align: right; width: 100px; height: 36px" class="text" required>                                    
+                                        <input type="number" name="cantidad[]" min="0" max="${data[i].cantidad}" value="0" step="0.01" onkeypress="return filterFloat(event,this);" style="text-align: right; width: 100px; height: 36px" class="text" required>                                    
                                     </td>   
                                 </tr>
                             `);

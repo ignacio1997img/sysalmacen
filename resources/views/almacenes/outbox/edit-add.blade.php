@@ -271,7 +271,7 @@
                                 <input type="hidden" name="article_id[]" value="${product.id}" />
                             </td>
                             <td>
-                                <input type="number" name="cantidad[]" min="0.1" step="0.1" id="select-cant-${product.id}" style="text-align: right" class="form-control text" required>
+                                <input type="number" name="cantidad[]" min="0.1" step="0.01" id="select-cant-${product.id}" style="text-align: right" class="form-control text" required>
                             </td>
                             <td class="text-right"><button type="button" onclick="removeTr(${product.id})" class="btn btn-link"><i class="voyager-trash text-danger"></i></button></td>
                         </tr>
