@@ -374,19 +374,19 @@
 @section('javascript')
 <script>
 
-    $(document).ready(function(){
-        $('#entregarP').submit(function(e){
-            $('.btn_submit').val('Guardando...');
-            $('.btn_submit').attr('disabled', true);
-            $('.proce').css('display', 'block');
-            $('.icons').css('display', 'none');
-            $('.checkbox-inline').css('display', 'none');
+    // $(document).ready(function(){
+    //     $('#entregarP').submit(function(e){
+    //         $('.btn_submit').val('Guardando...');
+    //         $('.btn_submit').attr('disabled', true);
+    //         $('.proce').css('display', 'block');
+    //         $('.icons').css('display', 'none');
+    //         $('.checkbox-inline').css('display', 'none');
 
             
 
 
-        });
-    })
+    //     });
+    // })
 
 
     $('#show-modal').on('show.bs.modal', function (event)

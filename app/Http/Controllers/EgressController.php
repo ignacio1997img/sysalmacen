@@ -877,6 +877,7 @@ class EgressController extends Controller
             {
                 return redirect()->route('egres.index')->with(['message' => 'Todo el detalle se encuentra sin cantidad a entregar.', 'alert-type' => 'warning']);
             }
+            // return $detalle;
             foreach($detalle as $item)
             {
                 if($item->jsonDetails_id)
@@ -884,6 +885,8 @@ class EgressController extends Controller
                     $i=0;
                     foreach(json_decode($item->jsonDetails_id) as $item1)
                     {
+                        // return $detalle;
+                        // return $item->jsonDetails_id;
                         if($i==1)
                         {
                             $detalle_id = $item1;                            
@@ -895,45 +898,53 @@ class EgressController extends Controller
                         $i++;                        
                     }
                     // return 1;
+                    // return $item->jsonDetails_id;
+                    // return $detalle_id;
+                    // return $cant;
 
                     for ($x=0; $x < count($detalle_id); $x++) { 
-                        $verf = DetalleFactura::where('id', $detalle_id[$x])->where('deleted_at', null)->where('hist', 0)->first();
-
-                        DetalleEgreso::create([
-                            'solicitudegreso_id'    => $egreso->id,
-                            'registeruser_id'       => $user->id,
-                            'detallefactura_id'     => $detalle_id[$x],
-                            'cantsolicitada'        => $cant[$x],
-                            'precio'                => $verf->precio,
-                            'totalbs'               => $cant[$x]*$verf->precio,
-                            'gestion'               => $gestion->gestion,
-                            'sucursal_id'           => $solicitud->sucursal_id
-                        ]);
-                        $verf->decrement('cantrestante', $cant[$x]);
-
-                        $f = Factura::find($verf->factura_id);
-                        $s = SolicitudCompra::find($f->solicitudcompra_id);
-                        $s->update(['condicion' => 0]);
-
-                        if($verf->cantrestante == 0)
+                        // return $cant[$x];
+                        if($cant[$x] > 0)
                         {
-                            $verf->update(['condicion'=>0]);
-                        }
+                            // return $cant[$x];
+                            $verf = DetalleFactura::where('id', $detalle_id[$x])->where('deleted_at', null)->where('hist', 0)->first();
 
-                        $df = DetalleFactura::where('factura_id',$verf->factura_id)->where('hist', 0)->where('deleted_at', null)->get();
-                        $ok= true;
-                        $j = 0;
-                        while($j < count($df))
-                        {
-                            if($df[$j]->cantrestante != 0)
+                            DetalleEgreso::create([
+                                'solicitudegreso_id'    => $egreso->id,
+                                'registeruser_id'       => $user->id,
+                                'detallefactura_id'     => $detalle_id[$x],
+                                'cantsolicitada'        => $cant[$x],
+                                'precio'                => $verf->precio,
+                                'totalbs'               => $cant[$x]*$verf->precio,
+                                'gestion'               => $gestion->gestion,
+                                'sucursal_id'           => $solicitud->sucursal_id
+                            ]);
+                            $verf->decrement('cantrestante', $cant[$x]);
+
+                            $f = Factura::find($verf->factura_id);
+                            $s = SolicitudCompra::find($f->solicitudcompra_id);
+                            $s->update(['condicion' => 0]);
+
+                            if($verf->cantrestante == 0)
                             {
-                                $ok = false;
+                                $verf->update(['condicion'=>0]);
                             }
-                            $j++;
-                        }
-                        if($ok)
-                        {
-                            SolicitudCompra::where('id',$f->solicitudcompra_id)->update(['condicion' => 0, 'stock' => 0]);
+
+                            $df = DetalleFactura::where('factura_id',$verf->factura_id)->where('hist', 0)->where('deleted_at', null)->get();
+                            $ok= true;
+                            $j = 0;
+                            while($j < count($df))
+                            {
+                                if($df[$j]->cantrestante != 0)
+                                {
+                                    $ok = false;
+                                }
+                                $j++;
+                            }
+                            if($ok)
+                            {
+                                SolicitudCompra::where('id',$f->solicitudcompra_id)->update(['condicion' => 0, 'stock' => 0]);
+                            }
                         }
                     }
                 }

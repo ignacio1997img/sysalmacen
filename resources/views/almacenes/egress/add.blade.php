@@ -589,9 +589,11 @@
         function onselect_presentacion()
         {
             var id =  $(this).val();    
+            alert(id)
             if(id >=1)
             {
                 $.get('{{route('ajax_egres_select_article_detalle')}}/'+id, function(data){
+                    alert(data)
                     $("#precio").val(data[0].precio);
                     $("#stok").val(data[0].cantrestante);
                     $("#presentacion").val(data[0].presentacion);
