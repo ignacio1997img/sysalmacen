@@ -564,6 +564,7 @@
 
         function onselect_article()
         {
+            // alert(1)
             var id =  $(this).val();    
             $("#presentacion").val('');
                 $("#stok").val('');
@@ -589,7 +590,7 @@
         function onselect_presentacion()
         {
             var id =  $(this).val();    
-            alert(id)
+            // alert(id)
             if(id >=1)
             {
                 $.get('{{route('ajax_egres_select_article_detalle')}}/'+id, function(data){

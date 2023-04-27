@@ -1189,10 +1189,17 @@ class EgressController extends Controller
     }
 
 
-    protected function ajax_egres_select_article_detalle($id)
+    public function ajax_egres_select_article_detalle($id)
     {
         
-        return Article::where('id', $id)->first();
+        // return Article::where('id', $id)->first();
+        $detalle = DB::table('detalle_facturas as fd')
+                    ->join('articles as a', 'a.id', 'fd.article_id')
+                    ->select('fd.id', 'a.presentacion', 'fd.precio', 'fd.cantrestante')
+                    ->where('fd.id', $id)
+                    ->where('fd.hist', 0)
+                    ->get();
+        return $detalle;
     }
 
 }
