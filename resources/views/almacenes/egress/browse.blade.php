@@ -10,11 +10,11 @@
                     <h1 id="subtitle" class="page-title">
                         <i class="voyager-basket"></i> Egresos
                     </h1>
-                {{-- @if(auth()->user()->hasPermission('add_egres'))
+                @if(auth()->user()->hasPermission('add_egres'))
                     <a href="{{ route('egres.create') }}" class="btn btn-success btn-add-new">
                         <i class="voyager-plus"></i> <span>Crear</span>
                     </a>
-                @endif --}}
+                @endif
                 <!-- </div> -->
             </div>
         </div>

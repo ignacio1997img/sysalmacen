@@ -803,10 +803,8 @@ class EgressController extends Controller
             $user = Auth::user();
             foreach($detalle as $item)
             {
-                // dd(json_decode($item->jsonDetails_id));
                 if($item->jsonDetails_id)
                 {
-                    // return $item->jsonDetails_id;
                     $i=0;
                     foreach(json_decode($item->jsonDetails_id) as $item1)
                     {
@@ -817,6 +815,7 @@ class EgressController extends Controller
                             {
                                 if($data == 'si')
                                 {
+
                                     if($solicitud->unidad_id==$unidad)
                                     {
                                         return redirect()->route('egres-solicitud.show',['solicitud'=>$solicitud->id])->with(['message' => 'Ocurrio un error. Agrege nuevamente los detalle de la solicitud', 'alert-type' => 'error']);                                    
@@ -845,6 +844,7 @@ class EgressController extends Controller
                         }
                         $i++;                        
                     }
+                    // return $cant;
                     for ($x=0; $x < count($detalle_id); $x++) { 
                         $verf = DetalleFactura::where('id', $detalle_id[$x])->where('deleted_at', null)->where('hist', 0)->first();
                         // return $verf;
@@ -872,6 +872,11 @@ class EgressController extends Controller
                 'inventarioAlmacen_id'      => $gestion->id,
             ]);
             // return 1;
+            // return $detalle->SUM('cantentregada');
+            if($detalle->SUM('cantentregada')==0)
+            {
+                return redirect()->route('egres.index')->with(['message' => 'Todo el detalle se encuentra sin cantidad a entregar.', 'alert-type' => 'warning']);
+            }
             foreach($detalle as $item)
             {
                 if($item->jsonDetails_id)
@@ -932,13 +937,13 @@ class EgressController extends Controller
                         }
                     }
                 }
+
             }
             $solicitud->update(['status'=>'Entregado']);
             DB::commit();
             return redirect()->route('egres.index')->with(['message' => 'Solicitud entregada exitosamente.', 'alert-type' => 'success']);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->route('egres.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
         }
     }
 

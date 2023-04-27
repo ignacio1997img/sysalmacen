@@ -94,7 +94,7 @@
                                             </div> 
                                         @endif
                                 <main class="main">      
-                                {!! Form::open(['route' => 'egres.stores', 'class' => 'was-validated'])!!}  
+                                {!! Form::open(['route' => 'egres.store', 'class' => 'was-validated'])!!}  
 
                                 <input type="hidden" name="inventarioAlmacen_id" @if($gestion) value="{{$gestion->id}}" @endif>
                                 <input type="hidden" name="gestion" @if($gestion) value="{{$gestion->gestion}}" @endif>

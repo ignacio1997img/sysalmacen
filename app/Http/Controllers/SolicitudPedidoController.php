@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\Unit;
+use App\Models\Sucursal;
+use App\Models\SucursalUser;
 use Illuminate\Http\Request;
+use App\Models\SolicitudPedido;
+use App\Models\InventarioAlmacen;
+use App\Models\SucursalDireccion;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Sucursal;
-use App\Models\SucursalDireccion;
-use App\Models\InventarioAlmacen;
-use App\Models\SolicitudPedido;
 use App\Models\SolicitudPedidoDetalle;
 use App\Models\SucursalUnidadPrincipal;
-use App\Models\SucursalUser;
-use App\Models\Unit;
-use Carbon\Carbon;
 
 use function PHPUnit\Framework\returnSelf;
 
@@ -179,9 +179,9 @@ class SolicitudPedidoController extends Controller
                 ->where('d.cantrestante', '>', 0)
                 ->where('d.condicion', 1)
                 ->where('d.hist', 0)
-                ->select('s.id', 'f.id as factura_id', 'a.id as article_id', 'a.nombre as nombre', 'a.image', 'a.presentacion')
+                ->select('a.id', 'a.nombre as nombre', 'a.image', 'a.presentacion')
                 ->whereRaw("(nombre like '%$q%')")
-                ->groupBy('article_id')
+                ->groupBy('id')
                 ->orderBy('nombre')
                 ->get();
 

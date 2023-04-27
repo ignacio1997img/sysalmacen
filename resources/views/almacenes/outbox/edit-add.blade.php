@@ -393,31 +393,34 @@
             }
         }).change(function(){
             // alert(2)
+            // alert($('#select_producto option:selected').val())
             if($('#select_producto option:selected').val()){
                 let product = productSelected;
                 // toastr.info('EL detalle ya está agregado', 'Información');
 
                 // alert(product.article_id);
-                if($('.tables').find(`#tr-item-${product.article_id}`).val() === undefined){
+                if($('.tables').find(`#tr-item-${product.id}`).val() === undefined){
                 // alert(product.name);
 
                     $('#table-body').append(`
-                        <tr class="tr-item" id="tr-item-${product.article_id}">
+                        <tr class="tr-item" id="tr-item-${product.id}">
                             <td class="td-item"></td>
                             <td>
-                                <b class="label-description" id="description-${product.article_id}"><small>${product.nombre}</small><br>
+                                <b class="label-description" id="description-${product.id}"><small>${product.nombre}</small><br>
                                 <b class="label-description"><small>${product.presentacion}</small>
-                                <input type="hidden" name="article_id[]" value="${product.article_id}" />
+                                <input type="hidden" name="article_id[]" value="${product.id}" />
                             </td>
                             <td>
-                                <input type="number" name="cantidad[]" min="1" step="1" id="select-cant-${product.article_id}" style="text-align: right" class="form-control text" required>
+                                <input type="number" name="cantidad[]" min="1" step="1" id="select-cant-${product.id}" style="text-align: right" class="form-control text" required>
                             </td>
-                            <td class="text-right"><button type="button" onclick="removeTr(${product.article_id})" class="btn btn-link"><i class="voyager-trash text-danger"></i></button></td>
+                            <td class="text-right"><button type="button" onclick="removeTr(${product.id})" class="btn btn-link"><i class="voyager-trash text-danger"></i></button></td>
                         </tr>
                     `);
+                    toastr.success('Producto agregado..', 'Información');
+
                 }else{
                     // alert(1)
-                    toastr.info('EL detalle ya está agregado', 'Información');
+                    toastr.warning('El detalle ya está agregado..', 'Información');
                 }
                 setNumber();
                 // getSubtotal(product.article_id);
@@ -445,7 +448,7 @@
                             <img src="${image}" width="50px" />
                         </div>
                         <div>
-                            <b style="font-size: 16px">${option.nombre} </b> <br>
+                            <b style="font-size: 16px"> ${option.nombre} </b> <br>
                             <small style="font-size: 16px">${option.presentacion} </small>
                          
                         </div>
