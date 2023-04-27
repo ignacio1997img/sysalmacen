@@ -99,7 +99,7 @@
                                             <tr>
                                                 <th style="width: 30px">N&deg;</th>
                                                 <th style="text-align: center">Detalle</th>  
-                                                <th style="text-align: center; width: 80px">Cantidad</th>  
+                                                <th style="text-align: center; width: 120px">Cantidad</th>  
                                                 <th style="text-align: center; width: 80px"></th>  
                                             </tr>
                                         </thead>
