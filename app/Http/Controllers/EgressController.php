@@ -665,10 +665,16 @@ class EgressController extends Controller
 
     public function showSolicitud($id)
     {
+        // return 1;
         $data = SolicitudPedido::with('solicitudDetalle', 'sucursal')
             ->where('deleted_at', null)
             ->where('id', $id)
             ->first();
+        if($data->entregadoVisto == null)
+        {
+            $data->update(['entregadoVisto'=>Carbon::now()]);
+
+        }
 
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
         // return $sucursal;
@@ -950,7 +956,7 @@ class EgressController extends Controller
                 }
 
             }
-            $solicitud->update(['status'=>'Entregado']);
+            $solicitud->update(['status'=>'Entregado', 'entregadoDate'=>Carbon::now(), 'entregadoUser_id'=>Auth::user()->id]);
             DB::commit();
             return redirect()->route('egres.index')->with(['message' => 'Solicitud entregada exitosamente.', 'alert-type' => 'success']);
         } catch (\Throwable $th) {
