@@ -138,7 +138,7 @@
                                                 <div class="col-sm-12">
                                                     <div class="form-group">
                                                         <div class="input-group">
-                                                            <select class="form-control" id="select_proveedor" name="provider_id" required></select>
+                                                            <select class="form-control" id="select_proveedor" name="provider_id"></select>
                                                             <span class="input-group-btn">
                                                                 <button class="btn btn-primary" disabled title="Nuevo proveedor" data-target="#modal-create-customer" data-toggle="modal" style="margin: 0px" type="button">
                                                                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>

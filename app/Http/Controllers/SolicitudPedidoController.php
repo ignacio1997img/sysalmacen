@@ -206,6 +206,16 @@ class SolicitudPedidoController extends Controller
         DB::beginTransaction();
         try {
             $user = Auth::user();
+            $sucursal = Sucursal::where('id', $user->sucursal_id)->first();
+            if(!$sucursal)
+            {
+                return redirect()->route('outbox.index')->with(['message' => 'Error.', 'alert-type' => 'error']);
+            }
+            $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
+            if(!$gestion)
+            {
+                return redirect()->route('outbox.index')->with(['message' => 'Error en la gestion.', 'alert-type' => 'error']);
+            }
             
             $funcionario = $this->getWorker($user->funcionario_id);
             // dd($funcionario->id_unidad);
@@ -220,8 +230,9 @@ class SolicitudPedidoController extends Controller
             $char = 0;
             $type = 'd';
             $format = "%{$char}{$length}{$type}"; // or "$010d";
-            $request->merge(['nropedido' => strtoupper($unidad->sigla).'-'.sprintf($format, count($aux)+1)]);
+            $request->merge(['nropedido' => strtoupper($unidad->sigla).'-'.sprintf($format, count($aux)+1).'/'.$gestion->gestion]);
             // return $unidad;
+            // return $request;
 
 
 
@@ -231,17 +242,7 @@ class SolicitudPedidoController extends Controller
                 return redirect()->route('outbox.index')->with(['message' => 'Ingrese el detalle del pedido para hacer la solicitud.', 'alert-type' => 'error']);
             }
 
-            // $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
-            $sucursal = Sucursal::where('id', $user->sucursal_id)->first();
-            if(!$sucursal)
-            {
-                return redirect()->route('outbox.index')->with(['message' => 'Error.', 'alert-type' => 'error']);
-            }
-            $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
-            if(!$gestion)
-            {
-                return redirect()->route('outbox.index')->with(['message' => 'Error en la gestion.', 'alert-type' => 'error']);
-            }
+
             
             $sol = SolicitudPedido::create([
                 'sucursal_id'=>$sucursal->id,
