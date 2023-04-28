@@ -8,7 +8,7 @@
             <div class="row">
                 <!-- <div class="c"> -->
                     <h1 id="subtitle" class="page-title">
-                        <i class="icon fa-regular fa-clipboard"></i> Pedidos
+                        <i class="icon fa-regular fa-clipboard"></i> Solicitudes
                     </h1>
         
             </div>
