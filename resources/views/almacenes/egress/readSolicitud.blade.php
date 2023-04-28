@@ -31,27 +31,36 @@
                         <div class="panel-body">                                       
                             {{-- <h5 id="subtitle">Solicitud de Compras</h5> --}}
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-8">
                                     <div class="panel-heading" style="border-bottom:0;">
-                                        <h3 class="panel-title">Almacen</h3>
+                                        <label class="panel-title">Almacen</label>
                                     </div>
                                     <div class="panel-body" style="padding-top:0;">
                                         <p><small>{{strtoupper($data->sucursal->nombre)}}</small></p>
                                     </div>
                                     <hr style="margin:0;">
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="panel-heading" style="border-bottom:0;">
-                                        <h3 class="panel-title">Solicitante</h3>
+                                        <label class="panel-title">Nro Solicitud</label>
                                     </div>
                                     <div class="panel-body" style="padding-top:0;">
-                                        <p><small>{{strtoupper($data->first.' '.$data->last_name)}}</small></p>
+                                        <p><small>{{strtoupper($data->nropedido)}}</small></p>
                                     </div>
                                     <hr style="margin:0;">
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-8">
                                     <div class="panel-heading" style="border-bottom:0;">
-                                        <h3 class="panel-title">Fecha de Solicitud</h3>
+                                        <label class="panel-title">Solicitante</label>
+                                    </div>
+                                    <div class="panel-body" style="padding-top:0;">
+                                        <p><small>{{strtoupper($data->first_name.' '.$data->last_name.' - '.$data->job)}} </small></p>
+                                    </div>
+                                    <hr style="margin:0;">
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="panel-heading" style="border-bottom:0;">
+                                        <label class="panel-title">Fecha de Solicitud</label>
                                     </div>
                                     <div class="panel-body" style="padding-top:0;">
                                         <p><small>{{date('d/m/Y H:i:s', strtotime($data->fechasolicitud))}}</small></p>
@@ -60,7 +69,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="panel-heading" style="border-bottom:0;">
-                                        <h3 class="panel-title">Dirección</h3>
+                                        <label class="panel-title">Dirección</label>
                                     </div>
                                     <div class="panel-body" style="padding-top:0;">
                                         <p><small>{{$data->direccion_name}}</small></p>
@@ -69,66 +78,70 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="panel-heading" style="border-bottom:0;">
-                                        <h3 class="panel-title">Unidad</h3>
+                                        <label class="panel-title">Unidad</label>
                                     </div>
                                     <div class="panel-body" style="padding-top:0;">
                                         <p><small>{{$data->unidad_name}}</small></p>
                                     </div>
                                     <hr style="margin:0;">
                                 </div>
-                                               
+                                            
                             </div>
                             <h5 id="subtitle">Articulo:</h5>
                             <div class="row">
-                                <table id="dataTableStyle" class="table table-bordered table-striped table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 50px; text-align: center">N°</th>                                                 
-                                            <th style="text-align: center">PARTIDA</th>
-                                            <th style="text-align: center">DETALLE</th>
-                                            <th style="text-align: center">UNIDAD</th>                
-                                            <th style="text-align: center">CANT. SOLICITADA</th>                
-                                            <th style="text-align: center; width: 200px">CANT. A ENTREGAR</th>                
-                                        </tr>
-                                    </thead>    
-                                    <tbody>
-                                        @php
-                                            $numeroitems =1;
-                                        @endphp
-                                        @foreach ($data->solicitudDetalle as $item)
-                                            <tr>
-                                                <td style="text-align: right">{{$numeroitems}}</td>
-                                                <td style="text-align: center">{{$item->article->partida->codigo}}</td>
-                                                <td style="text-align: left">{{strtoupper($item->article->nombre)}}</td>
-                                                <td style="text-align: center">{{strtoupper($item->article->presentacion)}}</td>
-                                                <td style="text-align: right">{{number_format($item->cantsolicitada, 2, ',', ' ')}}</td>
-                                                <td style="text-align: right">
-                                                    <div class="no-sort no-click bread-actions text-right">
-                                                        {{-- <input type="number" style="width: 80px; text-align: right" name="cantidad[]" value="{{number_format($item->cantsolicitada)}}"> --}}
-                                                        {{-- <input type="number" name="cantidad[]" id="amount" min="0" step=".1" onkeypress="return filterFloat(event,this);" onchange="subTotal()" onkeyup="subTotal()" style="text-align: right; width: 100px; height: 36px" class="text" required>                                     --}}
-                                              
-                                                        <label class="label label-success" id="cantentregar-{{$item->id}}" style="font-size: 12px;">{{$item->cantentregada}}</label>
-                                                        @if ($data->status != 'Entregado')                                                      
-                                                            <a href="#" data-toggle="modal" data-target="#show-modal" 
-                                                                data-detalle_id="{{$item->id}}"
-                                                                data-article_id="{{$item->article_id}}"
-                                                                data-article="{{strtoupper($item->article->nombre)}}"
-                                                                data-partida="{{strtoupper($item->article->partida->codigo.'-'.$item->article->partida->nombre)}}"
-                                                                data-cantidad="{{$item->cantsolicitada}}"
-                                                                data-unidad_id="{{$data->unidad_id}}"
-                                                                data-item='@json($item)' title="Ver" class="btn btn-sm btn-warning view">
-                                                                <i class="fa-solid fa-eye"></i>
-                                                            </a>
-                                                        @endif
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <?php
-                                                $numeroitems++;
-                                            ?>
-                                        @endforeach
-                                    </tbody>                                        
-                                </table>
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table id="dataTable" class="table table-bordered table-striped table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 50px; text-align: center">N°</th>                                                 
+                                                    <th style="text-align: center">PARTIDA</th>
+                                                    <th style="text-align: center">DETALLE</th>
+                                                    <th style="text-align: center">UNIDAD</th>                
+                                                    <th style="text-align: center">CANT. SOLICITADA</th>                
+                                                    <th style="text-align: center; width: 200px">CANT. A ENTREGAR</th>                
+                                                </tr>
+                                            </thead>    
+                                            <tbody>
+                                                @php
+                                                    $numeroitems =1;
+                                                @endphp
+                                                @foreach ($data->solicitudDetalle as $item)
+                                                    <tr>
+                                                        <td style="text-align: right">{{$numeroitems}}</td>
+                                                        <td style="text-align: center">{{$item->article->partida->codigo}}</td>
+                                                        <td style="text-align: left">{{strtoupper($item->article->nombre)}}</td>
+                                                        <td style="text-align: center">{{strtoupper($item->article->presentacion)}}</td>
+                                                        <td style="text-align: right">{{number_format($item->cantsolicitada, 2, ',', ' ')}}</td>
+                                                        <td style="text-align: right">
+                                                            <div class="no-sort no-click bread-actions text-right">
+                                                                {{-- <input type="number" style="width: 80px; text-align: right" name="cantidad[]" value="{{number_format($item->cantsolicitada)}}"> --}}
+                                                                {{-- <input type="number" name="cantidad[]" id="amount" min="0" step=".1" onkeypress="return filterFloat(event,this);" onchange="subTotal()" onkeyup="subTotal()" style="text-align: right; width: 100px; height: 36px" class="text" required>                                     --}}
+                                                    
+                                                                <label class="label label-success" id="cantentregar-{{$item->id}}" style="font-size: 12px;">{{$item->cantentregada}}</label>
+                                                                @if ($data->status != 'Entregado')                                                      
+                                                                    <a href="#" data-toggle="modal" data-target="#show-modal" 
+                                                                        data-detalle_id="{{$item->id}}"
+                                                                        data-article_id="{{$item->article_id}}"
+                                                                        data-article="{{strtoupper($item->article->nombre)}}"
+                                                                        data-partida="{{strtoupper($item->article->partida->codigo.'-'.$item->article->partida->nombre)}}"
+                                                                        data-cantidad="{{$item->cantsolicitada}}"
+                                                                        data-unidad_id="{{$data->unidad_id}}"
+                                                                        data-item='@json($item)' title="Ver" class="btn btn-sm btn-warning view">
+                                                                        <i class="fa-solid fa-eye"></i>
+                                                                    </a>
+                                                                @endif
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <?php
+                                                        $numeroitems++;
+                                                    ?>
+                                                @endforeach
+                                            </tbody>                                        
+                                        </table>
+                                    </div>    
+                                </div>    
                             </div>    
                             @if ($data->status != 'Entregado')
                                 <a data-toggle="modal" data-target="#myModalEntregar" title="Aprobar Solicitud" class="btn btn-sm btn-success view">

@@ -33,27 +33,36 @@
                             <div class="panel-body">                                       
                                 {{-- <h5 id="subtitle">Solicitud de Compras</h5> --}}
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-8">
                                         <div class="panel-heading" style="border-bottom:0;">
-                                            <h3 class="panel-title">Almacen</h3>
+                                            <label class="panel-title">Almacen</label>
                                         </div>
                                         <div class="panel-body" style="padding-top:0;">
                                             <p><small>{{strtoupper($data->sucursal->nombre)}}</small></p>
                                         </div>
                                         <hr style="margin:0;">
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="panel-heading" style="border-bottom:0;">
-                                            <h3 class="panel-title">Solicitante</h3>
+                                            <label class="panel-title">Nro Solicitud</label>
                                         </div>
                                         <div class="panel-body" style="padding-top:0;">
-                                            <p><small>{{strtoupper($data->first.' '.$data->last_name)}}</small></p>
+                                            <p><small>{{strtoupper($data->nropedido)}}</small></p>
                                         </div>
                                         <hr style="margin:0;">
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-8">
                                         <div class="panel-heading" style="border-bottom:0;">
-                                            <h3 class="panel-title">Fecha de Solicitud</h3>
+                                            <label class="panel-title">Solicitante</label>
+                                        </div>
+                                        <div class="panel-body" style="padding-top:0;">
+                                            <p><small>{{strtoupper($data->first_name.' '.$data->last_name.' - '.$data->job)}} </small></p>
+                                        </div>
+                                        <hr style="margin:0;">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="panel-heading" style="border-bottom:0;">
+                                            <label class="panel-title">Fecha de Solicitud</label>
                                         </div>
                                         <div class="panel-body" style="padding-top:0;">
                                             <p><small>{{date('d/m/Y H:i:s', strtotime($data->fechasolicitud))}}</small></p>
@@ -62,7 +71,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="panel-heading" style="border-bottom:0;">
-                                            <h3 class="panel-title">Dirección</h3>
+                                            <label class="panel-title">Dirección</label>
                                         </div>
                                         <div class="panel-body" style="padding-top:0;">
                                             <p><small>{{$data->direccion_name}}</small></p>
@@ -71,7 +80,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="panel-heading" style="border-bottom:0;">
-                                            <h3 class="panel-title">Unidad</h3>
+                                            <label class="panel-title">Unidad</label>
                                         </div>
                                         <div class="panel-body" style="padding-top:0;">
                                             <p><small>{{$data->unidad_name}}</small></p>
