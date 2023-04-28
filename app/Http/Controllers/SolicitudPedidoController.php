@@ -218,19 +218,20 @@ class SolicitudPedidoController extends Controller
             }
             
             $funcionario = $this->getWorker($user->funcionario_id);
-            // dd($funcionario->id_unidad);
 
             $unidad = Unit::where('id', $funcionario->id_unidad)->first();
 
             $aux = SolicitudPedido::where('unidad_id',$unidad->id)
                     ->where('deleted_at', null)
                     ->get();
+            $ok = SolicitudPedido::where('deleted_at', null)->where('gestion', $gestion->gestion)->where('unidad_id', $unidad->id)->count();
+            // return $ok;
 
             $length = 4;
             $char = 0;
             $type = 'd';
             $format = "%{$char}{$length}{$type}"; // or "$010d";
-            $request->merge(['nropedido' => strtoupper($unidad->sigla).'-'.sprintf($format, count($aux)+1).'/'.$gestion->gestion]);
+            $request->merge(['nropedido' => strtoupper($unidad->sigla).'-'.sprintf($format, $ok+1).'/'.$gestion->gestion]);
             // return $unidad;
             // return $request;
 
