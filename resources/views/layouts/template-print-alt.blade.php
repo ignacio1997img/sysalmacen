@@ -43,7 +43,7 @@
             }
         }
     </style>
-    {{-- @yield('css') --}}
+    @yield('css')
 </head>
 <body>
     <div class="hide-print" style="text-align: right; padding: 10px 0px">
@@ -72,6 +72,6 @@
         });
     </script>
 
-    {{-- @yield('script') --}}
+    @yield('script')
 </body>
 </html>
