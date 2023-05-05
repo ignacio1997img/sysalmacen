@@ -428,31 +428,6 @@
                     //     $('#input-dni').val(customerSelected.razonsocial ? customerSelected.razonsocial : '');
                     // }
                 });
-    
-                // $('#form-create-customer').submit(function(e){
-                //     e.preventDefault();
-                //     $('.btn-save-customer').attr('disabled', true);
-                //     $('.btn-save-customer').val('Guardando...');
-                //     $.post($(this).attr('action'), $(this).serialize(), function(data){
-                //         if(data.customer.id){
-                //             toastr.success('Usuario creado', 'Éxito');
-                //             $(this).trigger('reset');
-                //         }else{
-                //             toastr.error(data.error, 'Error');
-                //         }
-                //     })
-                //     .always(function(){
-                //         $('.btn-save-customer').attr('disabled', false);
-                //         $('.btn-save-customer').text('Guardar');
-                //         $('#modal-create-customer').modal('hide');
-                //     });
-                // });
-    
-    
-    
-                // $('#form-sale').submit(function(e){
-                //     $('#btn-submit').attr('disabled', 'disabled');
-                // });
             });
     
 
@@ -740,7 +715,7 @@
                     $.get('{{route('ajax_article')}}/'+id, function(data){
                         var html_article=    '<option value="" selected disabled>--Seleccione un Artículo--</option>'
                             for(var i=0; i<data.length; ++i)
-                            html_article += '<option value="'+data[i].id+'">'+data[i].nombre+'</option>'
+                            html_article += '<option value="'+data[i].id+'">'+data[i].id+ '-' +data[i].nombre+'</option>'
 
                         $('#article_id').html(html_article);           
                     });

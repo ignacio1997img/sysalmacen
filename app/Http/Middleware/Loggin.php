@@ -25,6 +25,8 @@ class Loggin
     {
         try {
             $obj = new Controller();
+            $user  = Auth::user();
+            // dd($user);
             if(setting('configuracion.maintenance') && !auth()->user()->hasRole('admin')){
                 return redirect()->route('maintenance');
             }
@@ -37,15 +39,24 @@ class Loggin
                 return redirect()->route('error');
             }
 
-            if($obj->getWorker(Auth::user()->funcionario_id) == "error" && !auth()->user()->hasRole('admin'))
+
+            //si el usuario no tiene direcion y unidad  no accedera al sistema
+            if((!$user->unidadAdministrativa_id || !$user->direccionAdministrativa_id) && !auth()->user()->hasRole('admin'))
             {
                 return redirect()->route('contact');
             }
 
-            if($obj->getWorker(Auth::user()->funcionario_id) == "null" && !auth()->user()->hasRole('admin'))
+            // dd($obj->getWorker($user->funcionario_id));
+            //Para ver si no existe la personas con contrato no accedera al sistema
+            if(!$obj->getWorker($user->funcionario_id) && !auth()->user()->hasRole('admin'))
             {
                 return redirect()->route('notpeople');
             }
+
+            // if($obj->getWorker(Auth::user()->funcionario_id) == "null" && !auth()->user()->hasRole('admin'))
+            // {
+            //     return redirect()->route('notpeople');
+            // }
 
 
 

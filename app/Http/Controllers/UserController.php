@@ -65,18 +65,18 @@ class UserController extends Controller
     }
 
 
-    public function desactivar(Request $request)
-    {
-        return $request;
-        SucursalUser::where('id',$request->id)->update(['condicion' =>0]);
-        return redirect('admin/users/'.$request->user_id.'/edit');
-    }
-    protected function activar(Request $request)
-    {
-        return $request;
-        SucursalUser::where('id',$request->id)->update(['condicion' =>1]);
-        return redirect('admin/users/'.$request->user_id.'/edit');
-    }
+    // public function desactivar(Request $request)
+    // {
+    //     return $request;
+    //     SucursalUser::where('id',$request->id)->update(['condicion' =>0]);
+    //     return redirect('admin/users/'.$request->user_id.'/edit');
+    // }
+    // protected function activar(Request $request)
+    // {
+    //     return $request;
+    //     SucursalUser::where('id',$request->id)->update(['condicion' =>1]);
+    //     return redirect('admin/users/'.$request->user_id.'/edit');
+    // }
 
     /**
      * Display the specified resource.
@@ -245,8 +245,6 @@ class UserController extends Controller
 
 
     public function update_user(Request $request, User $user){
-        // return $request;
-        // return $user;
 
         $ok = User::where('funcionario_id', $request->funcionario_id)->where('id', '!=', $user->id)->first();
         // return $ok;
@@ -266,7 +264,9 @@ class UserController extends Controller
             $user->update([
                 // 'role_id' => $request->role_id,
                 'email' => $request->email,
-                'sucursal_id'=>$request->sucursal_id
+                'sucursal_id'=>$request->sucursal_id,
+                'unidadAdministrativa_id' => $request->unit_id,
+                'direccionAdministrativa_id'=> $request->direction_id
             ]);
             
             if ($request->password != '') {
@@ -286,16 +286,15 @@ class UserController extends Controller
                     'name' => $request->name,
                 ]);
             }
-            $contract = Contract::with(['unidad'])->where('person_id', $user->funcionario_id)->where('deleted_at', null)->where('status', 'firmado')->first();
-            // return $contract;
-            // return $request;
-            if($contract)
-            {
-                if(!$contract->unidad_administrativa_id)
-                {
-                    $contract->update(['unidad_administrativa_id' => $request->unidad_administrativa_id]);
-                }
-            }
+            // $contract = Contract::with(['unidad'])->where('person_id', $user->funcionario_id)->where('deleted_at', null)->where('status', 'firmado')->first();
+
+            // if($contract)
+            // {
+            //     if(!$contract->unidad_administrativa_id)
+            //     {
+            //         $contract->update(['unidad_administrativa_id' => $request->unidad_administrativa_id]);
+            //     }
+            // }
 
 
             SucursalUser::where('deleted_at', null)->where('user_id', $user->id)->where('condicion',1)->update(['condicion'=>0]);

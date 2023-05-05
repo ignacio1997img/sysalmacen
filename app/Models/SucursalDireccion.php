@@ -17,4 +17,9 @@ class SucursalDireccion extends Model
     {
         return $this->belongsTo(Sucursal::class, 'sucursal_id');
     }
+
+    public function direction()
+    {
+        return $this->belongsTo(Direction::class, 'direccionAdministrativa_id');
+    }
 }

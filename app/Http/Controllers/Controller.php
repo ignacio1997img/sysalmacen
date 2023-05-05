@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\InventarioAlmacen;
+use App\Models\SucursalDireccion;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -38,6 +39,7 @@ class Controller extends BaseController
             ->get();
     }
 
+    //Para obtener todas la unidades de una direccion en especifica
     public function getUnidades($id)
     {
         return DB::connection('mamore')->table('unidades as u')
@@ -141,14 +143,15 @@ class Controller extends BaseController
                     'c.unidad_administrativa_id as id_unidad', 'u.nombre as unidad')
             ->first();
         if(!$funcionario)
+        // if(1==1)
         {
-            return "null";
+            return NULL;
         }
 
-        if((!$funcionario->id_unidad || !$funcionario->id_direccion) && !auth()->user()->hasRole('admin') )
-        {
-            return "error";
-        }
+        // if((!$funcionario->id_unidad || !$funcionario->id_direccion) && !auth()->user()->hasRole('admin') )
+        // {
+        //     return "error";
+        // }
 
         if($funcionario->cargo_id != NULL)
         {
@@ -161,6 +164,16 @@ class Controller extends BaseController
         }
         
         return $funcionario;
+    }
+
+
+    //Para obtener las direciones de cada almacen asignada
+    public function getDireccionSucursal($id)
+    {
+        return SucursalDireccion::with(['direction'])
+            ->where('sucursal_id', $id)
+            ->where('status', 1)
+            ->where('deleted_at', null)->get();
     }
 
 

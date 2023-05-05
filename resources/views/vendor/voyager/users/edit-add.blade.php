@@ -125,7 +125,7 @@
 
                             <div class="form-group">
                                 <label for="sucursal_id">Almacen</label>
-                                <select name="sucursal_id" class="form-control select2">
+                                <select name="sucursal_id" id="sucursal_id" class="form-control select2">
                                     <option value="" >--Seleccione una opción--</option>
                                     @foreach(\App\Models\Sucursal::all() as $item)
                                         <option value="{{ $item->id }}" @if($sucursal) {{$sucursal->sucursal_id==$item->id?'selected':''}} @endif>{{ $item->nombre }}</option>
@@ -134,6 +134,29 @@
                             </div>
                             @if ($dataTypeContent->id)
                                 @php
+                                    $direction = \App\Models\SucursalDireccion::with(['direction'])->where('sucursal_id', $dataTypeContent->sucursal_id)->where('status', 1)->where('deleted_at', null)->get();
+                                    $unidad = \App\Models\Unit::where('direccion_id', $dataTypeContent->direccionAdministrativa_id)->where('estado', 1)->where('deleted_at', null)->get();
+                                @endphp   
+                                <div class="form-group">
+                                    <label for="direction_id">Dirección Administrativa</label>
+                                    <select name="direction_id" id="direction_id" class="form-control select2">                                   
+                                        <option value="" >--Seleccione una opción--</option>
+                                        @foreach ($direction as $item)
+                                            <option value="{{$item->direction->id}}" {{$dataTypeContent->direccionAdministrativa_id==$item->direction->id?'selected':''}}>{{$item->direction->nombre}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>  
+                                <div class="form-group">
+                                    <label for="unit_id">Unidad Administrativa</label>
+                                    <select name="unit_id" id="unit_id" class="form-control select2">   
+                                        <option value="" >--Seleccione una opción--</option>
+                                        @foreach ($unidad as $item)
+                                            <option value="{{$item->id}}" {{$dataTypeContent->unidadAdministrativa_id==$item->id?'selected':''}}>{{$item->nombre}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                {{-- @php
                                     $contract = \App\Models\Contract::with(['unidad'])->where('person_id', $dataTypeContent->funcionario_id)->where('deleted_at', null)->where('status', 'firmado')->first();
                                     $unidad = [];
                                     if($contract)
@@ -161,16 +184,12 @@
                                         @endif
                                         
                                     </select>
-                                </div>                            
-                            @else
+                                </div>                             --}}
+                            {{-- @else
                                 @php
                                     $unidad = \App\Models\Unit::where('deleted_at', null)->where('estado', 1)->get()
-                                @endphp
+                                @endphp --}}
                             @endif
-
-                            
-
-
 
                          
                             @php
@@ -220,67 +239,6 @@
          
 
             <div class="row">
-                {{-- <div class="col-md-8">
-                            {!! Form::open(['route' => 'usuario.store', 'class' => 'was-validated'])!!}
-                                
-                                <label for="default_role">{{ __('Almacen') }}</label>
-                                <select name="branchoffice_id" class="form-control select2">
-                                    <option value="" selected>Seleccione</option>
-                                    @foreach (\App\Models\Sucursal::orderBy('nombre')->pluck('nombre','id') as $id => $warehouse)                                    
-                                     <option value="{{ $id }}">{{ $warehouse }} </option>                                 
-                                    @endforeach
-                                </select>
-
-                                <input type="hidden" name="user_id" value="{{$dataTypeContent->id}}">
-                                <div class="input-group-append">
-                                    <button class="btn btn-success" type="submit" data-toggle="tooltip"><i class="voyager-plus"></i></button>
-                                </div>
-                            {!! Form::close()!!} 
-                                <br><br>
-                            <table class="table table-bordered table-striped table-sm">
-                                <thead>
-                                    <tr>
-                                        <th>Id</th>
-                                        <th>Alamacen</th>
-                                        <th>Estado</th>    
-                                        <th>Opcion</th>    
-                                    </tr>
-                                </thead>
-                                <?php
-                                    $ok = \App\Models\Sucursal::join('sucursal_users as u','u.sucursal_id','sucursals.id')
-                                                        ->where('u.user_id',$dataTypeContent->id)
-                                                        ->select('u.id','sucursals.nombre','u.condicion')
-                                                        ->orderBy('nombre')->get();
-                                    // dd($ok);
-                                ?>
-                                <tbody>
-                                    @foreach($ok as $okk)
-                                        <tr>
-                                            <td>{{ $okk->id }}</td>
-                                            <td>{{ $okk->nombre }}</td>
-                                            <td>
-                                                @if($okk->condicion === 1)
-                                                    <span class="badge badge-primary">Activo</span>
-                                                @else
-                                                    <span class="badge badge-danger">Inactivo</span>
-                                                @endif
-                                            </td>
-                                            
-                                            @if($okk->condicion == 1)
-                                                <td class="text-center">
-                                                    <a class="btn-lg btn-button" data-toggle="modal" data-target="#delete_modal" data-id="{{$okk->id}}" data-nombre="{{ $okk->nombre }}" title="Desactivar Almacen"><i class="voyager-trash" style="color: red;"></i></a>
-                                                </td>
-                                            @else
-                                                <td class="text-center">
-                                                    <a class="btn-lg btn-button" data-toggle="modal" data-target="#activar_modal" data-id="{{$okk->id}}" data-nombre="{{ $okk->nombre }}"title="Habilitar Almacen"><i class="voyager-check" style="color: rgb(0, 26, 255);"></i></a>
-                                                </td>
-                                            @endif
-                                        </tr>
-                                    @endforeach
-                                    
-                                </tbody>
-                            </table>
-                </div> --}}
                 <div class="col-md-4">
 
                 </div>
@@ -415,16 +373,42 @@
         $('#getfuncionario').on('select2:select', function (e) {
            
             var data = e.params.data;
-            // alert(1)
             if (data) {
-                // document.getElementById("nombre").value = data.nombre;
-                // document.getElementById("apellido").value = data.apellido;
-                // document.getElementById("ap_materno").value = data.ap_materno;
                 document.getElementById("people").value = data.text;
-                // document.getElementById("alfanum").value = data.alfanum;
-                // document.getElementById("departamento_id").value = data.departamento_id;
             }					
 		});
+
+        $('#sucursal_id').on('select2:select', function (e) {
+           var data = e.params.data;
+           if (data.id) {
+                // alert(1)
+               $.get('{{route('ajax-get.direccinsucursal')}}/'+data.id, function(data){
+                // alert(data)
+                        var html_direction=    '<option value="" selected>--Seleccione una opción--</option>'
+                            for(var i=0; i<data.length; ++i)
+                            html_direction += '<option value="'+data[i].direction.id+'">'+data[i].direction.nombre+'</option>'
+
+                        $('#direction_id').html(html_direction);           
+                });
+           }	
+           $('#direction_id').html(''); 				
+           $('#unit_id').html(''); 				
+       });
+       $('#direction_id').on('select2:select', function (e) {
+            var data = e.params.data;
+            // alert(data.id)
+            if (data.id) {
+                $.get('{{route('ajax-get.unidadDirection')}}/'+data.id, function(data){
+                    // alert(data)
+                            var html_unit=    '<option value="" selected>--Seleccione una opción--</option>'
+                                for(var i=0; i<data.length; ++i)
+                                html_unit += '<option value="'+data[i].id+'">'+data[i].nombre+'</option>'
+
+                            $('#unit_id').html(html_unit);           
+                    });
+            }				
+            $('#unit_id').html(''); 				
+       });
 
     });
 

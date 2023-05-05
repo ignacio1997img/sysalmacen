@@ -338,6 +338,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::get('egress/selectarticle/detalle/{id?}', [EgressController::class, 'ajax_egres_select_article_detalle'])->name('ajax_egres_select_article_detalle');
 
 
+    //###################################################################   Funciona   ######################################################
+    Route::get('ajax/get/direccionsucursal/{id?}', [Controller::class, 'getDireccionSucursal'])->name('ajax-get.direccinsucursal'); //Para obtener todas las direciones de una sucursal
+    Route::get('ajax/get/unidadDirection/{id?}', [Controller::class, 'getUnidades'])->name('ajax-get.unidadDirection'); //Para obtener todas las direciones de una sucursal
+
+
+
 
     //___________________________________________________________________________DONACIONES_______________________________________________________
     Route::get('incomedonor/selectarticle/{id?}', [IncomeDonorController::class, 'ajax_article'])->name('ajax_article_donor');
@@ -348,6 +354,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
  //egress
     Route::get('incomedonor/selectarticle/egress/{id?}', [EgressDonorController::class, 'ajax_article'])->name('ajax_disponible_article_donor');
     Route::get('incomedonor/llenar_input/egress/{id?}', [EgressDonorController::class, 'ajax_autollenar_articulo'])->name('ajax_egressdoner_llenarimput');
+
+
+
 
 
 
