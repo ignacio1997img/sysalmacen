@@ -66,7 +66,6 @@
                                     <label class="panel-title">Dirección</label>
                                 </div>
                                 <div class="panel-body" style="padding-top:0;">
-                                    {{-- <p><small>{{$funcionario->direccion}}</small></p> --}}
                                     <p><small>{{$user->direction->nombre}}</small></p>
                                 </div>
                                 <hr style="margin:0;">
@@ -76,7 +75,6 @@
                                     <label class="panel-title">Unidad</label>
                                 </div>
                                 <div class="panel-body" style="padding-top:0;">
-                                    {{-- <p><small>{{$funcionario->unidad??'Sin Unidad'}}</small></p> --}}
                                     <p><small>{{$user->unit->nombre??'Sin Unidad'}}</small></p>
                                 </div>
                                 <hr style="margin:0;">
@@ -120,7 +118,7 @@
                             </div>       
                             <div class="form-group col-md-12 text-center">
                                 {{-- Tiene que tener una gestion activa y tenes una unidad agregada como funcionario --}}
-                                @if ($gestion && $funcionario->unidad)
+                                @if ($gestion && $user->unidadAdministrativa_id)
                                     <button type="submit" id="btn-register" class="btn btn-success btn-block">Registrar Pedido <i class="voyager-basket"></i></button>
                                 @endif
                                 <button id="btn-volver" class="btn btn-block" href="{{ route('outbox.index') }}" >Volver a la lista</button>

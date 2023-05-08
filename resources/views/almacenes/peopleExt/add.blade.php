@@ -35,7 +35,7 @@
                                             @endforeach
                                         </select>
                                     </div>       
-                                    <div class="form-group col-md-4">
+                                    {{-- <div class="form-group col-md-4">
                                         <small>Direcion Administrativa</small>
                                         <select name="direccionAdministrativa_id" id="direccionAdministrativa_id" class="form-control select2" required>
                                             <option value="" disabled selected>-- Selecciona una dirección --</option>
@@ -43,8 +43,8 @@
                                                 <option value="{{$item->id}}">{{$item->nombre}}</option>
                                             @endforeach
                                         </select>
-                                    </div>   
-                                    <div class="form-group col-md-4">
+                                    </div>    --}}
+                                    <div class="form-group col-md-8">
                                         <small>Cargo</small>
                                         <input type="text" name="cargo" class="form-control text">
                                     </div>                           

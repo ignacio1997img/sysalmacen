@@ -1,13 +1,13 @@
 <div class="col-md-12">
     <div class="table-responsive">
-        <table id="dataStyle" class="table table-bordered table-hover">
+        <table id="dataTable" class="table table-bordered table-hover">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>CI</th>
                     <th>Nombre completo</th>                    
                     <th>Cargo</th>
-                    <th>Dirección Administrativa</th>
+                    {{-- <th>Dirección Administrativa</th> --}}
                     <th>Fecha</th>
                     <th>Estado</th>
                     <th class="text-right">Acciones</th>
@@ -20,7 +20,7 @@
                     <td>{{ $item->people->ci }}</td>
                     <td>{{ $item->people->first_name}} {{ $item->people->last_name}}</td>
                     <td>{{ $item->cargo}}</td>
-                    <td>{{ $item->direction->nombre}}</td>
+                    {{-- <td>{{ $item->direction->nombre}}</td> --}}
                     <td>
                         <small>Inicio: {{$item->start}}</small><br>
                         <small>Fin: {{$item->finish}}</small>

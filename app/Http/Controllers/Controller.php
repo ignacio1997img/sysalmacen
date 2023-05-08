@@ -10,6 +10,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\PeopleExt;
 
 class Controller extends BaseController
 {
@@ -142,27 +143,41 @@ class Controller extends BaseController
                 DB::raw("CONCAT(p.first_name, ' ', p.last_name) as nombre"), 'p.first_name', 'p.last_name', 'c.direccion_administrativa_id as id_direccion', 'd.nombre as direccion',
                     'c.unidad_administrativa_id as id_unidad', 'u.nombre as unidad')
             ->first();
+
+        if($funcionario)
+        {
+            if($funcionario->cargo_id != NULL)
+            {
+                $cargo = DB::connection('mysqlgobe')->table('cargo')
+                    ->where('id',$funcionario->cargo_id)
+                    ->select('*')
+                    ->first();
+            
+                $funcionario->cargo=$cargo->Descripcion;
+            }
+        }
+        
         if(!$funcionario)
-        // if(1==1)
+        {
+            // $funcionario = PeopleExt::where('people_id', $id)
+            //     ->where('status',1)
+            //     ->where('deleted_at',null)
+            //     ->select('cargo', 'people_id as people_id')
+            //     ->first();          
+
+            $funcionario = DB::connection('mamore')->table('people as p')
+                ->join('sysalmacen.people_exts as px', 'px.people_id', 'p.id')
+                ->where('px.status',1)
+                ->where('px.deleted_at',null)
+                ->where('px.people_id', $id)
+                ->select('p.id as people_id', 'p.ci as ci', 'px.cargo', DB::raw("CONCAT(p.first_name, ' ', p.last_name) as nombre"), 'p.first_name', 'p.last_name')
+                ->first();
+        }
+
+        if(!$funcionario)
         {
             return NULL;
         }
-
-        // if((!$funcionario->id_unidad || !$funcionario->id_direccion) && !auth()->user()->hasRole('admin') )
-        // {
-        //     return "error";
-        // }
-
-        if($funcionario->cargo_id != NULL)
-        {
-            $cargo = DB::connection('mysqlgobe')->table('cargo')
-                ->where('id',$funcionario->cargo_id)
-                ->select('*')
-                ->first();
-    
-            $funcionario->cargo=$cargo->Descripcion;
-        }
-        
         return $funcionario;
     }
 

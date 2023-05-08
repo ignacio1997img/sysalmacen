@@ -76,6 +76,7 @@ class SolicitudPedidoController extends Controller
 
         $funcionario = $this->getWorker($user->funcionario_id);
         // dd($funcionario);
+        // return $user;
 
         $mainUnit = SucursalUnidadPrincipal::where('sucursal_id', $user->sucursal_id)->where('status', 1)->where('deleted_at', null)->first();
         // return $mainUnit;
