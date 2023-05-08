@@ -13,4 +13,9 @@ class Unit extends Model
     protected $table = 'unidades';
     protected $fillable = ['nombre', 'direccion_id', 'estado'];
 
+    public function direction()
+    {
+        return $this->belongsTo(Direction::class, 'direccion_id');
+    }
+
 }

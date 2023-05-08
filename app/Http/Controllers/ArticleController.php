@@ -50,4 +50,20 @@ class ArticleController extends Controller
 
         return view('almacenes.article.list', compact('data'));
     }
+
+
+    public function getArticle()
+    {
+        $q = request('q');
+
+        $data = DB::table('articles as a')
+            ->join('partidas as p', 'p.id', 'a.partida_id')
+            ->where('a.deleted_at', null)
+            ->where('a.condicion', 1)
+            ->whereRaw($q ? '(a.nombre like "%'.$q.'%" or a.presentacion like "%'.$q.'%")' : 1)
+            ->select('a.id', 'a.nombre as article', 'a.presentacion', 'a.image', 'p.nombre as partida', 'p.codigo')
+            ->get();
+
+        return response()->json($data);
+    }
 }

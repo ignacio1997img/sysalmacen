@@ -66,7 +66,8 @@
                                     <label class="panel-title">Dirección</label>
                                 </div>
                                 <div class="panel-body" style="padding-top:0;">
-                                    <p><small>{{$funcionario->direccion}}</small></p>
+                                    {{-- <p><small>{{$funcionario->direccion}}</small></p> --}}
+                                    <p><small>{{$user->direction->nombre}}</small></p>
                                 </div>
                                 <hr style="margin:0;">
                             </div>
@@ -75,7 +76,8 @@
                                     <label class="panel-title">Unidad</label>
                                 </div>
                                 <div class="panel-body" style="padding-top:0;">
-                                    <p><small>{{$funcionario->unidad??'Sin Unidad'}}</small></p>
+                                    {{-- <p><small>{{$funcionario->unidad??'Sin Unidad'}}</small></p> --}}
+                                    <p><small>{{$user->unit->nombre??'Sin Unidad'}}</small></p>
                                 </div>
                                 <hr style="margin:0;">
                             </div>                            
@@ -121,7 +123,7 @@
                                 @if ($gestion && $funcionario->unidad)
                                     <button type="submit" id="btn-register" class="btn btn-success btn-block">Registrar Pedido <i class="voyager-basket"></i></button>
                                 @endif
-                                <a id="btn-volver" href="{{ route('outbox.index') }}" >Volver a la lista</a>
+                                <button id="btn-volver" class="btn btn-block" href="{{ route('outbox.index') }}" >Volver a la lista</button>
                             </div>                        
                             
                         </div>
@@ -203,10 +205,17 @@
 
 <script>
     $(document).ready(function(){
+        
         $('#form-registrar-pedido').submit(function(e){
-            $('#btn-register').text('Registrando...');
-            $('#btn-register').prop('disabled', true);
-            $('#btn-volver').prop('disabled', true);
+            // $('#btn-register').text('Registrando...');
+            // $('#btn-register').prop('disabled', true);
+
+            $("#btn-register").text('Registrando...');
+            $("#btn-register").attr('disabled','disabled');
+
+
+            // $('#btn-volver').prop('disabled', true);
+            $('#btn-volver').attr('disabled','disabled');
         });
     })
     $(document).ready(function(){

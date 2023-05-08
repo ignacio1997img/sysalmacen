@@ -26,300 +26,225 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="panel panel-bordered">
-                            <div class="panel-body">           
-                                                 
-                                <div class="table-responsive">                                   
-            
-                                    <main class="main"> 
-                                        @if (!$gestion)
-                                            <div class="alert alert-danger">
-                                                <strong>Aviso: </strong>
-                                                <p> No tiene una gestion activa, contactese con los administradores del sistema.</p>
-                                            </div> 
-                                        @endif
+                            <div class="panel-body">     
+                            
+                            {!! Form::open(['route' => 'income.store', 'id'=>'form-income', 'class' => 'was-validated'])!!}  
+                                <input type="hidden" name="inventarioAlmacen_id" @if($gestion) value="{{$gestion->id}}" @endif>
+                                <input type="hidden" name="gestion" @if($gestion) value="{{$gestion->gestion}}" @endif>
 
-                                        
-                                        {!! Form::open(['route' => 'income.store', 'class' => 'was-validated', 'id'=>'form-agregar'])!!}
-                                        <div class="card-body">
-                                            <input type="hidden" name="inventarioAlmacen_id" @if($gestion) value="{{$gestion->id}}" @endif>
-                                            <input type="hidden" name="gestion" @if($gestion) value="{{$gestion->gestion}}" @endif>
-
-                                            <h5>Solicitud de Compras</h5>
-                                            <div class="row">
-                                                <!-- === -->
-                                                <div class="col-sm-3">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <select name="branchoffice_id" class="form-control select2" required>
-                                                                {{-- @foreach ($sucursal as $item) --}}
-                                                                    <option value="{{$sucursal->id}}" selected>{{$sucursal->nombre}}</option>
-                                                                {{-- @endforeach --}}
-                                                            </select>
-                                                        </div>
-                                                        <small>Sucursal.</small>
-                                                    </div>
-                                                </div>                                            
-                                                <div class="col-sm-4">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <select id="das" name="direccionadministrativa" class="form-control select2" required>
-                                                                <option value="" selected disabled>Seleccione una Direccion Administrativa</option>
-                                                                @foreach ($da as $data)
-                                                                    <option value="{{$data->id}}">{{$data->nombre}}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                        <small>Seleccionar Direción Administrativa.</small>
-                                                    </div>
-                                                </div>
-                                                <!-- === -->
-                                                <div class="col-sm-5">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <select id="unidadEje" name="unidadadministrativa" class="form-control select2" required>
-                                                                
-                                                            </select>
-                                                        </div>
-                                                        <small>Seleccionar Unidad Administrativa.</small>
-                                                    </div>
-                                                </div>
-                                                
-
-                                                <!-- === -->
+                                <h5>Solicitud de Compras</h5>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <select name="branchoffice_id" class="form-control select2" required>
+                                                    <option value="{{$sucursal->id}}" selected>{{$sucursal->nombre}}</option>
+                                                </select>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-sm-3">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="date" name="fechaingreso" id="fechaingreso" class="form-control text" onchange="gestionVerification()" onkeyup="gestionVerification()" @if($gestion) min="{{$gestion->gestion.'-01-01'}}" max="{{$gestion->gestion.'-12-31'}}" @endif required>
-                                                            <b class="text-danger" id="label-date" style="display:none">La gestion Correspondiente es incorrecta..</b>
-
-                                                        </div>
-                                                        <small>Fecha Ingreso.</small>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <select name="modality_id" class="form-control select2" required>
-                                                                <option value="">Seleccione una Modalidad de Compra</option>
-                                                                @foreach ($modalidad as $data)
-                                                                    <option value="{{$data->id}}">{{$data->nombre}}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                        <small>Seleccionar Modalidad de Compra.</small>
-                                                    </div>
-                                                </div>
-                                                
-                                                <!-- === -->
-                                                <!-- <div class="col-sm-3">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="text" class="form-control form-control-sm" name="nrosolicitud" placeholder="Introducir número de solicitud" autocomplete="off" required>
-                                                        </div>
-                                                        <small>Número Solicitud.</small>
-                                                    </div>
-                                                </div> -->
-                                                <!-- === -->
-                                               
-                                                <!-- === -->
+                                            <small>Sucursal.</small>
+                                        </div>
+                                    </div>                                            
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <select id="das" name="direccionadministrativa" class="form-control select2" required>
+                                                    <option value="" selected disabled>Seleccione una Direccion Administrativa</option>
+                                                    @foreach ($da as $data)
+                                                        <option value="{{$data->id}}">{{$data->nombre}}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
-                                            <hr>
-                                            <h5 id="subtitle">Proveedor + Detalle de Factura:</h5>
-                                                {{-- <div class="form-group">
-                                                    <div class="form-line">
-                                                        <input type="file" name="file" id="archivo" class="form-control form-control-sm" placeholder="Seleccione un Proveedor" accept="application/pdf">
-                                                    </div>
-                                                    <small>Archivos.</small>
-                                                </div> --}}
+                                            <small>Seleccionar Direción Administrativa.</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <select id="unidadEje" name="unidadadministrativa" class="form-control select2" required>
+                                                
+                                                </select>
+                                            </div>
+                                            <small>Seleccionar Unidad Administrativa.</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <input type="date" name="fechaingreso" id="fechaingreso" class="form-control text" onchange="gestionVerification()" onkeyup="gestionVerification()" @if($gestion) min="{{$gestion->gestion.'-01-01'}}" max="{{$gestion->gestion.'-12-31'}}" @endif required>
+                                                <b class="text-danger" id="label-date" style="display:none">La gestion Correspondiente es incorrecta..</b>
+
+                                            </div>
+                                            <small>Fecha Ingreso.</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <select name="modality_id" class="form-control select2" required>
+                                                    <option value="">Seleccione una Modalidad de Compra</option>
+                                                    @foreach ($modalidad as $data)
+                                                        <option value="{{$data->id}}">{{$data->nombre}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <small>Seleccionar Modalidad de Compra.</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <h5 id="subtitle">Proveedor + Detalle de Factura:</h5>
     
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <div class="form-group">
-                                                        <div class="input-group">
-                                                            <select class="form-control" id="select_proveedor" name="provider_id"></select>
-                                                            <span class="input-group-btn">
-                                                                <button class="btn btn-primary" disabled title="Nuevo proveedor" data-target="#modal-create-customer" data-toggle="modal" style="margin: 0px" type="button">
-                                                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                                                </button>
-                                                            </span>
-                                                        </div>
-                                                        <small for="product_id">Proveedor</small>
-                                                    </div>
-                                                </div>
-                                                {{-- <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <select id="provider" name="provider_id" class="form-control select2" required>
-                                                                <option value="">Seleccione un Proveedor</option>
-                                                                @foreach ($proveedor as $data)
-                                                                    <option value="{{$data->id}}_{{$data->nit}}_{{$data->responsable}}">{{$data->razonsocial}}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                        <small>Seleccionar Proveedor.</small>
-                                                    </div>
-                                                </div>
-                                                <input type="hidden" id="provider_id" name="provider_id">
-                                            
-                                                <div class="col-sm-3">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="text" id="nit" class="form-control form-control-sm text" placeholder="Seleccione un Proveedor" disabled readonly>
-                                                        </div>
-                                                        <small>NIT.</small>
-                                                    </div>
-                                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <select class="form-control" id="select_proveedor" name="provider_id"></select>
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-primary" disabled title="Nuevo proveedor" data-target="#modal-create-customer" data-toggle="modal" style="margin: 0px" type="button">
+                                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                            <small for="product_id">Proveedor</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <select name="tipofactura" id="tipofactura"class="form-control text" required>
+                                                    <option value="Manual">Factura Manual</option>
+                                                    <option value="Electronica">Factura Electronica</option>
+                                                    <option value="Orden_Compra">Orden de Compra</option>
+                                                </select>
+                                            </div>
+                                            <small>Tipo.</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <input type="date" id="fechafactura" name="fechafactura" class="form-control text">
+                                            </div>
+                                            <small>Fecha.</small>
+                                        </div>
+                                    </div>                                                
                                                 <!-- === -->
-                                                <div class="col-sm-3">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="text" id="responsable" class="form-control form-control-sm text" placeholder="Seleccione un Proveedor" disabled >
-                                                        </div>
-                                                        <small>Responsable.</small>
-                                                    </div>
-                                                </div> --}}
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <input type="number" step="0.01"  style="text-align: right" class="form-control form-control-sm text" id="montofactura" name="montofactura" placeholder="Introducir monto" value="0.00" disabled required>
+                                                <input type="hidden" step="0.01" name="total" value="0" id="totals" required>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-sm-2">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <select name="tipofactura" id="tipofactura"class="form-control text" required>
-                                                                <option value="Manual">Factura Manual</option>
-                                                                <option value="Electronica">Factura Electronica</option>
-                                                                <option value="Orden_Compra">Orden de Compra</option>
-                                                            </select>
-                                                        </div>
-                                                        <small>Tipo.</small>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="date" id="fechafactura" name="fechafactura" class="form-control text">
-                                                        </div>
-                                                        <small>Fecha.</small>
-                                                    </div>
-                                                </div>
-                                                
-                                                <!-- === -->
-                                                <div class="col-sm-2">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="number" step="0.01"  style="text-align: right" class="form-control form-control-sm text" id="montofactura" name="montofactura" placeholder="Introducir monto" value="0.00" disabled required>
-                                                            <input type="hidden" step="0.01" name="total" value="0" id="totals" required>
-                                                        </div>
-                                                        <small>Monto *(Bs).</small>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="text" id="nrofactura" name="nrofactura" placeholder="Introducir Numero" class="form-control text" title="Introducir Nro de Factura" required>
-                                                        </div>
-                                                        <small>Numero.</small>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-2" id="nroautorizacion">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="text"  name="nroautorizacion" id="nroautorizacion" placeholder="Introducir Nro Autorizacion" class="form-control text" title="Introducir Nro Autorizacion de la Factura" required>
-                                                        </div>
-                                                        <small>Nro Autorizacion Fact.</small>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-2" id="nrocontrol">
-                                                    {{-- add tipo de factura --}}
-                                                </div>
+                                            <small>Monto *(Bs).</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <input type="text" id="nrofactura" name="nrofactura" placeholder="Introducir Numero" class="form-control text" title="Introducir Nro de Factura" required>
                                             </div>
-                                            <hr>
-                                            <h5 id="subtitle">Partida + Articulo:</h5>
-                                            <div class="row">
-                                                <div class="col-sm-4">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <select id="partida"class="form-control select2">
-                                                                <option value="" selected disabled>--Seleccione una Partida--</option>
-                                                                @foreach($partida as $data)
-                                                                    <option value="{{$data->id}}">{{$data->codigo}} - {{$data->nombre}}</option>                                                                
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                        <small>Partidas.</small>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <div class="form-group">
-                                                        <select id="article_id" class="form-control select2">
-                                                            
-                                                        </select>
-                                                        <small>Articulo.</small>
-                                                    </div>
-                                                </div>
-                                                
-                                                <!-- === -->
-                                                <div class="col-sm-1">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="text"disabled class="form-control form-control-sm text" id="presentacion" autocomplete="off">
-                                                        </div>
-                                                        <small>Presentacion.</small>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="number" min="1" style="text-align: right" onkeypress="return filterFloat(event,this);" id="cantidad" placeholder="Cantidad Articulo" class="form-control text" title="Cantidad">
-                                                        </div>
-                                                        <small>Cantidad</small>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <input type="number" style="text-align: right" onkeypress="return filterFloat(event,this);" id="precio" placeholder="Precio Unitario" class="form-control text" title="Precio Unitario Bs">
-                                                        </div>
-                                                        <small>Precio Unit. (Bs).</small>
-                                                    </div>
-                                                </div>
+                                            <small>Numero.</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2" id="nroautorizacion">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <input type="text"  name="nroautorizacion" id="nroautorizacion" placeholder="Introducir Nro Autorizacion" class="form-control text" title="Introducir Nro Autorizacion de la Factura" required>
                                             </div>
-                                            
-                                            <div class="form-group">
-                                                <div class="form-line">
-                                                    <button type="button" id="bt_add" class="btn btn-success"><i class="voyager-basket"></i> Agregar Artículo</button>
-                                                </div>
+                                            <small>Nro Autorizacion Fact.</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2" id="nrocontrol">
+                                                        {{-- add tipo de factura --}}
+                                    </div>
+                                </div>
+                                <hr>
+                                <h5 id="subtitle">Partida + Articulo:</h5>
+
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-btn">
+                                                    <select class="form-control" id="select_producto"></select>
+
+                                                </span>
                                             </div>
-                                        
-                                            <table id="dataTableStyle" class="table table-bordered table-striped table-sm">
+                                            <small for="product_id">Artículo</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="table-responsive">
+                                            <table id="dataTable" class="tables table-bordered table-hover">
                                                 <thead>
                                                     <tr>
-                                                        <th style="text-align: center">Opción</th>
-                                                        <th style="text-align: center">Partida</th>
-                                                        <th style="text-align: center">Articulo</th>
-                                                        <th style="text-align: center">Presentación</th>
-                                                        <th style="text-align: center">Cantidad</th>
-                                                        <th style="text-align: center">Precio Unit.</th>
-                                                        <th style="text-align: center">SubTotal</th>
-                    
+                                                        <th style="width: 30px">N&deg;</th>
+                                                        <th style="text-align: center">Detalle</th>  
+                                                        <th style="text-align: center; width: 120px">Cantidad Unit.</th>  
+                                                        <th style="text-align: center; width: 120px">Precio Unit.</th>  
+                                                        <th style="text-align: center; width: 120px">Sub Total</th>  
+                                                        <th style="text-align: center; width: 80px"></th> 
+
+
+
+
+
                                                     </tr>
                                                 </thead>
+                                                <tbody id="table-body">
+                                                    <tr id="tr-empty">
+                                                        <td colspan="6" style="height: 290px">
+                                                            <h4 class="text-center text-muted" style="margin-top: 50px">
+                                                                <i class="voyager-basket" style="font-size: 50px"></i> <br><br>
+                                                                Lista de artículo vacía
+                                                            </h4>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
                                                 <tfoot>
-                                                    <th colspan="6" style="text-align: left"><h5>TOTAL</h5></th>
-                                                    <th style="text-align: right"><h4 id="total">Bs. 0.00</h4></th>                                                    
+                                                    <tr id="tr-empty">
+                                                        <td colspan="3" style="text-align: right">
+                                                            Total
+                                                        </td>
+                                                        <td colspan="2" style="text-align: right">
+                                                            <small>Bs.</small> <b id="label-total">0.00</b>
+                                                            <input type="hidden" name="amount" id="input-total" value="0">
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
                                                 </tfoot>
-                                                
                                             </table>
-                                            
-                                        </div>   
-                                        @if ($gestion)
-                                            <div class="card-footer">
-                                                <button id="btn_guardar" disabled type="submit" style="display:none" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
-                                            </div>   
-                                        @endif
-                                        {!! Form::close() !!}                   
-                                    </main>
+                                        </div>
+                                    </div> 
                                 </div>
+
+
+
+
+                                @if (!$gestion)
+                                    <div class="alert alert-danger">
+                                        <strong>Aviso: </strong>
+                                        <p> No tiene una gestion activa, contactese con los administradores del sistema.</p>
+                                        </div> 
+                                @endif
+
+                                        
+                                
+                                @if ($gestion)
+                                    <div class="card-footer">
+                                        <button id="btn_guardar" type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
+                                    </div>   
+                                @endif
+                                {!! Form::close() !!}      
+
+
                             </div>
                         </div>
                     </div>
@@ -330,45 +255,6 @@
         {{-- <input type="text" name="moneda nac" id="moneda_nac" value="10" onkeypress="return filterFloat(event,this);"/>    --}}
 
         {{-- Modal crear cliente --}}
-        <form action="{{ url('admin/customers/store') }}" id="form-create-customer" method="POST">
-            <div class="modal fade" tabindex="-1" id="modal-create-customer" role="dialog">
-                <div class="modal-dialog modal-primary">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title"><i class="voyager-trash"></i> Desea eliminar el siguiente registro?</h4>
-                        </div>
-                        <div class="modal-body">
-                            @csrf
-                            <input type="hidden" name="type" value="normal">
-                            <input type="hidden" name="status" value="activo">
-                            <div class="form-group">
-                                <label for="full_name">Nombre completo</label>
-                                <input type="text" name="full_name" class="form-control" placeholder="Juan Perez" required>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="full_name">NIT/CI</label>
-                                    <input type="text" name="dni" class="form-control" placeholder="123456789">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="full_name">Celular</label>
-                                    <input type="text" name="phone" class="form-control" placeholder="75199157">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="address">Dirección</label>
-                                <textarea name="address" class="form-control" rows="3" placeholder="C/ 18 de nov. Nro 123 zona central"></textarea>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                            <input type="submit" class="btn btn-primary btn-save-customer" value="Guardar">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
 
 
 
@@ -380,8 +266,9 @@
     @stop
 
     @section('javascript')
-        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+        {{-- <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
+        <script src="{{ asset('vendor/tippy/popper.min.js') }}"></script>
+        <script src="{{ asset('vendor/tippy/tippy-bundle.umd.min.js') }}"></script>
         <script>
             var productSelected, customerSelected;
             $(document).ready(function(){
@@ -424,15 +311,8 @@
                         return opt.razonsocial;
                     }
                 }).change(function(){
-                    // if(customerSelected){
-                    //     $('#input-dni').val(customerSelected.razonsocial ? customerSelected.razonsocial : '');
-                    // }
                 });
             });
-    
-
-    
-
      
             function formatResultCustomers(option){
                 // Si está cargando mostrar texto de carga
@@ -446,31 +326,236 @@
                             </div>`);
             }
         </script>
+
+
         <script>
             $(document).ready(function(){
-                $('#form-agregar').submit(function(e){
-                    // $('#btn_guardar').css('display', 'none');
-                    $('#btn_guardar').attr('disabled', true);
+                
+                // $('#form-income').submit(function(e){
 
-                });
+                //     $("#btn_guardar").text('Guardando......');
+                //     $("#btn_guardar").attr('disabled','disabled');
+
+
+                //     $('#btn-volver').attr('disabled','disabled');
+                // });
             })
+            $(document).ready(function(){
+                var productSelected;
+
+                $('#select_producto').select2({
+                // tags: true,
+                    placeholder: '<i class="fa fa-search"></i> Buscar...',
+                    escapeMarkup : function(markup) {
+                        return markup;
+                    },
+                    language: {
+                        inputTooShort: function (data) {
+                            return `Por favor ingrese ${data.minimum - data.input.length} o más caracteres`;
+                        },
+                        noResults: function () {
+                            return `<i class="far fa-frown"></i> No hay resultados encontrados`;
+                        }
+                    },
+                    quietMillis: 250,
+                    minimumInputLength: 2,
+                    ajax: {
+                        url: "{{ url('admin/income/article/list/ajax') }}",        
+                        processResults: function (data) {
+                            let results = [];
+                            data.map(data =>{
+                                results.push({
+                                    ...data,
+                                    disabled: false
+                                });
+                            });
+                            return {
+                                results
+                            };
+                        },
+                        cache: true
+                    },
+                    templateResult: formatResultArticle,
+                    templateSelection: (opt) => {
+                        productSelected = opt;
+
+                        
+                        return opt.id?opt.article:'<i class="fa fa-search"></i> Buscar... ';
+                    }
+                }).change(function(){
+                    if($('#select_producto option:selected').val()){
+                        let product = productSelected;
+                        if($('.tables').find(`#tr-item-${product.id}`).val() === undefined){
+                            $('#table-body').append(`
+                                <tr class="tr-item" id="tr-item-${product.id}">
+                                    <td class="td-item"></td>
+                                    <td id="description-${product.id}">
+                                        <b class="label-description"><small>${product.id} - ${product.article}</small><br>
+                                        <b class="label-description"><small>PRESENTACION: </small>${product.presentacion}<br>
+                                        <b class="label-description"><small>PARTIDA: </small>${product.codigo} - ${product.partida}
+                                        <input type="hidden" name="article_id[]" value="${product.id}" />
+                                    </td>
+                                    <td>
+                                        <input type="number" onkeypress="return filterFloat(event,this);" onkeyup="getSubtotal(${product.id})" onchange="getSubtotal(${product.id})" name="cantidad[]" min="0.01" step="0.01" id="input-quantity-${product.id}" style="text-align: right" class="form-control text" required>
+                                    </td>
+                                    <td>
+                                        <input type="number" onkeypress="return filterFloat(event,this);" onkeyup="getSubtotal(${product.id})" onchange="getSubtotal(${product.id})" name="precio[]" min="0.01" step="0.01" id="input-price-${product.id}" style="text-align: right" class="form-control text" required>
+                                    </td>
+                                    <td class="text-right">
+                                        <h4 class="label-subtotal" id="label-subtotal-${product.id}">0</h4>
+                                        <input type="hidden" name="subT[]" id="input-subt-${product.id}">
+                                    </td>
+
+                                    <td class="text-right"><button type="button" onclick="removeTr(${product.id})" class="btn btn-link"><i class="voyager-trash text-danger"></i></button></td>
+                                </tr>
+                            `);
+
+
+
+                            // popover
+                            let image = "{{ asset('images/default.jpg') }}";
+                            if(product.image){
+                                image = "{{ asset('storage') }}/" + product.image.replace('.', '-cropped.');
+                                
+                            }                            
+
+                            tippy(`#description-${product.id}`, {
+                                content: `  <div style="display: flex; flex-direction: row">
+                                                <div style="margin-right:10px">
+                                                    <img src="${image}" width="60px" alt="${product.article}" />
+                                                </div>
+                                                <div>
+                                                    <b>${product.article}</b><br>
+                                                    <b>PRESENTACION : ${product.presentacion}</b><br>
+                                                    <b>PARTIDA: ${product.partida}</b>    
+                                                </div>
+                                            </div>`,
+                                allowHTML: true,
+                                maxWidth: 450,
+                            });
+
+
+                            toastr.success('Producto agregado..', 'Información');
+
+                        }else{
+                            // alert(1)
+                            toastr.warning('El detalle ya está agregado..', 'Información');
+                        }
+                        setNumber();
+                        getSubtotal(product.id);
+                    }
+                });
+                
+
+            })
+
+            function formatResultArticle(option){
+                if (option.loading) {
+                    return '<span class="text-center"><i class="fas fa-spinner fa-spin"></i> Buscando...</span>';
+                }
+                let image = "{{ asset('images/default.jpg') }}";
+                if(option.image){
+                    image = "{{ asset('storage') }}/"+option.image.replace('.', '-cropped.');
+                    // alert(image)
+                }
+                
+                // Mostrar las opciones encontradas
+                return $(`  <div style="display: flex">
+                                <div style="margin: 0px 10px">
+                                    <img src="${image}" width="50px" />
+                                </div>
+                                <div>
+                                    <b style="font-size: 14px"><small>${option.id} -</small> ${option.article} </b> <br>
+                                    <small style="font-size: 12px">PRESENTACION:</small> ${option.presentacion}<br>
+                                    <small style="font-size: 14px">PARTIDA: </small> ${option.codigo} - ${option.partida}
+                                
+                                </div>
+                            </div>`);
+            }
+
+            function getSubtotal(id){
+                // alert(id)
+                let price = $(`#input-price-${id}`).val() ? parseFloat($(`#input-price-${id}`).val()) : 0;
+                let quantity = $(`#input-quantity-${id}`).val() ? parseFloat($(`#input-quantity-${id}`).val()) : 0;
+                // alert(price)
+                $(`#label-subtotal-${id}`).text((price * quantity).toFixed(2));
+                $(`#input-subt-${id}`).val((price * quantity).toFixed(2));
+                getTotal();
+            }
+
+            function getTotal(){
+                let total = 0;
+                $(".label-subtotal").each(function(index) {
+                    total += parseFloat($(this).text());
+                });
+                $('#montofactura').val(total.toFixed(2));
+                $('#totals').val(total.toFixed(2));
+
+                $('#label-total').text(total.toFixed(2));
+                $('#input-total').val(total.toFixed(2));
+            }
+
+
+
+            function setNumber(){
+                var length = 0;
+                $(".td-item").each(function(index) {
+                    $(this).text(index +1);
+                    length++;
+                });
+
+                if(length > 0){
+                    $('#tr-empty').css('display', 'none');
+                }else{
+                    $('#tr-empty').fadeIn('fast');
+                }
+            }
+
+            function removeTr(id){
+                // alert(1)
+                $(`#tr-item-${id}`).remove();
+                $('#select_producto').val("").trigger("change");
+                setNumber();
+                getTotal();
+            }
+
+
+
+
+
+
+
+        </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <script>
+            // $(document).ready(function(){
+            //     $('#form-agregar').submit(function(e){
+            //         // $('#btn_guardar').css('display', 'none');
+            //         $('#btn_guardar').attr('disabled', true);
+
+            //     });
+            // })
 
             $(function()
             {    
-                // $(".select2").select2({theme: "classic"});
 
                 $('#das').on('change', unidad_administrativa);
 
-                $('#provider').on('change', onselect_proveedor_llenar);
-
                 $('#tipofactura').on('change', onselect_tipo);
-
-                $('#partida').on('change', onselect_article);
-                $('#article_id').on('change', onselect_presentacion);
-
-                $('#bt_add').click(function() {
-                    agregar();
-                });
 
                 gestionVerification();
 
@@ -498,131 +583,131 @@
 
 
 
-            var cont=0;
-            var total=0;
-            subtotal=[];
+            // var cont=0;
+            // var total=0;
+            // subtotal=[];
 
-            function agregar()
-            {
-                partida=$("#partida option:selected").text();
-                // montofactura=$("#montofactura").val();
-                article_id=$("#article_id").val();
-                presentacion=$("#presentacion").val();
+            // function agregar()
+            // {
+            //     partida=$("#partida option:selected").text();
+            //     // montofactura=$("#montofactura").val();
+            //     article_id=$("#article_id").val();
+            //     presentacion=$("#presentacion").val();
 
-                cantidad=parseFloat($("#cantidad").val()?$("#cantidad").val():0).toFixed(2);
-                precio=parseFloat($("#precio").val()? $("#precio").val():0).toFixed(2);
+            //     cantidad=parseFloat($("#cantidad").val()?$("#cantidad").val():0).toFixed(2);
+            //     precio=parseFloat($("#precio").val()? $("#precio").val():0).toFixed(2);
 
-                subT = cantidad * precio;
+            //     subT = cantidad * precio;
 
-                nombre_articulo=$("#article_id option:selected").text();
+            //     nombre_articulo=$("#article_id option:selected").text();
 
-                var arrayarticle = [];
-                var i=0;
-                var j=0;
-                ok=false;
+            //     var arrayarticle = [];
+            //     var i=0;
+            //     var j=0;
+            //     ok=false;
 
-                // alert(cantidad)
+            //     // alert(cantidad)
 
-                if (partida != 'Seleccione una Partida..' && nombre_articulo != 'Seleccione un Articulo..' && cantidad > 0 && precio > 0) {
+            //     if (partida != 'Seleccione una Partida..' && nombre_articulo != 'Seleccione un Articulo..' && cantidad > 0 && precio > 0) {
                     
                   
 
-                    var fila='<tr class="selected" id="fila'+article_id+'">'
-                            fila+='<td><button type="button" class="btn btn-danger" onclick="eliminar('+article_id+')";><i class="voyager-trash"></i></button></td>'
-                            fila+='<td>'+partida+'</td>'
-                            fila+='<td><input type="hidden" class="input_article" name="article_id[]"value="'+article_id+'">'+nombre_articulo+'</td>'
-                            fila+='<td>'+presentacion+'</td>'
-                            fila+='<td style="text-align: right"><input type="hidden" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td>'
-                            fila+='<td style="text-align: right"><input type="hidden" name="precio[]" value="'+precio+'">'+precio+'</td>'
-                            fila+='<td style="text-align: right"><input type="hidden" class="input_subtotal" name="subtotal[]" value="'+(subT).toFixed(2)+'">'+(subT).toFixed(2)+'</td>'
-                        fila+='</tr>';
+            //         var fila='<tr class="selected" id="fila'+article_id+'">'
+            //                 fila+='<td><button type="button" class="btn btn-danger" onclick="eliminar('+article_id+')";><i class="voyager-trash"></i></button></td>'
+            //                 fila+='<td>'+partida+'</td>'
+            //                 fila+='<td><input type="hidden" class="input_article" name="article_id[]"value="'+article_id+'">'+nombre_articulo+'</td>'
+            //                 fila+='<td>'+presentacion+'</td>'
+            //                 fila+='<td style="text-align: right"><input type="hidden" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td>'
+            //                 fila+='<td style="text-align: right"><input type="hidden" name="precio[]" value="'+precio+'">'+precio+'</td>'
+            //                 fila+='<td style="text-align: right"><input type="hidden" class="input_subtotal" name="subtotal[]" value="'+(subT).toFixed(2)+'">'+(subT).toFixed(2)+'</td>'
+            //             fila+='</tr>';
                     
-                        $(".input_article").each(function(){
-                            // alert(parseFloat($(this).val()))
-                            arrayarticle[i]= parseFloat($(this).val());
-                            i++;
-                        }); 
-                        var ok=true;
-                        // alert(arrayarticle.length)
-                        for(j=0;j<arrayarticle.length; j++)
-                        {
+            //             $(".input_article").each(function(){
+            //                 // alert(parseFloat($(this).val()))
+            //                 arrayarticle[i]= parseFloat($(this).val());
+            //                 i++;
+            //             }); 
+            //             var ok=true;
+            //             // alert(arrayarticle.length)
+            //             for(j=0;j<arrayarticle.length; j++)
+            //             {
                             
-                            if(arrayarticle[j] == article_id)
-                            {
-                                limpiar();
-                                ok = false;
+            //                 if(arrayarticle[j] == article_id)
+            //                 {
+            //                     limpiar();
+            //                     ok = false;
 
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Oops...',
-                                    text: 'El artículo ya existe en la lista..',
-                                })                             
-                            }
-                        }
-                        if(ok==true)
-                        {
-                            limpiar();
-                            $('#dataTableStyle').append(fila);
-                            $("#total").html("Bs. "+calcular_total().toFixed(2));
-                            $("#totals").val(calcular_total().toFixed(2));
-                            $("#montofactura").val(calcular_total().toFixed(2));
+            //                     Swal.fire({
+            //                         icon: 'error',
+            //                         title: 'Oops...',
+            //                         text: 'El artículo ya existe en la lista..',
+            //                     })                             
+            //                 }
+            //             }
+            //             if(ok==true)
+            //             {
+            //                 limpiar();
+            //                 $('#dataTableStyle').append(fila);
+            //                 $("#total").html("Bs. "+calcular_total().toFixed(2));
+            //                 $("#totals").val(calcular_total().toFixed(2));
+            //                 $("#montofactura").val(calcular_total().toFixed(2));
 
-                            $('#btn_guardar').removeAttr('disabled');
+            //                 $('#btn_guardar').removeAttr('disabled');
 
-                            Swal.fire({
-                                position: 'top-end',
-                                icon: 'success',
-                                title: 'Artículo Agregado',
-                                showConfirmButton: false,
-                                timer: 1500
-                            })
-                        }
-                }
-                else
-                {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Rellene los Campos Correctamente.',
-                        // footer: '<a href="">Why do I have this issue?</a>'
-                    })
-                }
+            //                 Swal.fire({
+            //                     position: 'top-end',
+            //                     icon: 'success',
+            //                     title: 'Artículo Agregado',
+            //                     showConfirmButton: false,
+            //                     timer: 1500
+            //                 })
+            //             }
+            //     }
+            //     else
+            //     {
+            //         Swal.fire({
+            //             icon: 'error',
+            //             title: 'Oops...',
+            //             text: 'Rellene los Campos Correctamente.',
+            //             // footer: '<a href="">Why do I have this issue?</a>'
+            //         })
+            //     }
 
-            }        
-            function limpiar()
-            {
-                $("#precio").val("");
-                $("#cantidad").val("");
-            }
+            // }        
+            // function limpiar()
+            // {
+            //     $("#precio").val("");
+            //     $("#cantidad").val("");
+            // }
 
 
-            function eliminar(index)
-            {
-                // total=total-subtotal[index];
-                // $("#total").html("Bs/." + total);
-                $("#fila" + index).remove();
-                $("#total").html("Bs. "+calcular_total().toFixed(2));
-                $("#totals").val(calcular_total().toFixed(2));
-                $("#montofactura").val(calcular_total().toFixed(2));
+            // function eliminar(index)
+            // {
+            //     // total=total-subtotal[index];
+            //     // $("#total").html("Bs/." + total);
+            //     $("#fila" + index).remove();
+            //     $("#total").html("Bs. "+calcular_total().toFixed(2));
+            //     $("#totals").val(calcular_total().toFixed(2));
+            //     $("#montofactura").val(calcular_total().toFixed(2));
 
-                if(calcular_total().toFixed(2) == 0)
-                {
-                    $('#btn_guardar').attr('disabled', true);
-                }
-            }
+            //     if(calcular_total().toFixed(2) == 0)
+            //     {
+            //         $('#btn_guardar').attr('disabled', true);
+            //     }
+            // }
 
             //calcular total de factura
-            function calcular_total()
-            {
-                let total = 0;
-                $(".input_subtotal").each(function(){
-                    total += parseFloat($(this).val());
-                    // alert(parseFloat($(this).val()));
-                });
-                // console.log(total);
+            // function calcular_total()
+            // {
+            //     let total = 0;
+            //     $(".input_subtotal").each(function(){
+            //         total += parseFloat($(this).val());
+            //         // alert(parseFloat($(this).val()));
+            //     });
+            //     // console.log(total);
                 
-                return total;
-            }
+            //     return total;
+            // }
 
 
             
@@ -647,15 +732,7 @@
                 }
             }
             
-        
-            function onselect_proveedor_llenar()
-            {
-                datoProveedor = document.getElementById('provider').value.split('_');
-                // alert(datoProveedor[2]);
-                $("#provider_id").val(datoProveedor[0]);
-                $("#nit").val(datoProveedor[1]);
-                $("#responsable").val(datoProveedor[2]);
-            }
+
 
             function onselect_tipo()
             {
@@ -707,47 +784,6 @@
                 }
             }
 
-            function onselect_article()
-            {
-                var id =  $(this).val();    
-                if(id >=1)
-                {
-                    $.get('{{route('ajax_article')}}/'+id, function(data){
-                        var html_article=    '<option value="" selected disabled>--Seleccione un Artículo--</option>'
-                            for(var i=0; i<data.length; ++i)
-                            html_article += '<option value="'+data[i].id+'">'+data[i].id+ '-' +data[i].nombre+'</option>'
-
-                        $('#article_id').html(html_article);           
-                    });
-                }
-                else
-                {
-                    var html_article=    ''       
-                    $('#article_id').html(html_article);
-                    $("#presentacion").val('');
-                }
-            }
-            function onselect_presentacion()
-            {
-                // datoProveedor = document.getElementById('provider').value.split('_');
-                // alert(datoProveedor[2]);
-                var id =  $(this).val();    
-                if(id >=1)
-                {
-                    $.get('{{route('ajax_presentacion')}}/'+id, function(data){
-                                // alert(data.presentacion)
-                        $("#presentacion").val(data.presentacion);
-                    });
-                }
-                else
-                {
-                    $("#presentacion").val('');
-                    
-                }
-                // $("#provider_id").val(datoProveedor[0]);
-                // $("#nit").val(datoProveedor[1]);
-                // $("#responsable").val(datoProveedor[2]);
-            }
 
         </script> 
     <script type="text/javascript">

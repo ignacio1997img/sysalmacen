@@ -9,15 +9,15 @@
     <table width="100%">
         <tr>
             <td style="width: 20%"><img src="{{ asset('images/icon.png') }}" alt="GADBENI" width="100px"></td>
-            <td style="text-align: center;  width:70%">
-                <h3 style="margin-bottom: 0px; margin-top: 5px">
+            <td style="text-align: center;  width:60%">
+                <h3 style="margin-bottom: 0px; margin-top: 5px; font-size: 15px">
                     GOBIERNO AUTONOMO DEPARTAMENTAL DEL BENI<br>
                 </h3>
-                <h4 style="margin-bottom: 0px; margin-top: 5px">
+                <h4 style="margin-bottom: 0px; margin-top: 5px; font-size: 15px">
                     UNIDAD DE ALMACENES MATERIALES Y SUMINISTROS
                     {{-- Stock Disponible {{date('d/m/Y', strtotime($start))}} Hasta {{date('d/m/Y', strtotime($finish))}} --}}
                 </h4>
-                <small style="margin-bottom: 0px; margin-top: 5px; text-transform: uppercase;">
+                <small style="margin-bottom: 0px; margin-top: 5px; text-transform: uppercase; font-size: 12px">
                     Acta de Recepción de Materiales y Suministros <br>
                     {{$sol->sucursal->nombre}}<br>                    
                     {{$modalidad->nombre}} - {{$sol->nrosolicitud}}
@@ -25,16 +25,16 @@
                     {{ date('d', strtotime($sol->fechaingreso)) }} de {{ $months[intval(date('m', strtotime($sol->fechaingreso)))] }} de {{ date('Y', strtotime($sol->fechaingreso)) }}
                 </small>
             </td>
-            <td style="text-align: right; width:30%">
+            <td style="text-align: right; width:20%">
                 <h3 style="margin-bottom: 0px; margin-top: 5px">
                    
-                    <small style="font-size: 11px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/M/Y H:i:s') }}</small>
+                    <small style="font-size: 10px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/m/Y H:i:s') }}</small>
                 </h3>
             </td>
         </tr>
     </table>
     <br><br>
-    <table class="text-center" width="100%" style="font-size: 8pt">
+    <table class="text-center" width="100%" style="font-size: 7pt">
         <tr>
             <th style="text-align: center">PROVEEDOR</th>
             <th style="text-align: center">NIT</th>
@@ -55,7 +55,9 @@
         </tr>
     </table>
     <br>
-    <table style="width: 100%; font-size: 12px" border="1" cellspacing="0" cellpadding="5">
+    {{-- <table style="width: 100%; font-size: 12px" border="1" cellspacing="0" cellpadding="5"> --}}
+    <table style="width: 100%; font-size: 12px" border="1" class="print-friendly" cellspacing="0" cellpadding="2">
+
         <thead>
 
             <tr>
@@ -103,7 +105,7 @@
     </div>
 
     <div class="text">
-        <p style="font-size: 13px;"><b>NOTA:</b> La información expuesta en el presente cuadro cuenta con la documentación de soporte correspondiente, en el marco de las Normas Básicas del Sistema de Contabilidad Integrada.</p>
+        <p style="font-size: 10px;"><b>NOTA:</b> La información expuesta en el presente cuadro cuenta con la documentación de soporte correspondiente, en el marco de las Normas Básicas del Sistema de Contabilidad Integrada.</p>
     </div>
     <br>
     <br><br>
@@ -113,7 +115,7 @@
             <td style="text-align: center">
                 ______________________
                 <br>
-                <b>Responsable Almacen</b>
+                <b style="font-size: 12px">Responsable Almacen</b>
             </td>
             <td style="text-align: center">
                 {{-- ______________________
@@ -123,7 +125,7 @@
             <td style="text-align: center">
                 ______________________
                 <br>
-                <b>Jefe de Contrataciones</b>
+                <b style="font-size: 12px">Jefe de Contrataciones</b>
             </td>
         </tr>
     </table>
@@ -135,7 +137,7 @@
             <td style="text-align: center">
                 ______________________
                 <br>
-                <b>Proveedor</b>
+                <b style="font-size: 12px">Proveedor</b>
             </td>
             <td style="text-align: center">
             </td>
@@ -143,3 +145,15 @@
     </table>
 
 @endsection
+@section('css')
+    <style>
+        table, th, td {
+            border-collapse: collapse;
+        }
+        /* @media print { div{ page-break-inside: avoid; } }  */
+          
+        table.print-friendly tr td, table.print-friendly tr th {
+            page-break-inside: avoid;
+        }
+    </style>
+@stop

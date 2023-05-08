@@ -27,6 +27,16 @@ class User extends \TCG\Voyager\Models\User
         'unidadAdministrativa_id'
     ];
 
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class, 'unidadAdministrativa_id');
+    }
+
+    public function direction()
+    {
+        return $this->belongsTo(Direction::class, 'direccionAdministrativa_id');
+    }
+
     /**
      * The attributes that should be hidden for arrays.
      *

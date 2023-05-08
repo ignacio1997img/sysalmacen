@@ -68,16 +68,14 @@ class SolicitudPedidoController extends Controller
 
     public function create()
     {
-        // return 1;
         $user = Auth::user();
-
 
         // $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
         $sucursal = Sucursal::where('id', $user->sucursal_id)->first();
         $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $user->sucursal_id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
 
-        // return 1;
         $funcionario = $this->getWorker($user->funcionario_id);
+        // dd($funcionario);
 
         $mainUnit = SucursalUnidadPrincipal::where('sucursal_id', $user->sucursal_id)->where('status', 1)->where('deleted_at', null)->first();
         // return $mainUnit;
@@ -87,29 +85,24 @@ class SolicitudPedidoController extends Controller
             $query = ' or s.unidadadministrativa = '.$mainUnit->unidadAdministrativa_id;
         }
         $unidad = 'null';
-        if($funcionario->id_unidad)
+        if($user->unidadAdministrativa_id)
         {
-            $unidad = $funcionario->id_unidad;
+            // $unidad = $funcionario->id_unidad;
+            $unidad = $user->unidadAdministrativa_id;
         }
 
-
-            $data = DB::table('solicitud_compras as s')
+        $data = DB::table('solicitud_compras as s')
                 ->join('facturas as f', 'f.solicitudcompra_id', 's.id')
                 ->join('detalle_facturas as d', 'd.factura_id', 'f.id')
                 ->join('articles as a', 'a.id', 'd.article_id')
 
                 ->where('s.sucursal_id', $user->sucursal_id)
                 ->where('s.stock', 1)
-                ->where('s.deleted_at', null)
-                
-
+                ->where('s.deleted_at', null)          
                 // ->whereRaw('(s.unidadadministrativa = '.$funcionario->id_unidad.' or s.unidadadministrativa = 0)')
-
                 ->whereRaw('(s.unidadadministrativa = '.$unidad.''.$query.')')
                 // ->whereRaw('(s.unidadadministrativa = '.$funcionario->id_unidad.')')
-
                 ->where('f.deleted_at', null)
-
                 ->where('d.deleted_at', null)
                 ->where('d.cantrestante', '>', 0)
                 ->where('d.condicion', 1)
@@ -118,19 +111,7 @@ class SolicitudPedidoController extends Controller
                 ->groupBy('article_id')
                 ->orderBy('article')
                 ->get();
-        // }
-        // else
-        // {
-        //     $data = null;
-        // }
-        // return $data;
-
-        // return count($data);
-
-
-
-
-        return view('almacenes.outbox.edit-add', compact('gestion', 'sucursal', 'funcionario', 'data'));
+        return view('almacenes.outbox.edit-add', compact('gestion', 'sucursal', 'funcionario', 'user'));
     }
 
 
@@ -142,7 +123,7 @@ class SolicitudPedidoController extends Controller
         $user = Auth::user();
 
 
-        $funcionario = $this->getWorker($user->funcionario_id);
+        // $funcionario = $this->getWorker($user->funcionario_id);
 
         $mainUnit = SucursalUnidadPrincipal::where('sucursal_id', $user->sucursal_id)->where('status', 1)->where('deleted_at', null)->first();
         // return $mainUnit;
@@ -152,9 +133,10 @@ class SolicitudPedidoController extends Controller
             $query = ' or s.unidadadministrativa = '.$mainUnit->unidadAdministrativa_id;
         }
         $unidad = 'null';
-        if($funcionario->id_unidad)
+        if($user->unidadAdministrativa_id)
         {
-            $unidad = $funcionario->id_unidad;
+            // $unidad = $funcionario->id_unidad;
+            $unidad = $user->unidadAdministrativa_id;
         }
 
 
@@ -162,19 +144,13 @@ class SolicitudPedidoController extends Controller
                 ->join('facturas as f', 'f.solicitudcompra_id', 's.id')
                 ->join('detalle_facturas as d', 'd.factura_id', 'f.id')
                 ->join('articles as a', 'a.id', 'd.article_id')
-
                 ->where('s.sucursal_id', $user->sucursal_id)
                 ->where('s.stock', 1)
-                ->where('s.deleted_at', null)
-                
-
+                ->where('s.deleted_at', null)      
                 // ->whereRaw('(s.unidadadministrativa = '.$funcionario->id_unidad.' or s.unidadadministrativa = 0)')
-
                 ->whereRaw('(s.unidadadministrativa = '.$unidad.''.$query.')')
                 // ->whereRaw('(s.unidadadministrativa = '.$funcionario->id_unidad.')')
-
                 ->where('f.deleted_at', null)
-
                 ->where('d.deleted_at', null)
                 ->where('d.cantrestante', '>', 0)
                 ->where('d.condicion', 1)
@@ -219,7 +195,8 @@ class SolicitudPedidoController extends Controller
             
             $funcionario = $this->getWorker($user->funcionario_id);
 
-            $unidad = Unit::where('id', $funcionario->id_unidad)->first();
+            $unidad = Unit::with(['direction'])->where('id', $user->unidadAdministrativa_id)->first();
+            // return $unidad;
 
             $aux = SolicitudPedido::where('unidad_id',$unidad->id)
                     ->where('deleted_at', null)
@@ -232,10 +209,6 @@ class SolicitudPedidoController extends Controller
             $type = 'd';
             $format = "%{$char}{$length}{$type}"; // or "$010d";
             $request->merge(['nropedido' => strtoupper($unidad->sigla).'-'.sprintf($format, $ok+1).'/'.$gestion->gestion]);
-            // return $unidad;
-            // return $request;
-
-
 
 
             if(!$request->article_id)
@@ -254,10 +227,10 @@ class SolicitudPedidoController extends Controller
                 'first_name'=>$funcionario->first_name,
                 'last_name'=>$funcionario->last_name,
                 'job'=>$funcionario->cargo,
-                'direccion_name'=>$funcionario->direccion,
-                'direccion_id'=>$funcionario->id_direccion,
-                'unidad_name'=>$funcionario->unidad,
-                'unidad_id'=> $funcionario->id_unidad,
+                'direccion_name'=>$unidad->direction->nombre,
+                'direccion_id'=>$user->direccionAdministrativa_id,
+                'unidad_name'=>$unidad->nombre,
+                'unidad_id'=> $user->unidadAdministrativa_id,
                 'registerUser_Id'=> $user->id
             ]);            
             $cont = 0;    

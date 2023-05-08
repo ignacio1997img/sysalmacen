@@ -10,7 +10,7 @@
     <table width="100%">
         <tr>
             <td style="width: 20%"><img src="{{ asset('images/icon.png') }}" alt="GADBENI" width="100px"></td>
-            <td style="text-align: center;  width:70%">
+            <td style="text-align: center;  width:65%">
                 <h3 style="margin-bottom: 0px; margin-top: 5px">
                     GOBIERNO AUTONOMO DEPARTAMENTAL DEL BENI<br>
                 </h3>
@@ -24,10 +24,10 @@
                     {{ date('d', strtotime($sol->fechaegreso)) }} de {{ $months[intval(date('m', strtotime($sol->fechaegreso)))] }} de {{ date('Y', strtotime($sol->fechaegreso)) }}
                 </small>
             </td>
-            <td style="text-align: right; width:30%">
+            <td style="text-align: right; width:15%">
                 <h3 style="margin-bottom: 0px; margin-top: 5px">
                    
-                    <small style="font-size: 11px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/M/Y H:i:s') }}</small>
+                    <small style="font-size: 11px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/m/Y H:i:s') }}</small>
                 </h3>
             </td>
         </tr>
@@ -46,7 +46,8 @@
         </tr>
     </table>
     <br>
-    <table style="width: 100%; font-size: 12px" border="1" cellspacing="0" cellpadding="5">
+    {{-- <table style="width: 100%; font-size: 12px" border="1" cellspacing="0" cellpadding="5"> --}}
+    <table style="width: 100%; font-size: 10px" border="1" class="print-friendly" cellspacing="0" cellpadding="2">
         <thead>
             <tr>
                 <th style="width:5px">N&deg;</th>
@@ -95,7 +96,7 @@
     </div>
 
     <div class="text">
-        <p style="font-size: 13px;"><b>NOTA:</b> La información expuesta en el presente cuadro cuenta con la documentación de soporte correspondiente, en el marco de las Normas Básicas del Sistema de Contabilidad Integrada.</p>
+        <p style="font-size: 10px;"><b>NOTA:</b> La información expuesta en el presente cuadro cuenta con la documentación de soporte correspondiente, en el marco de las Normas Básicas del Sistema de Contabilidad Integrada.</p>
     </div>
     <br>
     <br><br>
@@ -121,3 +122,15 @@
     </table>
 
 @endsection
+@section('css')
+    <style>
+        table, th, td {
+            border-collapse: collapse;
+        }
+        /* @media print { div{ page-break-inside: avoid; } }  */
+          
+        table.print-friendly tr td, table.print-friendly tr th {
+            page-break-inside: avoid;
+        }
+    </style>
+@stop

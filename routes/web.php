@@ -80,6 +80,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::resource('income', IncomeController::class);
     Route::get('income/ajax/list/{type}/{search?}', [IncomeController::class, 'list']);
     Route::get('income/provider/list/ajax', [ProviderController::class, 'list']);
+    Route::get('income/article/list/ajax', [ArticleController::class, 'getArticle']);//para poder obtener todos los articulos disponible
     Route::get('incomes/browse/view/{id?}', [IncomeController::class, 'view_ingreso'])->name('income_view');
     Route::get('incomes/browse/view/stock/{id?}', [IncomeController::class, 'view_ingreso_stock'])->name('income_view_stock');
     Route::delete('incomes/browse/delete', [IncomeController::class, 'destroy'])->name('income_delete');
@@ -320,8 +321,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::get('incomes/selectunidadejecutora/{id?}', [IncomeController::class, 'ajax_unidad_administrativa'])->name('ajax_unidad_administrativa');
 
     // Route::get('incomes/selectunidadsolicitante/{id?}', [IncomeController::class, 'ajax_unidad_solicitante'])->name('ajax_unidad_solicitante');
-    Route::get('incomes/selectarticle/{id?}', [IncomeController::class, 'ajax_article'])->name('ajax_article');
-    Route::get('incomes/selectpresentacion/{id?}', [IncomeController::class, 'ajax_presentacion'])->name('ajax_presentacion');
+    // Route::get('incomes/selectarticle/{id?}', [IncomeController::class, 'ajax_article'])->name('ajax_article');
+    // Route::get('incomes/selectpresentacion/{id?}', [IncomeController::class, 'ajax_presentacion'])->name('ajax_presentacion');
 
 
     //SOLICITUD DE EGRESO MEDIANTE VISTA

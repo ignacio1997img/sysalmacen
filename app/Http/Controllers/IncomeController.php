@@ -251,11 +251,11 @@ class IncomeController extends Controller
     // Para ver el Stock de cada almacen
     protected function view_ingreso_stock($id)
     {
-        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
-        {
-            Auth::logout();
-            return redirect()->route('maintenance');
-        }
+        // if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
+        // {
+        //     Auth::logout();
+        //     return redirect()->route('maintenance');
+        // }
 
         $sol = SolicitudCompra::find($id);
  
@@ -294,29 +294,15 @@ class IncomeController extends Controller
     public function store(Request $request)
     {      
         // return $request;
-        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
-        {
-            Auth::logout();
-            return redirect()->route('maintenance');
-        }
-
-        // return $request;
         $user = Auth::user();
         DB::beginTransaction();
         try {
-            $total =0;
-            $x = 0;
-        
-            while($x < count($request->subtotal))
+
+            if($request->amount==0)
             {
-                $total = $total + $request->subtotal[$x];
-                $x++;
+                return redirect()->route('income.create')->with(['message' => 'Lista de detalle vacia..', 'alert-type' => 'error']);
             }
-            // return $total;
-            
-            if($request->total == $total)
-            {
-                // return 2;
+
                 $unidad = DB::connection('mamore')->table('unidades')
                         ->select('sigla')
                         ->where('id',$request->unidadadministrativa)
@@ -359,7 +345,7 @@ class IncomeController extends Controller
                         'registeruser_id'       => $user->id,
                         'tipofactura'           => $request->tipofactura,
                         'fechafactura'          => $request->fechafactura,
-                        'montofactura'          => $request->total,
+                        'montofactura'          => $request->amount,
                         'nrofactura'            => $request->nrofactura,
                         'nroautorizacion'       => $request->nroautorizacion,
                         'nrocontrol'            => $request->nrocontrol,
@@ -367,7 +353,8 @@ class IncomeController extends Controller
                         'gestion'               => $request->gestion,
                         'sucursal_id'       => $request->branchoffice_id
                 ]);
-                // return 2;
+                // return $request;
+                // return $factura;
                 
                 $cont = 0;
         
@@ -379,7 +366,7 @@ class IncomeController extends Controller
                         'article_id'            => $request->article_id[$cont],
                         'cantsolicitada'        => $request->cantidad[$cont],
                         'precio'                => $request->precio[$cont],
-                        'totalbs'               => $request->subtotal[$cont],
+                        'totalbs'               => $request->subT[$cont],
                         'cantrestante'          => $request->cantidad[$cont],
                         'fechaingreso'          => $request->fechaingreso,
                         'gestion'               => $request->gestion,
@@ -390,14 +377,9 @@ class IncomeController extends Controller
                 // return 1;
                 DB::commit();
                 return redirect()->route('income.index')->with(['message' => 'Registrado exitosamente.', 'alert-type' => 'success']);
-            }
-            else
-            {
-                return 'Error';
-                return redirect()->route('income.index')->with(['message' => 'El monto de la factura no coincide con el total de la solicitud.', 'alert-type' => 'error']);
-            }
         } catch (\Throwable $th) {
             DB::rollback();
+            // return 0;
             return redirect()->route('income.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);            
         }
     }
