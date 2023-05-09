@@ -160,13 +160,15 @@ class EgressController extends Controller
             $data = SolicitudEgreso::with(['sucursal', 'unidad', 'direccion'])
             ->where('deleted_at', NULL)
             ->whereRaw($query_filter)
-            ->where(function($query) use ($search){
-                if($search){
-                    $query->OrWhereRaw($search ? "gestion like '%$search%'" : 1)
-                    ->OrWhereRaw($search ? "nropedido like '%$search%'" : 1)
-                    ->OrWhereRaw($search ? "id like '%$search%'" : 1);
-                }
-            })
+            // ->where(function($query) use ($search){
+            //     if($search){
+            //         $query->OrWhereRaw($search ? "gestion like '%$search%'" : 1)
+            //         ->OrWhereRaw($search ? "nropedido like '%$search%'" : 1)
+            //         ->OrWhereRaw($search ? "id like '%$search%'" : 1);
+            //     }
+            // })
+            ->whereRaw($search ? "(gestion like '%$search%' or nropedido like '%$search%' or id like '%$search%')" : 1)
+
             ->orderBy('id', 'DESC')->paginate($paginate);
             return view('almacenes.egress.listEgreso', compact('data', 'gestion'));
 
