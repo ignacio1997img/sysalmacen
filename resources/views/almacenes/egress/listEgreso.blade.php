@@ -58,7 +58,7 @@
                                                 <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Editar</span>
                                             </a>
                                         @endif
-                                        @if(auth()->user()->hasPermission('delete_egres1'))
+                                        @if(auth()->user()->hasPermission('delete_egres') && !$item->solicitudPedido_id)
                                             <a data-toggle="modal" data-id="{{$item->id}}" data-target="#myModalEliminar" title="Eliminar" class="btn btn-sm btn-danger view">
                                                 <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Eliminar</span>
                                             </a>

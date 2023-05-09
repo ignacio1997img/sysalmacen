@@ -876,6 +876,7 @@ class EgressController extends Controller
                 'fechaegreso'               => Carbon::now(),
                 'gestion'                   => $gestion->gestion,
                 'inventarioAlmacen_id'      => $gestion->id,
+                'solicitudPedido_id'        => $solicitud->id
             ]);
             // return 1;
             // return $detalle->SUM('cantentregada');
