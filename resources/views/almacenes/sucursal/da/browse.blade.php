@@ -75,7 +75,7 @@
                                         </table>
                                     </div>
                                     <div class="col-md-4">
-                                        <a data-toggle="modal" data-target="#modal-almacen" title="Agregar Almacen Principal" data-id="{{$item->id}}" class="btn btn-sm btn-success view">
+                                        <a data-toggle="modal" data-target="#modal-almacen" title="Agregar Almacen Principal" class="btn btn-sm btn-success view">
                                             <i class="fa-solid fa-shop"></i> <span class="hidden-xs hidden-sm"></span>
                                         </a>  
                                         <br>
