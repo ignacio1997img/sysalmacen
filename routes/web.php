@@ -321,8 +321,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::get('incomes/selectunidadejecutora/{id?}', [IncomeController::class, 'ajax_unidad_administrativa'])->name('ajax_unidad_administrativa');
 
     // Route::get('incomes/selectunidadsolicitante/{id?}', [IncomeController::class, 'ajax_unidad_solicitante'])->name('ajax_unidad_solicitante');
-    // Route::get('incomes/selectarticle/{id?}', [IncomeController::class, 'ajax_article'])->name('ajax_article');
-    // Route::get('incomes/selectpresentacion/{id?}', [IncomeController::class, 'ajax_presentacion'])->name('ajax_presentacion');
+    Route::get('incomes/selectarticle/{id?}', [IncomeController::class, 'ajax_article'])->name('ajax_article');
+    Route::get('incomes/selectpresentacion/{id?}', [IncomeController::class, 'ajax_presentacion'])->name('ajax_presentacion');
 
 
     //SOLICITUD DE EGRESO MEDIANTE VISTA
