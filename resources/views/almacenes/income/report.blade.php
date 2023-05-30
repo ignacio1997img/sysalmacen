@@ -48,9 +48,9 @@
             <th style="text-align: center">FECHA INGRESO</th>
         </tr>
         <tr>
-            <td style="text-align: center">{{$proveedor->razonsocial}}</td>
-            <td style="text-align: center">{{$proveedor->nit}}</td>
-            <td style="text-align: center">{{$factura->nrofactura}}</td>
+            <td style="text-align: center">{{$proveedor->razonsocial??'SN'}}</td>
+            <td style="text-align: center">{{$proveedor->nit??'SN'}}</td>
+            <td style="text-align: center">{{$factura->nrofactura??'SN'}}</td>
             <td style="text-align: center">{{\Carbon\Carbon::parse($sol->fechaingreso)->format('d/m/Y')}}</td>
         </tr>
     </table>
