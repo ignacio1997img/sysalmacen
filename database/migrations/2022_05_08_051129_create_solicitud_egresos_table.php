@@ -29,7 +29,7 @@ class CreateSolicitudEgresosTable extends Migration
             $table->date('fechasolicitud')->nullable();
             $table->date('fechaegreso')->nullable();
             $table->string('gestion', 10)->nullable();
-            $table->smallInteger('condicion')->default(1);
+            $table->string('condicion')->default('entregado');
             $table->timestamps();
             $table->foreignId('deleteuser_id')->nullable()->constrained('users');
             $table->softDeletes();

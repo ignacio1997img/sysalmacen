@@ -560,7 +560,7 @@ class EgressController extends Controller
         try{
 
             $sol = SolicitudEgreso::find($request->id);
-            SolicitudEgreso::where('id', $sol->id)->update(['deleteuser_id'=>$user->id, 'deleted_at' => Carbon::now()]);
+            SolicitudEgreso::where('id', $sol->id)->update(['deleteuser_id'=>$user->id, 'deleted_at' => Carbon::now(), 'condicion'=>'eliminado']);
     
            
 
@@ -623,6 +623,10 @@ class EgressController extends Controller
 
     }//anulado por mantenimiento
 
+
+    public function destroySolicitud(Request $request){
+        return $request;
+    }
 
     protected function show($id)
     {

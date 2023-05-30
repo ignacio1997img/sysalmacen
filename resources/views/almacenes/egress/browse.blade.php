@@ -40,11 +40,10 @@
                                 <input type="text" id="input-search" class="form-control">
                             </div>
                             <div class="col-sm-12 text-right">
-                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="solicitud">Solicitudes 
-
-                                </label>
+                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="solicitud">Solicitudes </label>
                              
-                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="egreso" checked>Egreso Almacen</label>
+                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="egreso" checked>Salida Almacen</label>
+                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="egreso" checked>Eliminadas</label>
                                                                 
                             </div>
                         </div>
@@ -61,6 +60,36 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title"><i class="voyager-trash"></i> Desea eliminar el siguiente ingreso?</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="id">
+
+                    <div class="text-center" style="text-transform:uppercase">
+                        <i class="voyager-trash" style="color: red; font-size: 5em;"></i>
+                        <br>
+                        
+                        <p><b>Desea eliminar el siguiente registro?</b></p>
+                    </div>
+                </div>                
+                <div class="modal-footer">
+                    
+                        <input type="submit" class="btn btn-danger pull-right delete-confirm" value="Sí, eliminar">
+                    
+                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
+                </div>
+                {!! Form::close()!!} 
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal modal-danger fade" tabindex="-1" id="myModalEliminarSolicitud" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                {!! Form::open(['route' => 'egres-solicitud.delete', 'method' => 'post']) !!}
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><i class="voyager-trash"></i> Desea eliminar el siguiente egreso</h4>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="id" id="id">
@@ -189,6 +218,16 @@
 
 
         $('#myModalEliminar').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+
+            var id = button.data('id')
+
+            var modal = $(this)
+            modal.find('.modal-body #id').val(id)
+                
+        });
+
+        $('#myModalEliminarSolicitud').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
 
             var id = button.data('id')

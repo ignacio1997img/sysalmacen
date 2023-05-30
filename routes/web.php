@@ -99,7 +99,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::resource('egres', EgressController::class);
     Route::get('egres/ajax/list/{type}/{search?}', [EgressController::class, 'list']);
     Route::post('egres/update', [EgressController::class, 'update'])->name('egres_update');
-    Route::post('egres/delete', [EgressController::class, 'destroy'])->name('egres_delete');
+    Route::post('egres/delete', [EgressController::class, 'destroy'])->name('egres_delete');//Para eliminar los egreso de manera normal
+    Route::post('egres/solicitud/delete', [EgressController::class, 'destroySolicitud'])->name('egres-solicitud.delete');//Para eliminar los egreso de manera mediante solicitud
 
     Route::get('egres/solicitud/{solicitud?}/show', [EgressController::class, 'showSolicitud'])->name('egres-solicitud.show');
     Route::post('egres/rechazar', [EgressController::class, 'rechazarSolicitud'])->name('egres.rechazar');
