@@ -16,7 +16,7 @@ class CreateFacturasTable extends Migration
         Schema::create('facturas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('solicitudcompra_id')->constrained('solicitud_compras');
-            $table->foreignId('provider_id')->constrained('providers');
+            $table->foreignId('provider_id')->nullable()->constrained('providers');
             // $table->foreignId('modality_id')->constrained('modalities');
             $table->foreignId('registeruser_id')->constrained('users');
 

@@ -75,6 +75,39 @@
                 </div>
             </div>
         </div>
+        <div class="modal modal-success fade" tabindex="-1" id="myModalConfirmarEliminacion" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    {!! Form::open(['route' => 'outbox.enviar', 'method' => 'post']) !!}
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title"><i class="fa-solid fa-check"></i> Confirmar Eliminación</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-warning">
+                            <strong>Aviso: </strong>
+                            <p>El confirmar la eliminacion, usted debera devolver todos el detalle o artículo al encargado del almacen.</p>
+                        </div> 
+                        <input type="hidden" name="id" id="id">
+
+                        <div class="text-center" style="text-transform:uppercase">
+                            <i class="fa-solid fa-check" style="color: rgb(134, 127, 127); font-size: 5em;"></i>
+                            <br>
+                            <br>
+                            
+                            <p><b>Desea confirmar la elminación?</b></p>
+                        </div>
+                    </div>                
+                    <div class="modal-footer">
+                        
+                            <input type="submit" class="btn btn-success pull-right delete-confirm" value="Sí, confirmar">
+                        
+                        <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
+                    </div>
+                    {!! Form::close()!!} 
+                </div>
+            </div>
+        </div>
         <div class="modal modal-danger fade" tabindex="-1" id="myModalEliminar" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -206,6 +239,15 @@
             }
 
             $('#myModalEnviar').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget)
+
+                var id = button.data('id')
+
+                var modal = $(this)
+                modal.find('.modal-body #id').val(id)
+                    
+            });
+            $('#myModalConfirmarEliminacion').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget)
 
                 var id = button.data('id')

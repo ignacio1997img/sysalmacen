@@ -27,14 +27,14 @@
                             <p><small>{{$item->direccion->nombre}}</small></p>
                         </td>
                         <td style="text-align: center">
-                            <p><small>{{$item->factura[0]->proveedor->razonsocial}}</small></p>
-                            <p><small>NIT: {{$item->factura[0]->proveedor->nit}}</small></p>
+                            <p><small>{{$item->factura[0]->proveedor->razonsocial??''}}</small></p>
+                            <p><small>NIT: {{$item->factura[0]->proveedor->nit??'SN'}}</small></p>
                         </td>
                         <td style="text-align: center">
                             <small>
-                                <p>N:{{$item->factura[0]->nrofactura}}</p>
+                                <p>N:{{$item->factura[0]->nrofactura??''}}</p>
                                 <p>Monto: Bs.{{$item->factura[0]->montofactura}}</p>
-                                <p>Fecha: {{\Carbon\Carbon::parse($item->factura[0]->fechafactura)->format('d/m/Y')}}</p>
+                                <p>Fecha: {{$item->factura[0]->fechafactura?\Carbon\Carbon::parse($item->factura[0]->fechafactura)->format('d/m/Y'):'SN'}}</p>
                             </small>
                         </td>
                         <td style="text-align: center">{{date('d/m/Y H:i:s', strtotime($item->created_at))}}<br><small>{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}}.</small></td>

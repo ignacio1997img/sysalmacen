@@ -320,8 +320,8 @@ class IncomeController extends Controller
                     
 
 
-
                 $request->merge(['nrosolicitud' => strtoupper($unidad[0]->sigla).'-'.sprintf($format, count($aux)+1)]);
+// return $request;
             
                 // $gestion = Carbon::parse($request->fechaingreso)->format('Y');
 
@@ -337,7 +337,7 @@ class IncomeController extends Controller
                         'inventarioAlmacen_id'  => $request->inventarioAlmacen_id
                 ]);
                 
-                // return $solicitud;
+                // return $request;
             
                 $factura = Factura::create([
                         'solicitudcompra_id'   => $solicitud->id,
@@ -379,7 +379,7 @@ class IncomeController extends Controller
                 return redirect()->route('income.index')->with(['message' => 'Registrado exitosamente.', 'alert-type' => 'success']);
         } catch (\Throwable $th) {
             DB::rollback();
-            // return 0;
+            return 0;
             return redirect()->route('income.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);            
         }
     }

@@ -55,6 +55,9 @@
                             @if ($item->status == 'Entregado')
                                 <label class="label label-success">Entregado</label>
                             @endif
+                            @if ($item->status == 'pendienteeliminacion')
+                                <label class="label label-danger">Pendiente en Eliminacion</label>
+                            @endif
                         </td>
                         <td style="text-align: right">
                             <div class="no-sort no-click bread-actions text-right">
@@ -66,10 +69,19 @@
 
 
                                 {{-- @if($item->status != 'Pendiente' && $item->status != 'Rechazado' && auth()->user()->hasPermission('read_egres')) --}}
-                                @if( $item->status != 'Pendiente' && auth()->user()->hasPermission('print_outbox'))
+                                @if( $item->status != 'Pendiente' && $item->status != 'pendienteeliminacion' && auth()->user()->hasPermission('print_outbox'))
                                     <a href="{{route('outbox.show',$item->id)}}" title="Imprimir solicitud" target="_blank" class="btn btn-sm btn-dark view">
                                         <i class="glyphicon glyphicon-print"></i>
                                     </a>   
+                                @endif
+
+                                @if ($item->status == 'pendienteeliminacion')
+                                    <a data-toggle="modal" data-id="{{$item->id}}" data-target="#myModalConfirmarEliminacion" title="Imprimir solicitud" class="btn btn-sm btn-success view">
+                                        <i class="fa-solid fa-check"></i> Confirmar Eliminación
+                                    </a>   
+                                    <a data-toggle="modal" data-id="{{$item->id}}" data-target="#myModalCancelarEliminar" title="Eliminar" class="btn btn-sm btn-danger view">
+                                        <i class="fa-solid fa-xmark"></i> Cancelar Eliminación
+                                    </a>
                                 @endif
                                 
                                 @if($gestion && $item->status == 'Pendiente' || $gestion && $item->status == 'Enviado')

@@ -145,7 +145,7 @@
                                     <div class="col-sm-2">
                                         <div class="form-group">
                                             <div class="form-line">
-                                                <input type="text" id="nrofactura" name="nrofactura" placeholder="Introducir Numero" class="form-control text" title="Introducir Nro de Factura" required>
+                                                <input type="text" id="nrofactura" name="nrofactura" placeholder="Introducir Numero" class="form-control text" title="Introducir Nro de Factura">
                                             </div>
                                             <small>Numero.</small>
                                         </div>
@@ -153,7 +153,7 @@
                                     <div class="col-sm-2" id="nroautorizacion">
                                         <div class="form-group">
                                             <div class="form-line">
-                                                <input type="text"  name="nroautorizacion" id="nroautorizacion" placeholder="Introducir Nro Autorizacion" class="form-control text" title="Introducir Nro Autorizacion de la Factura" required>
+                                                <input type="text"  name="nroautorizacion" id="nroautorizacion" placeholder="Introducir Nro Autorizacion" class="form-control text" title="Introducir Nro Autorizacion de la Factura">
                                             </div>
                                             <small>Nro Autorizacion Fact.</small>
                                         </div>
