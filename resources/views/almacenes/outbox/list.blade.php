@@ -75,14 +75,14 @@
                                     </a>   
                                 @endif
 
-                                @if ($item->status == 'pendienteeliminacion')
+                                {{-- @if ($item->status == 'pendienteeliminacion')
                                     <a data-toggle="modal" data-id="{{$item->id}}" data-target="#myModalConfirmarEliminacion" title="Imprimir solicitud" class="btn btn-sm btn-success view">
                                         <i class="fa-solid fa-check"></i> Confirmar Eliminación
                                     </a>   
                                     <a data-toggle="modal" data-id="{{$item->id}}" data-target="#myModalCancelarEliminar" title="Eliminar" class="btn btn-sm btn-danger view">
                                         <i class="fa-solid fa-xmark"></i> Cancelar Eliminación
                                     </a>
-                                @endif
+                                @endif --}}
                                 
                                 @if($gestion && $item->status == 'Pendiente' || $gestion && $item->status == 'Enviado')
                                     @if($item->gestion == $gestion->gestion)
