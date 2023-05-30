@@ -548,22 +548,14 @@ class EgressController extends Controller
 
 
     public function destroy(Request $request)
-    {       
-        if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
-        {
-            Auth::logout();
-            return redirect()->route('maintenance');
-        }
-        // return $request;
+    {    
         $user =Auth::user();
+        return 'Mantenimiento';
         DB::beginTransaction();
         try{
-
             $sol = SolicitudEgreso::find($request->id);
             SolicitudEgreso::where('id', $sol->id)->update(['deleteuser_id'=>$user->id, 'deleted_at' => Carbon::now(), 'condicion'=>'eliminado']);
     
-           
-
             $detalle = DetalleEgreso::where('solicitudegreso_id', $sol->id)->where('deleted_at', null)->where('condicion',1)->get();
             $i=0;
 
@@ -616,7 +608,7 @@ class EgressController extends Controller
             return redirect()->route('egres.index')->with(['message' => 'Ingreso Eliminado Exitosamente.', 'alert-type' => 'success']);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return 0;
+            // return 0;
             return redirect()->route('egres.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
         }
             
@@ -625,7 +617,69 @@ class EgressController extends Controller
 
 
     public function destroySolicitud(Request $request){
-        return $request;
+        $user =Auth::user();
+        DB::beginTransaction();
+        try{
+            $sol = SolicitudEgreso::where('id', $request->id)->where('condicion', 'entregado')->where('deleted_at', null)->first();
+            return $sol;
+            $sol = SolicitudEgreso::find($request->id);
+            SolicitudEgreso::where('id', $sol->id)->update(['deleteuser_id'=>$user->id, 'deleted_at' => Carbon::now(), 'condicion'=>'eliminado']);
+    
+            $detalle = DetalleEgreso::where('solicitudegreso_id', $sol->id)->where('deleted_at', null)->where('condicion',1)->get();
+            $i=0;
+
+            while($i < count($detalle))
+            {                
+                DetalleFactura::where('id', $detalle[$i]->detallefactura_id)->where('hist', 0)->increment('cantrestante', $detalle[$i]->cantsolicitada);
+
+                // $aux = DetalleFactura::find($detalle[$i]->detallefactura_id);
+                $aux = DetalleFactura::where('id', $detalle[$i]->detallefactura_id)->where('hist', 0)->first();
+
+
+                $df = DetalleFactura::where('factura_id',$aux->factura_id)->where('deleted_at', null)->where('hist', 0)->get();
+                $f = Factura::find($aux->factura_id);
+                $s = SolicitudCompra::find($f->solicitudcompra_id);
+                $j=0;
+                $ok=true;
+                while($j < count($df))
+                {
+                    if($df[$j]->cantsolicitada == $df[$j]->cantrestante)
+                    {
+                        $df[$j]->update(['condicion' => 1]);
+                        $s->update(['stock' => 1]);
+
+                    }
+                    else
+                    {
+                        if($df[$j]->cantrestante > 0)
+                        {
+                            $df[$j]->update(['condicion' => 1]);
+                            $s->update(['stock' => 1]);
+                        }
+                        $ok=false;
+                    }
+                    $j++;
+                }
+                if($ok)
+                {           
+                    $s->update(['condicion' => 1]);
+                }
+
+                
+                $i++;
+            }
+
+
+            DetalleEgreso::where('solicitudegreso_id', $sol->id)->update(['deleteuser_id'=>$user->id, 'deleted_at' => Carbon::now()]);
+
+
+            DB::commit();
+            return redirect()->route('egres.index')->with(['message' => 'Ingreso Eliminado Exitosamente.', 'alert-type' => 'success']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            // return 0;
+            return redirect()->route('egres.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
+        }
     }
 
     protected function show($id)
