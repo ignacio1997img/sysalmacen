@@ -354,7 +354,7 @@ class IncomeController extends Controller
                         'sucursal_id'       => $request->branchoffice_id
                 ]);
                 // return $request;
-                return $factura;
+                // return $factura;
                 
                 $cont = 0;
         
