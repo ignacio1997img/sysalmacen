@@ -337,7 +337,7 @@ class IncomeController extends Controller
                         'inventarioAlmacen_id'  => $request->inventarioAlmacen_id
                 ]);
                 
-                // return $request;
+                return $request;
             
                 $factura = Factura::create([
                         'solicitudcompra_id'   => $solicitud->id,
