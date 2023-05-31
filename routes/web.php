@@ -62,10 +62,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
 
     // :::::::::::::::::::::::::::::     PARA LAS SOLICITUDES  DE LOS PRODECTOS O ARTICULOS       ::::::::::::::::::::::::::::::::::::::::::
     Route::resource('outbox',SolicitudPedidoController::class);
-    Route::get('outbox/ajax/list/{search?}', [SolicitudPedidoController::class, 'list']);
+    Route::get('outbox/ajax/list', [SolicitudPedidoController::class, 'list']);
     Route::get('outbox/article/stock/ajax', [SolicitudPedidoController::class, 'ajaxProductExists']);//para poder obtener los particulos o productos disponible para hacer la solicitud
     Route::post('outbox/delete', [SolicitudPedidoController::class, 'deletePedido'])->name('outbox.deletepedido');
     Route::post('outbox/enviar', [SolicitudPedidoController::class, 'solicitudEnviada'])->name('outbox.enviar');
+    Route::post('outbox/delete/confirmar', [SolicitudPedidoController::class, 'confirmarEliminacion'])->name('outbox-delete.confirmar');//Paar que confirme la anulacion del pedido y vuelva el detalle al almacen
+    Route::post('outbox/delete/cancelar', [SolicitudPedidoController::class, 'cancelarEliminacion'])->name('outbox-delete.cancelar'); //Para cancelar la anulacion de pedido
 
     Route::resource('inbox', SolicitudBandejaController::class);
     Route::get('inbox/ajax/list/{type}/{search?}', [SolicitudBandejaController::class, 'list']);

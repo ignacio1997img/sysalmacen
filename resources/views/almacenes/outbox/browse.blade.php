@@ -39,6 +39,14 @@
                                 <div class="col-sm-2">
                                     <input type="text" id="input-search" class="form-control">
                                 </div>
+
+                                <div class="col-sm-12 text-right">
+                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="pendiente" checked>Pendiente</label>
+                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="entregado">Entregados</label>
+                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="rechazado">Rechazados</label>
+
+                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="eliminado">Eliminado</label>                              
+                                </div>
                             </div>
                             <div class="row" id="div-results" style="min-height: 120px"></div>
                         </div>
@@ -78,7 +86,7 @@
         <div class="modal modal-success fade" tabindex="-1" id="myModalConfirmarEliminacion" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    {!! Form::open(['route' => 'outbox.enviar', 'method' => 'post']) !!}
+                    {!! Form::open(['route' => 'outbox-delete.confirmar', 'method' => 'post']) !!}
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title"><i class="fa-solid fa-check"></i> Confirmar Eliminación</h4>
@@ -86,7 +94,7 @@
                     <div class="modal-body">
                         <div class="alert alert-warning">
                             <strong>Aviso: </strong>
-                            <p>El confirmar la eliminacion, usted debera devolver todos el detalle o artículo al encargado del almacen.</p>
+                            <p>Al confirmar la eliminacion, usted debera devolver todos el detalle o artículo de este pedio al encargado del almacen.</p>
                         </div> 
                         <input type="hidden" name="id" id="id">
 
@@ -101,6 +109,35 @@
                     <div class="modal-footer">
                         
                             <input type="submit" class="btn btn-success pull-right delete-confirm" value="Sí, confirmar">
+                        
+                        <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
+                    </div>
+                    {!! Form::close()!!} 
+                </div>
+            </div>
+        </div>
+
+        <div class="modal modal-danger fade" tabindex="-1" id="myModalCancelarEliminacion" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    {!! Form::open(['route' => 'outbox-delete.cancelar', 'method' => 'post']) !!}
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title"><i class="fa-solid fa-xmark"></i> Cancelar</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="id" id="id">
+
+                        <div class="text-center" style="text-transform:uppercase">
+                            <i class="fa-solid fa-xmark" style="color: red; font-size: 5em;"></i>
+                            <br>
+                            
+                            <p><b>Desea cancelar la anulacion del pedido?</b></p>
+                        </div>
+                    </div>                
+                    <div class="modal-footer">
+                        
+                            <input type="submit" class="btn btn-danger pull-right delete-confirm" value="Sí, aceptar">
                         
                         <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
                     </div>
@@ -203,7 +240,9 @@
             var countPage = 10, order = 'id', typeOrder = 'desc';
             $(document).ready(() => {
                 list();
-                
+                $('.radio-type').click(function(){
+                    list();
+                });
                 $('#input-search').on('keyup', function(e){
                     if(e.keyCode == 13) {
                         list();
@@ -218,17 +257,15 @@
             });
 
             function list(page = 1){
-                // $('#div-results').loading({message: 'Cargando...'});
                 var loader = '<div class="col-md-12 bg"><div class="loader" id="loader-3"></div></div>'
                 $('#div-results').html(loader);
 
-                // let type = $(".radio-type:checked").val();
+                let type = $(".radio-type:checked").val();
 
                 let url = '{{ url("admin/outbox/ajax/list") }}';
                 let search = $('#input-search').val() ? $('#input-search').val() : '';
-
                 $.ajax({
-                    url: `${url}/${search}?paginate=${countPage}&page=${page}`,
+                    url: `${url}?search=${search}&type=${type}&paginate=${countPage}&page=${page}`,
 
                     type: 'get',
                     
@@ -237,6 +274,11 @@
                 }});
 
             }
+
+
+
+
+
 
             $('#myModalEnviar').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget)
@@ -248,6 +290,15 @@
                     
             });
             $('#myModalConfirmarEliminacion').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget)
+
+                var id = button.data('id')
+
+                var modal = $(this)
+                modal.find('.modal-body #id').val(id)
+                    
+            });
+            $('#myModalCancelarEliminacion').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget)
 
                 var id = button.data('id')

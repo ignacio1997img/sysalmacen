@@ -3,6 +3,18 @@
 @section('page_title', 'Reporte')
 
 @section('content')
+
+    @if ($sol->status == 'eliminado')
+        <div id="watermark">
+            <img src="{{ asset('images/anulado.png') }}" /> 
+        </div>
+    @endif
+
+    @if ($sol->status == 'Rechazado')
+        <div id="watermark">
+            <img src="{{ asset('images/rechazado.png') }}" /> 
+        </div>
+    @endif
     @php
         $months = array('', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre');    
     @endphp

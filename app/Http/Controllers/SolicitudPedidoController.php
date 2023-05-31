@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SolicitudPedidoDetalle;
 use App\Models\SucursalUnidadPrincipal;
+use App\Models\DetalleEgreso;
+use App\Models\Factura;
+use App\Models\SolicitudEgreso;
+use App\Models\DetalleFactura;
+use App\Models\SolicitudCompra;
 
 use function PHPUnit\Framework\returnSelf;
 
@@ -29,39 +34,108 @@ class SolicitudPedidoController extends Controller
         // return 1;
         return view('almacenes.outbox.browse');
     }
-    public function list($type, $search = null){
-        $user = Auth::user();
-        // dump($user);
+    public function list(){
 
-        // $sucursal = SucursalUser::where('user_id', $user->id)->where('condicion', 1)->where('deleted_at', null)->first();
+        $search = request('search') ?? null;
+        $type = request('type') ?? null;
+        $paginate = request('paginate') ?? 10;
+
+        // return $type; 
+
+        $user = Auth::user();
         
         $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $user->sucursal_id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
         
-        // dump($gestion);
+
 
         $query_filter = 'people_id = '.$user->funcionario_id;
         
         if(Auth::user()->hasRole('admin'))
         {
             $query_filter =1;
+        }        
+        
+        switch($type)
+        {
+            case 'eliminado':
+                $data =  SolicitudPedido::with(['solicitudDetalle'])
+                    ->where(function($query) use ($search){
+                        if($search){
+                            $query->OrWhereRaw($search ? "gestion like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "nropedido like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "id like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "unidad_name like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "direccion_name like '%$search%'" : 1);
+                        }
+                    })
+                    ->where('status', 'eliminado')
+                    ->whereRaw($query_filter)
+                    ->orderBy('id', 'DESC')->paginate($paginate);
+                    break;
+            case 'entregado':
+                $data =  SolicitudPedido::with(['solicitudDetalle'])
+                    ->where(function($query) use ($search){
+                        if($search){
+                            $query->OrWhereRaw($search ? "gestion like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "nropedido like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "id like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "unidad_name like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "direccion_name like '%$search%'" : 1);
+                        }
+                    })
+                    ->where('deleted_at', NULL)
+                    ->whereRaw("(status = 'Entregado' or status = 'pendienteeliminacion') and ".$query_filter)
+                    // ->whereRaw($query_filter)
+                    ->orderBy('id', 'DESC')->paginate($paginate);
+                    break;
+            case 'rechazado':
+                $data =  SolicitudPedido::with(['solicitudDetalle'])
+                    ->where(function($query) use ($search){
+                        if($search){
+                            $query->OrWhereRaw($search ? "gestion like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "nropedido like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "id like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "unidad_name like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "direccion_name like '%$search%'" : 1);
+                        }
+                    })
+                    ->where('deleted_at', NULL)
+                    ->where('status', 'Rechazado')
+                    ->whereRaw($query_filter)
+                    ->orderBy('id', 'DESC')->paginate($paginate);
+                    break;
+            case 'pendiente':
+                $data =  SolicitudPedido::with(['solicitudDetalle'])
+                    ->where(function($query) use ($search){
+                        if($search){
+                            $query->OrWhereRaw($search ? "gestion like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "nropedido like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "id like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "unidad_name like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "direccion_name like '%$search%'" : 1);
+                        }
+                    })
+                    ->where('deleted_at', NULL)
+                    ->whereRaw("(status = 'Pendiente' or status = 'Enviado' or status = 'Aprobado') and ".$query_filter)
+                    // ->whereRaw($query_filter)
+                    ->orderBy('id', 'DESC')->paginate($paginate);
+                    break;
+            
         }
-        
-        $paginate = request('paginate') ?? 10;
-        
 
-        $data =  SolicitudPedido::with(['solicitudDetalle'])
-            ->where(function($query) use ($search){
-                if($search){
-                    $query->OrWhereRaw($search ? "gestion like '%$search%'" : 1)
-                    ->OrWhereRaw($search ? "nropedido like '%$search%'" : 1)
-                    ->OrWhereRaw($search ? "id like '%$search%'" : 1)
-                    ->OrWhereRaw($search ? "unidad_name like '%$search%'" : 1)
-                    ->OrWhereRaw($search ? "direccion_name like '%$search%'" : 1);
-                }
-            })
-            ->where('deleted_at', NULL)
-            ->whereRaw($query_filter)
-            ->orderBy('id', 'DESC')->paginate($paginate);
+        // $data =  SolicitudPedido::with(['solicitudDetalle'])
+        //     ->where(function($query) use ($search){
+        //         if($search){
+        //             $query->OrWhereRaw($search ? "gestion like '%$search%'" : 1)
+        //             ->OrWhereRaw($search ? "nropedido like '%$search%'" : 1)
+        //             ->OrWhereRaw($search ? "id like '%$search%'" : 1)
+        //             ->OrWhereRaw($search ? "unidad_name like '%$search%'" : 1)
+        //             ->OrWhereRaw($search ? "direccion_name like '%$search%'" : 1);
+        //         }
+        //     })
+        //     ->where('deleted_at', NULL)
+        //     ->whereRaw($query_filter)
+        //     ->orderBy('id', 'DESC')->paginate($paginate);
 
         return view('almacenes.outbox.list', compact('data', 'gestion'));
     }
@@ -265,6 +339,7 @@ class SolicitudPedidoController extends Controller
         $sol = SolicitudPedido::with(['solicitudDetalle'])
             ->where('id', $id)
             ->first();
+            // return 1;
         
         return view('almacenes.outbox.report', compact('sol'));
     }
@@ -299,5 +374,102 @@ class SolicitudPedidoController extends Controller
     {
         SolicitudPedido::where('id', $request->id)->update(['status'=>'Enviado']);
         return redirect()->route('outbox.index')->with(['message' => 'Solicitud enviada exitosamente.', 'alert-type' => 'success']);
+    }
+
+    public function confirmarEliminacion(Request $request)
+    {
+        // return $request;
+
+        $user =Auth::user();
+        // return 'Mantenimiento';
+        DB::beginTransaction();
+        try{
+            $pedido = SolicitudPedido::where('id', $request->id)->first();
+            // return $pedido;
+            $sol = SolicitudEgreso::where('solicitudPedido_id', $request->id)->first();
+            // return $sol;
+            // $sol = SolicitudEgreso::find($request->id);
+    
+            $detalle = DetalleEgreso::where('solicitudegreso_id', $sol->id)->where('deleted_at', null)->where('condicion',1)->get();
+            $i=0;
+
+            while($i < count($detalle))
+            {                
+                DetalleFactura::where('id', $detalle[$i]->detallefactura_id)->where('hist', 0)->increment('cantrestante', $detalle[$i]->cantsolicitada);
+
+                // $aux = DetalleFactura::find($detalle[$i]->detallefactura_id);
+                $aux = DetalleFactura::where('id', $detalle[$i]->detallefactura_id)->where('hist', 0)->first();
+
+
+                $df = DetalleFactura::where('factura_id',$aux->factura_id)->where('deleted_at', null)->where('hist', 0)->get();
+                $f = Factura::find($aux->factura_id);
+                $s = SolicitudCompra::find($f->solicitudcompra_id);
+                $j=0;
+                $ok=true;
+                while($j < count($df))
+                {
+                    if($df[$j]->cantsolicitada == $df[$j]->cantrestante)
+                    {
+                        $df[$j]->update(['condicion' => 1]);
+                        $s->update(['stock' => 1]);
+
+                    }
+                    else
+                    {
+                        if($df[$j]->cantrestante > 0)
+                        {
+                            $df[$j]->update(['condicion' => 1]);
+                            $s->update(['stock' => 1]);
+                        }
+                        $ok=false;
+                    }
+                    $j++;
+                }
+                if($ok)
+                {           
+                    $s->update(['condicion' => 1]);
+                }
+
+                
+                $i++;
+            }
+
+
+            DetalleEgreso::where('solicitudegreso_id', $sol->id)->update(['deleteuser_id'=>$user->id, 'deleted_at' => Carbon::now()]);
+
+
+            $sol->update(['deleteuser_id'=>$user->id, 'deleted_at' => Carbon::now(), 'condicion'=>'eliminado']);
+            SolicitudPedidoDetalle::where('solicitudPedido_id', $pedido->id)->update(['deleted_at'=>Carbon::now(), 'deletedUser_Id'=>$user->id]);
+            $pedido->update(['deletedUser_Id'=>$user->id, 'deleted_at' => Carbon::now(), 'status'=>'eliminado']);
+
+
+
+            DB::commit();
+            return redirect()->route('outbox.index')->with(['message' => 'Ingreso Eliminado Exitosamente.', 'alert-type' => 'success']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            // return 0;
+            return redirect()->route('outbox.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
+        }
+    }
+
+    public function cancelarEliminacion(Request $request)
+    {
+        DB::beginTransaction();
+        try{
+            $pedido = SolicitudPedido::where('id', $request->id)->first();
+            $sol = SolicitudEgreso::where('solicitudPedido_id', $request->id)->first();
+
+            $sol->update(['condicion'=>'entregado']);
+            $pedido->update(['status'=>'Entregado']);
+
+            DB::commit();
+            return redirect()->route('outbox.index')->with(['message' => 'La anulacion de pedido ha sido cancelado exitosamente...', 'alert-type' => 'success']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return 0;
+            return redirect()->route('outbox.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
+        }
+        
     }
 }
