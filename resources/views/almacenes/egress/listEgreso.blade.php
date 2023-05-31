@@ -12,6 +12,7 @@
                     <th class="text-align: center">Fecha Salida</th>
 
                     <th style="text-align: center">Fecha Registro</th>
+                    <th style="text-align: center">Estado</th>
                     @if(auth()->user()->hasRole(['admin']))
                         <th style="text-align: center">Sucursal</th>
                     @endif
@@ -36,7 +37,17 @@
                         <td>{{date('d/m/Y', strtotime($item->fechasolicitud))}}</td>
                         <td>{{date('d/m/Y', strtotime($item->fechaegreso))}}</td>
                         <td style="text-align: center">{{date('d/m/Y H:i:s', strtotime($item->created_at))}}<br><small>{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}}.</small></td>
-
+                        <td>
+                            @if ($item->condicion == 'entregado')
+                                <label class="label label-success">Entregado</label>
+                            @endif
+                            @if ($item->condicion == 'pendienteeliminacion')
+                                <label class="label label-warning">Pendiente en Eliminacion</label>
+                            @endif
+                            @if ($item->condicion == 'eliminado')
+                                <label class="label label-danger">Eliminado</label>
+                            @endif
+                        </td>
 
                     
                         @if(auth()->user()->hasRole(['admin']))
@@ -45,11 +56,7 @@
                         <td style="text-align: right">
                             <div class="no-sort no-click bread-actions text-right">
 
-                                @if(auth()->user()->hasPermission('read_egres'))
-                                    <a href="{{route('egres.show',$item->id)}}" title="Imprimir" target="_blank" class="btn btn-sm btn-success view">
-                                        <i class="glyphicon glyphicon-print"></i>
-                                    </a>   
-                                @endif
+                                
                                 
                                 @if($gestion)
                                     @if($item->gestion == $gestion->gestion)
@@ -64,12 +71,23 @@
                                             </a>
                                         @endif
 
-                                        @if(auth()->user()->hasPermission('delete_egres') && $item->solicitudPedido_id)
+                                        @if(auth()->user()->hasPermission('delete_egres') && $item->solicitudPedido_id && $item->condicion == 'entregado')
                                             <a data-toggle="modal" data-id="{{$item->id}}" data-target="#myModalEliminarSolicitud" title="Eliminar" class="btn btn-sm btn-danger view">
                                                 <i class="voyager-trash"></i>
                                             </a>
                                         @endif
+                                        @if ($item->condicion == 'pendienteeliminacion')  
+                                            <a data-toggle="modal" data-id="{{$item->id}}" data-target="#myModalCancelarEliminacion" title="Eliminar" class="btn btn-sm btn-danger view">
+                                                <i class="fa-solid fa-xmark"></i> Cancelar Eliminación
+                                            </a>
+                                        @endif
                                     @endif
+                                @endif
+
+                                @if(auth()->user()->hasPermission('read_egres'))
+                                    <a href="{{route('egres.show',$item->id)}}" title="Imprimir" target="_blank" class="btn btn-sm btn-success view">
+                                        <i class="glyphicon glyphicon-print"></i>
+                                    </a>   
                                 @endif
                                 
                             </div>

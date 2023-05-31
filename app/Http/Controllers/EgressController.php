@@ -550,7 +550,7 @@ class EgressController extends Controller
     public function destroy(Request $request)
     {    
         $user =Auth::user();
-        return 'Mantenimiento';
+        // return 'Mantenimiento';
         DB::beginTransaction();
         try{
             $sol = SolicitudEgreso::find($request->id);
@@ -632,6 +632,29 @@ class EgressController extends Controller
             return redirect()->route('egres.index')->with(['message' => 'Solicitud de elimonacion enviada..', 'alert-type' => 'success']);
         } catch (\Throwable $th) {
             DB::rollBack();
+            return redirect()->route('egres.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
+        }
+    }
+
+    public function cancelarEliminacion(Request $request)
+    {
+        // return $request;
+        DB::beginTransaction();
+        try{
+            $sol = SolicitudEgreso::where('id', $request->id)->where('condicion', 'pendienteeliminacion')->first();
+            // return $sol;
+
+            $pedido = SolicitudPedido::where('id', $sol->solicitudPedido_id)->first();
+            
+
+            $sol->update(['condicion'=>'entregado']);
+            $pedido->update(['status'=>'Entregado']);
+
+            DB::commit();
+            return redirect()->route('egres.index')->with(['message' => 'La anulacion de pedido ha sido cancelado exitosamente...', 'alert-type' => 'success']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            // return 0;
             return redirect()->route('egres.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
         }
     }

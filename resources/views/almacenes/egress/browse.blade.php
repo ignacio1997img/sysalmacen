@@ -98,12 +98,40 @@
                         <i class="voyager-trash" style="color: red; font-size: 5em;"></i>
                         <br>
                         
-                        <p><b>Desea eliminar el siguiente registro?</b></p>
+                        <p><b>Desea enviar la solicitud de anular el egreso?</b></p>
                     </div>
                 </div>                
                 <div class="modal-footer">
                     
-                        <input type="submit" class="btn btn-danger pull-right delete-confirm" value="Sí, eliminar">
+                        <input type="submit" class="btn btn-danger pull-right delete-confirm" value="Sí, solicitar">
+                    
+                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
+                </div>
+                {!! Form::close()!!} 
+            </div>
+        </div>
+    </div>
+    <div class="modal modal-danger fade" tabindex="-1" id="myModalCancelarEliminacion" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                {!! Form::open(['route' => 'egres-delete.cancelar', 'method' => 'post']) !!}
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><i class="fa-solid fa-xmark"></i> Cancelar</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="id">
+
+                    <div class="text-center" style="text-transform:uppercase">
+                        <i class="fa-solid fa-xmark" style="color: red; font-size: 5em;"></i>
+                        <br>
+                        
+                        <p><b>Desea cancelar la anulacion del pedido?</b></p>
+                    </div>
+                </div>                
+                <div class="modal-footer">
+                    
+                        <input type="submit" class="btn btn-danger pull-right delete-confirm" value="Sí, aceptar">
                     
                     <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
                 </div>
@@ -236,6 +264,17 @@
             modal.find('.modal-body #id').val(id)
                 
         });
+
+
+        $('#myModalCancelarEliminacion').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget)
+
+                var id = button.data('id')
+
+                var modal = $(this)
+                modal.find('.modal-body #id').val(id)
+                    
+            });
         
        
     </script>

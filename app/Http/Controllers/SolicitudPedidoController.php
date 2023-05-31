@@ -457,7 +457,7 @@ class SolicitudPedidoController extends Controller
     {
         DB::beginTransaction();
         try{
-            $pedido = SolicitudPedido::where('id', $request->id)->first();
+            $pedido = SolicitudPedido::where('id', $request->id)->where('status', 'pendienteeliminacion')->first();
             $sol = SolicitudEgreso::where('solicitudPedido_id', $request->id)->first();
 
             $sol->update(['condicion'=>'entregado']);
@@ -467,7 +467,7 @@ class SolicitudPedidoController extends Controller
             return redirect()->route('outbox.index')->with(['message' => 'La anulacion de pedido ha sido cancelado exitosamente...', 'alert-type' => 'success']);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return 0;
+            // return 0;
             return redirect()->route('outbox.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
         }
         
