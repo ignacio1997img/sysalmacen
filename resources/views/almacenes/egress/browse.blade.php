@@ -43,7 +43,7 @@
                                 <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="solicitud">Solicitudes </label>
                              
                                 <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="egreso" checked>Salida Almacen</label>
-                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="egreso" checked>Eliminadas</label>
+                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="eliminado" checked>Eliminadas</label>
                                                                 
                             </div>
                         </div>

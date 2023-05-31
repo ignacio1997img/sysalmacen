@@ -57,6 +57,9 @@
                             @if ($item->status == 'Entregado')
                                 <label class="label label-success">Entregado</label>
                             @endif
+                            @if ($item->status == 'eliminado')
+                                <label class="label label-danger">Eliminado</label>
+                            @endif
                         </td>
                         <td style="text-align: right">
                             <div class="no-sort no-click bread-actions text-right">
