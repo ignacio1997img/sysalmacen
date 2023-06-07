@@ -94,7 +94,39 @@
                                                         <td style="text-align: right">
                                                             <div class="no-sort no-click bread-actions text-right">  
                                                                 <a data-toggle="modal" data-target="#modal-deleteUnidad" title="Eliminar Unidad Principal" data-id="{{$item->id}}" class="btn btn-sm btn-danger view">
-                                                                    <i class="fa-solid fa-trash"></i> <span class="hidden-xs hidden-sm">Eliminar</span>
+                                                                    <i class="fa-solid fa-trash"></i> <span class="hidden-xs hidden-sm"></span>
+                                                                </a> 
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach                              
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-8">
+                                        
+                                    </div>
+                                    <div class="col-md-4">
+                                        <a data-toggle="modal" data-target="#modal-subalmacen" title="Agregar Almacen Principal" class="btn btn-sm btn-success view">
+                                            <i class="fa-solid fa-shop"></i> <span class="hidden-xs hidden-sm"></span>
+                                        </a>  
+                                        <br>
+                                        <br>
+                                        <table id="dataTable" class="table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th style="text-align: center">Nombre</th>
+                                                    <th style="text-align: right">Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($sub as $item)
+                                                    <tr>
+                                                        <td style="text-align: center">{{$item->name}}</td>
+                                                        <td style="text-align: right">
+                                                            <div class="no-sort no-click bread-actions text-right">  
+                                                                <a data-toggle="modal" data-target="#modal-deleteSubalmacen" title="Eliminar Sub almacen" data-id="{{$item->id}}" class="btn btn-sm btn-danger view">
+                                                                    <i class="fa-solid fa-trash"></i> <span class="hidden-xs hidden-sm"></span>
                                                                 </a> 
                                                             </div>
                                                         </td>
@@ -325,6 +357,81 @@
                     </div>
                 </div>
             </div>
+
+
+
+            {{-- Para registrar sub almacen de cada almacen --}}
+            <div class="modal fade modal-success" role="dialog" id="modal-subalmacen">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">                
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title"><i class="voyager-plus"></i>Sub Almacenes</h4>
+                        </div>
+                        {!! Form::open(['route' => 'sucursal-subalmacen.store','class' => 'was-validated'])!!}
+                            <!-- Modal body -->
+                            <input type="hidden" value="{{$sucursal->id}}" name="sucursal_id">
+                            <div class="modal-body">   
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><b>Nombre Del Sub Almacen:</b></span>
+                                        </div>
+                                        {{-- <select name="unidad_id" id="unidad_id" class="form-control select2" required>
+                                            <option value="">Seleccione una unidad..</option>
+                                            
+                                        </select> --}}
+                                        <input type="text" id="name" name="name" required class="form-control">
+                                    </div>
+                                </div> 
+
+                            </div>
+                            
+                            <!-- Modal footer -->
+                            <div class="modal-footer justify-content-between">
+                                <button type="button text-left" class="btn btn-danger" data-dismiss="modal" data-toggle="tooltip" title="Volver">Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-success btn-sm" title="Registrar..">
+                                    Agregar
+                                </button>
+                            </div>
+                        {!! Form::close()!!} 
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="modal modal-danger fade" tabindex="-1" id="modal-deleteSubalmacen" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        {!! Form::open(['route' => 'sucursal-subalmacen.destroy', 'method' => 'DELETE']) !!}
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title"><i class="voyager-trash"></i> Eliminar Sub Almacen</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="id" id="subalmacen_id">
+                            <input type="hidden" value="{{$sucursal->id}}" name="sucursal_id">
+                            <div class="text-center" style="text-transform:uppercase">
+                                <i class="voyager-trash" style="color: red; font-size: 5em;"></i>
+                                <br>
+                                
+                                <p><b>Desea eliminar el siguiente registro?</b></p>
+                            </div>
+                        </div>                
+                        <div class="modal-footer">
+                            
+                                <input type="submit" class="btn btn-danger pull-right delete-confirm" value="Sí, eliminar">
+                            
+                            <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
+                        </div>
+                        {!! Form::close()!!} 
+                    </div>
+                </div>
+            </div>
+
+
+
     @stop
 
 
@@ -467,6 +574,15 @@
 
                     var modal = $(this)
                     modal.find('.modal-body #sucursalUnidad').val(id)
+                    
+                });
+                $('#modal-deleteSubalmacen').on('show.bs.modal', function (event) {
+                    var button = $(event.relatedTarget) //captura valor del data-empresa=""
+
+                    var id = button.data('id')
+
+                    var modal = $(this)
+                    modal.find('.modal-body #subalmacen_id').val(id)
                     
                 });
 

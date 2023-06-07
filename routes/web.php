@@ -135,6 +135,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::post('sucursals/unidad/store', [SucursalController::class, 'storeUnidad'])->name('sucursal-unidad.store'); //para poder agregar una unidad administrativa como almacen principal
     Route::delete('sucursals/unidad/delete', [SucursalController::class, 'destroyUnidad'])->name('sucursal-unidad.destroy');
 
+    Route::post('sucursals/subalmacen/store', [SucursalController::class, 'storeSubAlmacen'])->name('sucursal-subalmacen.store'); //para poder agregar un subalmacen al almacen
+    Route::delete('sucursals/subalmacen/delete', [SucursalController::class, 'destroySubAlmacen'])->name('sucursal-subalmacen.destroy');//Para poder eliminar un sub almacen
+
+
 
     Route::get('providers', [ProviderController::class, 'index'])->name('voyager.providers.index');
 

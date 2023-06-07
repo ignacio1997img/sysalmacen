@@ -6,6 +6,7 @@ use App\Models\Direction;
 use Illuminate\Http\Request;
 use App\Models\Sucursal;
 use App\Models\SucursalDireccion;
+use App\Models\SucursalSubAlmacen;
 use App\Models\SucursalUnidadPrincipal;
 use App\Models\SucursalUser;
 use Illuminate\Support\Facades\Auth;
@@ -37,10 +38,11 @@ class SucursalController extends Controller
             ->get();
         // return $sucursal;
         $principal = SucursalUnidadPrincipal::with(['unidad'])->where('sucursal_id', $sucursal->id)->where('deleted_at', null)->get();
+        $sub = SucursalSubAlmacen::where('sucursal_id', $sucursal->id)->where('deleted_at', null)->get();
         // return $principal;
 
             // return $data;
-        return view('almacenes.sucursal.da.browse', compact('sucursal', 'data', 'da', 'principal'));
+        return view('almacenes.sucursal.da.browse', compact('sucursal', 'data', 'da', 'principal', 'sub'));
     }
 
     public function storeDireccion(Request $request)
@@ -157,4 +159,41 @@ class SucursalController extends Controller
             return redirect()->route('sucursal-da.index',['sucursal'=>$request->sucursal_id])->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
         }
     }
+
+    public function storeSubAlmacen(Request $request)
+    {
+        // return $request;
+        DB::beginTransaction();
+        try {
+            SucursalSubAlmacen::create([
+                'sucursal_id' => $request->sucursal_id,
+                'name' => $request->name,
+                // 'registerUser_id' => Auth::user()->id
+            ]);
+            DB::commit();
+            return redirect()->route('sucursal-da.index',['sucursal'=>$request->sucursal_id])->with(['message' => 'Sub Almacen Registrado Exitosamente', 'alert-type' => 'success']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('sucursal-da.index',['sucursal'=>$request->sucursal_id])->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
+        }
+    }
+
+    public function destroySubAlmacen(Request $request)
+    {
+        // return $request;
+        DB::beginTransaction();
+        try {
+            SucursalSubAlmacen::where('id',$request->id)
+                ->update(['deleted_at'=>Carbon::now(), 
+                        // 'deleteUser_id' => Auth::user()->id
+                ]);
+            DB::commit();
+            return redirect()->route('sucursal-da.index',['sucursal'=>$request->sucursal_id])->with(['message' => 'Sub Almacen Eliminado Exitosamente', 'alert-type' => 'success']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('sucursal-da.index',['sucursal'=>$request->sucursal_id])->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
+        }
+    }
+
+
 }

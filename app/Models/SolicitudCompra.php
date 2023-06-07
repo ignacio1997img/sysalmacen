@@ -9,9 +9,23 @@ class SolicitudCompra extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['sucursal_id',  'inventarioAlmacen_id', 'direccionadministrativa', 'unidadadministrativa', 'modality_id', 'registeruser_id',
-                            'nrosolicitud', 'fechaingreso', 'gestion', 'condicion', 'deleteuser_id','stock'
-                            ];
+    protected $fillable = [
+        'sucursal_id',
+        'inventarioAlmacen_id',
+        'direccionadministrativa',
+        'unidadadministrativa',
+        'modality_id',
+        'registeruser_id',
+        'nrosolicitud',
+        'fechaingreso', 
+        'gestion', 
+        'condicion', 
+        'deleteuser_id',
+        'stock',
+        'subSucursal_id'
+                            
+    ];
+
 
     public function sucursal()
     {
