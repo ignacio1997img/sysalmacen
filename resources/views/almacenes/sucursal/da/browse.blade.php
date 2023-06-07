@@ -15,6 +15,9 @@
                             <i class="voyager-plus"></i> <span>Crear</span>
                         </a>
                     @endif
+                    <a href="{{ route('voyager.sucursals.index') }}" class="btn btn-warning btn-add-new">
+                        <i class="fa-solid fa-arrow-rotate-left"></i> <span>Volver</span>
+                    </a>
                 </div>
                 <div class="col-md-4">
 
