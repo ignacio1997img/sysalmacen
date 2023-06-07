@@ -23,6 +23,7 @@ class User extends \TCG\Voyager\Models\User
         'password',
         'role_id',
         'sucursal_id',
+        'subSucursal_id',
         'direccionAdministrativa_id',
         'unidadAdministrativa_id',
         'contract_id'

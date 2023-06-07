@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class UpdateUseTable extends Migration
+class UpdateEgresTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class UpdateUseTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->integer('contract_id')->nullable();
+        Schema::table('solicitud_egresos', function (Blueprint $table) {
+            $table->foreignId('subSucursal_id')->nullable()->constrained('sucursal_sub_almacens');
         });
     }
 

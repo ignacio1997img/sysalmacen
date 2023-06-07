@@ -8,6 +8,7 @@ use App\Models\SucursalUser;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Contract;
+use App\Models\SucursalSubAlmacen;
 
 class UserController extends Controller
 {
@@ -259,12 +260,14 @@ class UserController extends Controller
             return redirect()->route('voyager.users.index')->with(['message' => 'Elija otro correo por favor.', 'alert-type' => 'error']);
         }
 
+        // return $request;
         DB::beginTransaction();
         try {
             $user->update([
                 // 'role_id' => $request->role_id,
                 'email' => $request->email,
                 'sucursal_id'=>$request->sucursal_id,
+                'subSucursal_id'=>$request->subSucursal_id,
                 'unidadAdministrativa_id' => $request->unit_id,
                 'direccionAdministrativa_id'=> $request->direction_id
             ]);
@@ -318,5 +321,11 @@ class UserController extends Controller
                 'message' => "El usuario, se actualizo con exito.",
                 'alert-type' => 'success'
             ]);
+    }
+
+    public function getSubSucursal($id)
+    {
+        return SucursalSubAlmacen::where('sucursal_id', $id)
+            ->where('deleted_at', null)->get();
     }
 }

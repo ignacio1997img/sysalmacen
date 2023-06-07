@@ -350,6 +350,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
 
     //###################################################################   Funciona   ######################################################
     Route::get('ajax/get/direccionsucursal/{id?}', [Controller::class, 'getDireccionSucursal'])->name('ajax-get.direccinsucursal'); //Para obtener todas las direciones de una sucursal
+    Route::get('ajax/get/subsucursal/{id?}', [UserController::class, 'getSubSucursal'])->name('ajax-get.subsucursal'); //Para obtener todas la sub sucursales de los almacenes
     Route::get('ajax/get/unidadDirection/{id?}', [Controller::class, 'getUnidades'])->name('ajax-get.unidadDirection'); //Para obtener todas las direciones de una sucursal
 
 

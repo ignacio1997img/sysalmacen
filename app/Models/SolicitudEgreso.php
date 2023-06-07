@@ -21,7 +21,8 @@ class SolicitudEgreso extends Model
         'condicion',
         'deleteuser_id',
         'deleted_at',
-        'solicitudPedido_id'
+        'solicitudPedido_id',
+        'subSucursal_id'
     ];
 
     public function sucursal()

@@ -136,7 +136,19 @@
                                 @php
                                     $direction = \App\Models\SucursalDireccion::with(['direction'])->where('sucursal_id', $dataTypeContent->sucursal_id)->where('status', 1)->where('deleted_at', null)->get();
                                     $unidad = \App\Models\Unit::where('direccion_id', $dataTypeContent->direccionAdministrativa_id)->where('estado', 1)->where('deleted_at', null)->get();
-                                @endphp   
+                                    $sub = \App\Models\SucursalSubAlmacen::where('sucursal_id', $dataTypeContent->sucursal_id)->where('deleted_at', null)->get();
+
+                                @endphp 
+                                <div class="form-group">
+                                    <label for="subSucursal_id">Sub Almacen</label>
+                                    <select name="subSucursal_id" id="subSucursal_id" class="form-control select2">                                   
+                                        <option value="" >--Seleccione una opción--</option>
+                                        @foreach ($sub as $item)
+                                            <option value="{{$item->id}}" {{$dataTypeContent->subSucursal_id==$item->id?'selected':''}}>{{$item->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>  
+                                  
                                 <div class="form-group">
                                     <label for="direction_id">Dirección Administrativa</label>
                                     <select name="direction_id" id="direction_id" class="form-control select2">                                   
@@ -155,40 +167,6 @@
                                         @endforeach
                                     </select>
                                 </div>
-
-                                {{-- @php
-                                    $contract = \App\Models\Contract::with(['unidad'])->where('person_id', $dataTypeContent->funcionario_id)->where('deleted_at', null)->where('status', 'firmado')->first();
-                                    $unidad = [];
-                                    if($contract)
-                                    {
-                                        $unidad = \App\Models\Unit::where('deleted_at', null)->where('direccion_id' , $contract->direccion_administrativa_id)->where('estado', 1)->get();
-                                    }
-                                @endphp    
-                                <div class="form-group">
-                                    <label for="unidad_administrativa_id">Unidad Administrativa</label>
-                                    <select name="unidad_administrativa_id" class="form-control select2">
-                                        @if ($dataTypeContent->id)
-                                            @if ($contract->unidad_administrativa_id)
-                                                <option value="{{ $contract->unidad_administrativa_id }}">{{ $contract->unidad->nombre }}</option>
-                                            @else
-                                                <option value="" >--Seleccione una opción--</option>
-                                                @foreach($unidad as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->nombre }}</option>
-                                                @endforeach
-                                            @endif                                        
-                                        @else
-                                            <option value="" >--Seleccione una opción--</option>
-                                            @foreach($unidad as $item)
-                                                <option value="{{ $item->id }}">{{ $item->nombre }}</option>
-                                            @endforeach
-                                        @endif
-                                        
-                                    </select>
-                                </div>                             --}}
-                            {{-- @else
-                                @php
-                                    $unidad = \App\Models\Unit::where('deleted_at', null)->where('estado', 1)->get()
-                                @endphp --}}
                             @endif
 
                          
@@ -382,17 +360,28 @@
            var data = e.params.data;
            if (data.id) {
                 // alert(1)
-               $.get('{{route('ajax-get.direccinsucursal')}}/'+data.id, function(data){
-                // alert(data)
+                $.get('{{route('ajax-get.direccinsucursal')}}/'+data.id, function(data){
                         var html_direction=    '<option value="" selected>--Seleccione una opción--</option>'
                             for(var i=0; i<data.length; ++i)
                             html_direction += '<option value="'+data[i].direction.id+'">'+data[i].direction.nombre+'</option>'
 
                         $('#direction_id').html(html_direction);           
                 });
+
+                $.get('{{route('ajax-get.subsucursal')}}/'+data.id, function(data){
+                        var html_sub=    '<option value="" selected>--Seleccione una opción--</option>'
+                            for(var i=0; i<data.length; ++i)
+                            html_sub += '<option value="'+data[i].id+'">'+data[i].name+'</option>'
+
+                        $('#subSucursal_id').html(html_sub);           
+                });
            }	
-           $('#direction_id').html(''); 				
-           $('#unit_id').html(''); 				
+        //    else
+        //    {
+                $('#direction_id').html(''); 				
+                $('#unit_id').html(''); 				
+                $('#subSucursal_id').html(''); 	
+        //    }			
        });
        $('#direction_id').on('select2:select', function (e) {
             var data = e.params.data;

@@ -161,7 +161,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 1,
                 'delete' => 0,
                 'details' => '{"model":"TCG\\\\Voyager\\\\Models\\\\Role","table":"roles","type":"belongsTo","column":"role_id","key":"id","label":"display_name","pivot_table":"roles","pivot":"0","taggable":"0"}',
-                'order' => 16,
+                'order' => 17,
             ),
             9 => 
             array (
@@ -177,7 +177,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 1,
                 'delete' => 1,
                 'details' => '{"model":"TCG\\\\Voyager\\\\Models\\\\Role","table":"roles","type":"belongsToMany","column":"id","key":"id","label":"display_name","pivot_table":"user_roles","pivot":"1","taggable":"0"}',
-                'order' => 17,
+                'order' => 19,
             ),
             10 => 
             array (
@@ -193,7 +193,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 0,
                 'delete' => 0,
                 'details' => '{}',
-                'order' => 18,
+                'order' => 21,
             ),
             11 => 
             array (
@@ -2210,6 +2210,54 @@ class DataRowsTableSeeder extends Seeder
                 'delete' => 0,
                 'details' => '{}',
                 'order' => 6,
+            ),
+            137 => 
+            array (
+                'id' => 230,
+                'data_type_id' => 1,
+                'field' => 'user_belongsto_sucursal_sub_almacen_relationship',
+                'type' => 'relationship',
+                'display_name' => 'Sub Almacen',
+                'required' => 0,
+                'browse' => 1,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 0,
+                'details' => '{"model":"App\\\\Models\\\\SucursalSubAlmacen","table":"sucursal_sub_almacens","type":"belongsTo","column":"subSucursal_id","key":"id","label":"name","pivot_table":"archivos","pivot":"0","taggable":"0"}',
+                'order' => 16,
+            ),
+            138 => 
+            array (
+                'id' => 231,
+                'data_type_id' => 1,
+                'field' => 'contract_id',
+                'type' => 'text',
+                'display_name' => 'Contract Id',
+                'required' => 0,
+                'browse' => 1,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => '{}',
+                'order' => 18,
+            ),
+            139 => 
+            array (
+                'id' => 232,
+                'data_type_id' => 1,
+                'field' => 'subSucursal_id',
+                'type' => 'text',
+                'display_name' => 'SubSucursal Id',
+                'required' => 0,
+                'browse' => 1,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => '{}',
+                'order' => 20,
             ),
         ));
         
