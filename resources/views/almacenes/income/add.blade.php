@@ -44,7 +44,7 @@
                                             <small>Sucursal.</small>
                                         </div>
                                     </div>                                            
-                                    <div class="col-sm-4" @if($sucursal->id == 8) style="display: none" @endif >
+                                    <div class="col-sm-4" @if($sucursal->id != 8) style="display: none" @endif >
                                         <div class="form-group">
                                             <div class="form-line">
                                                 <select id="subSucursal_id" name="subSucursal_id" class="form-control select2" required>
