@@ -32,9 +32,9 @@
                                 <input type="hidden" name="inventarioAlmacen_id" @if($gestion) value="{{$gestion->id}}" @endif>
                                 <input type="hidden" name="gestion" @if($gestion) value="{{$gestion->gestion}}" @endif>
 
-                                <h5>Solicitud de Compras</h5>
+                                <h5>Almacen</h5>
                                 <div class="row">
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-4">
                                         <div class="form-group">
                                             <div class="form-line">
                                                 <select name="branchoffice_id" class="form-control select2" required>
@@ -44,6 +44,19 @@
                                             <small>Sucursal.</small>
                                         </div>
                                     </div>                                            
+                                    <div class="col-sm-4" @if($sucursal->id == 8) style="display: none" @endif >
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <select id="subSucursal_id" name="subSucursal_id" class="form-control select2" required>
+                                                    <option value="{{$sub->id}}" selected>{{$sub->name}}</option>
+                                                </select>
+                                            </div>
+                                            <small>Categoria.</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h5>Solicitud de Compras</h5>
+                                <div class="row">                                          
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <div class="form-line">
@@ -57,7 +70,7 @@
                                             <small>Seleccionar Direción Administrativa.</small>
                                         </div>
                                     </div>
-                                    <div class="col-sm-5">
+                                    <div class="col-sm-4">
                                         <div class="form-group">
                                             <div class="form-line">
                                                 <select id="unidadEje" name="unidadadministrativa" class="form-control select2" required>
@@ -65,18 +78,6 @@
                                                 </select>
                                             </div>
                                             <small>Seleccionar Unidad Administrativa.</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <div class="form-group">
-                                            <div class="form-line">
-                                                <input type="date" name="fechaingreso" id="fechaingreso" class="form-control text" onchange="gestionVerification()" onkeyup="gestionVerification()" @if($gestion) min="{{$gestion->gestion.'-01-01'}}" max="{{$gestion->gestion.'-12-31'}}" @endif required>
-                                                <b class="text-danger" id="label-date" style="display:none">La gestion Correspondiente es incorrecta..</b>
-
-                                            </div>
-                                            <small>Fecha Ingreso.</small>
                                         </div>
                                     </div>
                                     <div class="col-sm-4">
@@ -93,6 +94,18 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <input type="date" name="fechaingreso" id="fechaingreso" class="form-control text" onchange="gestionVerification()" onkeyup="gestionVerification()" @if($gestion) min="{{$gestion->gestion.'-01-01'}}" max="{{$gestion->gestion.'-12-31'}}" @endif required>
+                                                <b class="text-danger" id="label-date" style="display:none">La gestion Correspondiente es incorrecta..</b>
+
+                                            </div>
+                                            <small>Fecha Ingreso.</small>
+                                        </div>
+                                    </div>                                    
+                                </div>
                                 <hr>
                                 <h5 id="subtitle">Proveedor + Detalle de Factura:</h5>
     
@@ -100,7 +113,7 @@
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <div class="input-group">
-                                                <select class="form-control" id="select_proveedor" name="provider_id"></select>
+                                                <select class="form-control" id="select_proveedor" name="provider_id" required></select>
                                                 <span class="input-group-btn">
                                                     <button class="btn btn-primary" disabled title="Nuevo proveedor" data-target="#modal-create-customer" data-toggle="modal" style="margin: 0px" type="button">
                                                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -127,7 +140,7 @@
                                     <div class="col-sm-2">
                                         <div class="form-group">
                                             <div class="form-line">
-                                                <input type="date" id="fechafactura" name="fechafactura" class="form-control text">
+                                                <input type="date" id="fechafactura" name="fechafactura" class="form-control text" required>
                                             </div>
                                             <small>Fecha.</small>
                                         </div>
@@ -145,7 +158,7 @@
                                     <div class="col-sm-2">
                                         <div class="form-group">
                                             <div class="form-line">
-                                                <input type="text" id="nrofactura" name="nrofactura" placeholder="Introducir Numero" class="form-control text" title="Introducir Nro de Factura">
+                                                <input type="text" id="nrofactura" name="nrofactura" placeholder="Introducir Numero" class="form-control text" title="Introducir Nro de Factura" required>
                                             </div>
                                             <small>Numero.</small>
                                         </div>
@@ -153,7 +166,7 @@
                                     <div class="col-sm-2" id="nroautorizacion">
                                         <div class="form-group">
                                             <div class="form-line">
-                                                <input type="text"  name="nroautorizacion" id="nroautorizacion" placeholder="Introducir Nro Autorizacion" class="form-control text" title="Introducir Nro Autorizacion de la Factura">
+                                                <input type="text"  name="nroautorizacion" id="nroautorizacion" placeholder="Introducir Nro Autorizacion" class="form-control text" title="Introducir Nro Autorizacion de la Factura" required>
                                             </div>
                                             <small>Nro Autorizacion Fact.</small>
                                         </div>

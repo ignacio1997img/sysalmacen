@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SucursalUser;
 use App\Models\InventarioAlmacen;
+use App\Models\SucursalSubAlmacen;
 
 class IncomeController extends Controller
 {
@@ -165,24 +166,11 @@ class IncomeController extends Controller
 
     public function create()
     {
-        // if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
-        // {
-        //     Auth::logout();
-        //     return redirect()->route('maintenance');
-        // }
-
-        // return 1;
-
-        // $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
         $user= Auth::user();
         $sucursal =$user->sucursal_id;
-        // return $sucursal;
-        // $sucursal = SucursalUser::where('user_id', $user->id)->where('condicion', 1)->where('deleted_at', null)->first();
+        $sub = $user->subSucursal_id;
 
-
-        // return $gestion;
-
-        if(!$sucursal)
+        if(!$sucursal || !$sub)
         {
             return "Contactese con el administrador";
         }
@@ -199,22 +187,16 @@ class IncomeController extends Controller
         $partida = Partida::all();
         $modalidad = Modality::all();
         $sucursal = Sucursal::where('id', $sucursal)->first();
+        $sub = SucursalSubAlmacen::where('id', $sub)->first();
         // return $partida;
 
-        return view('almacenes.income.add', compact('sucursal', 'da', 'proveedor', 'partida', 'modalidad', 'gestion'));
+        return view('almacenes.income.add', compact('sucursal', 'sub', 'da', 'proveedor', 'partida', 'modalidad', 'gestion'));
 
     }
 
     // para imprimir el ingreso de cada almacen
     protected function view_ingreso($id)
     {
-        // if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
-        // {
-        //     Auth::logout();
-        //     return redirect()->route('maintenance');
-        // }
-
-
         // $sol = SolicitudCompra::find($id);
         $sol = SolicitudCompra::with(['sucursal'])
             ->where('id', $id)->first();
@@ -251,14 +233,7 @@ class IncomeController extends Controller
     // Para ver el Stock de cada almacen
     protected function view_ingreso_stock($id)
     {
-        // if(setting('configuracion.maintenance')&& !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin'))
-        // {
-        //     Auth::logout();
-        //     return redirect()->route('maintenance');
-        // }
-
-        $sol = SolicitudCompra::find($id);
- 
+        $sol = SolicitudCompra::find($id); 
         
         $factura = Factura::where('solicitudcompra_id', $sol->id)->get();
 
@@ -327,6 +302,7 @@ class IncomeController extends Controller
 
                 $solicitud = SolicitudCompra::create([
                         'sucursal_id'       => $request->branchoffice_id,
+                        'subSucursal_id' => $request->subSucursal_id,
                         'direccionadministrativa' => $request->direccionadministrativa,
                         'unidadadministrativa'     => $request->unidadadministrativa,
                         'modality_id'           => $request->modality_id,
