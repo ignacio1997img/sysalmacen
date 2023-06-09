@@ -80,7 +80,7 @@ class IncomeController extends Controller
         
         // dd($sucursal);
 
-        $query_filter = 'sucursal_id = '.$sucursal;
+        $query_filter = 'sucursal_id = '.$sucursal.' and subSucursal_id = '. $user->subSucursal_id;
         // dd($gestion);
         
         if(Auth::user()->hasRole('admin'))

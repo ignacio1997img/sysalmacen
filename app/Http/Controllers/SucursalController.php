@@ -28,12 +28,12 @@ class SucursalController extends Controller
         //     $aux = SucursalSubAlmacen::where('sucursal_id', $item->sucursal_id)->first();
         //     SolicitudCompra::where('sucursal_id', $item->sucursal_id)->update(['subSucursal_id'=>$aux->id]);
         // }
-        // $data = SolicitudEgreso::all();
-        // foreach($data as $item)
-        // {
-        //     $aux = SucursalSubAlmacen::where('sucursal_id', $item->sucursal_id)->first();
-        //     SolicitudEgreso::where('sucursal_id', $item->sucursal_id)->update(['subSucursal_id'=>$aux->id]);
-        // }
+        $data = SolicitudEgreso::all();
+        foreach($data as $item)
+        {
+            $aux = SucursalSubAlmacen::where('sucursal_id', $item->sucursal_id)->first();
+            SolicitudEgreso::where('sucursal_id', $item->sucursal_id)->update(['subSucursal_id'=>$aux->id]);
+        }
 
         // return 1;
         $sucursal = Sucursal::where('deleted_at', null)->where('condicion', 1)->get();

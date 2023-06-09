@@ -142,12 +142,14 @@ class EgressController extends Controller
         // $search = request('search') ?? null;
         // $type = request('type') ?? null;
         $user = Auth::user();
+        // dd($user);
 
         $sucursal = SucursalUser::where('user_id', $user->id)->where('condicion', 1)->where('deleted_at', null)->first();
 
         $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->sucursal_id)->where('deleted_at', null)->first(); //para ver si hay gestion activa o cerrada
 
-        $query_filter = 'sucursal_id = ' . $sucursal->sucursal_id;
+        // $query_filter = 'sucursal_id = ' . $sucursal->sucursal_id;
+        $query_filter = 'sucursal_id = '.$user->sucursal_id.' and subSucursal_id = '. $user->subSucursal_id;
 
         if (Auth::user()->hasRole('admin')) {
             $query_filter = 1;
@@ -694,11 +696,13 @@ class EgressController extends Controller
     // Para obtener todos los articulos comprado o ingresado por la unidad
     public function ajax_unidad($unidad, $article)
     {
+        $user = Auth::user();
         $data = DB::table('solicitud_compras as s')
             ->join('facturas as f', 'f.solicitudcompra_id', 's.id')
             ->join('detalle_facturas as d', 'd.factura_id', 'f.id')
             ->join('articles as a', 'a.id', 'd.article_id')
             ->where('s.stock', 1)
+            ->where('s.subSucursal_id', $user->subSucursal_id)
             ->where('s.deleted_at', null)
             ->where('s.unidadadministrativa', $unidad)
 
@@ -721,6 +725,8 @@ class EgressController extends Controller
     //para obtener los articulos del almacen central de cada almacen u sucursal
     public function ajax_almacen($article)
     {
+        $user = Auth::user();
+
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
         $unidad = SucursalUnidadPrincipal::where('deleted_at', null)->where('sucursal_id', $sucursal->sucursal_id)->first()->unidadAdministrativa_id;
         // return $unidad;
@@ -729,6 +735,7 @@ class EgressController extends Controller
             ->join('detalle_facturas as d', 'd.factura_id', 'f.id')
             ->join('articles as a', 'a.id', 'd.article_id')
             ->where('s.stock', 1)
+            ->where('s.subSucursal_id', $user->subSucursal_id)
             ->where('s.deleted_at', null)
             ->where('s.unidadadministrativa', $unidad)
 
@@ -857,6 +864,7 @@ class EgressController extends Controller
             // return $solicitud;
             $egreso = SolicitudEgreso::create([
                 'sucursal_id'               => $solicitud->sucursal_id,
+                'subSucursal_id'            => $solicitud->subSucursal_id,
                 'unidadadministrativa'      => $solicitud->unidad_id,
                 'direccionadministrativa'   => $solicitud->direccion_id,
                 'registeruser_id'           => $user->id,

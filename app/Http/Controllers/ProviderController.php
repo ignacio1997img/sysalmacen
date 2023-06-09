@@ -27,7 +27,10 @@ class ProviderController extends Controller
     public function list(){
         $q = request('q');
         $data = Provider::whereRaw($q ? '(nit like "%'.$q.'%" or razonsocial like "%'.$q.'%" or responsable like "%'.$q.'%")' : 1)
-                    ->where('deleted_at', NULL)->where('condicion',1)->get();
+                    ->where('deleted_at', NULL)
+                    ->where('condicion',1)
+                    // ->where('sucursal_id', Auth::user()->sucursal_id)
+                    ->get();
         return response()->json($data);
     }
 }

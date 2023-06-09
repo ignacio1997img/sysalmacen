@@ -4,22 +4,22 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\Unit;
+use App\Models\Factura;
 use App\Models\Sucursal;
 use App\Models\SucursalUser;
 use Illuminate\Http\Request;
+use App\Models\DetalleEgreso;
+use App\Models\DetalleFactura;
+use App\Models\SolicitudCompra;
+use App\Models\SolicitudEgreso;
 use App\Models\SolicitudPedido;
 use App\Models\InventarioAlmacen;
 use App\Models\SucursalDireccion;
+use App\Models\SucursalSubAlmacen;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SolicitudPedidoDetalle;
 use App\Models\SucursalUnidadPrincipal;
-use App\Models\DetalleEgreso;
-use App\Models\Factura;
-use App\Models\SolicitudEgreso;
-use App\Models\DetalleFactura;
-use App\Models\SolicitudCompra;
-use App\Models\SucursalSubAlmacen;
 
 use function PHPUnit\Framework\returnSelf;
 
@@ -32,7 +32,7 @@ class SolicitudPedidoController extends Controller
     
     public function index()
     {
-        // return 1;
+        
         
         $data = SolicitudPedido::all();
         foreach($data as $item)
@@ -40,6 +40,8 @@ class SolicitudPedidoController extends Controller
             $aux = SucursalSubAlmacen::where('sucursal_id', $item->sucursal_id)->first();
             SolicitudPedido::where('sucursal_id', $item->sucursal_id)->update(['subSucursal_id'=>$aux->id]);
         }
+
+
         return view('almacenes.outbox.browse');
     }
     public function list(){
@@ -150,6 +152,7 @@ class SolicitudPedidoController extends Controller
 
     public function create()
     {
+        // return 1;
         $user = Auth::user();
         $sucursal = Sucursal::where('id', $user->sucursal_id)->first();
         $sub = SucursalSubAlmacen::where('sucursal_id', $user->sucursal_id)->where('deleted_at', null)->get();
@@ -308,7 +311,7 @@ class SolicitudPedidoController extends Controller
             }
 
 
-            
+            // return $request;
             $sol = SolicitudPedido::create([
                 'sucursal_id'=>$sucursal->id,
                 'subSucursal_id' => $request->subSucursal_id,
