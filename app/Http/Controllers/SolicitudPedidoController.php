@@ -19,6 +19,7 @@ use App\Models\Factura;
 use App\Models\SolicitudEgreso;
 use App\Models\DetalleFactura;
 use App\Models\SolicitudCompra;
+use App\Models\SucursalSubAlmacen;
 
 use function PHPUnit\Framework\returnSelf;
 
@@ -32,6 +33,13 @@ class SolicitudPedidoController extends Controller
     public function index()
     {
         // return 1;
+        
+        $data = SolicitudPedido::all();
+        foreach($data as $item)
+        {
+            $aux = SucursalSubAlmacen::where('sucursal_id', $item->sucursal_id)->first();
+            SolicitudPedido::where('sucursal_id', $item->sucursal_id)->update(['subSucursal_id'=>$aux->id]);
+        }
         return view('almacenes.outbox.browse');
     }
     public function list(){
@@ -143,9 +151,10 @@ class SolicitudPedidoController extends Controller
     public function create()
     {
         $user = Auth::user();
-
-        // $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
         $sucursal = Sucursal::where('id', $user->sucursal_id)->first();
+        $sub = SucursalSubAlmacen::where('sucursal_id', $user->sucursal_id)->where('deleted_at', null)->get();
+
+
         $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $user->sucursal_id)->where('deleted_at', null)->first();//para ver si hay gestion activa o cerrada
 
         $funcionario = $this->getWorker($user->funcionario_id);
@@ -186,15 +195,21 @@ class SolicitudPedidoController extends Controller
                 ->groupBy('article_id')
                 ->orderBy('article')
                 ->get();
-        return view('almacenes.outbox.edit-add', compact('gestion', 'sucursal', 'funcionario', 'user'));
+        return view('almacenes.outbox.edit-add', compact('gestion', 'sucursal', 'sub', 'funcionario', 'user'));
     }
 
 
 
     //Funcion ajax para obtener los articulos disponible en el almacen
-    public function ajaxProductExists()
+    public function ajaxProductExists(Request $request)
     {
-        $q = request('q');
+
+        $q = $request->search;
+        $type = $request->externo;
+
+
+        // $q = request('q');
+
         $user = Auth::user();
 
 
@@ -220,6 +235,7 @@ class SolicitudPedidoController extends Controller
                 ->join('detalle_facturas as d', 'd.factura_id', 'f.id')
                 ->join('articles as a', 'a.id', 'd.article_id')
                 ->where('s.sucursal_id', $user->sucursal_id)
+                ->where('s.subSucursal_id', $type)
                 ->where('s.stock', 1)
                 ->where('s.deleted_at', null)      
                 // ->whereRaw('(s.unidadadministrativa = '.$funcionario->id_unidad.' or s.unidadadministrativa = 0)')
@@ -295,6 +311,7 @@ class SolicitudPedidoController extends Controller
             
             $sol = SolicitudPedido::create([
                 'sucursal_id'=>$sucursal->id,
+                'subSucursal_id' => $request->subSucursal_id,
                 'fechasolicitud'=> Carbon::now(),
                 'gestion' => $gestion->gestion,
                 'nropedido' => $request->nropedido,

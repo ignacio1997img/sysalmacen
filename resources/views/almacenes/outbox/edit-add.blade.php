@@ -29,15 +29,27 @@
                 <div class="col-md-12">
                     <div class="panel panel-bordered">
                         <div class="panel-body" style="padding-bottom: 0px">
-                            <div class="form-group col-md-12">
-                                <label for="customer_id">Almacen:</label>                              
-
+                            <div class="form-group col-md-8">
+                                <label for="customer_id">Almacen:</label>          
                                 <div class="form-group">
                                     <div class="form-line">
                                         <select name="sucursal_id" class="form-control select2" required>
                                             @if ($sucursal)
                                                 <option value="{{$sucursal->id}}">{{$sucursal->nombre}}</option>                                                    
                                             @endif
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="customer_id">Tipo Almacen:</label>          
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <select name="subSucursal_id" id="subSucursal_id" class="form-control select2" required>
+                                            <option value="" selected disabled>--Seleccione una opción--</option>
+                                            @foreach ($sub as $item)
+                                                <option value="{{$item->id}}">{{$item->name}}</option>                                                    
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -56,7 +68,7 @@
                                     <label class="panel-title">Fecha de Solicitud</label>
                                 </div>
                                 <div class="panel-body" style="padding-top:0;">
-                                    <p><small>{{date('d/m/Y')}}</small></p>
+                                    <p><small>{{date('d/m/Y h:i:s')}}</small></p>
                                 </div>
                                 <hr style="margin:0;">
                             </div>
@@ -215,11 +227,30 @@
             // $('#btn-volver').prop('disabled', true);
             $('#btn-volver').attr('disabled','disabled');
         });
+        
+
     })
     $(document).ready(function(){
+        
+
         var productSelected;
+        subid=null;
+        $('#subSucursal_id').on('change', function()
+        {
+            subid = $("#subSucursal_id").val();
+            $('#select_producto').val("").trigger("change");
+            $(`.classRemove`).remove();
+            $('#tr-empty').fadeIn('fast');
+        });
+        // ruta = `{{ url('admin/outbox/article/stock/ajax/${subid}') }}`
+        // alert(subid)
+        // alert(ruta)
+
 
         $('#select_producto').select2({
+            // subName=$("#subSucursal_id option:selected").text();
+            // subId =$("#subSucursal_id").val();
+            // alert(subId);
         // tags: true,
             placeholder: '<i class="fa fa-search"></i> Buscar...',
             escapeMarkup : function(markup) {
@@ -236,8 +267,14 @@
             quietMillis: 250,
             minimumInputLength: 2,
             ajax: {
-                url: "{{ url('admin/outbox/article/stock/ajax') }}",        
-                processResults: function (data) {
+                url: `{{ url('admin/outbox/article/stock/ajax') }}`,     
+                data: function (params) {
+                    return {
+                                search: params.term, // search term
+                                externo: subid,
+                            };
+                        },   
+                processResults: function (data) {                    
                     let results = [];
                     data.map(data =>{
                         results.push({
@@ -270,7 +307,7 @@
                 // alert(product.name);
 
                     $('#table-body').append(`
-                        <tr class="tr-item" id="tr-item-${product.id}">
+                        <tr class="tr-item classRemove" id="tr-item-${product.id}">
                             <td class="td-item"></td>
                             <td>
                                 <b class="label-description" id="description-${product.id}"><small>${product.nombre}</small><br>
@@ -293,6 +330,8 @@
                 // getSubtotal(product.article_id);
             }
         });
+
+        
         
 
     })
@@ -339,7 +378,6 @@
     }
 
     function removeTr(id){
-        // alert(1)
         $(`#tr-item-${id}`).remove();
         $('#select_producto').val("").trigger("change");
         setNumber();

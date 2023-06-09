@@ -11,6 +11,7 @@ class SolicitudPedido extends Model
 
     protected $fillable = [
         'sucursal_id',
+        'subSucursal_id',
         'fechasolicitud',
         'gestion',
         'nropedido',
