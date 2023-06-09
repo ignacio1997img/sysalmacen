@@ -117,6 +117,18 @@
                                                 </div>
                                             </div>
                                             <!-- === -->
+                                            <div class="col-sm-3" @if($sucursal->id != 8) style="display: none" @endif >
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        <select id="subSucursal_id" name="subSucursal_id" class="form-control select2" required>
+                                                            <option value="{{$sub->id}}" selected>{{$sub->name}}</option>
+                                                        </select>
+                                                    </div>
+                                                    <small>Categoria.</small>
+                                                </div>
+                                            </div>
+
+
                                             <div class="col-sm-3">
                                                 <div class="form-group">
                                                     <div class="form-line">

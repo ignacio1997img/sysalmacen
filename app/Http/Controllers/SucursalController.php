@@ -22,12 +22,12 @@ class SucursalController extends Controller
     public function index()
     {
 
-        $data = SolicitudCompra::all();
-        foreach($data as $item)
-        {
-            $aux = SucursalSubAlmacen::where('sucursal_id', $item->sucursal_id)->first();
-            SolicitudCompra::where('sucursal_id', $item->sucursal_id)->update(['subSucursal_id'=>$aux->id]);
-        }
+        // $data = SolicitudCompra::all();
+        // foreach($data as $item)
+        // {
+        //     $aux = SucursalSubAlmacen::where('sucursal_id', $item->sucursal_id)->first();
+        //     SolicitudCompra::where('sucursal_id', $item->sucursal_id)->update(['subSucursal_id'=>$aux->id]);
+        // }
         $data = SolicitudEgreso::all();
         foreach($data as $item)
         {

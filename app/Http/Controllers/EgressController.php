@@ -23,6 +23,7 @@ use App\Models\SolicitudPedido;
 use App\Models\SolicitudPedidoDetalle;
 use App\Models\SucursalUnidadPrincipal;
 use PhpParser\Node\Stmt\Break_;
+use App\Models\SucursalSubAlmacen;
 
 class EgressController extends Controller
 {
@@ -201,26 +202,25 @@ class EgressController extends Controller
 
     public function create()
     {
-        if (setting('configuracion.maintenance') && !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('almacen_admin')) {
-            Auth::logout();
-            return redirect()->route('maintenance');
-        }
+        // $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
+        $user= Auth::user();
+        $sucursal =$user->sucursal_id;
+        $sub = $user->subSucursal_id;
+        $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal)->where('deleted_at', null)->first(); //para ver si hay gestion activa o cerrada
 
-
-        // return 1;
-        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
-
-        $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->sucursal_id)->where('deleted_at', null)->first(); //para ver si hay gestion activa o cerrada
-
-        if (!$sucursal) {
+        // if (!$sucursal)
+        if(!$sucursal || !$sub)
+        {
             return "Contactese con el administrador";
         }
 
-        $da = $this->direccionSucursal($sucursal->sucursal_id);
-        $sucursal = Sucursal::where('id', $sucursal->sucursal_id)->first();
+        $da = $this->direccionSucursal($sucursal);
+        $sucursal = Sucursal::where('id', $sucursal)->first();
+        $sub = SucursalSubAlmacen::where('id', $sub)->first();
 
 
-        return view('almacenes.egress.add', compact('sucursal', 'da', 'gestion'));
+
+        return view('almacenes.egress.add', compact('sucursal', 'sub', 'da', 'gestion'));
     } //anulado 
 
 
@@ -239,6 +239,7 @@ class EgressController extends Controller
 
             $egreso = SolicitudEgreso::create([
                 'sucursal_id'               => $request->sucursal_id,
+                'subSucursal_id' => $request->subSucursal_id,
                 'unidadadministrativa'      => $request->unidadadministrativa,
                 'direccionadministrativa'   => $request->direccionadministrativa,
                 'registeruser_id'           => $user->id,
