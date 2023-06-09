@@ -13,7 +13,9 @@ class UpdateSolicitudPeTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::table('solicitud_pedidos', function (Blueprint $table) {
+            $table->foreignId('subSucursal_id')->nullable()->constrained('sucursal_sub_almacens');
+        });
     }
 
     /**

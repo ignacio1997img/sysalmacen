@@ -16,6 +16,7 @@ class CreateSolicitudPedidosTable extends Migration
         Schema::create('solicitud_pedidos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('sucursal_id')->nullable()->constrained('sucursals');
+            $table->foreignId('subSucursal_id')->nullable()->constrained('sucursal_sub_almacens');
             $table->date('fechasolicitud');
             $table->string('gestion', 10);
             $table->string('nropedido')->nullable();
