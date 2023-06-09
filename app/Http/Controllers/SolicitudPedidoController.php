@@ -32,16 +32,6 @@ class SolicitudPedidoController extends Controller
     
     public function index()
     {
-        
-        
-        $data = SolicitudPedido::all();
-        foreach($data as $item)
-        {
-            $aux = SucursalSubAlmacen::where('sucursal_id', $item->sucursal_id)->first();
-            SolicitudPedido::where('sucursal_id', $item->sucursal_id)->update(['subSucursal_id'=>$aux->id]);
-        }
-
-
         return view('almacenes.outbox.browse');
     }
     public function list(){
