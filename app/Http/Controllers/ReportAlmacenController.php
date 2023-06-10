@@ -149,6 +149,7 @@ class ReportAlmacenController extends Controller
             ->orderBy('d.id', 'ASC')
 
             ->get();
+        dump($direction);
 
         
         //Para obtener los saldos de cada almacen de las GESTIONES anteriores 
@@ -290,73 +291,56 @@ class ReportAlmacenController extends Controller
         $sucursal = Sucursal::find($request->sucursal_id);
 
         // Para obtener el saldo de la anterior gestion
-        $saldo = DB::table('solicitud_compras as sc')
-                ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')       
-                ->join('detalle_facturas as df', 'df.factura_id', 'f.id')   
-
-                ->join('articles as a', 'a.id', 'df.article_id')
-                ->join('partidas as p', 'p.id', 'a.partida_id')
-
-                ->where('sc.deleted_at', null)
-                ->where('sc.sucursal_id', $request->sucursal_id)
-
-                ->where('f.deleted_at', null)
-
-                ->where('df.hist', 1)
-                ->where('df.gestion', $gestion)
-                ->where('df.deleted_at', null)                    
-
-                ->select('p.id', 'p.nombre', DB::raw("SUM(df.cantrestante * df.precio) as s_inicialbs"), DB::raw("SUM(df.cantrestante) as s_inicialc"))
-                ->groupBy('p.id')
-                ->get();
+        
         // return $saldo;
-        // dd($saldo);
+        // dump($saldo);
+        // dump()
 
 
 
-        $ingreso = DB::table('solicitud_compras as sc')
-                ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')       
-                ->join('detalle_facturas as df', 'df.factura_id', 'f.id')   
+        // $ingreso = DB::table('solicitud_compras as sc')
+        //         ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')       
+        //         ->join('detalle_facturas as df', 'df.factura_id', 'f.id')   
 
-                ->join('articles as a', 'a.id', 'df.article_id')
-                ->join('partidas as p', 'p.id', 'a.partida_id')
+        //         ->join('articles as a', 'a.id', 'df.article_id')
+        //         ->join('partidas as p', 'p.id', 'a.partida_id')
 
-                ->where('sc.deleted_at', null)
-                ->where('sc.sucursal_id', $request->sucursal_id)
+        //         ->where('sc.deleted_at', null)
+        //         ->where('sc.sucursal_id', $request->sucursal_id)
 
-                ->where('f.deleted_at', null)
+        //         // ->where('f.deleted_at', null)
 
-                ->where('df.hist', 0)
-                ->where('df.gestion', $gestion)
-                ->where('df.deleted_at', null)                    
+        //         ->where('df.hist', 0)
+        //         ->where('df.gestion', $gestion)
+        //         ->where('df.deleted_at', null)                    
 
-                ->select('p.id', DB::raw("SUM(df.cantsolicitada * df.precio) as ingreso"), DB::raw("SUM(df.cantsolicitada) as s_inicialc"))
-                // ->groupBy('p.id')
+        //         ->select('p.id', DB::raw("SUM(df.cantsolicitada * df.precio) as ingreso"), DB::raw("SUM(df.cantsolicitada) as s_inicialc"))
+        //         // ->groupBy('p.id')
 
-                ->get();
-        // return $ingreso;
+        //         ->get();
+        // // return $ingreso;
 
 
 
-        $restante = DB::table('solicitud_compras as sc')
-                ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')       
-                ->join('detalle_facturas as df', 'df.factura_id', 'f.id')   
+        // $restante = DB::table('solicitud_compras as sc')
+        //         ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')       
+        //         ->join('detalle_facturas as df', 'df.factura_id', 'f.id')   
 
-                ->join('articles as a', 'a.id', 'df.article_id')
-                ->join('partidas as p', 'p.id', 'a.partida_id')
+        //         ->join('articles as a', 'a.id', 'df.article_id')
+        //         ->join('partidas as p', 'p.id', 'a.partida_id')
 
-                ->where('sc.deleted_at', null)
-                ->where('sc.sucursal_id', $request->sucursal_id)
+        //         ->where('sc.deleted_at', null)
+        //         ->where('sc.sucursal_id', $request->sucursal_id)
 
-                ->where('f.deleted_at', null)
+        //         ->where('f.deleted_at', null)
 
-                ->where('df.hist', 1)
-                ->where('df.gestion', $gestion+1)
-                ->where('df.deleted_at', null)                    
+        //         ->where('df.hist', 1)
+        //         ->where('df.gestion', $gestion+1)
+        //         ->where('df.deleted_at', null)                    
 
-                ->select('p.id', 'p.nombre', DB::raw("SUM(df.cantrestante * df.precio) as r_finalBs"), DB::raw("SUM(df.cantrestante) as r_finalC"))
-                // ->groupBy('p.id')
-                ->get();
+        //         ->select('p.id', 'p.nombre', DB::raw("SUM(df.cantrestante * df.precio) as r_finalBs"), DB::raw("SUM(df.cantrestante) as r_finalC"))
+        //         // ->groupBy('p.id')
+        //         ->get();
 
         // return $restante;
 
@@ -366,6 +350,50 @@ class ReportAlmacenController extends Controller
 
 
 // esta fi esta funcionando
+            $partida = Partida::all();
+
+            foreach($partida as $item)
+            {
+                $item->cantidadinicial="0.0";
+                $item->totalinicial="0.0";
+                $item->cantfinal="0.0";
+                $item->totalfinal="0.0";
+            }
+            
+
+            $saldo = DB::table('solicitud_compras as sc')
+                        ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')       
+                        ->join('detalle_facturas as df', 'df.factura_id', 'f.id')   
+
+                        ->join('articles as a', 'a.id', 'df.article_id')
+                        ->join('partidas as p', 'p.id', 'a.partida_id')
+
+                        ->where('sc.deleted_at', null)
+                        ->where('sc.sucursal_id', $request->sucursal_id)
+
+                        ->where('f.deleted_at', null)
+
+                        ->where('df.hist', 1)
+                        // ->where('df.condicion', 1)
+                        ->where('df.gestion', $gestion)
+                        ->where('df.deleted_at', null)                    
+
+                        ->select('p.id', 'p.nombre', DB::raw("SUM(df.cantrestante * df.precio) as s_inicialbs"), DB::raw("SUM(df.cantrestante) as s_inicialc"))
+                        ->groupBy('p.id')
+                        ->get();
+
+            foreach($partida as $x)
+            {
+                foreach($saldo as $y)
+                {
+                    if($x->id == $y->id)
+                    {
+                        $x->cantidadinicial=$x->cantidadinicial + $y->s_inicialc;
+                        $x->totalinicial=$x->totalinicial + $y->s_inicialbs;
+                    }
+                }
+            }
+
             $data = DB::table('solicitud_compras as sc')
                         ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')
                         ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
@@ -373,30 +401,92 @@ class ReportAlmacenController extends Controller
                         ->join('partidas as p', 'p.id', 'a.partida_id')
                         // ->leftJoin('detalle_egresos as de', 'de.detallefactura_id', 'df.id')
                         ->where('sc.deleted_at', null)
+                        ->where('sc.gestion', $gestion)
+
                         ->where('f.deleted_at', null)
                         ->where('df.deleted_at', null)
                         ->where('df.hist', 0)
+                        // ->where('df.histgestion', $gestion)
                         ->where('sc.sucursal_id', $request->sucursal_id)
                         
                         // ->where('de.deleted_at', null)
-                        ->select('p.id', 'p.codigo', 'p.nombre',DB::raw("SUM(df.cantsolicitada) as cantidadinicial"), DB::raw("SUM(df.cantsolicitada * df.precio) as totalinicial"),
-                                DB::raw("SUM(df.cantrestante) as cantfinal"), DB::raw("SUM((df.cantrestante) * df.precio) as totalfinal")
+                        ->select('p.id', 'p.codigo', 'p.nombre',DB::raw("SUM(df.cantsolicitada) as cantidadinicial"), DB::raw("SUM(df.cantsolicitada * df.precio) as totalinicial")
                                 )
                         ->groupBy('p.id')
                         ->get();
+            foreach($partida as $x)
+            {
+                foreach($data as $y)
+                {
+                    if($x->id == $y->id)
+                    {
+                        $x->cantidadinicial=$x->cantidadinicial + $y->cantidadinicial;
+                        $x->totalinicial=$x->totalinicial + $y->totalinicial;
+                    }
+                }
+            }
+            // dump(1);
+
+            $salida = DB::table('solicitud_egresos as se')
+                        ->join('detalle_egresos as de', 'de.solicitudegreso_id', 'se.id')
+                        ->join('detalle_facturas as df', 'df.id', 'de.detallefactura_id')
+
+                        ->join('articles as a', 'a.id', 'df.article_id')
+                        ->join('partidas as p', 'p.id', 'a.partida_id')
+
+                        ->where('se.gestion', $gestion)
+                        ->where('se.sucursal_id', $request->sucursal_id)
+                        ->where('se.deleted_at', null)
+
+                        ->where('de.deleted_at', null)
+                        // ->where('df.gestion', $gestion)
+
+                                // ->where('d.direcciones_tipo_id', 1)
+                        ->select('p.id', 'p.codigo', 'p.nombre', DB::raw("SUM(de.cantsolicitada) as cantfinal"), DB::raw("SUM(de.cantsolicitada * de.precio) as salida"))
+                                // ->select('d.id',DB::raw("SUM(de.totalbs) as salida"))
+
+                        ->groupBy('p.id')
+                        ->get();
+
+            // foreach($partida as $x)
+            // {
+            //     foreach($saldo as $y)
+            //     {
+            //         if($x->id == $y->id)
+            //         {
+            //             $x->cantidadinicial=$x->cantidadinicial + $y->s_inicialc;
+            //             $x->totalinicial=$x->totalinicial + $y->s_inicialbs;
+            //         }
+            //     }
+            // }
+                
+
+            foreach($partida as $x)
+            {
+                foreach($salida as $y)
+                {
+                    if($x->id == $y->id)
+                    {
+                        $x->cantfinal=$x->cantidadinicial - $y->cantfinal;
+                        $x->totalfinal=$x->totalinicial - $y->salida;
+                    }
+                }
+            }
+            // dump($salida->SUM('salida'));
+            // dump($partida);
         
         
         if($request->print==1)
         {
-            return view('almacenes/report/inventarioAnual/partidaGeneral/print', compact('data', 'gestion', 'sucursal'));
+            return view('almacenes/report/inventarioAnual/partidaGeneral/print', compact('partida', 'gestion', 'sucursal'));
         }
         if($request->print==2)
         {
-            return Excel::download(new AnualPartidaExport($data, $gestion), $sucursal->nombre.' - Partida Anual '.$gestion.'.xlsx');
+            return Excel::download(new AnualPartidaExport($partida, $gestion), $sucursal->nombre.' - Partida Anual '.$gestion.'.xlsx');
         }
         if($request->print ==NULL)
         {            
-            return view('almacenes/report/inventarioAnual/partidaGeneral/list', compact('data', 'gestion', 'sucursal'));
+            return view('almacenes/report/inventarioAnual/partidaGeneral/list', compact('partida', 'gestion', 'sucursal'));
         }
     }
     // ################################################################################
@@ -429,28 +519,26 @@ class ReportAlmacenController extends Controller
         $sucursal = Sucursal::find($request->sucursal_id);
 
         
-                $data = DB::table('solicitud_compras as sc')
-                        ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')
-                        ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
-                        ->join('articles as a', 'a.id', 'df.article_id')
+        $data = DB::table('solicitud_compras as sc')
+            ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')
+            ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
+            ->join('articles as a', 'a.id', 'df.article_id')
 
-                        ->where('sc.gestion', $gestion)
-                        ->where('sc.deleted_at', null)
-                        ->where('f.deleted_at', null)
-                        ->where('df.deleted_at', null)
-                        ->where('df.hist', 0)
+            ->where('sc.gestion', $gestion)
+            ->where('sc.deleted_at', null)
+            ->where('f.deleted_at', null)
+            ->where('df.deleted_at', null)
+            ->where('df.hist', 0)
 
-                        ->where('sc.sucursal_id', $request->sucursal_id)
-                        ->select('a.id', 'a.presentacion', 'a.nombre', 'df.precio',
-                                DB::raw("SUM(df.cantsolicitada) as cEntrada"), DB::raw("SUM(df.cantsolicitada - df.cantrestante) as cSalida"), DB::raw("SUM(df.cantrestante) as cFinal"),
+            ->where('sc.sucursal_id', $request->sucursal_id)
+            ->select('a.id', 'a.presentacion', 'a.nombre', 'df.precio',
+                DB::raw("SUM(df.cantsolicitada) as cEntrada"), DB::raw("SUM(df.cantsolicitada - df.cantrestante) as cSalida"), DB::raw("SUM(df.cantrestante) as cFinal"),
 
-                                DB::raw("SUM(df.cantsolicitada * df.precio) as vEntrada"), DB::raw("SUM((df.cantsolicitada - df.cantrestante) * df.precio) as vSalida"), DB::raw("SUM(df.cantrestante * df.precio) as vFinal")
-                                // ,DB::raw("SUM(de.cantsolicitada) as cantidadFinal"), DB::raw("SUM(de.totalbs) as totalFinal")
-                                )
-                        // ->groupBy('a.id')
-                        ->groupBy('a.id')
-                        ->groupBy('df.precio')
-                        ->get();
+                DB::raw("SUM(df.cantsolicitada * df.precio) as vEntrada"), DB::raw("SUM((df.cantsolicitada - df.cantrestante) * df.precio) as vSalida"), DB::raw("SUM(df.cantrestante * df.precio) as vFinal")
+            )
+            ->groupBy('a.id')
+            ->groupBy('df.precio')
+            ->get();
 
 
                 foreach($data as $item)
@@ -679,6 +767,7 @@ class ReportAlmacenController extends Controller
         //                 ->orderBy('cp.fechaingreso')
         //                 ->get();
         // }
+
 
         if($request->unidad_id == 'TODO')
         {

@@ -30,7 +30,7 @@
                         $total1 =0;
                         $total2 =0;
                     @endphp
-                    @forelse ($data as $item)
+                    @forelse ($partida as $item)
                         <tr style="text-align: center">
                             <td>{{ $count }}</td>
                             <td>{{ $item->codigo }} - {{ $item->nombre }}</td>
