@@ -30,7 +30,7 @@
             </td>
         </tr>
     </table>
-    <br><br>
+    <br>
     <table style="width: 100%; font-size: 12px" border="1" class="print-friendly" cellspacing="0" cellpadding="5">
 
         <thead>

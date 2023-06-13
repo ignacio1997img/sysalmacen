@@ -25,8 +25,9 @@
             </td>
         </tr>
     </table>
-    <br><br>
-    <table style="width: 100%; font-size: 12px" border="1" cellspacing="0" cellpadding="5">
+    <br>
+    <table style="width: 100%; font-size: 12px" border="1" class="print-friendly" cellspacing="0" cellpadding="5">
+
         <thead>
             <tr>
                 <th>N&deg;</th>
@@ -60,3 +61,18 @@
     </table>
 
 @endsection
+
+
+@section('css')
+    <style>
+        table, th, td {
+            border-collapse: collapse;
+        }
+        /* @media print { div{ page-break-inside: avoid; } }  */
+          
+        table.print-friendly tr td, table.print-friendly tr th {
+            page-break-inside: avoid;
+        }
+          
+    </style>
+@stop

@@ -9,7 +9,7 @@
 <div class="panel panel-bordered">
     <div class="panel-body">
         <div class="table-responsive">
-            <table style="width:100%"  class="table table-bordered table-striped table-sm">
+            <table id="dataTableStyle" style="width:100%"  class="table table-bordered table-striped table-sm">
                 <thead>
                     <tr>
                         <th style="width:5%">NRO&deg;</th>
@@ -27,6 +27,8 @@
                 <tbody>
                         @php
                             $count = 1;
+                            $total = 0;
+                            $cant = 0;
                         @endphp
                         @forelse ($data as $item)
                             <tr style="text-align: center">
@@ -46,12 +48,19 @@
                             </tr>
                             @php
                                 $count++;
+                                $total = $total + ($item->cantrestante * $item->precio);
+                                $cant = $cant + $item->cantrestante;
                             @endphp
                         @empty
                             <tr style="text-align: center">
-                                <td colspan="6">No se encontraron registros.</td>
+                                <td colspan="10">No se encontraron registros.</td>
                             </tr>
                         @endforelse
+                        <tr>
+                            <th colspan="8" class="text-right"><strong>TOTAL</strong></th>
+                            <th><strong>{{number_format($cant,2)}}</strong></th>
+                            <th><strong>{{number_format($total,2)}}</strong></th>
+                        </tr>
                 </tbody>
             </table>
         </div>
