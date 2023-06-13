@@ -7,7 +7,7 @@
     <table width="100%">
         <tr>
             <td style="width: 20%"><img src="{{ asset('images/icon.png') }}" alt="GADBENI" width="100px"></td>
-            <td style="text-align: center;  width:70%">
+            <td style="text-align: center;  width:60%">
                 <h2 style="margin-bottom: 0px; margin-top: 5px">
                     GOBIERNO AUTONOMO DEPARTAMENTAL DEL BENI<br>
                 </h2>
@@ -19,7 +19,7 @@
                     {{-- [{{date('d/m/Y', strtotime($start))}} Hasta {{date('d/m/Y', strtotime($finish))}}] --}}
                 </h3>
             </td>
-            <td style="text-align: right; width:30%">
+            <td style="text-align: right; width:20%">
                 <h3 style="margin-bottom: 0px; margin-top: 5px">
                    
                     <small style="font-size: 11px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/M/Y H:i:s') }}</small>
@@ -27,8 +27,9 @@
             </td>
         </tr>
     </table>
-    <br><br>
-    <table style="width: 100%; font-size: 12px" border="1" cellspacing="0" cellpadding="5">
+    <br>
+    <table style="width: 100%; font-size: 12px" border="1" class="print-friendly" cellspacing="0" cellpadding="3">
+
         <thead>
             <tr>
                 <th style="width:5%">N&deg;</th>
@@ -74,8 +75,8 @@
             @endforelse
             <tr>
                 <td colspan="8" class="text-right"><strong>TOTAL</strong></td>
-                <td><strong>{{number_format($cant,2,',', '.')}}</strong></td>
-                <td><strong>{{number_format($total,2,',', '.')}}</strong></td>
+                <td style="text-align: right"><strong>{{number_format($cant,2,',', '.')}}</strong></td>
+                <td style="text-align: right"><strong>{{number_format($total,2,',', '.')}}</strong></td>
             </tr>
         </tbody>
     </table>
@@ -84,3 +85,18 @@
     </div>
 
 @endsection
+
+
+@section('css')
+    <style>
+        table, th, td {
+            border-collapse: collapse;
+        }
+        /* @media print { div{ page-break-inside: avoid; } }  */
+          
+        table.print-friendly tr td, table.print-friendly tr th {
+            page-break-inside: avoid;
+        }
+          
+    </style>
+@stop

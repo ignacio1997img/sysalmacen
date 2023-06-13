@@ -54,9 +54,9 @@
                             </tr>
                         @endforelse
                         <tr>
-                            <td colspan="8" class="text-right"><strong>TOTAL</strong></td>
-                            <td><strong>{{number_format($cant,2,',', '.')}}</strong></td>
-                            <td><strong>{{number_format($total,2,',', '.')}}</strong></td>
+                            <th colspan="8" class="text-right"><strong>TOTAL</strong></th>
+                            <th style="text-align: right"><strong>{{number_format($cant,2,',', '.')}}</strong></th>
+                            <th style="text-align: right"><strong>{{number_format($total,2,',', '.')}}</strong></th>
                         </tr>
                 </tbody>
             </table>
