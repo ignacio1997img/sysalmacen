@@ -8,8 +8,8 @@ use Maatwebsite\Excel\Concerns\FromView;
 
 class AnualDetalleExport implements FromView
 {
-    function __construct($data, $gestion) {
-		$this->datas = $data;
+    function __construct($collection, $gestion) {
+		$this->collection = $collection;
 		$this->gestion = $gestion;
 
     }
@@ -18,7 +18,7 @@ class AnualDetalleExport implements FromView
     {
         return view('almacenes.report.inventarioAnual.detalleGeneral.excel',
         [
-            'data'=>$this->datas,
+            'collection'=>$this->collection,
             'gestion'=>$this->gestion
         ]);
     }

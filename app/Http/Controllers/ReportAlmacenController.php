@@ -30,6 +30,7 @@ use App\Models\DetalleEgreso;
 use App\Models\Partida;
 use App\Models\SolicitudEgreso;
 use App\Models\Unit;
+use Illuminate\Support\Arr;
 
 class ReportAlmacenController extends Controller
 {
@@ -41,81 +42,6 @@ class ReportAlmacenController extends Controller
     //para los reportes mediantes direciones admistrativa Income y Egress en Bolivianos  saldo
     public function directionIncomeSalida()
     {
-
-//     $data = DB::table('solicitud_compras as s')
-//     ->join('facturas as f', 'f.solicitudcompra_id', 's.id')
-//     ->join('detalle_facturas as d', 'd.factura_id', 'f.id')
-
-//     ->where('s.gestion', 2022)
-//     ->where('s.sucursal_id', 1)
-//     // ->where('s.deleted_at', null)
-
-//     ->where('f.deleted_at', null)
-
-
-//     ->where('d.deleted_at', null)
-//     ->where('d.hist', 0)
-
-//     // ->select(DB::raw("SUM(d.cantsolicitada * d.precio) as ingreso"))
-//     ->select('s.id', DB::raw("SUM(d.cantsolicitada * d.precio) as ingreso"), 'd.totalbs')
-//     ->groupBy('s.id')
-//     ->get();
-
-// // _____________________________________________________________________________________________
-//     $data = DB::table('solicitud_compras as s')
-//     ->join('facturas as f', 'f.solicitudcompra_id', 's.id')
-
-//     ->where('s.gestion', 2022)
-//     ->where('s.sucursal_id', 1)
-//     ->where('s.deleted_at', null)
-
-//     ->where('f.deleted_at', null)
-
-//     ->select('s.id', 'f.id as factura', DB::raw("SUM(f.montofactura) as ingreso"))
-//     ->groupBy('s.id')
-//     ->get();
-//     // return $data;
-    
-
-
-
-//     foreach($data as $item)
-//     {
-//         // return $item;
-//         $ok = DB::table('detalle_facturas as d')
-
-//             ->where('d.factura_id', $item->factura)
-
-
-//             ->where('d.deleted_at', null)
-//             ->where('d.hist', 0)
-
-//             // ->select(DB::raw("SUM(d.cantsolicitada * d.precio) as ingreso"))
-//             ->select(DB::raw("SUM(d.cantsolicitada * d.precio) as ingreso"), DB::raw("SUM(d.totalbs) as totalbs"))
-//             ->get();
-//         // return $ok[0]->ingreso;
-//         // return $item;
-
-
-//         if($item->ingreso != $ok[0]->totalbs)
-//         {
-//             return $item->id;
-//             // return $ok[0]->totalbs;
-//             return $item->ingreso;
-//         }
-//     }
-
-
-// para agregar las direciones 
-        // $ok = SolicitudEgreso::all();
-
-        // foreach($ok as $item)
-        // {
-        //     SolicitudEgreso::where('id',$item->id)->update(['direccionadministrativa'=>$this->getUnidad($item->unidadadministrativa)->direccion_id]);
-        // }
-
-        // $sucursal = SucursalUser::where('user_id', $user->id)->where('condicion', 1)->where('deleted_at', null)->first();
-
 
         $user = Auth::user();
         $query_filter = 'user_id ='.Auth::user()->id;
@@ -149,7 +75,6 @@ class ReportAlmacenController extends Controller
             ->orderBy('d.id', 'ASC')
 
             ->get();
-        dump($direction);
 
         
         //Para obtener los saldos de cada almacen de las GESTIONES anteriores 
@@ -171,8 +96,6 @@ class ReportAlmacenController extends Controller
                 ->groupBy('sc.direccionadministrativa')
                 ->orderBy('sc.direccionadministrativa', 'ASC')
                 ->get();
-        // dd($saldos);
-
 
 
         // Para obtener los ingresos de la gestion actual de cada almacen
@@ -289,67 +212,7 @@ class ReportAlmacenController extends Controller
         // return $gestion;
         $date = Carbon::now();
         $sucursal = Sucursal::find($request->sucursal_id);
-
-        // Para obtener el saldo de la anterior gestion
-        
-        // return $saldo;
-        // dump($saldo);
-        // dump()
-
-
-
-        // $ingreso = DB::table('solicitud_compras as sc')
-        //         ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')       
-        //         ->join('detalle_facturas as df', 'df.factura_id', 'f.id')   
-
-        //         ->join('articles as a', 'a.id', 'df.article_id')
-        //         ->join('partidas as p', 'p.id', 'a.partida_id')
-
-        //         ->where('sc.deleted_at', null)
-        //         ->where('sc.sucursal_id', $request->sucursal_id)
-
-        //         // ->where('f.deleted_at', null)
-
-        //         ->where('df.hist', 0)
-        //         ->where('df.gestion', $gestion)
-        //         ->where('df.deleted_at', null)                    
-
-        //         ->select('p.id', DB::raw("SUM(df.cantsolicitada * df.precio) as ingreso"), DB::raw("SUM(df.cantsolicitada) as s_inicialc"))
-        //         // ->groupBy('p.id')
-
-        //         ->get();
-        // // return $ingreso;
-
-
-
-        // $restante = DB::table('solicitud_compras as sc')
-        //         ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')       
-        //         ->join('detalle_facturas as df', 'df.factura_id', 'f.id')   
-
-        //         ->join('articles as a', 'a.id', 'df.article_id')
-        //         ->join('partidas as p', 'p.id', 'a.partida_id')
-
-        //         ->where('sc.deleted_at', null)
-        //         ->where('sc.sucursal_id', $request->sucursal_id)
-
-        //         ->where('f.deleted_at', null)
-
-        //         ->where('df.hist', 1)
-        //         ->where('df.gestion', $gestion+1)
-        //         ->where('df.deleted_at', null)                    
-
-        //         ->select('p.id', 'p.nombre', DB::raw("SUM(df.cantrestante * df.precio) as r_finalBs"), DB::raw("SUM(df.cantrestante) as r_finalC"))
-        //         // ->groupBy('p.id')
-        //         ->get();
-
-        // return $restante;
-
-   
-
-
-
-
-// esta fi esta funcionando
+        // esta fi esta funcionando
             $partida = Partida::all();
 
             foreach($partida as $item)
@@ -425,7 +288,6 @@ class ReportAlmacenController extends Controller
                     }
                 }
             }
-            // dump(1);
 
             $salida = DB::table('solicitud_egresos as se')
                         ->join('detalle_egresos as de', 'de.solicitudegreso_id', 'se.id')
@@ -447,18 +309,6 @@ class ReportAlmacenController extends Controller
 
                         ->groupBy('p.id')
                         ->get();
-
-            // foreach($partida as $x)
-            // {
-            //     foreach($saldo as $y)
-            //     {
-            //         if($x->id == $y->id)
-            //         {
-            //             $x->cantidadinicial=$x->cantidadinicial + $y->s_inicialc;
-            //             $x->totalinicial=$x->totalinicial + $y->s_inicialbs;
-            //         }
-            //     }
-            // }
                 
 
             foreach($partida as $x)
@@ -472,8 +322,6 @@ class ReportAlmacenController extends Controller
                     }
                 }
             }
-            // dump($salida->SUM('salida'));
-            // dump($partida);
         
         
         if($request->print==1)
@@ -518,7 +366,37 @@ class ReportAlmacenController extends Controller
         $date = Carbon::now();
         $sucursal = Sucursal::find($request->sucursal_id);
 
-        
+ 
+        $collection = collect([
+        ]);
+
+        $saldo = DB::table('solicitud_compras as sc')
+                        ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')       
+                        ->join('detalle_facturas as df', 'df.factura_id', 'f.id')   
+
+                        ->join('articles as a', 'a.id', 'df.article_id')
+
+                        ->where('sc.deleted_at', null)
+                        ->where('sc.sucursal_id', $request->sucursal_id)
+
+                        ->where('f.deleted_at', null)
+
+                        ->where('df.hist', 1)
+                        // ->where('df.condicion', 1)
+                        ->where('df.gestion', $gestion)
+                        ->where('df.deleted_at', null)                    
+
+                        ->select('a.id', 'a.nombre', 'a.presentacion', 'df.precio', DB::raw("SUM(df.cantrestante * df.precio) as bssaldo"), DB::raw("SUM(df.cantrestante) as saldo"))
+                        ->groupBy('a.id')
+                        ->groupBy('df.precio')
+                        
+                        ->get();
+
+        foreach($saldo as $item)
+        {
+            $collection->add(["id"=>$item->id, "nombre"=>$item->nombre, "presentacion"=>$item->presentacion,"precio"=>$item->precio, "saldo"=> $item->saldo, "entrada"=>0.0, "salida"=>0.0, "final"=>0.0, "bssaldo"=>$item->bssaldo, "bsentrada"=>0.0, "bssalida"=>0.0, "bsfinal"=>0.0]);
+        }
+
         $data = DB::table('solicitud_compras as sc')
             ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')
             ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
@@ -532,34 +410,180 @@ class ReportAlmacenController extends Controller
 
             ->where('sc.sucursal_id', $request->sucursal_id)
             ->select('a.id', 'a.presentacion', 'a.nombre', 'df.precio',
-                DB::raw("SUM(df.cantsolicitada) as cEntrada"), DB::raw("SUM(df.cantsolicitada - df.cantrestante) as cSalida"), DB::raw("SUM(df.cantrestante) as cFinal"),
+                DB::raw("SUM(df.cantsolicitada) as entrada"), 
 
-                DB::raw("SUM(df.cantsolicitada * df.precio) as vEntrada"), DB::raw("SUM((df.cantsolicitada - df.cantrestante) * df.precio) as vSalida"), DB::raw("SUM(df.cantrestante * df.precio) as vFinal")
+                DB::raw("SUM(df.cantsolicitada * df.precio) as bsentrada"), 
             )
             ->groupBy('a.id')
             ->groupBy('df.precio')
             ->get();
 
+        $salidas = DB::table('solicitud_egresos as se')
+            ->join('detalle_egresos as de', 'de.solicitudegreso_id', 'se.id')
+            ->join('detalle_facturas as df', 'df.id', 'de.detallefactura_id')
 
-                foreach($data as $item)
+            ->join('articles as a', 'a.id', 'df.article_id')
+
+            ->where('se.gestion', $gestion)
+            ->where('se.sucursal_id', $request->sucursal_id)
+            ->where('se.deleted_at', null)
+
+            ->where('de.deleted_at', null)
+
+            ->select('a.id', 'a.presentacion', 'a.nombre', 'de.precio', 
+                DB::raw("SUM(de.cantsolicitada) as salida"), 
+                DB::raw("SUM(de.cantsolicitada * de.precio) as bssalida"))
+
+            ->groupBy('a.id', 'de.precio')
+            ->get();
+        
+
+        if(count($saldo))
+        {
+            $i=0;
+            $ok=false;
+            $y = count($collection);
+
+            foreach($data as $item)
+            {                
+                $ok=false;
+                $id = null;
+                $nombre = null;
+                $precio = null;
+                $presentacion = null;
+                $saldo = null;
+                $bssaldo = null;
+                // $salida=null;
+                // $bssalida=null;
+                for($j=0; $j < $y; $j++)
                 {
-                    $item->cInicial=0.0;
-                    $item->vInicial=0.0;
-                    // $aux = $aux + $item->vFinal;
+                    if($item->precio == $collection[$j]['precio'] && $item->id == $collection[$j]['id'])
+                    {
+                        $i=$j;
+                        $ok=true;
+                        $id = $collection[$j]['id'];
+                        $nombre = $collection[$j]['nombre'];
+                        $precio = $collection[$j]['precio'];
+                        $presentacion = $collection[$j]['presentacion'];
+                        $saldo = $collection[$j]['saldo'];
+                        $bssaldo = $collection[$j]['bssaldo'];
+                        // $salida = $collection[$j]['salida'];
+                        // $bssalida = $collection[$j]['bssalida'];
+                    }
                 }
-       
+                if($ok)
+                {
+                    $collection[$i]=["id"=>$id, "nombre"=>$nombre, "presentacion"=>$presentacion,"precio"=>$precio, "saldo"=> $saldo, "entrada"=>$item->entrada, "salida"=>0.0, "final"=>0.0, "bssaldo"=>$bssaldo, "bsentrada"=>$item->bsentrada, "bssalida"=>0.0, "bsfinal"=>0.0];
+                }
+                else
+                {
+                    $collection->add(["id"=>$item->id, "nombre"=>$item->nombre, "presentacion"=>$item->presentacion,"precio"=>$item->precio, "saldo"=> 0.0, "entrada"=>$item->entrada, "salida"=>0.0, "final"=>0.0, "bssaldo"=>0.0, "bsentrada"=>$item->bsentrada, "bssalida"=>0.0, "bsfinal"=>0.0]);
+
+                }
+            }
+        }
+        else
+        {
+            // dump($salidas->sum('bssalida'));
+
+            foreach($data as $item)
+            {
+                $collection->add(["id"=>$item->id, "nombre"=>$item->nombre, "presentacion"=>$item->presentacion,"precio"=>$item->precio, "saldo"=> 0.0, "entrada"=>$item->entrada, "salida"=>0.0, "final"=>0.0, "bssaldo"=>0.0, "bsentrada"=>$item->bsentrada, "bssalida"=>0.0, "bsfinal"=>0.0]);
+            }
+        }
+
+        // __________________________________________________________________________________________________________
+
+        $i=0;
+        $ok=false;
+        $y = count($collection);
+
+        foreach($salidas as $item)
+        {                
+            $ok=false;
+            $id = null;
+            $nombre = null;
+            $precio = null;
+            $presentacion = null;
+            $saldo = null;
+            $bssaldo = null;
+            $entrada = null;
+            $bsentrada = null;
+            $salida=null;
+            $bssalida=null;
+            for($j=0; $j < $y; $j++)
+            {
+                if($item->precio == $collection[$j]['precio'] && $item->id == $collection[$j]['id'])
+                {
+                    $i=$j;
+                    $ok=true;
+                    $id = $collection[$j]['id'];
+                    $nombre = $collection[$j]['nombre'];
+                    $precio = $collection[$j]['precio'];
+                    $presentacion = $collection[$j]['presentacion'];
+
+                    $saldo = $collection[$j]['saldo'];
+                    $bssaldo = $collection[$j]['bssaldo'];  
+
+                    $entrada = $collection[$j]['entrada'];
+                    $bsentrada = $collection[$j]['bsentrada'];
+
+                    $salida = $item->salida;
+                    $bssalida = $item->bssalida;
+                }
+            }
+            if($ok)
+            {
+                $collection[$i]=["id"=>$id, "nombre"=>$nombre, "presentacion"=>$presentacion,"precio"=>$precio, "saldo"=> $saldo, "entrada"=>$entrada, "salida"=>$salida, "final"=>0.0, "bssaldo"=>$bssaldo, "bsentrada"=>$bsentrada, "bssalida"=>$bssalida, "bsfinal"=>0.0];
+            }
+        }
+
+        $id = null;
+        $nombre = null;
+        $precio = null;
+        $presentacion = null;
+
+        $saldo = null;
+        $bssaldo = null;
+
+        $entrada = null;
+        $bsentrada = null;
+
+        $salida=null;
+        $bssalida=null;
+        
+        for($j=0; $j < $y; $j++)
+        {
+            $id = $collection[$j]['id'];
+            $nombre = $collection[$j]['nombre'];
+            $precio = $collection[$j]['precio'];
+            $presentacion = $collection[$j]['presentacion'];
+
+            $saldo = $collection[$j]['saldo'];
+            $bssaldo = $collection[$j]['bssaldo'];  
+
+            $entrada = $collection[$j]['entrada'];
+            $bsentrada = $collection[$j]['bsentrada'];
+
+            $salida = $collection[$j]['salida'];
+            $bssalida = $collection[$j]['bssalida'];
+                
+            
+            $collection[$j]=["id"=>$id, "nombre"=>$nombre, "presentacion"=>$presentacion,"precio"=>$precio, "saldo"=> $saldo, "entrada"=>$entrada, "salida"=>$salida, "final"=>($saldo+$entrada)-$salida, "bssaldo"=>$bssaldo, "bsentrada"=>$bsentrada, "bssalida"=>$bssalida, "bsfinal"=>($bssaldo+$bsentrada)-$bssalida];
+        }
+        // dump($collection);
 
         if($request->print==1){
-            return view('almacenes/report/inventarioAnual/detalleGeneral/print', compact('data', 'gestion', 'sucursal'));
+            return view('almacenes/report/inventarioAnual/detalleGeneral/print', compact('collection', 'gestion', 'sucursal'));
         }
         if($request->print==2)
         {
-            return Excel::download(new AnualDetalleExport($data, $gestion), $sucursal->nombre.' - Detalle Anual '.$gestion.'.xlsx');
+            return Excel::download(new AnualDetalleExport($collection, $gestion), $sucursal->nombre.' - Detalle Anual '.$gestion.'.xlsx');
         }
 
         if($request->print==NULL)
         {            
-            return view('almacenes/report/inventarioAnual/detalleGeneral/list', compact('data'));
+            return view('almacenes/report/inventarioAnual/detalleGeneral/list', compact('collection'));
         }
     }
 

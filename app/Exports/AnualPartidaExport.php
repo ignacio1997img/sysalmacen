@@ -8,9 +8,9 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 
 class AnualPartidaExport implements FromView
 {
-    function __construct($data, $gestion) {
-		// function __construct($data, $afp, $cc, $centralize, $program, $group, $type_generate, $type_render) {
-        $this->datas = $data;
+    function __construct($partida, $gestion) {
+		// function __construct($partida, $afp, $cc, $centralize, $program, $group, $type_generate, $type_render) {
+        $this->partida = $partida;
         $this->gestion = $gestion;
 
     }
@@ -19,7 +19,7 @@ class AnualPartidaExport implements FromView
     {
         return view('almacenes.report.inventarioAnual.partidaGeneral.excel',
 		[
-			'data' => $this->datas,
+			'partida' => $this->partida,
             'gestion' => $this->gestion
 		]);
     }

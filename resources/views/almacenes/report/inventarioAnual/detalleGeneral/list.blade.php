@@ -20,10 +20,8 @@
                         <th rowspan="2" style="text-align: center">PRECIO UNITARIO</th>
                         <th colspan="4" style="text-align: center">CANTIDAD</th>
                         <th colspan="4" style="text-align: center">VALORES</th>
-                        {{-- <th style="text-align: center">SALDO FINAL</th> --}}
                     </tr>
                     <tr>
-                        {{-- <th style="width:5px">NRO&deg;</th> --}}
                         <th style="text-align: center">SALDO INICIAL</th>
                         <th style="text-align: center">ENTRADAS</th>
                         <th style="text-align: center">SALIDAS</th>
@@ -32,7 +30,6 @@
                         <th style="text-align: center">ENTRADAS</th>
                         <th style="text-align: center">SALIDAS</th>
                         <th style="text-align: center">SALDO FINAL</th>
-                        {{-- <th style="text-align: center">SALDO FINAL</th> --}}
                     </tr>
                 </thead>
                 <tbody>
@@ -48,37 +45,36 @@
                         $vFin = 0;
 
                     @endphp
-                    @forelse ($data as $item)
+                    @forelse ($collection as $item)
                         <tr style="text-align: center">
                             <td>{{ $count }}</td>
-                            <td>{{ $item->id }} - {{ $item->nombre }}</td>
-                            <td style="text-align: right">{{ $item->presentacion}}</td>
-                            <td style="text-align: right">{{ $item->precio}}</td>
-                            <td style="text-align: right">{{ number_format($item->cInicial,2,',', '.')}}</td>
-                            <td style="text-align: right">{{ number_format($item->cEntrada,2,',', '.')}}</td>
-                            <td style="text-align: right">{{ number_format($item->cSalida,2,',', '.')}}</td>
-                            <td style="text-align: right">{{ number_format($item->cFinal,2,',', '.')}}</td>
+                            <td>{{ $item['id'] }} - {{ $item['nombre'] }}</td>
+                            <td style="text-align: right">{{ $item['presentacion']}}</td>
+                            <td style="text-align: right">{{ $item['precio']}}</td>
+                            <td style="text-align: right">{{ number_format($item['saldo'],2,',', '.')}}</td>
+                            <td style="text-align: right">{{ number_format($item['entrada'],2,',', '.')}}</td>
+                            <td style="text-align: right">{{ number_format($item['salida'],2,',', '.')}}</td>
+                            <td style="text-align: right">{{ number_format($item['final'],2,',', '.')}}</td>
 
-                            <td style="text-align: right">{{ number_format($item->vInicial,2,',', '.')}}</td>
-                            <td style="text-align: right">{{ number_format($item->vEntrada,2,',', '.')}}</td>
-                            <td style="text-align: right">{{ number_format($item->vSalida,2,',', '.')}}</td>
-                            <td style="text-align: right">{{ number_format($item->vFinal,2,',', '.')}}</td>
+                            <td style="text-align: right">{{ number_format($item['bssaldo'],2,',', '.')}}</td>
+                            <td style="text-align: right">{{ number_format($item['bsentrada'],2,',', '.')}}</td>
+                            <td style="text-align: right">{{ number_format($item['bssalida'],2,',', '.')}}</td>
+                            <td style="text-align: right">{{ number_format($item['bsfinal'],2,',', '.')}}</td>
                                                                                     
                         </tr>
                         @php
                             $count++;
-                            $cIni = $cIni + $item->cInicial;
-                            $vIni = $cIni + $item->vInicial;
+                            $cIni = $cIni + $item['saldo'];
+                            $vIni = $vIni + $item['bssaldo'];
 
-                            $cEnt = $cEnt + $item->cEntrada;
-                            $vEnt = $vEnt + $item->vEntrada;
+                            $cEnt = $cEnt + $item['entrada'];
+                            $vEnt = $vEnt + $item['bsentrada'];
 
-                            $cSal = $cSal + $item->cSalida;
-                            $vSal = $vSal + $item->vSalida;
+                            $cSal = $cSal + $item['salida'];
+                            $vSal = $vSal + $item['bssalida'];
 
-                            $cFin = $cFin + $item->cFinal;
-                            $vFin = $vFin + $item->vFinal;
-                            // $vFin = $vFin + (number_format($item->vEntrada - $item->vSalida,2));
+                            $cFin = $cFin + $item['final'];
+                            $vFin = $vFin + $item['bsfinal'];
                             
                             
                         @endphp

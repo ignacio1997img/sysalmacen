@@ -7,7 +7,7 @@
     <table width="100%">
         <tr>
             <td style="width: 20%"><img src="{{ asset('images/icon.png') }}" alt="GADBENI" width="100px"></td>
-            <td style="text-align: center;  width:70%">
+            <td style="text-align: center;  width:60%">
                 <h3 style="margin-bottom: 0px; margin-top: 5px">
                     GOBIERNO AUTONOMO DEPARTAMENTAL DEL BENI<br>
                 </h3>
@@ -22,16 +22,17 @@
                     (Expresado en Bolivianos)
                 </small>
             </td>
-            <td style="text-align: right; width:30%">
+            <td style="text-align: right; width:20%">
                 <h3 style="margin-bottom: 0px; margin-top: 5px">
                    
-                    <small style="font-size: 11px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/M/Y H:i:s') }}</small>
+                    <small style="font-size: 11px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/m/Y H:i:s') }}</small>
                 </h3>
             </td>
         </tr>
     </table>
     <br><br>
-    <table style="width: 100%; font-size: 12px" border="1" cellspacing="0" cellpadding="5">
+    <table style="width: 100%; font-size: 12px" border="1" class="print-friendly" cellspacing="0" cellpadding="5">
+
         <thead>
             <tr>
                 <th rowspan="2" style="width:5px">N&deg;</th>
@@ -40,10 +41,8 @@
                 <th rowspan="2" style="text-align: center">PRECIO UNITARIO</th>
                 <th colspan="4" style="text-align: center">CANTIDAD</th>
                 <th colspan="4" style="text-align: center">VALORES</th>
-                {{-- <th style="text-align: center">SALDO FINAL</th> --}}
             </tr>
             <tr>
-                {{-- <th style="width:5px">NRO&deg;</th> --}}
                 <th style="text-align: center">SALDO INICIAL</th>
                 <th style="text-align: center">ENTRADAS</th>
                 <th style="text-align: center">SALIDAS</th>
@@ -52,7 +51,6 @@
                 <th style="text-align: center">ENTRADAS</th>
                 <th style="text-align: center">SALIDAS</th>
                 <th style="text-align: center">SALDO FINAL</th>
-                {{-- <th style="text-align: center">SALDO FINAL</th> --}}
             </tr>
         </thead>
         <tbody>
@@ -68,71 +66,65 @@
                 $vFin = 0;
 
             @endphp
-            @forelse ($data as $item)
+            @forelse ($collection as $item)
                 <tr>
-                    <td>{{ $count }}</td>
-                    <td style="text-align: left">{{ $item->id }} - {{ $item->nombre }}</td>
-                    <td style="text-align: right">{{ $item->presentacion}}</td>
-                    <td style="text-align: right">{{ $item->precio}}</td>
-                    <td style="text-align: right">{{ number_format($item->cInicial,2,',', '.')}}</td>
-                    <td style="text-align: right">{{ number_format($item->cEntrada,2,',', '.')}}</td>
-                    <td style="text-align: right">{{ number_format($item->cSalida,2,',', '.')}}</td>
-                    <td style="text-align: right">{{ number_format($item->cFinal,2,',', '.')}}</td>
+                            <td>{{ $count }}</td>
+                            <td>{{ $item['id'] }} - {{ $item['nombre'] }}</td>
+                            <td style="text-align: right">{{ $item['presentacion']}}</td>
+                            <td style="text-align: right">{{ $item['precio']}}</td>
+                            <td style="text-align: right">{{ number_format($item['saldo'],2,',', '.')}}</td>
+                            <td style="text-align: right">{{ number_format($item['entrada'],2,',', '.')}}</td>
+                            <td style="text-align: right">{{ number_format($item['salida'],2,',', '.')}}</td>
+                            <td style="text-align: right">{{ number_format($item['final'],2,',', '.')}}</td>
 
-                    <td style="text-align: right">{{ number_format($item->vInicial,2,',', '.')}}</td>
-                    <td style="text-align: right">{{ number_format($item->vEntrada,2,',', '.')}}</td>
-                    <td style="text-align: right">{{ number_format($item->vSalida,2,',', '.')}}</td>
-                    <td style="text-align: right">{{ number_format($item->vFinal,2,',', '.')}}</td>
+                            <td style="text-align: right">{{ number_format($item['bssaldo'],2,',', '.')}}</td>
+                            <td style="text-align: right">{{ number_format($item['bsentrada'],2,',', '.')}}</td>
+                            <td style="text-align: right">{{ number_format($item['bssalida'],2,',', '.')}}</td>
+                            <td style="text-align: right">{{ number_format($item['bsfinal'],2,',', '.')}}</td>
                                                                             
                 </tr>
                 @php
                     $count++;
-                    $cIni = $cIni + $item->cInicial;
-                    $vIni = $cIni + $item->vInicial;
+                    $cIni = $cIni + $item['saldo'];
+                    $vIni = $vIni + $item['bssaldo'];
 
-                    $cEnt = $cEnt + $item->cEntrada;
-                    $vEnt = $vEnt + $item->vEntrada;
+                    $cEnt = $cEnt + $item['entrada'];
+                    $vEnt = $vEnt + $item['bsentrada'];
 
-                    $cSal = $cSal + $item->cSalida;
-                    $vSal = $vSal + $item->vSalida;
+                    $cSal = $cSal + $item['salida'];
+                    $vSal = $vSal + $item['bssalida'];
 
-                    $cFin = $cFin + $item->cFinal;
-                    $vFin = $vFin + $item->vFinal;
-                    // $vFin = $vFin + (number_format($item->vEntrada - $item->vSalida,2));
-                    
-                    
+                    $cFin = $cFin + $item['final'];
+                    $vFin = $vFin + $item['bsfinal'];                            
                 @endphp
             @empty
                 <tr style="text-align: center">
-                    <td colspan="6">No se encontraron registros.</td>
+                    <td colspan="12">No se encontraron registros.</td>
                 </tr>
             @endforelse
             <tr>
-                <th colspan="4" style="text-align: left">Total</th>
-                <th style="text-align: right">{{number_format($cIni,2,',', '.')}}</th>
-                <th style="text-align: right">{{number_format($cEnt,2,',', '.')}}</th>
-                <th style="text-align: right">{{number_format($cSal,2,',', '.')}}</th>
-                <th style="text-align: right">{{number_format($cFin,2,',', '.')}}</th>
-
-                <th style="text-align: right">{{number_format($vIni,2,',', '.')}}</th>
-                <th style="text-align: right">{{number_format($vEnt,2,',', '.')}}</th>
-                <th style="text-align: right">{{number_format($vSal,2,',', '.')}}</th>
-                <th style="text-align: right">{{number_format($vFin,2,',', '.')}}</th>
+                        <th colspan="4" style="text-align: left">Total</th>
+                        <th style="text-align: right">{{number_format($cIni,2,',', '.')}}</th>
+                        <th style="text-align: right">{{number_format($cEnt,2,',', '.')}}</th>
+                        <th style="text-align: right">{{number_format($cSal,2,',', '.')}}</th>
+                        <th style="text-align: right">{{number_format($cFin,2,',', '.')}}</th>
+        
+                        <th style="text-align: right">{{number_format($vIni,2,',', '.')}}</th>
+                        <th style="text-align: right">{{number_format($vEnt,2,',', '.')}}</th>
+                        <th style="text-align: right">{{number_format($vSal,2,',', '.')}}</th>
+                        <th style="text-align: right">{{number_format($vFin,2,',', '.')}}</th>
             </tr>
         </tbody>
        
     </table>
-    {{-- <div class="row" style="font-size: 9pt">
-        <p style="text-align: right">Total - Artículo Disponible: BS. {{NumerosEnLetras::convertir($total,'Bolivianos',true)}}</p>
-    </div> --}}
 
     <div class="text">
-        <p style="font-size: 13px;"><b>NOTA:</b> La información expuesta en el presente cuadro cuenta con la documentación de soporte correspondiente, en el marco de las Normas Básicas del Sistema de Contabilidad Integrada.</p>
+        <p style="font-size: 12px;"><b>NOTA:</b> La información expuesta en el presente cuadro cuenta con la documentación de soporte correspondiente, en el marco de las Normas Básicas del Sistema de Contabilidad Integrada.</p>
     </div>
     <br>
     <br><br>
     <br>
-    <table width="100%">
+    <table style="width: 100%; font-size: 12px">
         <tr>
             <td style="text-align: center">
                 ______________________
@@ -152,7 +144,7 @@
         </tr>
     </table>
     <br>
-    <table width="100%">
+    <table style="width: 100%; font-size: 12px">
         <tr>
             <td style="text-align: center">
                 {{-- ______________________
@@ -173,3 +165,17 @@
     </table>
 
 @endsection
+
+@section('css')
+    <style>
+        table, th, td {
+            border-collapse: collapse;
+        }
+        /* @media print { div{ page-break-inside: avoid; } }  */
+          
+        table.print-friendly tr td, table.print-friendly tr th {
+            page-break-inside: avoid;
+        }
+          
+    </style>
+@stop
