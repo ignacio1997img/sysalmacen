@@ -137,6 +137,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
 
     Route::post('sucursals/subalmacen/store', [SucursalController::class, 'storeSubAlmacen'])->name('sucursal-subalmacen.store'); //para poder agregar un subalmacen al almacen
     Route::delete('sucursals/subalmacen/delete', [SucursalController::class, 'destroySubAlmacen'])->name('sucursal-subalmacen.destroy');//Para poder eliminar un sub almacen
+    Route::get('sucursals/subalmacen/get/{id?}', [SucursalController::class, 'getSubSucursal'])->name('ajax-sucursal-subalmacen.get');
 
 
 

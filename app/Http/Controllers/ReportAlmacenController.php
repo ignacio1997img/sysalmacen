@@ -595,18 +595,15 @@ class ReportAlmacenController extends Controller
     public function articleStock()
     {
         $user = Auth::user();
-        $query_filter = 'user_id ='.Auth::user()->id;
+        
+        $query_filter = 'id ='.$user->sucursal_id;
         
         if(Auth::user()->hasRole('admin'))
         {
             $query_filter = 1;
         }
 
-        $sucursal = SucursalUser::where('condicion', 1)
-                        ->where('deleted_at', null)
-                        ->whereRaw($query_filter)
-                        ->GroupBy('sucursal_id')
-                        ->get();
+        $sucursal = Sucursal::whereRaw($query_filter)->get();
                         
         $direction = $this->getDirecciones();        
 
@@ -618,10 +615,13 @@ class ReportAlmacenController extends Controller
         
         $date = Carbon::now();
         $sucursal = Sucursal::find($request->sucursal_id);
-        // dd($request);
-        // dd($sucursal);
-        // $start = $request->start;
-        // $finish = $request->finish;
+
+        $query_type = 1;
+        if($request->type_id != 'TODO')
+        {
+            $query_type = 'sc.subSucursal_id = '. $request->type_id;
+        }
+        
         $data = DB::table('solicitud_compras as sc')
                     ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')
                     ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
@@ -631,6 +631,7 @@ class ReportAlmacenController extends Controller
 
                     ->where('sc.deleted_at', null)
                     ->where('sc.sucursal_id', $request->sucursal_id)
+                    ->whereRaw($query_type)
 
                     ->where('f.deleted_at', null)
 

@@ -15,4 +15,9 @@ class SucursalSubAlmacen extends Model
         'status',
         'deleted_at'
     ];
+
+    public function sucursal()
+    {
+        return $this->belongsTo(Sucursal::class, 'sucursal_id');
+    }
 }

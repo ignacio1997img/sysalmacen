@@ -211,5 +211,18 @@ class SucursalController extends Controller
         }
     }
 
+    public function getSubSucursal($id)
+    {
+        $user = Auth::user();
+        $query_filter = 'id ='.$user->subSucursal_id;
+        
+        if(Auth::user()->hasRole('admin'))
+        {
+            $query_filter = 1;
+        }
+        return SucursalSubAlmacen::with(['sucursal'])
+            ->where('sucursal_id', $id)->whereRaw($query_filter)->where('deleted_at', null)->get();
+    }
+
 
 }
