@@ -123,20 +123,6 @@ class SolicitudPedidoController extends Controller
             
         }
 
-        // $data =  SolicitudPedido::with(['solicitudDetalle'])
-        //     ->where(function($query) use ($search){
-        //         if($search){
-        //             $query->OrWhereRaw($search ? "gestion like '%$search%'" : 1)
-        //             ->OrWhereRaw($search ? "nropedido like '%$search%'" : 1)
-        //             ->OrWhereRaw($search ? "id like '%$search%'" : 1)
-        //             ->OrWhereRaw($search ? "unidad_name like '%$search%'" : 1)
-        //             ->OrWhereRaw($search ? "direccion_name like '%$search%'" : 1);
-        //         }
-        //     })
-        //     ->where('deleted_at', NULL)
-        //     ->whereRaw($query_filter)
-        //     ->orderBy('id', 'DESC')->paginate($paginate);
-
         return view('almacenes.outbox.list', compact('data', 'gestion'));
     }
 
