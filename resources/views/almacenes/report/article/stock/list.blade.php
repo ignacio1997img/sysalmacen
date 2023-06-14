@@ -12,7 +12,7 @@
             <table id="dataTableStyle" style="width:100%"  class="table table-bordered table-striped table-sm">
                 <thead>
                     <tr>
-                        <th style="width:5%">NRO&deg;</th>
+                        <th>N&deg;</th>
                         <th style="width:15%">F. INGRESO</th>
                         <th style="width:25%">ENTIDAD + NRO COMPRA</th>
                         <th style="width:25%">PROVEEDOR</th>

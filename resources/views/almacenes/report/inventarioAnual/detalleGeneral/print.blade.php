@@ -31,8 +31,7 @@
         </tr>
     </table>
     <br>
-    <table style="width: 100%; font-size: 12px" border="1" class="print-friendly" cellspacing="0" cellpadding="5">
-
+    <table style="width: 100%; font-size: 12px" border="1" class="print-friendly" cellspacing="0" cellpadding="3">
         <thead>
             <tr>
                 <th rowspan="2" style="width:5px">N&deg;</th>

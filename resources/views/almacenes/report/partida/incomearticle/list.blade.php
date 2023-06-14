@@ -1,10 +1,10 @@
 
-{{-- <div class="col-md-12 text-right">
+<div class="col-md-12 text-right">
 
-    <button type="button" onclick="report_excel()" class="btn btn-success"><i class="fa-solid fa-file-excel"></i> Exportar a Excel</button>
+    {{-- <button type="button" onclick="report_excel()" class="btn btn-success"><i class="fa-solid fa-file-excel"></i> Exportar a Excel</button> --}}
     <button type="button" onclick="report_print()" class="btn btn-dark"><i class="glyphicon glyphicon-print"></i> Imprimir</button>
 
-</div> --}}
+</div>
 <div class="col-md-12">
 <div class="panel panel-bordered">
     <div class="panel-body">
@@ -15,7 +15,7 @@
                         <th colspan="9">{{$partida->codigo}} {{$partida->nombre}}</th>
                     </tr>
                     <tr>
-                        <th style="width:5%">N&deg;</th>
+                        <th>N&deg;</th>
                         <th>N&deg; SOLICITUD</th>
                         <th>FECHA INGRESO </th>
                         <th>N&deg; FACTURA</th>
@@ -49,7 +49,7 @@
                             @endphp
                         @empty
                             <tr style="text-align: center">
-                                <td colspan="10">No se encontraron registros.</td>
+                                <td colspan="9">No se encontraron registros.</td>
                             </tr>
                         @endforelse
                         <tr>

@@ -20,13 +20,13 @@
             <td style="text-align: right; width:30%">
                 <h3 style="margin-bottom: 0px; margin-top: 5px">
                    
-                    <small style="font-size: 11px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/M/Y H:i:s') }}</small>
+                    <small style="font-size: 11px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/m/Y H:i:s') }}</small>
                 </h3>
             </td>
         </tr>
     </table>
     <br>
-    <table style="width: 100%; font-size: 12px" border="1" class="print-friendly" cellspacing="0" cellpadding="5">
+    <table style="width: 100%; font-size: 12px" border="1" class="print-friendly" cellspacing="0" cellpadding="3">
 
         <thead>
             <tr>
@@ -68,7 +68,6 @@
         table, th, td {
             border-collapse: collapse;
         }
-        /* @media print { div{ page-break-inside: avoid; } }  */
           
         table.print-friendly tr td, table.print-friendly tr th {
             page-break-inside: avoid;

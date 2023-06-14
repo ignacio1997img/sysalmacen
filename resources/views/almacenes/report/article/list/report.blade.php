@@ -22,13 +22,19 @@
                                 <input type="hidden" name="print">
                                 <div class="form-group">
                                     <div class="form-line">
-                                        <select name="sucursal_id" class="form-control select2" required>
-                                            <option value=""disabled selected>Seleccione una opcion..</option>
+                                        <select name="sucursal_id" id="sucursal_id" class="form-control select2" required>
+                                            <option value=""disabled selected>--Seleccione una opcion--</option>
                                             @foreach ($sucursal as $item)
-                                                <option value="{{$item->sucursal->id}}">{{$item->sucursal->nombre}}</option>
+                                                <option value="{{$item->id}}">{{$item->nombre}}</option>
                                             @endforeach                                             
                                         </select>
                                         <small>Sucursal</small>
+                                    </div>
+                                    <br>
+                                    <div class="form-line">
+                                        <select name="type_id" id="type_id" class="form-control select2" required>        
+                                        </select>
+                                        <small>Tipo</small>
                                     </div>
                                 </div>
                                 
@@ -190,6 +196,27 @@
              $('#form-search').removeAttr('target');
             $('#form-search input[name="print"]').val('');
         }
+
+        // Para seleccionar los sub almacenes
+        $('#sucursal_id').on('change',function()
+        {
+            id= $(this).val();
+            if(id>=1)
+            {
+                $.get('{{route('ajax-sucursal-subalmacen.get')}}/'+id, function(data){
+                    var html_type=    '<option disabled selected value="">-- Seleccione una gestión --</option>'
+                        html_type +=    '<option value="TODO">Todos</option>'
+                    for(var i=0; i<data.length; ++i)
+                        html_type += '<option value="'+data[i].id+'">'+data[i].name+'</option>'
+
+                    $('#type_id').html(html_type);
+                });
+            }
+            else
+            {
+                $('#type_id').html('');
+            }
+        });
     </script>
 @stop
 @else

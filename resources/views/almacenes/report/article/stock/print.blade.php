@@ -21,17 +21,17 @@
             <td style="text-align: right; width:20%">
                 <h3 style="margin-bottom: 0px; margin-top: 5px">
                    
-                    <small style="font-size: 11px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/M/Y H:i:s') }}</small>
+                    <small style="font-size: 11px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/m/Y H:i:s') }}</small>
                 </h3>
             </td>
         </tr>
     </table>
     <br>
-    <table style="width: 100%; font-size: 12px" border="1" class="print-friendly" cellspacing="0" cellpadding="5">
+    <table style="width: 100%; font-size: 12px" border="1" class="print-friendly" cellspacing="0" cellpadding="3">
 
         <thead>
             <tr>
-                <th style="width:5%">NRO&deg;</th>
+                <th>N&deg;</th>
                 <th>F. INGRESO</th>
                 <th>ENTIDAD + NRO COMPRA</th>
                 <th>PROVEEDOR</th>

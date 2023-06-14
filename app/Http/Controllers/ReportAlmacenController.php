@@ -603,11 +603,9 @@ class ReportAlmacenController extends Controller
             $query_filter = 1;
         }
 
-        $sucursal = Sucursal::whereRaw($query_filter)->get();
-                        
-        $direction = $this->getDirecciones();        
+        $sucursal = Sucursal::whereRaw($query_filter)->get();      
 
-        return view('almacenes/report/article/stock/report', compact('sucursal', 'direction'));
+        return view('almacenes/report/article/stock/report', compact('sucursal'));
     }
 
     public function articleStockList(Request $request)
@@ -664,18 +662,15 @@ class ReportAlmacenController extends Controller
     public function articleList()
     {
         $user = Auth::user();
-        $query_filter = 'user_id ='.Auth::user()->id;
+        
+        $query_filter = 'id ='.$user->sucursal_id;
         
         if(Auth::user()->hasRole('admin'))
         {
             $query_filter = 1;
         }
 
-        $sucursal = SucursalUser::where('condicion', 1)
-                        ->where('deleted_at', null)
-                        ->whereRaw($query_filter)
-                        ->GroupBy('sucursal_id')
-                        ->get();
+        $sucursal = Sucursal::whereRaw($query_filter)->get(); 
                          
 
         return view('almacenes.report.article.list.report', compact('sucursal'));
@@ -712,19 +707,17 @@ class ReportAlmacenController extends Controller
 
     public function incomeOffice()
     {
-        $user = Auth::user();
-        $query_filter = 'user_id ='.Auth::user()->id;
         $partida = Partida::where('deleted_at', null)->get();        
+        $user = Auth::user();
+        
+        $query_filter = 'id ='.$user->sucursal_id;
+        
         if(Auth::user()->hasRole('admin'))
         {
             $query_filter = 1;
         }
 
-        $sucursal = SucursalUser::where('condicion', 1)
-                        ->where('deleted_at', null)
-                        ->whereRaw($query_filter)
-                        ->GroupBy('sucursal_id')
-                        ->get();    
+        $sucursal = Sucursal::whereRaw($query_filter)->get();    
 
         return view('almacenes.report.article.incomeOffice.report', compact('sucursal', 'partida'));
     }
@@ -743,55 +736,11 @@ class ReportAlmacenController extends Controller
         $query_direccion ='';
         $query_partida ='';
 
-        // if($request->unidad_id == 'TODO')
-        // {
-        //     $message = 'Dirección Administrativa - '.$this->getDireccion($request->direccion_id)->nombre;
-        //     $data = DB::table('solicitud_compras as cp')
-        //                 ->join('facturas as f', 'f.solicitudcompra_id', 'cp.id')
-        //                 ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
-        //                 ->join('articles as a', 'df.article_id', 'a.id')
-        //                 ->join('partidas as p', 'p.id', 'a.partida_id')
-        //                 ->where('df.deleted_at', null)
-        //                 ->where('df.hist', 0)
-        //                 ->where('f.deleted_at', null)
-        //                 ->where('cp.deleted_at', null)
-        //                 ->where('cp.direccionadministrativa', $request->direccion_id)
-        //                 ->where('cp.fechaingreso', '>=', $request->start)
-        //                 ->where('cp.fechaingreso', '<=', $request->finish)
-
-        //                 ->where('cp.sucursal_id', $request->sucursal_id)
-
-        //                 ->select('cp.unidadadministrativa as unidad','cp.fechaingreso',  'a.nombre as articulo', 'p.nombre as partida', 'nrosolicitud', 'a.presentacion', 'df.precio', 'df.cantsolicitada', 'df.totalbs')
-        //                 // ->orderBy('u.id')
-        //                 ->orderBy('cp.fechaingreso')
-        //                 ->get();
-        //     foreach($data as $item)
-        //     {
-        //         $item->unidad = Unit::find($item->unidad)->nombre;
-        //     }
-        // }
-        // else      
-        // {
-        //     $message = 'Unidad - '.$this->getUnidad($request->unidad_id)->nombre;
-        //     $data = DB::table('solicitud_compras as cp')
-        //                 ->join('facturas as f', 'f.solicitudcompra_id', 'cp.id')
-        //                 ->join('detalle_facturas as df', 'df.factura_id', 'f.id')
-        //                 ->join('articles as a', 'df.article_id', 'a.id')
-        //                 ->join('partidas as p', 'p.id', 'a.partida_id')
-        //                 ->where('df.deleted_at', null)
-        //                 ->where('df.hist', 0)
-        //                 ->where('f.deleted_at', null)
-        //                 ->where('cp.deleted_at', null)
-        //                 ->where('cp.unidadadministrativa', $request->unidad_id)
-        //                 ->where('cp.fechaingreso', '>=', $request->start)
-        //                 ->where('cp.fechaingreso', '<=', $request->finish)
-        //                 ->where('cp.sucursal_id', $request->sucursal_id)
-
-        //                 ->select('cp.unidadadministrativa as unidad','cp.fechaingreso',  'a.nombre as articulo', 'p.nombre as partida', 'nrosolicitud', 'a.presentacion', 'df.precio', 'df.cantsolicitada', 'df.totalbs')
-        //                 // ->orderBy('u.id')
-        //                 ->orderBy('cp.fechaingreso')
-        //                 ->get();
-        // }
+        $query_type = 1;
+        if($request->type_id != 'TODO')
+        {
+            $query_type = 'cp.subSucursal_id = '. $request->type_id;
+        }
 
 
         if($request->unidad_id == 'TODO')
@@ -828,6 +777,7 @@ class ReportAlmacenController extends Controller
                         ->where('cp.deleted_at', null)
                         ->whereRaw($query_direccion)
                         ->whereRaw($query_partida)
+                        ->whereRaw($query_type)
                         ->where('cp.fechaingreso', '>=', $request->start)
                         ->where('cp.fechaingreso', '<=', $request->finish)
                         ->where('cp.sucursal_id', $request->sucursal_id)
@@ -869,21 +819,18 @@ class ReportAlmacenController extends Controller
     //  para los egresos por todas las oficina de una direcion o por oficinas.......
     public function egressOffice()
     {
-        $user = Auth::user();
         $partida = Partida::where('deleted_at', null)->get();
-        $query_filter = 'user_id ='.Auth::user()->id;
+
+        $user = Auth::user();
+        
+        $query_filter = 'id ='.$user->sucursal_id;
         
         if(Auth::user()->hasRole('admin'))
         {
             $query_filter = 1;
         }
 
-        $sucursal = SucursalUser::where('condicion', 1)
-                        ->where('deleted_at', null)
-                        ->whereRaw($query_filter)
-                        ->GroupBy('sucursal_id')
-                        ->get();    
-        // return $sucursal;
+        $sucursal = Sucursal::whereRaw($query_filter)->get();    
 
         return view('almacenes.report.article.egressOffice.report', compact('sucursal', 'partida'));
     }
@@ -900,6 +847,12 @@ class ReportAlmacenController extends Controller
 
         $query_direccion ='';
         $query_partida ='';
+
+        $query_type = 1;
+        if($request->type_id != 'TODO')
+        {
+            $query_type = 'se.subSucursal_id = '. $request->type_id;
+        }
 
         if($request->unidad_id == 'TODO')
         {
@@ -933,6 +886,7 @@ class ReportAlmacenController extends Controller
 
                         ->whereRaw($query_direccion)
                         ->whereRaw($query_partida)
+                        ->whereRaw($query_type)
 
                         ->where('se.deleted_at', null)
                         // ->where('se.direccionadministrativa', $request->direccion_id)
@@ -970,33 +924,33 @@ class ReportAlmacenController extends Controller
     //para ver todos los articulos que se ingresaron en la gestion por partida detallando que factura es
     public function incomePartidaArticle()
     {
+        $partida = Partida::where('deleted_at', null)->get();
+
         $user = Auth::user();
-        $query_filter = 'user_id ='.Auth::user()->id;
+        
+        $query_filter = 'id ='.$user->sucursal_id;
         
         if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('almacen_admin'))
         {
             $query_filter = 1;
         }
 
-        $sucursal = SucursalUser::where('condicion', 1)
-                        ->where('deleted_at', null)
-                        ->whereRaw($query_filter)
-                        ->GroupBy('sucursal_id')
-                        ->get();
-        $partida = Partida::where('deleted_at', null)->get();
+        $sucursal = Sucursal::whereRaw($query_filter)->get(); 
 
         return view('almacenes.report.partida.incomearticle.report', compact('sucursal', 'partida'));
     }
 
     public function incomePartidaArticleList(Request $request)
     {
-        // dd($request);
         $date = Carbon::now();
         $sucursal = Sucursal::find($request->sucursal_id);
-        // dd($request);
-        // dd($sucursal);
-        // $start = $request->start;
-        // $finish = $request->finish;
+        $query_type = 1;
+        if($request->type_id != 'TODO')
+        {
+            $query_type = 'sc.subSucursal_id = '. $request->type_id;
+        }
+        $finish = $request->finish;
+        $start = $request->start;
         $partida = Partida::where('id', $request->partida_id)->first();
         $data = DB::table('solicitud_compras as sc')
                     ->join('facturas as f', 'f.solicitudcompra_id', 'sc.id')
@@ -1015,6 +969,8 @@ class ReportAlmacenController extends Controller
                     ->where('df.deleted_at', null)
 
                     ->where('p.id', $request->partida_id)
+                    ->whereRaw($query_type)
+
 
 
                     ->select('df.fechaingreso', 'p.codigo', 'p.nombre', 'sc.nrosolicitud', 
@@ -1026,7 +982,7 @@ class ReportAlmacenController extends Controller
         // dd($data->sum('totalbs'));
       
         if($request->print==1){
-            return view('almacenes.report.article.stock.print', compact('data', 'sucursal'));
+            return view('almacenes.report.partida.incomearticle.print', compact('data', 'partida', 'finish', 'start'));
         }
         if($request->print==2)
         {

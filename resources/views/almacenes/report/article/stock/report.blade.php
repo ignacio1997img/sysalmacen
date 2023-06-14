@@ -32,7 +32,7 @@
                                     </div>
                                     <br>
                                     <div class="form-line">
-                                        <select name="type_id" id="type_id" class="form-control select2" required>                                         --}}
+                                        <select name="type_id" id="type_id" class="form-control select2" required>    
                                         </select>
                                         <small>Tipo</small>
                                     </div>

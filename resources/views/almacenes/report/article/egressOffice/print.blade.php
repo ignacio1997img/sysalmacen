@@ -21,7 +21,7 @@
             <td style="text-align: right; width:20%">
                 <h3 style="margin-bottom: 0px; margin-top: 5px">
                    
-                    <small style="font-size: 11px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/M/Y H:i:s') }}</small>
+                    <small style="font-size: 11px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/m/Y H:i:s') }}</small>
                 </h3>
             </td>
         </tr>
@@ -31,7 +31,7 @@
 
         <thead>
             <tr>
-                <th style="width:5%">N&deg;</th>
+                <th>N&deg;</th>
                 <th>F. EGRESO</th>
                 <th>NRO PEDIDO</th>
                 <th>OFICINA</th>
