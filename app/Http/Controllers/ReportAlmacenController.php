@@ -724,7 +724,7 @@ class ReportAlmacenController extends Controller
 
     public function incomeOfficeList(Request $request)
     {
-        // dd($request);
+        // dump($request);
         $finish = $request->finish;
         $start = $request->start;
         $date = Carbon::now();
@@ -743,17 +743,29 @@ class ReportAlmacenController extends Controller
         }
 
 
-        if($request->unidad_id == 'TODO')
+        if($request->direccion_id == 'TODO')
         {
-            $message = 'Dirección Administrativa - '.$this->getDireccion($request->direccion_id)->nombre;
-            $query_direccion = 'cp.direccionadministrativa = '. $request->direccion_id;
+            $message = 'Todas la Direcciones';
+            $query_direccion = 1;
         }
-        else      
+        else
         {
-            $message = 'Unidad - '.$this->getUnidad($request->unidad_id)->nombre;
-            $query_direccion = 'cp.direccionadministrativa = '. $request->direccion_id.' and cp.unidadadministrativa = '. $request->unidad_id;
+            if($request->unidad_id == 'TODO')
+            {
+                $message = 'Dirección Administrativa - '.$this->getDireccion($request->direccion_id)->nombre;
+                $query_direccion = 'cp.direccionadministrativa = '. $request->direccion_id;
+            }
+            else      
+            {
+                $message = 'Unidad - '.$this->getUnidad($request->unidad_id)->nombre;
+                $query_direccion = 'cp.direccionadministrativa = '. $request->direccion_id.' and cp.unidadadministrativa = '. $request->unidad_id;
+            }
         }
 
+        
+
+
+        
         if($request->partida_id == 'TODOp')
         {
             $messagePartida = 'Partidas - Todas las Partidas';

@@ -135,6 +135,7 @@
                 {
                     $.get('{{route('ajax-incomeOffice.direccion')}}/'+id, function(data){
                         var html_direcicion=    '<option value="" disabled selected>--Seleccione una dirección--</option>'
+                            html_direcicion +=    '<option value="TODO">Todas las Direcciones</option>'
                             for(var i=0; i<data.length; ++i)
                             html_direcicion += '<option value="'+data[i].id+'">'+data[i].nombre+'</option>'
 
@@ -163,8 +164,16 @@
                 }
                 else
                 {
-                    // alert(1)
-                    $("#unidad_id").html('');
+                    if(id=='TODO')
+                    {
+                        var html_unidad=    '<option value="" disabled selected>--Seleccione una unidad--</option>'
+                            html_unidad +=    '<option value="TODO">Todas las Unidades</option>'
+                        $('#unidad_id').html(html_unidad); 
+                    }
+                    else
+                    {
+                        $("#unidad_id").html('');
+                    }
                 }
         }
 
