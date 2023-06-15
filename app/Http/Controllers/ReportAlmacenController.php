@@ -866,15 +866,23 @@ class ReportAlmacenController extends Controller
             $query_type = 'se.subSucursal_id = '. $request->type_id;
         }
 
-        if($request->unidad_id == 'TODO')
+        if($request->direccion_id == 'TODO')
         {
-            $message = 'Dirección Administrativa - '.$this->getDireccion($request->direccion_id)->nombre;
-            $query_direccion = 'se.direccionadministrativa = '. $request->direccion_id;
+            $message = 'Todas la Direcciones';
+            $query_direccion = 1;
         }
-        else      
+        else
         {
-            $message = 'Unidad - '.$this->getUnidad($request->unidad_id)->nombre;
-            $query_direccion = 'se.direccionadministrativa = '. $request->direccion_id.' and se.unidadadministrativa = '. $request->unidad_id;
+            if($request->unidad_id == 'TODO')
+            {
+                $message = 'Dirección Administrativa - '.$this->getDireccion($request->direccion_id)->nombre;
+                $query_direccion = 'se.direccionadministrativa = '. $request->direccion_id;
+            }
+            else      
+            {
+                $message = 'Unidad - '.$this->getUnidad($request->unidad_id)->nombre;
+                $query_direccion = 'se.direccionadministrativa = '. $request->direccion_id.' and se.unidadadministrativa = '. $request->unidad_id;
+            }
         }
 
         if($request->partida_id == 'TODOp')
