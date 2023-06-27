@@ -103,7 +103,9 @@
             <td style="text-align: center">
                 ______________________
                 <br>
-                <b>Entrege Conforme</b>
+                <b style="font-size: 14px">Unidad Solicitante</b> <br>
+                <b style="font-size: 11px">{{strtoupper($sol->first_name.' '.$sol->last_name)}} <br>
+                    {{strtoupper($sol->job)}}</b>
             </td>
             <td style="text-align: center">
                 {{-- ______________________
@@ -113,7 +115,10 @@
             <td style="text-align: center">
                 ______________________
                 <br>
-                <b>Recibí Conforme</b>
+                <b style="font-size: 14px">Direccion Administrativa</b>
+                <br>
+                <br>
+                <br>
             </td>
         </tr>
     </table>
