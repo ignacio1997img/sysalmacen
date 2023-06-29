@@ -115,7 +115,7 @@
             <td style="text-align: center">
                 ______________________
                 <br>
-                <b style="font-size: 14px">Direccion Administrativa</b>
+                <b style="font-size: 14px">{{$sol->sucursal_id!=1?'Recibi Conforme':'Direccion Administrativa'}}</b>
                 <br>
                 <br>
                 <br>
