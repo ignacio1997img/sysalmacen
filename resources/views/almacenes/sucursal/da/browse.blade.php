@@ -285,7 +285,7 @@
                         <!-- Modal Header -->
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title"><i class="voyager-plus"></i>Almacen Principal</h4>
+                            <h4 class="modal-title"><i class="voyager-plus"></i>Almacenes Principales</h4>
                         </div>
                         {!! Form::open(['route' => 'sucursal-unidad.store','class' => 'was-validated'])!!}
                             <!-- Modal body -->

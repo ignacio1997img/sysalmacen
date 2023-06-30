@@ -142,10 +142,21 @@ class SucursalController extends Controller
         // return $request;
         DB::beginTransaction();
 
-        $ok = SucursalUnidadPrincipal::where('deleted_at', null)->where('sucursal_id', $request->sucursal_id)->first();
-        if($ok)
+        $ok = SucursalUnidadPrincipal::where('deleted_at', null)->where('sucursal_id', $request->sucursal_id)->where('unidadAdministrativa_id', $request->unidad_id)->where('direccionAdministrativa_id', $request->direccion_id)->first();
+        
+        // if($ok)
+        // {
+        //     return redirect()->route('sucursal-da.index',['sucursal'=>$request->sucursal_id])->with(['message' => 'La unidad ya se encuentra resgistrada.', 'alert-type' => 'error']);
+        // }
+
+
+        $ok = SucursalUnidadPrincipal::where('deleted_at', null)->where('sucursal_id', $request->sucursal_id)->get();
+
+        // return $ok->count();
+        // return count($ok);
+        if(count($ok) >= 2)
         {
-            return redirect()->route('sucursal-da.index',['sucursal'=>$request->sucursal_id])->with(['message' => 'Ya cuenta con un almacen principal.', 'alert-type' => 'error']);
+            return redirect()->route('sucursal-da.index',['sucursal'=>$request->sucursal_id])->with(['message' => 'La sucursal exedio la cantidad maxima de unidades principales.', 'alert-type' => 'error']);
         }
         try {
             SucursalUnidadPrincipal::create([
