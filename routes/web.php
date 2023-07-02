@@ -19,6 +19,7 @@ use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\MaintenanceController;
 
 use App\Http\Controllers\DonationStockController;
+use App\Http\Controllers\ExistingProductController;
 use App\Http\Controllers\InventarioAlmacenController;
 use App\Http\Controllers\PeopleExtController;
 use App\Http\Controllers\ReportAlmacenController;
@@ -59,6 +60,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::resource('usuario', UserController::class);
     Route::post('usuarios/desactivar', [UserController::class, 'desactivar'])->name('almacen_desactivar');
     Route::post('usuarios/activar', [UserController::class, 'activar'])->name('almacen_activar');
+
+
+
+    // ::::::::::::::::::::::::::Para los productos en existencia ::::::::::::::::::::::::::::::::::::::
+    Route::get('existingproducts', [ExistingProductController::class, 'index'])->name('existingproducts.index');
+    Route::post('existingproducts/list', [ExistingProductController::class, 'articleExistingList'])->name('existingproducts.list');
 
     // :::::::::::::::::::::::::::::     PARA LAS SOLICITUDES  DE LOS PRODECTOS O ARTICULOS       ::::::::::::::::::::::::::::::::::::::::::
     Route::resource('outbox',SolicitudPedidoController::class);
@@ -112,7 +119,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
 
     // para obtener los articulos de la unidad y articulo en especifico
     Route::get('egres/ajax/articleunidad/{unidad?}/{article?}', [EgressController::class, 'ajax_unidad'])->name('egres-ajax.articleunidad');
-    Route::get('egres/ajax/articlealmacen/{article?}', [EgressController::class, 'ajax_almacen'])->name('egres-ajax.articlealmacen');
+    Route::get('egres/ajax/articlealmacen/{article?}/{unidad_id?}/{unidad1?}/{unidad2?}', [EgressController::class, 'ajax_almacen'])->name('egres-ajax.articlealmacen');
     Route::post('egres/detalle/store', [EgressController::class, 'detailsDetalle'])->name('egres-ajax.detalle.store');
     Route::post('egres/entregarsolicitud/store', [EgressController::class, 'egresEntregarSolicitud'])->name('egres-entregarsolicitud.store');
 
@@ -137,7 +144,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
 
     Route::post('sucursals/subalmacen/store', [SucursalController::class, 'storeSubAlmacen'])->name('sucursal-subalmacen.store'); //para poder agregar un subalmacen al almacen
     Route::delete('sucursals/subalmacen/delete', [SucursalController::class, 'destroySubAlmacen'])->name('sucursal-subalmacen.destroy');//Para poder eliminar un sub almacen
-    Route::get('sucursals/subalmacen/get/{id?}', [SucursalController::class, 'getSubSucursal'])->name('ajax-sucursal-subalmacen.get');
+    Route::get('sucursals/subalmacen/get/{id?}', [SucursalController::class, 'getSubSucursal'])->name('ajax-sucursal-subalmacen.get');//Para obtener todo los sub almacenes de una sucursal
+    Route::get('sucursals/subalmacen/all/{id?}', [SucursalController::class, 'allSubSucursal'])->name('ajax-sucursal-subalmacen.all');//Para obtener todo los sub almacenes de una sucursal
 
 
 

@@ -24,6 +24,7 @@ use App\Models\SolicitudPedidoDetalle;
 use App\Models\SucursalUnidadPrincipal;
 use PhpParser\Node\Stmt\Break_;
 use App\Models\SucursalSubAlmacen;
+use Facade\Ignition\DumpRecorder\Dump;
 
 class EgressController extends Controller
 {
@@ -597,7 +598,7 @@ class EgressController extends Controller
             $pedido->update(['status' => 'pendienteeliminacion']);
 
             DB::commit();
-            return redirect()->route('egres.index')->with(['message' => 'Solicitud de elimonacion enviada..', 'alert-type' => 'success']);
+            return redirect()->route('egres.index')->with(['message' => 'Solicitud de eliminacion enviada..', 'alert-type' => 'success']);
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->route('egres.index')->with(['message' => 'Ocurrio un error.', 'alert-type' => 'error']);
@@ -687,10 +688,27 @@ class EgressController extends Controller
 
         $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
         // return $sucursal;
-        $unidad = SucursalUnidadPrincipal::where('deleted_at', null)->where('sucursal_id', $sucursal->sucursal_id)->first()->unidadAdministrativa_id ?? '';
+        // $unidad = SucursalUnidadPrincipal::where('deleted_at', null)->where('sucursal_id', $sucursal->sucursal_id)->first()->unidadAdministrativa_id ?? '';
+        $mainUnit = SucursalUnidadPrincipal::where('deleted_at', null)->where('sucursal_id', $sucursal->sucursal_id)->get();
+        $unidad1 ='';
+        $unidad2 ='';
+        // return $mainUnit;
+        if(count($mainUnit)== 1)
+        {
+            $unidad1 = $mainUnit[0]->unidadAdministrativa_id;
+        }
+
+        if(count($mainUnit)== 2)
+        {
+            $unidad1 = $mainUnit[0]->unidadAdministrativa_id;
+
+            $unidad2 = $mainUnit[1]->unidadAdministrativa_id;
+        }
+
+
         // return $unidad;
         // SolicitudPedido::where('id', $id)->update(['visto'=>Carbon::now()]);
-        return view('almacenes.egress.readSolicitud', compact('data', 'unidad'));
+        return view('almacenes.egress.readSolicitud', compact('data', 'unidad1', 'unidad2'));
     }
 
     // Para obtener todos los articulos comprado o ingresado por la unidad
@@ -704,6 +722,8 @@ class EgressController extends Controller
             ->where('s.stock', 1)
             ->where('s.subSucursal_id', $user->subSucursal_id)
             ->where('s.deleted_at', null)
+
+
             ->where('s.unidadadministrativa', $unidad)
 
             ->where('f.deleted_at', null)
@@ -722,22 +742,52 @@ class EgressController extends Controller
 
         return $data;
     }
+
+
     //para obtener los articulos del almacen central de cada almacen u sucursal
-    public function ajax_almacen($article)
+    public function ajax_almacen($article, $unidad_id, $unidad1, $unidad2)
     {
         $user = Auth::user();
 
-        $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
+        $sucursal = SucursalUser::where('user_id', $user->id)->where('condicion', 1)->where('deleted_at', null)->first();
+
         $unidad = SucursalUnidadPrincipal::where('deleted_at', null)->where('sucursal_id', $sucursal->sucursal_id)->first()->unidadAdministrativa_id;
-        // return $unidad;
-        $data = DB::table('solicitud_compras as s')
+
+        // $unidad = 66;
+
+        $query=1;
+
+        if($unidad1 != 0 && $unidad_id != $unidad1)
+        {
+            $query = '(s.unidadadministrativa = '.$unidad1.')';
+        }
+
+        if($unidad2 != 0 && $unidad_id != $unidad2)
+        {
+            $query = '(s.unidadadministrativa = '.$unidad2.')';
+        }
+
+
+
+        if($unidad1 != 0 && $unidad2 != 0 && $unidad_id != $unidad1 && $unidad_id != $unidad2)
+        {
+            $query = '(s.unidadadministrativa = '.$unidad1.' or s.unidadadministrativa = '.$unidad2.')';
+        }
+
+        $data = '';
+        if($unidad1 != 0 || $unidad2 != 0)
+        {
+            $data = DB::table('solicitud_compras as s')
             ->join('facturas as f', 'f.solicitudcompra_id', 's.id')
             ->join('detalle_facturas as d', 'd.factura_id', 'f.id')
             ->join('articles as a', 'a.id', 'd.article_id')
             ->where('s.stock', 1)
             ->where('s.subSucursal_id', $user->subSucursal_id)
             ->where('s.deleted_at', null)
-            ->where('s.unidadadministrativa', $unidad)
+
+            // ->where('s.unidadadministrativa', $unidad)
+
+            ->whereRaw($query)
 
             ->where('f.deleted_at', null)
 
@@ -752,6 +802,8 @@ class EgressController extends Controller
             // ->groupBy('article_id')
             ->orderBy('s.id')
             ->get();
+        }
+        
 
         return $data;
     }
@@ -795,10 +847,37 @@ class EgressController extends Controller
         try {
             $sucursal = SucursalUser::where('user_id', Auth::user()->id)->where('condicion', 1)->where('deleted_at', null)->first();
             $unidad = SucursalUnidadPrincipal::where('deleted_at', null)->where('sucursal_id', $sucursal->sucursal_id)->first()->unidadAdministrativa_id ?? '';
+
+
+            $mainUnit = SucursalUnidadPrincipal::where('deleted_at', null)->where('sucursal_id', $sucursal->sucursal_id)->get();
+            $unidad1 ='';
+            $unidad2 ='';
+            // return $mainUnit;
+            if(count($mainUnit)== 1)
+            {
+                $unidad1 = $mainUnit[0]->unidadAdministrativa_id;
+            }
+
+            if(count($mainUnit)== 2)
+            {
+                $unidad1 = $mainUnit[0]->unidadAdministrativa_id;
+
+                $unidad2 = $mainUnit[1]->unidadAdministrativa_id;
+            }
+
+            // dump($unidad1);
+            // dump($unidad2);
+
+
             $gestion = InventarioAlmacen::where('status', 1)->where('sucursal_id', $sucursal->sucursal_id)->where('deleted_at', null)->first(); //para ver si hay gestion activa o cerrada         
 
             $solicitud = SolicitudPedido::where('id', $request->id)->where('deleted_at', null)->first();
+
+            // dump($solicitud->unidad_id);
+
             $detalle = SolicitudPedidoDetalle::where('solicitudPedido_id', $solicitud->id)->where('deleted_at', null)->get();
+
+            // return $detalle;
 
 
             if ($solicitud->status != 'Aprobado') {
@@ -817,25 +896,29 @@ class EgressController extends Controller
             $detalle_id = [];
             $cant = [];
             $user = Auth::user();
-            foreach ($detalle as $item) {
-                if ($item->jsonDetails_id) {
-                    $i = 0;
-                    foreach (json_decode($item->jsonDetails_id) as $item1) {
-                        // return $item->jsonDetails_id;
-                        if ($i == 0) {
-                            foreach ($item1 as $data) {
-                                if ($data == 'si') {
+            // foreach ($detalle as $item) {
+            //     if ($item->jsonDetails_id) {
+            //         $i = 0;
+            //         foreach (json_decode($item->jsonDetails_id) as $item1) {
+            //             // return $item->jsonDetails_id;
+            //             if ($i == 0) {
+            //                 // dd($item1);
+            //                 foreach ($item1 as $data) {
+            //                     dump($data);
+            //                     if ($data == 'si') {
 
-                                    if ($solicitud->unidad_id == $unidad) {
-                                        return redirect()->route('egres-solicitud.show', ['solicitud' => $solicitud->id])->with(['message' => 'Ocurrio un error. Agrege nuevamente los detalle de la solicitud', 'alert-type' => 'error']);
-                                    }
-                                }
-                            }
-                        }
-                        $i++;
-                    }
-                }
-            }
+            //                         if ($solicitud->unidad_id == $unidad1 || $solicitud->unidad_id == $unidad2) {
+            //                             return redirect()->route('egres-solicitud.show', ['solicitud' => $solicitud->id])->with(['message' => 'Ocurrio un error. Agrege nuevamente los detalle de la solicitud', 'alert-type' => 'error']);
+            //                         }
+            //                     }
+            //                 }
+            //             }
+            //             $i++;
+            //         }
+            //     }
+            //     dump('-------');
+            // }
+            // return 1;
             foreach ($detalle as $item) {
                 if ($item->jsonDetails_id) {
                     $i = 0;
@@ -849,9 +932,11 @@ class EgressController extends Controller
                         $i++;
                     }
                     // return $cant;
+                    // dd($detalle_id);
                     for ($x = 0; $x < count($detalle_id); $x++) {
                         $verf = DetalleFactura::where('id', $detalle_id[$x])->where('deleted_at', null)->where('hist', 0)->first();
                         // return $verf;
+                        // dd($verf);
                         if ($verf->cantrestante < 0) {
                             return redirect()->route('egres-solicitud.show', ['solicitud' => $solicitud->id])->with(['message' => 'Ocurrio un error. Contactese con el administrador de sistema', 'alert-type' => 'error']);
                         }
@@ -895,6 +980,8 @@ class EgressController extends Controller
                         }
                         $i++;
                     }
+                    // dump($detalle_id);
+                    // dump($cant);
                     // return 1;
                     // return $item->jsonDetails_id;
                     // return $detalle_id;
@@ -942,6 +1029,7 @@ class EgressController extends Controller
                     }
                 }
             }
+            // return 1;
             $solicitud->update(['status' => 'Entregado', 'entregadoDate' => Carbon::now(), 'entregadoUser_id' => Auth::user()->id]);
             DB::commit();
             return redirect()->route('egres.index')->with(['message' => 'Solicitud entregada exitosamente.', 'alert-type' => 'success']);

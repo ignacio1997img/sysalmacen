@@ -194,17 +194,26 @@ class SolicitudPedidoController extends Controller
 
         // $funcionario = $this->getWorker($user->funcionario_id);
 
-        $mainUnit = SucursalUnidadPrincipal::where('sucursal_id', $user->sucursal_id)->where('status', 1)->where('deleted_at', null)->first();
+        $mainUnit = SucursalUnidadPrincipal::where('sucursal_id', $user->sucursal_id)->where('status', 1)->where('deleted_at', null)->get();
         // return $mainUnit;
         $query = '';
-        if($mainUnit)
+
+        if(count($mainUnit)== 1)
         {
-            $query = ' or s.unidadadministrativa = '.$mainUnit->unidadAdministrativa_id;
+            $query = ' or s.unidadadministrativa = '.$mainUnit[0]->unidadAdministrativa_id;
         }
+
+        if(count($mainUnit)== 2)
+        {
+            $query = ' or s.unidadadministrativa = '.$mainUnit[0]->unidadAdministrativa_id.' or s.unidadadministrativa = '.$mainUnit[1]->unidadAdministrativa_id;
+        }
+
+
+
+
         $unidad = 'null';
         if($user->unidadAdministrativa_id)
         {
-            // $unidad = $funcionario->id_unidad;
             $unidad = $user->unidadAdministrativa_id;
         }
 
@@ -230,18 +239,6 @@ class SolicitudPedidoController extends Controller
                 ->groupBy('id')
                 ->orderBy('nombre')
                 ->get();
-
-        
-        // $data = IncomesDetail::with(['article','article.category'])
-        //     ->where(function($query) use ($q){
-        //         if($q){
-        //             $query->OrwhereHas('article', function($query) use($q){
-        //                 $query->whereRaw("(name like '%$q%')");
-        //             });
-        //         }
-        //     })
-        //     ->select('article_id', 'id', 'price', 'expiration',  DB::raw("SUM(cantRestante) as cantRestante"))
-        //     ->where('cantRestante','>', 0)->where('deleted_at', null)->where('expirationStatus', 1)->groupBy('article_id', 'price', 'expiration')->get();
 
         return response()->json($data);
     }

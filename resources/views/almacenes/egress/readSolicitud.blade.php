@@ -244,8 +244,8 @@
                                     <tbody></tbody>
                                 </table>
                             </div>
-                            @if ($unidad)                                
-                                @if ($data->unidad_id != $unidad)                                
+                            {{-- @if ($unidad)                                
+                                @if ($data->unidad_id != $unidad)                                 --}}
                                     <div class="col-md-12">
                                         <table id="detalle" class="table table-bordered table-hover detallepago">
                                             <thead>
@@ -263,8 +263,8 @@
                                             <tbody></tbody>
                                         </table>
                                     </div>
-                                @endif
-                            @endif
+                                {{-- @endif
+                            @endif --}}
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -404,10 +404,14 @@
 
     $('#show-modal').on('show.bs.modal', function (event)
     {
-        // alert({{$unidad}})
+       
         var unidad_id = {{$data->unidad_id}};
         // alert(unidad_id)
-        var unidad = {{$unidad?$unidad:0}};
+        // alert(unidad_id)
+        var unidad = 0;
+        var unidad1 = {{$unidad1?$unidad1:0}};
+        var unidad2 = {{$unidad2?$unidad2:0}};
+
         // alert(unidad)
         var button = $(event.relatedTarget);
         var item = button.data('item');
@@ -432,6 +436,9 @@
         $('.detalle tbody').empty();
         $('.detallepago tbody').empty();
 
+        // alert(unidad_id)
+        // alert(unidad1)
+        // alert(unidad2)
         $.get('{{route('egres-ajax.articleunidad')}}/'+unidad_id+'/'+article_id, function(data){
                     for (var i=0; i<data.length; i++) {
 
@@ -461,9 +468,8 @@
                     }
         });
 
-        if(unidad != 0 && unidad != unidad_id)
-        {
-            $.get('{{route('egres-ajax.articlealmacen')}}/'+article_id, function(data){
+        
+            $.get('{{route('egres-ajax.articlealmacen')}}/'+article_id+'/'+unidad_id+'/'+unidad1+'/'+unidad2, function(data){
                             //  alert(data)
                         for (var i=0; i<data.length; i++) {
                             $('.detallepago tbody').append(`
@@ -491,8 +497,7 @@
                                 </tr>
                             `);
                         }
-            });
-        }            
+            });        
     })
 
     $(function()

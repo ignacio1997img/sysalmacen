@@ -96,6 +96,8 @@ class PermissionRoleTableSeeder extends Seeder
         $permissions = Permission::whereRaw('table_name = "admin" or
                                             table_name = "outbox" or
                                             table_name = "inbox" or
+
+                                            table_name = "existingproducts" or                                            
                                             
 
                                             `key` = "browse_partidas" or
@@ -236,6 +238,8 @@ class PermissionRoleTableSeeder extends Seeder
                                             table_name = "inbox" or
                                             table_name = "outbox" or
 
+                                            table_name = "existingproducts" or 
+
                                             table_name = "reports_anual" or
                                             
                                             `key` = "browse_printalmacen-article-list" or
@@ -251,7 +255,7 @@ class PermissionRoleTableSeeder extends Seeder
         $role->permissions()->sync($permissions->pluck('id')->all());
 
 
-        //Para ingreso y egreso y reporte y aprobacion de solicitudes y crear solicitud
+        //Para ingreso y egreso y reporte y crear solicitud
         $role = Role::where('name', 'almacen_subadmin_responsable_solicitar')->firstOrFail();
         $permissions = Permission::whereRaw('table_name = "admin" or
                                             table_name = "income" or
@@ -263,6 +267,7 @@ class PermissionRoleTableSeeder extends Seeder
                                             `key` = "add_providers" or
 
                                             table_name = "outbox" or
+                                            table_name = "existingproducts" or 
 
                                             table_name = "reports_anual" or
                                             
@@ -286,6 +291,8 @@ class PermissionRoleTableSeeder extends Seeder
         $role = Role::where('name', 'almacen_solicitud_pedido')->firstOrFail();
         $permissions = Permission::whereRaw('table_name = "admin" or
                                              table_name = "outbox" or
+                                             table_name = "existingproducts" or 
+
                                             
                                             `key` = "browse_clear-cache"')->get();
         $role->permissions()->sync($permissions->pluck('id')->all());
@@ -303,6 +310,8 @@ class PermissionRoleTableSeeder extends Seeder
         $role = Role::where('name', 'almacen_aprobar_solicitar')->firstOrFail();
         $permissions = Permission::whereRaw('table_name = "admin" or
                                              table_name = "outbox" or
+                                             table_name = "existingproducts" or 
+
                                              table_name = "inbox" or
                                             
                                             `key` = "browse_clear-cache"')->get();

@@ -99,6 +99,18 @@ class PermissionsTableSeeder extends Seeder
         Permission::generateFor('egres');
 
 
+        //Para ver la existencia de los productos
+        $keys = [
+            'browse_existingproducts',
+        ];
+
+        foreach ($keys as $key) {
+            Permission::firstOrCreate([
+                'key'        => $key,
+                'table_name' => 'existingproducts',
+            ]);
+        }
+
 
         //Para las Solicitudes o para crear solictudes
         $keys = [

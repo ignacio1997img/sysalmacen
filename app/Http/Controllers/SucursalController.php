@@ -43,6 +43,22 @@ class SucursalController extends Controller
 
     public function indexDireccion($sucursal)
     {
+        // $mainUnit = SucursalUnidadPrincipal::where('sucursal_id', $sucursal)->where('status', 1)->where('deleted_at', null)->get();
+        // $query = '';
+        // // return $mainUnit[0]->unidadAdministrativa_id;
+        // if(count($mainUnit)== 1)
+        // {
+        //     $query = ' or s.unidadadministrativa = '.$mainUnit[0]->unidadAdministrativa_id;
+        // }
+
+        // if(count($mainUnit)== 2)
+        // {
+        //     $query = ' or s.unidadadministrativa = '.$mainUnit[0]->unidadAdministrativa_id.' or s.unidadadministrativa = '.$mainUnit[1]->unidadAdministrativa_id;
+        // }
+        // return 1010011;
+
+
+
         $sucursal = Sucursal::find($sucursal);
         $da = Direction::where('deleted_at', null)->get();
         $data = DB::connection('mamore')->table('direcciones as d')
@@ -225,14 +241,24 @@ class SucursalController extends Controller
     public function getSubSucursal($id)
     {
         $user = Auth::user();
+
         $query_filter = 'id ='.$user->subSucursal_id;
         
         if(Auth::user()->hasRole('admin'))
         {
             $query_filter = 1;
         }
+
         return SucursalSubAlmacen::with(['sucursal'])
             ->where('sucursal_id', $id)->whereRaw($query_filter)->where('deleted_at', null)->get();
+    }
+
+
+    //Para obtener todas la sub sucursales de una sucursal
+    public function allSubSucursal($id)
+    {
+        return SucursalSubAlmacen::with(['sucursal'])
+            ->where('sucursal_id', $id)->where('deleted_at', null)->get();
     }
 
 
